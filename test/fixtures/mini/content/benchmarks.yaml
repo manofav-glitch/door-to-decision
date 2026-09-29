@@ -1,0 +1,11 @@
+timeTargets:
+  - { id: t-ecg, label: "Door to test", from: door, to: tested, targetMin: 10, check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 } }
+vitalLimits:
+  check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }
+  hr: { low: 60, high: 100 }
+  sbp: { low: 90, high: 180 }
+  dbp: { low: 50, high: 110 }
+  rr: { low: 10, high: 20 }
+  spo2: { low: 94, high: 100 }
+  gcs: { low: 15, high: 15 }
+  temp: { low: 36, high: 38 }

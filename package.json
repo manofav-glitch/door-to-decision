@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "validate": "node scripts/validate.ts",
+    "review": "node scripts/review.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

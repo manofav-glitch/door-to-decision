@@ -1,0 +1,68 @@
+id: demo-c-01
+title: "Test patient"
+difficulty: 1
+minutes: 5
+settings: [big, small]
+patient: { age: 50, sex: F, weightKg: 60 }
+initial:
+  clock: "23:50"
+  vitals: { hr: 80, sbp: 120, dbp: 80, rr: 16, spo2: 98, gcs: 15, temp: 37 }
+  flags: [secret]
+timeTargets:
+  big: [t-ecg]
+  small: [t-ecg]
+check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }
+start: intro
+nodes:
+  intro:
+    type: story
+    panels: [{ scene: triage-desk, caption: "{clock} · Triage", bubbles: [{ who: patient, text: "Hello" }] }]
+    next: first
+  first:
+    type: choice
+    check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }
+    prompt: "First?"
+    options:
+      - { label: Test, grade: best, consequence: ok, teaching: good, effects: { minutes: 5, milestone: tested }, next: multi }
+      - { label: Harm, grade: harmful, consequence: bad, teaching: no, effects: { minutes: 2, sbp: -50, patient: -40 }, next: crash }
+      - { label: Big only, grade: acceptable, consequence: ok, teaching: fine, showIf: { setting: big }, effects: { minutes: 20, milestone: tested }, next: multi }
+  crash:
+    type: story
+    panels: [{ scene: resus-bay, sfx: "BEEP" }]
+    next:
+      - { if: { vital: sbp, below: 80 }, to: end-bad }
+      - { to: multi }
+  multi:
+    type: multiselect
+    check: { source: ref-a, verified: false, todo: "check me" }
+    prompt: "Pick up to 2"
+    max: 2
+    options:
+      - { id: a, label: A, grade: best, consequence: a, teaching: a, missedEffects: { patient: -10 } }
+      - { id: b, label: B, grade: best, consequence: b, teaching: b }
+      - { id: c, label: C, grade: harmful, consequence: c, teaching: c, effects: { addFlags: [gave_c] } }
+    next:
+      - { if: { flag: gave_c }, to: end-bad }
+      - { to: dose }
+  dose:
+    type: dose
+    check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }
+    prompt: "Dose?"
+    drug: drug-x
+    dose: per-kg
+    tolerancePct: 10
+    correct: { consequence: ok, teaching: ok }
+    under: { consequence: low, teaching: low }
+    over: { consequence: high, teaching: high, effects: { patient: -40 } }
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+  end-good: { type: ending, outcome: good, summary: "Well done", panels: [{ scene: ward }] }
+  end-fair: { type: ending, outcome: fair, summary: "Okay" }
+  end-bad: { type: ending, outcome: critical, summary: "Learn from this" }
+debrief:
+  diagnosis: "Test diagnosis"
+  keyPoints: ["one"]
+  unlocks: [drug-x]
+  refs: [ref-a]
+  check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }

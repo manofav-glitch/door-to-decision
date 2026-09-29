@@ -1,0 +1,11 @@
+id: drug-x
+title: Drug X
+summary: A test drug.
+doses:
+  - id: per-kg
+    label: Bolus
+    route: IV
+    text: "10–20 units/kg"
+    rule: { unit: units, perKg: { min: 10, max: 20 } }
+    check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }
+check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }

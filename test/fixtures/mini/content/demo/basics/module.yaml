@@ -1,0 +1,6 @@
+id: basics
+title: Basics
+settings:
+  - { id: big, label: Big hospital, description: Has everything }
+  - { id: small, label: Small hospital, description: Has less }
+cases: [c-01]
