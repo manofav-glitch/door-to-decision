@@ -2,7 +2,7 @@
 // the compiler (compile.ts) turns validated YAML into the JSON the app and engine use.
 // This file holds NO clinical facts — only the shape of content.
 import { z } from 'zod';
-import { ACTORS, SCENES } from '../art/registry.ts';
+import { ACTORS, MOODS, parseActor, SCENES } from '../art/registry.ts';
 
 const Id = z
   .string()
@@ -93,7 +93,14 @@ export const Bubble = z.strictObject({
 });
 export const Panel = z.strictObject({
   scene: z.enum(SCENES),
-  actors: z.array(z.enum(ACTORS)).optional(),
+  // "name" or "name:mood", e.g. patient:pain
+  actors: z
+    .array(
+      z.string().refine((a) => parseActor(a) !== undefined, {
+        message: `use one of ${ACTORS.join(', ')}, optionally with :${MOODS.join(' / :')}`,
+      }),
+    )
+    .optional(),
   caption: Text.optional(), // "{clock}" is replaced by the case clock, e.g. "{clock} · Triage"
   bubbles: z.array(Bubble).optional(),
   sfx: Text.optional(),

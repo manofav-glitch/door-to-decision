@@ -202,7 +202,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6">
         <section
           aria-label="Story panels"
-          className="grid flex-1 content-start gap-4 pb-4 sm:grid-cols-2"
+          className="grid flex-1 grid-cols-[minmax(0,1fr)] content-start gap-4 pb-4 sm:grid-cols-[repeat(2,minmax(0,1fr))]"
         >
           {/* On ECG beats the tracing comes first: it's what the learner has to read. */}
           {ecg && assets[ecg.image] && (
@@ -217,7 +217,14 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
             />
           )}
           {panels.map((p, i) => (
-            <PanelView key={`${viewNodeId}-${i}`} panel={p} clock={clock} assets={assets} />
+            <PanelView
+              key={`${viewNodeId}-${i}`}
+              panel={p}
+              clock={clock}
+              assets={assets}
+              index={i}
+              ctx={{ vitals: view.vitals, limits: c.vitalLimits }}
+            />
           ))}
         </section>
 
