@@ -1,0 +1,90 @@
+# {{ID}} — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: TODO: write the real diagnosis here (learners never see this comment).
+#
+# This file was made by `npm run new-case`. See docs/CONTENT_GUIDE.md for every option.
+# Lines starting with # are comments: the app ignores them.
+#
+# The story is a list of `nodes` (steps). Each has a `type`:
+#   story        panels only, then Continue
+#   choice       one answer (options graded best / acceptable / suboptimal / harmful)
+#   ecg          like choice, with an ECG picture
+#   ecg-leads    tap the leads on an ECG
+#   multiselect  pick several (e.g. initial treatment)
+#   dose         type a dose; checked against a drug card
+#   calculator   work out a score (HEART, TIMI, GRACE)
+#   ending       good / fair / critical
+# After editing, run:  npm run validate   (checks everything)
+#                      npm run graph      (draws the branching map in docs/graphs/)
+
+id: {{ID}}
+title: "{{TITLE}}"          # the presentation only, never the diagnosis
+difficulty: 1               # 1 easy · 2 medium · 3 hard
+minutes: 8                  # rough play time
+# settings: [pci-capable, non-pci]   # optional: hospital types defined in module.yaml
+patient: { age: 50, sex: M, weightKg: 70 }
+initial:
+  clock: "09:00"            # wall-clock time at arrival
+  vitals: { hr: 80, sbp: 130, dbp: 80, rr: 16, spo2: 98, gcs: 15, temp: 37.0 }
+  flags: []                 # hidden facts the story can branch on, e.g. [rv_infarct]
+timeTargets:
+  default: [door-to-ecg]    # time targets from benchmarks.yaml (per setting, or "default")
+check:
+  source: needs-source      # a reference id from content/references.yaml
+  verified: false
+  todo: "Check the presentation and vitals."
+
+start: arrival              # the first step
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk                  # see CONTENT_GUIDE for all scenes
+        actors: [patient:pain, nurse]       # left to right; moods: pain, worried, relieved, alarmed
+        caption: "{clock} · Triage"         # {clock} shows the case clock
+        bubbles:
+          - { who: patient, text: "TODO: what the patient says." }
+          - { who: nurse, text: "TODO: what the nurse reports." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: needs-source, verified: false, todo: "Check grades and teaching." }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "TODO: one line: what happens to the patient."
+        teaching: "TODO: one line: why."
+        effects: { minutes: 5, milestone: ecg }   # the clock moves on; "ecg" stamps door-to-ECG
+        next: end-good
+      - label: "TODO: a tempting wrong answer"
+        grade: harmful
+        consequence: "TODO: what goes wrong."
+        teaching: "TODO: why it's harmful, without shaming."
+        effects: { minutes: 5, milestone: ecg, patient: -40, sbp: -30 }
+        next: end-critical
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Later · Ward"
+    summary: "TODO: how the patient did."
+
+  end-critical:
+    type: ending
+    outcome: critical
+    summary: "TODO: what happened and the lesson, framed as teaching, not blame."
+
+debrief:
+  diagnosis: "TODO: the diagnosis, revealed at the end."
+  keyPoints:
+    - "TODO: key point 1."
+  pitfalls:
+    - "TODO: a common mistake."
+  unlocks: []               # codex card ids, e.g. [heart, aspirin]
+  refs: []                  # reference ids, e.g. [esc-acs-2023]
+  check: { source: needs-source, verified: false }

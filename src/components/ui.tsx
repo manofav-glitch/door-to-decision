@@ -76,3 +76,14 @@ export function NotFound({ what }: { what: string }) {
 export function Difficulty({ n }: { n: number }) {
   return <span aria-label={`Difficulty ${n} of 3`}>{'●'.repeat(n) + '○'.repeat(3 - n)}</span>;
 }
+
+export function DevTag() {
+  return (
+    <span
+      className="shrink-0 border-2 border-ink px-1 font-mono text-xs font-bold"
+      title="Dev mode (?dev=0 to turn off)"
+    >
+      DEV
+    </span>
+  );
+}

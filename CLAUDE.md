@@ -26,11 +26,12 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `npm run validate` — content checks with file:line: schema, broken `next`, unreachable nodes, dead ends, unset flags, missing refs/unlocks/doses/assets
 - `npm run review` — checklist of every unverified clinical item → `docs/CLINICAL_REVIEW.md` (regenerate after content edits)
 - `npm run ecg` — redraw ECG SVGs from `content/assets/ecg/*.ecg.yaml`
-- `npm run graph` — (Phase 4) Mermaid flowchart per case → `docs/graphs/`
-- Dev mode: (Phase 4) append `?dev=1` (node IDs, jump-to-node, state inspector)
+- `npm run graph` — Mermaid flowchart per case → `docs/graphs/<id>.md` (bold = ideal path, red dashed = harmful)
+- `npm run new-case -- <system> <module> <name> "<title>"` — scaffold from `docs/templates/case.yaml`, list in module.yaml, validate + graph (Claude skill: `/new-case`)
+- Dev mode: `?dev=1` (before or after the `#`; `?dev=0` off; kept per tab in sessionStorage): step ids, jump-to-step (run then stops saving), state inspector. Works on the live site.
 
 ## Folder map (update when it changes)
-- `docs/` — SPEC.md, CLINICAL_REVIEW.md (generated); planned: CONTENT_GUIDE.md, graphs/
+- `docs/` — SPEC.md, CONTENT_GUIDE.md (owner's plain-language authoring guide — keep in sync with the schema), CLINICAL_REVIEW.md + graphs/ (generated), templates/case.yaml
 - `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml` (incl. `needs-source` placeholder),
   `benchmarks.yaml` (time targets, HUD vital limits), `cvs/chest-pain/{module.yaml,cases/cp-01.yaml,cp-02.yaml}`,
   `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`
@@ -42,8 +43,9 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `src/store/` — `settings.ts`, `progress.ts` (runs saved as inputs and replayed; stars, unlocks, mistakes deck)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
 - `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (8 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
-- `scripts/` — validate.ts, review.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs
-- `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`; `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
+- `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
+- `.claude/skills/new-case/` — the /new-case project skill
+- `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`, `authoring.test.ts` (graph, scaffold, warnings); `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
 - `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
 
 ## Architecture rules
@@ -57,6 +59,8 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - A case is a draft if ANY check it depends on is unverified (its own, doses it asks, scores it uses, time targets, HUD limits, ECG drawings).
 - Calculator grading: every item's points right = best; same band (or risk row) = acceptable; different band = suboptimal. Number-item bins: a value on an edge goes to the higher bin (`value < below`).
 - Codex: every card is always browsable; cards unlocked by cases get a "✓ Unlocked" mark.
+- Style warnings (non-blocking, in compile.ts): spoiler words in titles, choice/ecg with no best option, consequence/teaching > 220 chars.
+- When the schema changes, update docs/CONTENT_GUIDE.md and docs/templates/case.yaml in the same commit.
 - Lead-tap grading: exact set = best; ≥ half found and ≤ 1 extra = acceptable; else suboptimal.
 - Art: ONE stroke width via `.art` (non-scaling); props grey, people ink, red only for alarms. Panels are ≥ square and grow downwards (grid + aspect spacer); grids use `minmax(0,1fr)` so long bubble text can't widen them.
 
@@ -103,5 +107,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   github.com/manofav-glitch/door-to-decision; Pages source = GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
 - Phase 1 done: engine, compiler, player, debrief, progress, cp-01.
 - Phase 2 done: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores, calculator node, Codex, draft cp-02.
-- Phase 3 built 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
-  69 clinical items unverified. Next: Phase 4 (authoring tools: graph, dev mode, /new-case, CONTENT_GUIDE.md).
+- Phase 3 done 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
+- Phase 4 built 2026-09-30: graph, dev mode, new-case script + skill, CONTENT_GUIDE.md, style warnings. 69 clinical items unverified.
+  Next: Phase 5 (remaining chest-pain cases, Learn/Exam polish, stars, mistakes deck + Revise mode).

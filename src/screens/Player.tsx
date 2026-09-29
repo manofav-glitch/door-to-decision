@@ -14,10 +14,11 @@ import {
   LeadGrid,
   MultiSelect,
 } from '../components/player/Sheet';
-import { Loading, NotFound, UnverifiedBadge } from '../components/ui';
+import { DevTag, Loading, NotFound, UnverifiedBadge } from '../components/ui';
 import {
   act,
   clockAt,
+  devJump,
   currentNode,
   doseFor,
   replay,
@@ -28,6 +29,8 @@ import {
   type Input,
   type RunState,
 } from '../engine/engine';
+import { DevPanel } from '../components/player/DevPanel';
+import { useDevMode } from '../lib/dev';
 import { useProgress, type SavedRun } from '../store/progress';
 import { useSettings } from '../store/settings';
 
@@ -61,6 +64,15 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   });
   const [pending, setPending] = useState<{ prev: RunState; res: ActResult } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const dev = useDevMode();
+  // after a dev jump the run can't be replayed from its inputs, so it is no longer saved
+  const [devJumped, setDevJumped] = useState(false);
+  const jump = (nodeId: string) => {
+    if (!run) return;
+    setPending(null);
+    setRun(devJump(c, run, nodeId));
+    setDevJumped(true);
+  };
   const [leadSel, setLeadSel] = useState<{ node: string; leads: string[] }>({
     node: '',
     leads: [],
@@ -92,8 +104,8 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   const learn = saved.mode === 'learn';
   const doAct = (input: Input) => {
     const res = act(c, run, input);
-    record(c.id, res.state.inputs);
-    if (res.state.ended)
+    if (!devJumped) record(c.id, res.state.inputs);
+    if (res.state.ended && !devJumped)
       finish(
         c.id,
         result(c, res.state),
@@ -195,7 +207,17 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         body = (
           <div className="flex flex-col gap-3">
             <p>{viewNode.summary}</p>
-            <ContinueButton label="See the debrief" onClick={() => navigate(`/debrief/${c.id}`)} />
+            {devJumped ? (
+              <ContinueButton
+                label="Back to the case (dev run not saved)"
+                onClick={() => navigate(`/case/${c.id}`)}
+              />
+            ) : (
+              <ContinueButton
+                label="See the debrief"
+                onClick={() => navigate(`/debrief/${c.id}`)}
+              />
+            )}
           </div>
         );
         break;
@@ -216,6 +238,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
           <span className="min-w-0 truncate font-semibold">{c.title}</span>
           {c.draft && <UnverifiedBadge className="shrink-0" />}
           <span className="ml-auto shrink-0 text-sm text-grey-1">{learn ? 'Learn' : 'Exam'}</span>
+          {dev && <DevTag />}
         </div>
         <Hud
           vitals={run.vitals}
@@ -289,7 +312,13 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
             </h2>
             {nodeUnverified && !pending && <UnverifiedBadge className="mt-1 shrink-0" />}
           </div>
+          {dev && (
+            <p className="-mt-2 mb-3 font-mono text-xs text-grey-1">
+              step: {viewNodeId} ({viewNode.type}){devJumped && ' · jumped: not saved'}
+            </p>
+          )}
           {body}
+          {dev && <DevPanel c={c} run={run} onJump={jump} />}
         </aside>
       </div>
     </div>
