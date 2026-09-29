@@ -18,24 +18,27 @@ Zod (content validation) · Vitest · vite-plugin-pwa · Zustand + localStorage 
 YAML content compiled at build time · GitHub Actions → GitHub Pages.
 No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fonts self-hosted. SVG/WebP only.
 
-## Commands (available once scaffolded — Phase 0)
-- `npm run dev` — local dev server
+## Commands
+- `npm run dev` — local dev server (`-- --port 5180 --strictPort` to pin the port)
+- `npm run preview` — serve the production build (after `npm run build`); this is how to test the PWA/offline
 - `npm run build` — production build (fails on invalid content)
 - `npm run lint` / `npm run format` / `npm test`
-- `npm run validate` — content checks: schema, broken `next`, unreachable nodes, dead ends, missing IDs/assets
-- `npm run graph` — Mermaid flowchart per case → `docs/graphs/`
-- `npm run review` — checklist of every unverified clinical value → `docs/CLINICAL_REVIEW.md`
+- `npm run validate` — (Phase 4) content checks: schema, broken `next`, unreachable nodes, dead ends, missing IDs/assets
+- `npm run graph` — (Phase 4) Mermaid flowchart per case → `docs/graphs/`
+- `npm run review` — (Phase 4) checklist of every unverified clinical value → `docs/CLINICAL_REVIEW.md`
 - Dev mode: append `?dev=1` (node IDs, jump-to-node, state inspector)
 
-## Folder map (planned; update when it changes)
-- `docs/` — SPEC.md, CLINICAL_REVIEW.md (generated), CONTENT_GUIDE.md, graphs/ (generated)
+## Folder map (✓ = exists; rest planned; update when it changes)
+- ✓ `docs/` — SPEC.md, CLINICAL_REVIEW.md (generated), CONTENT_GUIDE.md, graphs/ (generated)
 - `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml`, `benchmarks.yaml`,
   `<system>/<module>/module.yaml`, `<system>/<module>/cases/*.yaml`, `codex/{anatomy,pathology,drugs,scores,ecg}/`, `assets/`
 - `src/engine/` — pure TS game engine (state, effects, conditions, navigation). No React, no clinical facts.
 - `src/clinical/` — pure, unit-tested score functions (HEART, TIMI, GRACE)
 - `src/content/` — Zod schemas + build-time YAML compiler
-- `src/components/`, `src/screens/`, `src/art/` (SVG characters/scenes/props), `src/store/`
-- `scripts/` — validate, graph, review
+- ✓ `src/components/` (Layout, Disclaimer gate, ThemeSync), ✓ `src/screens/` (Home, Settings, SystemPlaceholder), ✓ `src/store/settings.ts`, `src/art/` (SVG characters/scenes/props)
+- ✓ `scripts/make-icons.mjs` — dependency-free generator for `public/icon*.{svg,png}`
+- ✓ `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
+- `scripts/` — validate, graph, review (Phase 4)
 
 ## Architecture rules
 - The engine is content-agnostic: new systems/modules/cases are added by adding content files only.
@@ -72,5 +75,14 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Ask before adding any dependency; prefer fewer.
 - Keep this file current when structure or conventions change.
 
+## Conventions / gotchas
+- Tailwind v4: custom CSS must live in `@layer base/components`; unlayered CSS beats utilities (broke `bg-ink` once).
+- Tokens are CSS variables in `src/index.css`; theme/text-size/reduce-motion are `data-*` attributes on `<html>` set by `ThemeSync`.
+- `showDrafts` defaults to ON in dev builds, OFF in deployed builds (persisted per device).
+- Vite `base` comes from env `BASE_PATH` (set by the deploy workflow). Hash routing means no server rewrites needed.
+- Fonts: Inter (UI) + Patrick Hand (bubbles), Latin subset only, via `@fontsource`, bundled and precached.
+- Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180.
+
 ## Status
-Pre-Phase 0: spec saved, plan awaiting owner approval. No app code yet.
+Phase 0 built locally (scaffold, tokens, routing, placeholder screens, PWA, Pages workflow). Not yet pushed:
+needs the GitHub repo name + owner's OK. Offline install still to be verified on the owner's phone. Phase 1 awaits go-ahead.

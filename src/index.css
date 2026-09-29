@@ -1,0 +1,83 @@
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@import '@fontsource/patrick-hand/latin-400.css';
+@import 'tailwindcss';
+
+/* Design tokens. Ink on paper; the single red accent is reserved for danger/alarms. */
+:root {
+  --paper: #f6f3ea;
+  --paper-2: #ebe7da;
+  --ink: #1a1915;
+  --grey-1: #4a4842; /* secondary text, AA on paper */
+  --grey-2: #8a877d; /* borders, disabled */
+  --alarm: #c62828;
+  --font-ui: 'Inter', system-ui, sans-serif;
+  --font-bubble: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --stroke: 3px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #14130f;
+    --paper-2: #1f1e19;
+    --ink: #ece8dc;
+    --grey-1: #b3b0a5;
+    --grey-2: #77746a;
+    --alarm: #ff6b6b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --paper: #14130f;
+  --paper-2: #1f1e19;
+  --ink: #ece8dc;
+  --grey-1: #b3b0a5;
+  --grey-2: #77746a;
+  --alarm: #ff6b6b;
+  color-scheme: dark;
+}
+
+:root[data-text-size='large'] { font-size: 112.5%; }
+:root[data-text-size='xlarge'] { font-size: 125%; }
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-grey-1: var(--grey-1);
+  --color-grey-2: var(--grey-2);
+  --color-alarm: var(--alarm);
+  --font-ui: var(--font-ui);
+  --font-bubble: var(--font-bubble);
+}
+
+@layer base {
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 1rem; /* >=16px on phones */
+  line-height: 1.5;
+}
+
+
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+}
+
+/* Bold comic-panel border used across the app. In a layer so utilities (bg-ink etc.) can override. */
+@layer components {
+  .panel { border: var(--stroke) solid var(--ink); background: var(--paper); }
+}
+
+/* Reduced motion: honoured from the OS setting or the in-app switch. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+:root[data-reduce-motion='on'] *,
+:root[data-reduce-motion='on'] *::before,
+:root[data-reduce-motion='on'] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
