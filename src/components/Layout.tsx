@@ -8,14 +8,20 @@ export function Layout() {
         <Link to="/" className="flex min-h-11 items-center text-xl font-bold">
           Door to Decision
         </Link>
-        <nav aria-label="Main" className="flex gap-2">
-          <Link
-            to="/settings"
-            aria-current={pathname === '/settings' ? 'page' : undefined}
-            className="flex min-h-11 items-center px-3 underline-offset-4 aria-[current=page]:underline"
-          >
-            Settings
-          </Link>
+        <nav aria-label="Main" className="flex gap-1">
+          {[
+            ['/codex', 'Codex'],
+            ['/settings', 'Settings'],
+          ].map(([to, label]) => (
+            <Link
+              key={to}
+              to={to!}
+              aria-current={pathname.startsWith(to!) ? 'page' : undefined}
+              className="flex min-h-11 items-center px-3 underline-offset-4 aria-[current=page]:underline"
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
       </header>
       <Outlet />

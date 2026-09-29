@@ -5,6 +5,7 @@ import type { NodeOf, Option } from '../../content/schema';
 import { formatNumber, type ActResult, type Input } from '../../engine/engine';
 import type { DoseRange } from '../../engine/dose';
 import { GradeChip } from '../ui';
+import { ScoreBreakdown } from '../ScoreParts';
 
 function useKeys(keys: { digit?: (n: number) => void; confirm?: () => void }) {
   const ref = useRef(keys);
@@ -168,10 +169,26 @@ export function DoseForm({ unit, onSubmit }: { unit: string; onSubmit: (value: n
   );
 }
 
-export function Feedback({ res, onContinue }: { res: ActResult; onContinue: () => void }) {
+export function Feedback({
+  res,
+  onContinue,
+  sources,
+}: {
+  res: ActResult;
+  onContinue: () => void;
+  sources?: string[];
+}) {
   return (
     <div className="flex flex-col gap-3" aria-live="polite">
       {res.dose && <DoseWorking dose={res.dose.expected} />}
+      {res.calc && (
+        <ScoreBreakdown
+          title={res.calc.title}
+          yours={res.calc.yours}
+          correct={res.calc.correct}
+          sources={sources}
+        />
+      )}
       <ul className="flex flex-col gap-3">
         {res.picks.map((p) => (
           <li

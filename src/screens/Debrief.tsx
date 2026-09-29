@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, index, useCase, type LoadedCase } from '../content/client';
 import { DoseWorking } from '../components/player/Sheet';
+import { ScoreBreakdown } from '../components/ScoreParts';
 import { BackLink, GradeChip, Loading, NotFound, Stars, UnverifiedBadge } from '../components/ui';
 import { idealRun, replay, result, type LogEntry, type RunState } from '../engine/engine';
 import { useProgress, type SavedRun } from '../store/progress';
@@ -224,6 +225,13 @@ function Decision({ entry, ideal }: { entry: LogEntry; ideal?: LogEntry }) {
         +{entry.atMinutes} min · <span className="font-semibold text-ink">{entry.prompt}</span>
       </p>
       {entry.dose && <DoseWorking dose={entry.dose.expected} />}
+      {entry.calc && (
+        <ScoreBreakdown
+          title={entry.calc.title}
+          yours={entry.calc.yours}
+          correct={entry.calc.correct}
+        />
+      )}
       <ul className="mt-2 flex flex-col gap-3">
         {entry.picks.map((p) => (
           <li key={p.optionId}>
@@ -236,11 +244,15 @@ function Decision({ entry, ideal }: { entry: LogEntry; ideal?: LogEntry }) {
           </li>
         ))}
       </ul>
-      {!allBest && idealLabels && entry.type !== 'multiselect' && entry.type !== 'dose' && (
-        <p className="mt-3 border-t-2 border-dashed border-grey-2 pt-2 text-sm">
-          <span className="font-semibold">Ideal:</span> {idealLabels.join('; ')}
-        </p>
-      )}
+      {!allBest &&
+        idealLabels &&
+        entry.type !== 'multiselect' &&
+        entry.type !== 'dose' &&
+        entry.type !== 'calculator' && (
+          <p className="mt-3 border-t-2 border-dashed border-grey-2 pt-2 text-sm">
+            <span className="font-semibold">Ideal:</span> {idealLabels.join('; ')}
+          </p>
+        )}
     </li>
   );
 }

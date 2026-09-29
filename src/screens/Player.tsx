@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, isPlayable, useCase, type LoadedCase } from '../content/client';
 import type { Node, Panel } from '../content/schema';
 import { EcgFigure } from '../components/player/EcgFigure';
+import { CalcForm } from '../components/ScoreParts';
 import { Hud } from '../components/player/Hud';
 import { PanelView } from '../components/player/PanelView';
 import {
@@ -19,6 +20,7 @@ import {
   currentNode,
   doseFor,
   replay,
+  scoreFor,
   result,
   visibleOptions,
   type ActResult,
@@ -97,6 +99,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   };
 
   const clock = clockAt(c, view.minutes);
+  const longSheet = viewNode.type === 'calculator';
   const panels = lastPanels(c.nodes, view.path);
   const nodeUnverified = 'check' in viewNode && viewNode.check && !viewNode.check.verified;
   const ecg = viewNode.type === 'ecg' ? viewNode : undefined;
@@ -105,7 +108,16 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   let body: React.ReactNode;
   if (pending) {
     title = 'What happened';
-    body = <Feedback res={pending.res} onContinue={() => setPending(null)} />;
+    const node = currentNode(c, pending.prev);
+    body = (
+      <Feedback
+        res={pending.res}
+        onContinue={() => setPending(null)}
+        sources={
+          node.type === 'calculator' ? scoreFor(c, node).refs.map((r) => r.citation) : undefined
+        }
+      />
+    );
   } else {
     switch (viewNode.type) {
       case 'story':
@@ -139,6 +151,16 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
             key={viewNode.drug + viewNode.dose}
             unit={doseFor(c, viewNode).unit}
             onSubmit={(value) => doAct({ kind: 'dose', value })}
+          />
+        );
+        break;
+      case 'calculator':
+        title = viewNode.prompt;
+        body = (
+          <CalcForm
+            key={viewNodeId}
+            def={scoreFor(c, viewNode).def}
+            onSubmit={(answers) => doAct({ kind: 'calc', answers })}
           />
         );
         break;
@@ -200,7 +222,12 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         </section>
 
         <aside
-          className={`sticky bottom-0 z-10 -mx-4 max-h-[55dvh] overflow-y-auto border-t-[3px] bg-paper px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-8px_16px_-12px_rgba(0,0,0,0.4)] lg:top-28 lg:mx-0 lg:max-h-[calc(100dvh-8rem)] lg:border-[3px] lg:p-4 lg:shadow-none ${
+          className={`z-10 -mx-4 border-t-[3px] bg-paper px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] lg:sticky lg:top-28 lg:mx-0 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto lg:border-[3px] lg:p-4 lg:shadow-none ${
+            // Long forms (calculators) flow with the page on phones instead of a cramped scrolling sheet.
+            longSheet
+              ? ''
+              : 'sticky bottom-0 max-h-[55dvh] overflow-y-auto shadow-[0_-8px_16px_-12px_rgba(0,0,0,0.4)]'
+          } ${
             viewNode.type === 'ending' && viewNode.outcome === 'critical' && !pending
               ? 'border-alarm'
               : 'border-ink'
