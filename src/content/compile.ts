@@ -19,6 +19,7 @@ import {
   type Next,
   type Node,
 } from './schema.ts';
+import { itemResult, ScoreError } from '../clinical/score.ts';
 import {
   CODEX_KINDS,
   type CaseSummary,
@@ -30,6 +31,7 @@ import {
   type ModuleSummary,
   type Reference,
   type ResolvedDose,
+  type ResolvedScore,
   type SystemSummary,
 } from './types.ts';
 
@@ -179,8 +181,17 @@ export function compileContent(root: string): Compiled {
         if (doseIds.has(d.id)) problems.push({ file: loaded.file, message: `dose id "${d.id}" is used twice` });
         doseIds.add(d.id);
       }
+      if (kind === 'scores' && !card.score)
+        problems.push({ file: loaded.file, message: 'cards in codex/scores need a score: section' });
+      if (kind !== 'scores' && card.score)
+        problems.push({ file: loaded.file, line: loaded.lineOf(['score']), message: 'only cards in codex/scores may have a score:' });
+      if (card.score?.bandsSource && !refs.has(card.score.bandsSource))
+        problems.push({ file: loaded.file, line: loaded.lineOf(['score', 'bandsSource']), message: `unknown reference "${card.score.bandsSource}"` });
       collectChecks(loaded);
-      const draft = !card.check.verified || card.doses.some((d) => !d.check.verified);
+      const draft =
+        !card.check.verified ||
+        card.doses.some((d) => !d.check.verified) ||
+        (card.score !== undefined && !card.score.check.verified);
       const entry: CodexEntry = {
         ...card,
         kind,
@@ -246,6 +257,7 @@ export function compileContent(root: string): Compiled {
         const own = checks.slice(checksBefore);
         const depChecks: Check[] = [
           ...Object.values(compiled.doses).map((d) => d.check),
+          ...Object.values(compiled.scores).map((x) => x.def.check),
           ...Object.values(compiled.imageChecks),
           ...Object.values(compiled.timeTargets).flat().map((t) => t.check),
           ...(bench ? [bench.data.vitalLimits.check] : []),
@@ -321,6 +333,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
   const settingsRead: { setting: string; path: Path }[] = [];
   const milestones = new Set<string>(['door']);
   const doses: Record<string, ResolvedDose> = {};
+  const scores: Record<string, ResolvedScore> = {};
   const imageChecks: Record<string, Check> = {};
 
   const noteEffects = (e: Effects | undefined) => {
@@ -397,6 +410,31 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
           check: dose.check,
         };
     }
+    if (node.type === 'calculator') {
+      for (const k of ['correct', 'close', 'wrong'] as const) {
+        noteEffects(node[k].effects);
+        noteNext(node[k].next, [...p, k, 'next']);
+      }
+      const card = ctx.codexById.get(node.score);
+      if (!card?.score) err([...p, 'score'], `no score card content/codex/scores/${node.score}.yaml`);
+      else {
+        scores[card.id] = { id: card.id, title: card.title, def: card.score, refs: card.refDetails };
+        for (const item of card.score.items) {
+          const a = node.answers[item.id];
+          if (a === undefined) err([...p, 'answers'], `missing the answer for "${item.id}"`);
+          else
+            try {
+              itemResult(item, a);
+            } catch (e) {
+              if (!(e instanceof ScoreError)) throw e;
+              err([...p, 'answers', item.id], e.message);
+            }
+        }
+        for (const k of Object.keys(node.answers))
+          if (!card.score.items.some((i) => i.id === k))
+            err([...p, 'answers', k], `"${k}" is not an item of ${card.id}`);
+      }
+    }
     nodes[id] = node;
   }
 
@@ -414,6 +452,8 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     if ('options' in node) node.options.forEach((o, i) => add(o.next, ['nodes', id, 'options', i, 'next']));
     if (node.type === 'dose')
       for (const k of ['correct', 'under', 'over'] as const) add(node[k].next, ['nodes', id, k, 'next']);
+    if (node.type === 'calculator')
+      for (const k of ['correct', 'close', 'wrong'] as const) add(node[k].next, ['nodes', id, k, 'next']);
     for (const o of out) if (!nodes[o.to]) err(o.path, `goes to "${o.to}", which is not a node in this case`);
     edges.set(id, out.map((o) => o.to).filter((t) => nodes[t]));
   }
@@ -494,6 +534,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     timeTargets,
     vitalLimits: vitalLimits as CompiledCase['vitalLimits'],
     doses,
+    scores,
     debrief: { ...c.debrief, unlocks, refs: refList },
     draft: true,
     unverifiedCount: 0,

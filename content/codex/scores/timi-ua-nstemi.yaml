@@ -1,0 +1,32 @@
+id: timi-ua-nstemi
+title: "TIMI risk score for UA/NSTEMI"
+summary: "Seven yes/no items, 1 point each, predicting death, new or recurrent MI, or severe recurrent ischaemia needing urgent revascularisation within 14 days."
+sections:
+  - heading: Not for STEMI
+    body: "TIMI for STEMI is a different score with different items. This one is for unstable angina / NSTEMI only."
+  - heading: Three or more risk factors
+    body: "From: family history of coronary disease, hypertension, hypercholesterolaemia, diabetes, current smoking."
+score:
+  items:
+    - { type: yesno, id: age, label: "Age 65 or over", points: 1 }
+    - { type: yesno, id: risk-factors, label: "3 or more coronary risk factors", points: 1 }
+    - { type: yesno, id: known-cad, label: "Known coronary stenosis of 50% or more", points: 1 }
+    - { type: yesno, id: aspirin, label: "Aspirin taken in the last 7 days", points: 1 }
+    - { type: yesno, id: angina, label: "Severe angina: 2 or more episodes in 24 hours", points: 1 }
+    - { type: yesno, id: st-deviation, label: "ST deviation of 0.5 mm or more", points: 1 }
+    - { type: yesno, id: markers, label: "Raised cardiac markers", points: 1 }
+  riskTable:
+    label: "Risk of an event by day 14"
+    rows:
+      - { from: 0, risk: "4.7%" }
+      - { from: 2, risk: "8.3%" }
+      - { from: 3, risk: "13.2%" }
+      - { from: 4, risk: "19.9%" }
+      - { from: 5, risk: "26.2%" }
+      - { from: 6, risk: "40.9%" }
+  check:
+    source: antman-2000
+    verified: false
+    todo: "Confirm the item wording and the 14-day event rates (scores 0–1 and 6–7 are grouped)."
+refs: [antman-2000]
+check: { source: antman-2000, verified: false }

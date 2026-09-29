@@ -102,6 +102,89 @@ export const Panel = z.strictObject({
 });
 export type Panel = z.infer<typeof Panel>;
 
+// ---------- risk scores (point tables live in content/codex/scores) ----------
+
+const ScoreOption = z.strictObject({ id: Id, label: Text, points: z.number() });
+const ScoreBin = z.strictObject({
+  below: z.number().optional(), // value < below falls in this bin; last bin omits it
+  points: z.number(),
+  label: Text, // e.g. "45–64"
+});
+const ascendingBins = (bins: { below?: number }[]) =>
+  bins.every((b, i) =>
+    i === bins.length - 1
+      ? b.below === undefined
+      : b.below !== undefined && (i === 0 || b.below > bins[i - 1]!.below!),
+  );
+export const ScoreItem = z.discriminatedUnion('type', [
+  z.strictObject({
+    type: z.literal('choice'),
+    id: Id,
+    label: Text,
+    hint: Text.optional(),
+    options: z.array(ScoreOption).min(2),
+  }),
+  z.strictObject({
+    type: z.literal('yesno'),
+    id: Id,
+    label: Text,
+    hint: Text.optional(),
+    points: z.number(),
+  }),
+  z.strictObject({
+    type: z.literal('number'),
+    id: Id,
+    label: Text,
+    hint: Text.optional(),
+    unit: Text,
+    // other units the calculator accepts: value in base unit = entered value / perBaseUnit
+    altUnits: z.array(z.strictObject({ unit: Text, perBaseUnit: z.number() })).default([]),
+    bins: z.array(ScoreBin).min(2).refine(ascendingBins, {
+      message: 'bins go from lowest to highest `below`; only the last bin omits below',
+    }),
+  }),
+]);
+export type ScoreItem = z.infer<typeof ScoreItem>;
+
+const ascendingFrom = (rows: { from: number }[]) =>
+  rows.every((r, i) => i === 0 || r.from > rows[i - 1]!.from);
+const fromMsg = { message: 'rows go from lowest to highest `from`' };
+const BandRows = z
+  .array(z.strictObject({ from: z.number(), label: Text, risk: Text.optional() }))
+  .min(1)
+  .refine(ascendingFrom, fromMsg);
+const RiskRows = z
+  .array(z.strictObject({ from: z.number(), risk: Text }))
+  .min(1)
+  .refine(ascendingFrom, fromMsg);
+
+export const ScoreDef = z
+  .strictObject({
+    items: z.array(ScoreItem).min(1),
+    // categories on the total, e.g. low / moderate / high
+    bands: BandRows.optional(),
+    bandsSource: Id.optional(), // if the bands come from a different source than the score
+    // finer lookup on the total, e.g. GRACE nomogram
+    riskTable: z
+      .strictObject({ label: Text, rows: RiskRows, note: Text.optional() })
+      .optional(),
+    check: Check,
+  })
+  .refine((d) => d.bands || d.riskTable, { message: 'a score needs bands and/or a riskTable' })
+  .refine((d) => new Set(d.items.map((i) => i.id)).size === d.items.length, {
+    message: 'item ids must be unique',
+  });
+export type ScoreDef = z.infer<typeof ScoreDef>;
+
+/** An answer to one score item: option id (choice), yes/no, a number, or a chosen bin. */
+export const ScoreAnswer = z.union([
+  z.string(),
+  z.boolean(),
+  z.number(),
+  z.strictObject({ bin: z.number().int().min(0) }),
+]);
+export type ScoreAnswer = z.infer<typeof ScoreAnswer>;
+
 // ---------- nodes ----------
 
 export const GRADES = ['best', 'acceptable', 'suboptimal', 'harmful'] as const;
@@ -180,6 +263,19 @@ const DoseNode = z.strictObject({
   over: DoseOutcome,
   next: Next,
 });
+const CalcOutcome = DoseOutcome;
+const CalculatorNode = z.strictObject({
+  type: z.literal('calculator'),
+  ...nodeBase,
+  check: Check,
+  prompt: Text,
+  score: Id, // codex/scores/<score>.yaml
+  answers: z.record(Id, ScoreAnswer), // the correct answer for every item, from the case facts
+  correct: CalcOutcome, // every item right (default grade best)
+  close: CalcOutcome, // same band, some items wrong (default acceptable)
+  wrong: CalcOutcome, // different band (default suboptimal)
+  next: Next,
+});
 const EndingNode = z.strictObject({
   type: z.literal('ending'),
   ...nodeBase,
@@ -193,6 +289,7 @@ export const Node = z.discriminatedUnion('type', [
   EcgNode,
   MultiNode,
   DoseNode,
+  CalculatorNode,
   EndingNode,
 ]);
 export type Node = z.infer<typeof Node>;
@@ -342,6 +439,7 @@ export const CodexCard = z.strictObject({
     )
     .default([]),
   india: Text.optional(), // availability note for India
+  score: ScoreDef.optional(), // required for cards in codex/scores/
   refs: z.array(Id).default([]),
   check: Check,
 });

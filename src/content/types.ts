@@ -1,5 +1,5 @@
 // Shapes of the compiled content the app and engine consume (produced by compile.ts).
-import type { Case, CodexCard, DoseRule, Node } from './schema.ts';
+import type { Case, CodexCard, DoseRule, Node, ScoreDef } from './schema.ts';
 import type { z } from 'zod';
 import type { Check as CheckSchema, BenchmarksFile, ReferencesFile } from './schema.ts';
 
@@ -21,6 +21,13 @@ export interface ResolvedDose {
   check: Check;
 }
 
+export interface ResolvedScore {
+  id: string;
+  title: string;
+  def: ScoreDef;
+  refs: Reference[];
+}
+
 export interface HospitalSetting {
   id: string;
   label: string;
@@ -36,6 +43,8 @@ export interface CompiledCase extends Omit<Case, 'settings' | 'timeTargets' | 'd
   vitalLimits: VitalLimits;
   /** "drug/dose" -> resolved dose used by dose nodes */
   doses: Record<string, ResolvedDose>;
+  /** score id -> point table used by calculator nodes */
+  scores: Record<string, ResolvedScore>;
   debrief: Omit<Case['debrief'], 'unlocks' | 'refs'> & {
     unlocks: { id: string; kind: CodexKind; title: string }[];
     refs: Reference[];

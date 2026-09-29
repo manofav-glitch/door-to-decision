@@ -1,0 +1,59 @@
+id: heart
+title: HEART score
+summary: "Risk of a major adverse cardiac event (MACE) within 6 weeks in undifferentiated ED chest pain: History, ECG, Age, Risk factors, Troponin, scored 0–2 each."
+sections:
+  - heading: Who it's for
+    body: "Adults with chest pain suspicious of ACS in the ED, once STEMI is excluded on the ECG. It supports, not replaces, serial troponin and clinical judgement."
+  - heading: Troponin
+    body: "'Normal limit' means the assay's 99th-percentile upper reference limit; with sex-specific limits (Fifth UDMI), use the one for the patient's sex."
+  - heading: Risk factors counted
+    body: "Hypercholesterolaemia, hypertension, diabetes, current or recent smoking, family history of early coronary disease, obesity. Known atherosclerotic disease (previous MI, revascularisation, stroke, peripheral arterial disease) scores 2 on its own."
+score:
+  items:
+    - type: choice
+      id: history
+      label: History
+      options:
+        - { id: slight, label: "Slightly suspicious", points: 0 }
+        - { id: moderate, label: "Moderately suspicious", points: 1 }
+        - { id: high, label: "Highly suspicious", points: 2 }
+    - type: choice
+      id: ecg
+      label: ECG
+      options:
+        - { id: normal, label: "Normal", points: 0 }
+        - { id: nonspecific, label: "Non-specific repolarisation disturbance", points: 1 }
+        - { id: st-deviation, label: "Significant ST deviation", points: 2 }
+    - type: number
+      id: age
+      label: Age
+      unit: years
+      bins:
+        - { below: 45, points: 0, label: "Under 45" }
+        - { below: 65, points: 1, label: "45–64" }
+        - { points: 2, label: "65 or over" }
+    - type: choice
+      id: risk-factors
+      label: Risk factors
+      options:
+        - { id: none, label: "None known", points: 0 }
+        - { id: one-two, label: "1–2 risk factors", points: 1 }
+        - { id: three-plus, label: "3 or more, or known atherosclerotic disease", points: 2 }
+    - type: choice
+      id: troponin
+      label: Troponin
+      hint: "Relative to the 99th-percentile upper reference limit"
+      options:
+        - { id: normal, label: "At or below the limit", points: 0 }
+        - { id: one-three, label: "1–3 × the limit", points: 1 }
+        - { id: over-three, label: "More than 3 × the limit", points: 2 }
+  bands:
+    - { from: 0, label: Low, risk: "MACE at 6 weeks about 1.7%" }
+    - { from: 4, label: Moderate, risk: "MACE at 6 weeks about 16.6%" }
+    - { from: 7, label: High, risk: "MACE at 6 weeks about 50.1%" }
+  check:
+    source: [six-2008, backus-2010, backus-2013]
+    verified: false
+    todo: "Confirm the item definitions and the band risks (quoted from Backus 2013)."
+refs: [six-2008, backus-2010, backus-2013]
+check: { source: [six-2008, backus-2013], verified: false }

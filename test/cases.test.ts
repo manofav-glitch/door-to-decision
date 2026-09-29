@@ -9,6 +9,7 @@ import {
   currentNode,
   doseFor,
   idealRun,
+  scoreFor,
   result,
   startRun,
   visibleOptions,
@@ -41,6 +42,19 @@ function randomInput(c: CompiledCase, s: RunState, rand: () => number): Input {
     case 'dose': {
       const e = doseFor(c, node);
       return { kind: 'dose', value: pickFrom([e.min, e.max, e.min * 0.5, e.max * 1.5]) };
+    }
+    case 'calculator': {
+      const answers = Object.fromEntries(
+        scoreFor(c, node).def.items.map((it) => [
+          it.id,
+          it.type === 'choice'
+            ? pickFrom(it.options).id
+            : it.type === 'yesno'
+              ? rand() < 0.5
+              : { bin: Math.floor(rand() * it.bins.length) },
+        ]),
+      );
+      return { kind: 'calc', answers };
     }
     case 'ending':
       throw new Error('ended');

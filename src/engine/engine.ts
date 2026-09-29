@@ -1,7 +1,17 @@
 // The game engine: pure functions over (compiled case, run state, learner input).
 // No React, no storage, no clinical facts — every number that matters comes from the case.
-import type { Condition, Effects, Grade, Next, Node, NodeOf, Option } from '../content/schema.ts';
-import type { CompiledCase } from '../content/types.ts';
+import type {
+  Condition,
+  Effects,
+  Grade,
+  Next,
+  Node,
+  NodeOf,
+  Option,
+  ScoreAnswer,
+} from '../content/schema.ts';
+import type { CompiledCase, ResolvedScore } from '../content/types.ts';
+import { category, scoreResult, ScoreError, type ScoreResult } from '../clinical/score.ts';
 import { expectedDose, type DoseRange } from './dose.ts';
 
 export type VitalKey = 'hr' | 'sbp' | 'dbp' | 'rr' | 'spo2' | 'gcs' | 'temp';
@@ -23,7 +33,8 @@ export type Input =
   | { kind: 'continue' }
   | { kind: 'pick'; optionId: string }
   | { kind: 'multi'; optionIds: string[] }
-  | { kind: 'dose'; value: number };
+  | { kind: 'dose'; value: number }
+  | { kind: 'calc'; answers: Record<string, ScoreAnswer> };
 
 export interface Pick {
   optionId: string;
@@ -37,12 +48,19 @@ export interface Pick {
 
 export interface LogEntry {
   nodeId: string;
-  type: 'choice' | 'ecg' | 'multiselect' | 'dose';
+  type: 'choice' | 'ecg' | 'multiselect' | 'dose' | 'calculator';
   prompt: string;
   /** case clock when the decision was made */
   atMinutes: number;
   picks: Pick[];
   dose?: { value: number; expected: DoseRange };
+  calc?: CalcComparison;
+}
+
+export interface CalcComparison {
+  title: string;
+  yours: ScoreResult;
+  correct: ScoreResult;
 }
 
 export interface RunState {
@@ -105,6 +123,7 @@ export interface ActResult {
   /** what the learner did and how it's graded (for Learn-mode feedback) */
   picks: Pick[];
   dose?: { value: number; expected: DoseRange; outcome: 'correct' | 'under' | 'over' };
+  calc?: CalcComparison;
 }
 
 export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
@@ -113,7 +132,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
   s.inputs.push(input);
   const node = currentNode(c, s);
   const decidedAt = s.minutes;
-  const log = (picks: Pick[], dose?: LogEntry['dose']) => {
+  const log = (picks: Pick[], dose?: LogEntry['dose'], calc?: CalcComparison) => {
     if (node.type === 'story' || node.type === 'ending') return;
     s.log.push({
       nodeId: s.nodeId,
@@ -122,6 +141,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       atMinutes: decidedAt,
       picks,
       dose,
+      calc,
     });
   };
 
@@ -201,9 +221,53 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       };
     }
 
+    case 'calculator': {
+      const { answers } = expect(input, 'calc');
+      const sc = scoreFor(c, node);
+      let yours: ScoreResult;
+      try {
+        yours = scoreResult(sc.def, answers);
+      } catch (e) {
+        if (e instanceof ScoreError) throw new EngineError(e.message);
+        throw e;
+      }
+      if (!yours.complete) throw new EngineError('Answer every item of the score');
+      const correct = scoreResult(sc.def, node.answers);
+      const allRight = yours.items.every((it, i) => it.points === correct.items[i]!.points);
+      const outcome = allRight
+        ? 'correct'
+        : category(yours) === category(correct)
+          ? 'close'
+          : 'wrong';
+      const defaultGrade: Record<typeof outcome, Grade> = {
+        correct: 'best',
+        close: 'acceptable',
+        wrong: 'suboptimal',
+      };
+      const o = node[outcome];
+      const p: Pick = {
+        optionId: outcome,
+        label: `${sc.title}: ${yours.total}${yours.band ? ` (${yours.band.label})` : ''}`,
+        grade: o.grade ?? defaultGrade[outcome],
+        consequence: o.consequence,
+        teaching: o.teaching,
+      };
+      const calc = { title: sc.title, yours, correct };
+      applyGrade(s, p);
+      applyEffects(s, o.effects);
+      log([p], undefined, calc);
+      return { state: goto(c, s, o.next ?? node.next), picks: [p], calc };
+    }
+
     case 'ending':
       throw new EngineError('The case has ended');
   }
+}
+
+export function scoreFor(c: CompiledCase, node: NodeOf<'calculator'>): ResolvedScore {
+  const sc = c.scores[node.score];
+  if (!sc) throw new EngineError(`Missing score ${node.score}`);
+  return sc;
 }
 
 export function doseFor(c: CompiledCase, node: NodeOf<'dose'>): DoseRange {
@@ -246,6 +310,8 @@ export function idealInput(c: CompiledCase, s: RunState): Input {
       const e = doseFor(c, node);
       return { kind: 'dose', value: e.min === e.max ? e.min : (e.min + e.max) / 2 };
     }
+    case 'calculator':
+      return { kind: 'calc', answers: node.answers };
     case 'ending':
       throw new EngineError('The case has ended');
   }

@@ -41,3 +41,28 @@
   citation: "American Heart Association. 2025 Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care: adult advanced life support. Circulation. 2025."
   year: 2025
   todo: "Add authors, volume, pages and DOI; confirm the bradycardia recommendations cited."
+
+- id: six-2008
+  citation: "Six AJ, Backus BE, Kelder JC. Chest pain in the emergency room: value of the HEART score. Neth Heart J. 2008;16(6):191–196."
+  year: 2008
+
+- id: backus-2010
+  citation: "Backus BE, Six AJ, Kelder JC, et al. Chest pain in the emergency room: a multicenter validation of the HEART score. Crit Pathw Cardiol. 2010;9(3):164–169."
+  year: 2010
+
+- id: backus-2013
+  citation: "Backus BE, Six AJ, Kelder JC, et al. A prospective validation of the HEART score for chest pain patients at the emergency department. Int J Cardiol. 2013;168(3):2153–2158."
+  year: 2013
+
+- id: antman-2000
+  citation: "Antman EM, Cohen M, Bernink PJ, et al. The TIMI risk score for unstable angina/non-ST elevation MI: a method for prognostication and therapeutic decision making. JAMA. 2000;284(7):835–842."
+  year: 2000
+
+- id: granger-2003
+  citation: "Granger CB, Goldberg RJ, Dabbous O, et al. Predictors of hospital mortality in the Global Registry of Acute Coronary Events. Arch Intern Med. 2003;163(19):2345–2353."
+  year: 2003
+
+- id: esc-nste-2011
+  citation: "Hamm CW, Bassand JP, Agewall S, et al. ESC Guidelines for the management of acute coronary syndromes in patients presenting without persistent ST-segment elevation. Eur Heart J. 2011;32(23):2999–3054."
+  year: 2011
+  todo: "Confirm this is where the GRACE in-hospital low/intermediate/high cut-offs come from."

@@ -1,0 +1,105 @@
+id: grace-in-hospital
+title: "GRACE score: in-hospital mortality (Granger 2003)"
+summary: "The original GRACE point score predicting death during the hospital stay in ACS. Eight items; the total maps to a probability of in-hospital death."
+sections:
+  - heading: Which GRACE is this?
+    body: "Only the in-hospital mortality point score from Granger 2003. It is NOT the 6-month post-discharge score, the admission-to-6-month score, or GRACE 2.0, which use different weights."
+  - heading: Bin edges
+    body: "The published table lists touching ranges (e.g. heart rate '≤ 50' and '50–69'). Here a value exactly on an edge goes into the higher bin."
+score:
+  items:
+    - type: choice
+      id: killip
+      label: Killip class
+      options:
+        - { id: i, label: "I: no heart failure", points: 0 }
+        - { id: ii, label: "II: crackles, S3 or raised JVP", points: 20 }
+        - { id: iii, label: "III: pulmonary oedema", points: 39 }
+        - { id: iv, label: "IV: cardiogenic shock", points: 59 }
+    - type: number
+      id: sbp
+      label: Systolic BP
+      unit: mmHg
+      bins:
+        - { below: 80, points: 58, label: "Under 80" }
+        - { below: 100, points: 53, label: "80–99" }
+        - { below: 120, points: 43, label: "100–119" }
+        - { below: 140, points: 34, label: "120–139" }
+        - { below: 160, points: 24, label: "140–159" }
+        - { below: 200, points: 10, label: "160–199" }
+        - { points: 0, label: "200 or more" }
+    - type: number
+      id: hr
+      label: Heart rate
+      unit: /min
+      bins:
+        - { below: 50, points: 0, label: "Under 50" }
+        - { below: 70, points: 3, label: "50–69" }
+        - { below: 90, points: 9, label: "70–89" }
+        - { below: 110, points: 15, label: "90–109" }
+        - { below: 150, points: 24, label: "110–149" }
+        - { below: 200, points: 38, label: "150–199" }
+        - { points: 46, label: "200 or more" }
+    - type: number
+      id: age
+      label: Age
+      unit: years
+      bins:
+        - { below: 30, points: 0, label: "Under 30" }
+        - { below: 40, points: 8, label: "30–39" }
+        - { below: 50, points: 25, label: "40–49" }
+        - { below: 60, points: 41, label: "50–59" }
+        - { below: 70, points: 58, label: "60–69" }
+        - { below: 80, points: 75, label: "70–79" }
+        - { below: 90, points: 91, label: "80–89" }
+        - { points: 100, label: "90 or over" }
+    - type: number
+      id: creatinine
+      label: Serum creatinine
+      unit: mg/dL
+      altUnits: [{ unit: "µmol/L", perBaseUnit: 88.4 }]
+      bins:
+        - { below: 0.4, points: 1, label: "Under 0.40" }
+        - { below: 0.8, points: 4, label: "0.40–0.79" }
+        - { below: 1.2, points: 7, label: "0.80–1.19" }
+        - { below: 1.6, points: 10, label: "1.20–1.59" }
+        - { below: 2.0, points: 13, label: "1.60–1.99" }
+        - { below: 4.0, points: 21, label: "2.00–3.99" }
+        - { points: 28, label: "4.0 or more" }
+    - { type: yesno, id: arrest, label: "Cardiac arrest at admission", points: 39 }
+    - { type: yesno, id: st-deviation, label: "ST-segment deviation", points: 28 }
+    - { type: yesno, id: enzymes, label: "Raised cardiac enzymes", points: 14 }
+  riskTable:
+    label: "In-hospital mortality (nearest nomogram point at or below the total)"
+    rows:
+      - { from: 0, risk: "0.2% or less" }
+      - { from: 70, risk: "0.3%" }
+      - { from: 80, risk: "0.4%" }
+      - { from: 90, risk: "0.6%" }
+      - { from: 100, risk: "0.8%" }
+      - { from: 110, risk: "1.1%" }
+      - { from: 120, risk: "1.6%" }
+      - { from: 130, risk: "2.1%" }
+      - { from: 140, risk: "2.9%" }
+      - { from: 150, risk: "3.9%" }
+      - { from: 160, risk: "5.4%" }
+      - { from: 170, risk: "7.3%" }
+      - { from: 180, risk: "9.8%" }
+      - { from: 190, risk: "13%" }
+      - { from: 200, risk: "18%" }
+      - { from: 210, risk: "23%" }
+      - { from: 220, risk: "29%" }
+      - { from: 230, risk: "36%" }
+      - { from: 240, risk: "44%" }
+      - { from: 250, risk: "52% or more" }
+  bands:
+    - { from: 0, label: "Low", risk: "In-hospital death under 1%" }
+    - { from: 109, label: "Intermediate", risk: "In-hospital death 1–3%" }
+    - { from: 141, label: "High", risk: "In-hospital death over 3%" }
+  bandsSource: esc-nste-2011
+  check:
+    source: [granger-2003, esc-nste-2011]
+    verified: false
+    todo: "Check every point value and nomogram row against Granger 2003; confirm bin edges (value on an edge → higher bin), the 88.4 µmol/L per mg/dL conversion, and the low/intermediate/high cut-offs and their source."
+refs: [granger-2003, esc-nste-2011]
+check: { source: granger-2003, verified: false }
