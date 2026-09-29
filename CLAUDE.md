@@ -84,5 +84,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180.
 
 ## Status
-Phase 0 built locally (scaffold, tokens, routing, placeholder screens, PWA, Pages workflow). Not yet pushed:
-needs the GitHub repo name + owner's OK. Offline install still to be verified on the owner's phone. Phase 1 awaits go-ahead.
+Phase 0 deployed: https://manofav-glitch.github.io/door-to-decision/ (repo github.com/manofav-glitch/door-to-decision,
+public; Pages source = GitHub Actions). Service worker + precache verified on the live site; owner's phone
+install/airplane-mode test pending. Owner pushes with a GitHub token (no `gh` CLI on this Mac). Phase 1 awaits go-ahead.
