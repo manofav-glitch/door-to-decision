@@ -1,0 +1,285 @@
+# cp-02 — DRAFT. Every clinical item is `verified: false` until the content owner reviews it.
+# Hidden truth: non-cardiac (musculoskeletal) chest pain. Teaching: HEART score + serial hs-troponin
+# → safe discharge, without over-investigating or under-investigating.
+# Assay-specific troponin cut-offs are deliberately not stated: they differ between labs.
+
+id: cvs-cp-02
+title: "44M, chest ache on and off since morning"
+difficulty: 1
+minutes: 8
+patient: { age: 44, sex: M, weightKg: 76 }
+initial:
+  clock: "14:30"
+  vitals: { hr: 78, sbp: 132, dbp: 84, rr: 16, spo2: 98, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Presentation and history are a teaching composite; confirm the history reads as 'slightly suspicious'."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient, relative, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He's had chest pain since this morning. Please check his heart." }
+          - { who: patient, text: "It's probably nothing. It comes and goes." }
+      - scene: triage-desk
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "44, software engineer. Pulse 78, BP 132 over 84, sats 98%." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "Every patient with chest pain that could be ACS gets an ECG within 10 minutes, however well they look."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "He looks well: reassure him and send him home"
+        grade: harmful
+        consequence: "Your senior stops you at the door and asks for an ECG and troponin first."
+        teaching: "Looking well doesn't exclude ACS. Discharge needs a risk assessment: ECG, troponin and a structured score."
+        effects: { minutes: 20, milestone: ecg, patient: -10 }
+        next: ecg-1
+      - label: "Chest X-ray first"
+        grade: suboptimal
+        consequence: "The X-ray is normal. The ECG is done at 20 minutes."
+        teaching: "The ECG comes first in chest pain; the X-ray can follow."
+        effects: { minutes: 20, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-acs-2023, verified: false }
+    image: ecg/cp-02-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 78 per minute. Normal axis. No ST elevation or depression. Upright T waves."
+    prompt: "Read the ECG."
+    options:
+      - label: "Normal ECG"
+        grade: best
+        consequence: "You note a normal ECG."
+        teaching: "A normal ECG lowers the probability of ACS but never excludes it. Troponin and a risk score come next."
+        effects: { minutes: 1 }
+        next: history
+      - label: "Non-specific ST-T changes"
+        grade: suboptimal
+        consequence: "Your senior reviews it and calls it normal."
+        teaching: "Calling a normal ECG abnormal inflates the HEART score and leads to unnecessary admission."
+        effects: { minutes: 3 }
+        next: history
+      - label: "Inferior STEMI: call the cath lab"
+        grade: harmful
+        consequence: "The cath lab team is stood down after your senior looks at the ECG."
+        teaching: "STEMI needs new ST elevation in two contiguous leads. Over-calling exposes patients to needless invasive procedures."
+        effects: { minutes: 10, patient: -5 }
+        next: history
+
+  history:
+    type: story
+    onEnter: { minutes: 5 }
+    panels:
+      - scene: resus-bay
+        actors: [patient, doctor]
+        caption: "{clock} · Assessment"
+        bubbles:
+          - { who: doctor, text: "Tell me about the pain." }
+          - { who: patient, text: "Sharp, here on the left. A few seconds, sometimes a minute. It's worse when I twist or take a deep breath." }
+          - { who: patient, text: "Not when I climb stairs. I've been moving house all weekend." }
+      - scene: resus-bay
+        actors: [patient, doctor]
+        bubbles:
+          - { who: doctor, text: "Any medical problems? Smoking? Family history?" }
+          - { who: patient, text: "I smoke, about ten a day. No diabetes, no BP. My father is 75 and well." }
+          - { who: narrator, text: "Pressing on the left costal cartilages reproduces the pain exactly." }
+    next: bloods
+
+  bloods:
+    type: choice
+    check:
+      source: esc-acs-2023
+      verified: false
+      todo: "Confirm wording for the 0/1 h or 0/2 h hs-troponin pathway (assay-specific cut-offs not stated)."
+    prompt: "Which blood test plan?"
+    options:
+      - label: "High-sensitivity troponin now, and repeat per the lab's 0/1 h or 0/2 h pathway"
+        grade: best
+        consequence: "The first sample is sent."
+        teaching: "A serial hs-troponin pathway is the standard way to rule out MI: one sample is rarely enough, especially within 3 hours of pain."
+        effects: { minutes: 2 }
+        next: first-trop
+      - label: "CK-MB"
+        grade: suboptimal
+        consequence: "The lab calls to ask why; you send a troponin instead."
+        teaching: "CK-MB is less sensitive and specific than troponin and has no place in ruling out MI where hs-troponin is available."
+        effects: { minutes: 15 }
+        next: first-trop
+      - label: "D-dimer for everyone with chest pain"
+        grade: suboptimal
+        consequence: "The D-dimer comes back mildly raised. Now you have a new problem."
+        teaching: "D-dimer is for patients with a real pre-test probability of PE, ideally after a structured assessment. Untargeted testing leads to needless scans."
+        effects: { minutes: 15, patient: -5 }
+        next: first-trop
+
+  first-trop:
+    type: story
+    onEnter: { minutes: 45 }
+    panels:
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: nurse, text: "First hs-troponin is back: below the 99th-percentile limit for men." }
+    next: heart-score
+
+  heart-score:
+    type: calculator
+    check:
+      source: [six-2008, backus-2013]
+      verified: false
+      todo: "Confirm the intended answers: history slightly suspicious; ECG normal; 1–2 risk factors (smoker); troponin ≤ limit."
+    prompt: "Work out his HEART score."
+    score: heart
+    answers:
+      history: slight
+      ecg: normal
+      age: 44
+      risk-factors: one-two
+      troponin: normal
+    correct:
+      consequence: "HEART score 1: low risk."
+      teaching: "Sharp, positional, reproducible pain is slightly suspicious (0); a normal ECG (0); age under 45 (0); one risk factor, smoking (1); troponin at or below the limit (0)."
+    close:
+      consequence: "Right band, but some items were scored differently."
+      teaching: "Compare your item-by-item breakdown with the correct one: small slips add up in borderline patients."
+    wrong:
+      consequence: "Your score puts him in a different risk band."
+      teaching: "A HEART score in the wrong band changes disposition. Score each item from the history, ECG and troponin you actually have."
+      effects: { minutes: 10 }
+    next: plan
+
+  plan:
+    type: choice
+    check: { source: [backus-2013, esc-acs-2023], verified: false }
+    prompt: "Low HEART score, normal ECG, first troponin below the limit. What now?"
+    options:
+      - label: "Repeat hs-troponin at the pathway time point; discharge if it stays low and unchanged"
+        grade: best
+        consequence: "You wait for the second sample."
+        teaching: "A low HEART score with serial troponins that stay low and unchanged is a well-validated route to safe early discharge."
+        effects: { minutes: 60 }
+        next: second-trop
+      - label: "Discharge now: the first troponin is normal"
+        grade: suboptimal
+        consequence: "Your senior asks you to wait for the second sample: his pain was only a few hours ago."
+        teaching: "Single-sample rule-out only applies to a very low, assay-specific value in patients who present late. Otherwise, repeat the troponin."
+        effects: { minutes: 60 }
+        next: second-trop
+      - label: "Admit for 24 hours of observation and a stress test"
+        grade: suboptimal
+        showIf: { notFlag: admitted }
+        consequence: "He spends the night on a trolley in a full ward."
+        teaching: "Low-risk patients with a negative serial troponin gain little from admission; outpatient review is enough."
+        effects: { minutes: 30, patient: -10, addFlags: [admitted] }
+        next: second-trop
+      - label: "Start dual antiplatelets and heparin as NSTE-ACS"
+        grade: harmful
+        consequence: "Your senior stops the heparin: there's no evidence of ACS."
+        teaching: "Treating low-risk chest pain as ACS exposes the patient to bleeding risk with no benefit."
+        effects: { minutes: 10, patient: -10 }
+        next: second-trop
+
+  second-trop:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [nurse, patient]
+        caption: "{clock} · Repeat troponin"
+        bubbles:
+          - { who: nurse, text: "Second hs-troponin: still below the limit, and no change from the first." }
+          - { who: patient, text: "So can I go home?" }
+    next: disposition
+
+  disposition:
+    type: choice
+    check: { source: [esc-acs-2023, backus-2013], verified: false }
+    prompt: "Serial troponins negative, HEART score low. Disposition?"
+    options:
+      - label: "Discharge with clear return advice and GP / outpatient follow-up; simple analgesia"
+        grade: best
+        consequence: "He goes home with a written safety-net: return if the pain changes, comes on exertion, or with breathlessness or collapse."
+        teaching: "Safe discharge isn't the end of care: explain the result, safety-net clearly, and arrange follow-up for risk-factor advice (smoking)."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Discharge with no advice: 'your heart is fine'"
+        grade: suboptimal
+        consequence: "He leaves unsure what to do if the pain changes."
+        teaching: "A negative work-up lowers risk; it doesn't make it zero. Always give return advice."
+        effects: { patient: -10 }
+        next: *outcome
+      - label: "Admit for a stress test before discharge"
+        grade: suboptimal
+        showIf: { notFlag: admitted }
+        consequence: "He is admitted for a test that could have been done as an outpatient, if at all."
+        teaching: "In low-risk patients with negative serial troponins, routine inpatient testing adds cost and delay but little benefit."
+        effects: { patient: -10 }
+        next: *outcome
+      - label: "Arrange urgent inpatient CT coronary angiography"
+        grade: suboptimal
+        consequence: "He is admitted overnight for the scan."
+        teaching: "CT coronary angiography can help selected patients, but it is not needed urgently for low-risk pain with negative serial troponins."
+        effects: { patient: -5 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: triage-desk
+        actors: [patient, relative]
+        caption: "{clock} · Going home"
+        bubbles:
+          - { who: relative, text: "Thank you for explaining it all, doctor." }
+    summary: "You ruled out MI safely with a low HEART score and serial troponins, and sent him home with a plan and a nudge to stop smoking."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient]
+        caption: "Next day"
+        bubbles:
+          - { who: patient, text: "So it was just a pulled muscle?" }
+    summary: "He was fine, but the route there was longer or riskier than it needed to be. The debrief shows where."
+
+debrief:
+  diagnosis: "Non-cardiac (musculoskeletal) chest pain. MI ruled out: low HEART score and serial hs-troponin below the 99th-percentile limit, without change."
+  keyPoints:
+    - "Every patient with possible ACS gets an ECG within 10 minutes, however well they look."
+    - "Rule out MI with a serial hs-troponin pathway; single-sample rule-out only applies in narrow, assay-specific circumstances."
+    - "HEART score: 0–3 is low risk. A low score plus negative serial troponins supports early discharge."
+    - "Safe discharge includes explanation, clear return advice and follow-up, not just 'your heart is fine'."
+  pitfalls:
+    - "Discharging on appearance alone, or after a single early troponin."
+    - "Over-calling a normal ECG, which inflates the HEART score."
+    - "Untargeted D-dimer testing in low-risk chest pain."
+    - "Admitting low-risk patients for tests they don't need."
+  unlocks: [heart, mi-classification]
+  refs: [six-2008, backus-2013, esc-acs-2023]
+  check:
+    source: [esc-acs-2023, backus-2013]
+    verified: false

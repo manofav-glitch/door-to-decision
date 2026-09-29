@@ -9,4 +9,4 @@ settings:
     label: Non-PCI hospital
     description: "No cath lab. The nearest PCI centre is about 2½ hours away by road."
 # Case files in play order (content/cvs/chest-pain/cases/<name>.yaml)
-cases: [cp-01]
+cases: [cp-01, cp-02]

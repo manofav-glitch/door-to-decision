@@ -1,0 +1,8 @@
+# Stylised drawing for cp-02: a normal 12-lead ECG, sinus rhythm ~78/min.
+title: "12-lead ECG, normal"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 78 }
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Check the drawing reads as a normal ECG."
