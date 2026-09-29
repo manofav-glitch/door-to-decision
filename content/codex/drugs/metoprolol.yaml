@@ -1,0 +1,12 @@
+id: metoprolol
+title: "Metoprolol (IV beta-blocker)"
+summary: "IV beta-blockade in acute MI helps only selected patients and harms those with shock, heart failure, bradycardia or AV block."
+sections:
+  - heading: When it may be considered
+    body: "Early IV beta-blocker only in selected patients having primary PCI, with no heart failure, SBP > 120 mmHg and no other contraindication."
+  - heading: Contraindications
+    body: "Signs of heart failure or shock; hypotension; bradycardia; second- or third-degree AV block; high risk of cardiogenic shock."
+  - heading: Why
+    body: "In a large trial of early IV then oral metoprolol, fewer reinfarctions and VF were offset by more cardiogenic shock, mainly in the first day and in higher-risk patients."
+refs: [esc-acs-2023, commit-2005]
+check: { source: [esc-acs-2023, commit-2005], verified: false }

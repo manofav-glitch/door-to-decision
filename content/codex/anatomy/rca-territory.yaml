@@ -1,0 +1,28 @@
+id: rca-territory
+title: "Right coronary artery: territory and dominance"
+summary: "What the RCA supplies, how dominance is defined, and why an RCA occlusion brings bradycardia and RV infarction."
+sections:
+  - heading: What the RCA supplies
+    body: >-
+      The right atrium and most of the right ventricle (through its RV/acute marginal branches);
+      the sinoatrial node in most people and the atrioventricular node in most right-dominant hearts;
+      and, when the circulation is right-dominant, the inferior wall of the left ventricle and the
+      posterior interventricular septum via the posterior descending artery (PDA).
+  - heading: Dominance
+    body: >-
+      Dominance is named after the artery that gives off the PDA. Most people are right-dominant;
+      a minority are left-dominant (PDA from the circumflex) or co-dominant.
+  - heading: Why the level of occlusion matters
+    body: >-
+      A proximal RCA occlusion, before the RV branches, adds right ventricular infarction to an
+      inferior MI. A more distal occlusion spares the RV.
+  - heading: ECG clues to an RCA culprit
+    body: >-
+      In inferior STEMI, ST elevation greater in III than in II, with ST depression in I and aVL,
+      favours the RCA over the circumflex. ST elevation in V1 or V4R suggests a proximal occlusion
+      with RV involvement.
+refs: [zimetbaum-2003, kinch-1994]
+check:
+  source: [zimetbaum-2003, needs-source]
+  verified: false
+  todo: "Add an anatomy source (and, if wanted, the dominance and nodal-supply percentages)."

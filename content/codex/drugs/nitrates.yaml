@@ -1,0 +1,17 @@
+id: nitrates
+title: "Nitrates (glyceryl trinitrate)"
+summary: "Venodilators that relieve ischaemic pain by lowering preload. They do not improve survival in MI and can cause dangerous hypotension."
+doses:
+  - id: sublingual
+    label: "Ischaemic chest pain"
+    route: Sublingual tablet or spray
+    text: "0.3–0.6 mg, repeat every 5 minutes if needed and BP allows (max 3 doses)"
+    check: { source: acc-aha-acs-2025, verified: false, todo: "Confirm dose and the local tablet/spray strengths." }
+sections:
+  - heading: Contraindications
+    body: >-
+      Systolic BP < 90 mmHg; suspected RV infarction; a phosphodiesterase-5 inhibitor in the last
+      24 hours (sildenafil) or 48 hours (tadalafil); severe aortic stenosis or hypertrophic obstructive
+      cardiomyopathy; marked bradycardia or tachycardia.
+refs: [esc-acs-2023, acc-aha-acs-2025]
+check: { source: [esc-acs-2023, acc-aha-acs-2025], verified: false }

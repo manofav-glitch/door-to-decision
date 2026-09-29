@@ -1,0 +1,23 @@
+id: fibrinolytics
+title: "Fibrinolysis: contraindications"
+summary: "Check this list before giving any fibrinolytic (tenecteplase, streptokinase …)."
+sections:
+  - heading: Absolute contraindications
+    body: >-
+      Previous intracranial haemorrhage or stroke of unknown origin at any time. Ischaemic stroke in the
+      previous 6 months. CNS damage, neoplasm or arteriovenous malformation. Recent major trauma, surgery or
+      head injury (within about a month). Gastrointestinal bleeding within the past month. Known bleeding
+      disorder (excluding menses). Aortic dissection. Non-compressible punctures in the past 24 hours
+      (e.g. liver biopsy, lumbar puncture).
+  - heading: Relative contraindications
+    body: >-
+      TIA in the previous 6 months. Oral anticoagulant therapy. Pregnancy or within 1 week postpartum.
+      Refractory hypertension (SBP > 180 and/or DBP > 110 mmHg). Advanced liver disease. Infective
+      endocarditis. Active peptic ulcer. Prolonged or traumatic resuscitation.
+  - heading: Not contraindications
+    body: "Age alone (but see the tenecteplase dose in older patients); diabetic retinopathy."
+refs: [esc-acs-2023, esc-stemi-2017]
+check:
+  source: [esc-acs-2023, esc-stemi-2017]
+  verified: false
+  todo: "Confirm the lists against the current guideline table, especially the 'not contraindications' line."

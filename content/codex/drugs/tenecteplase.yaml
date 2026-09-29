@@ -1,0 +1,26 @@
+id: tenecteplase
+title: Tenecteplase (TNK)
+summary: "Fibrin-specific fibrinolytic given as a single IV bolus. Dose by weight band; consider half dose at age 75 or over."
+doses:
+  - id: stemi
+    label: "STEMI, single bolus"
+    route: IV bolus over 5–10 seconds
+    text: "By weight: < 60 kg 30 mg · 60–69 kg 35 mg · 70–79 kg 40 mg · 80–89 kg 45 mg · ≥ 90 kg 50 mg. Consider half dose at age ≥ 75."
+    rule:
+      unit: mg
+      bands:
+        - { belowKg: 60, dose: 30 }
+        - { belowKg: 70, dose: 35 }
+        - { belowKg: 80, dose: 40 }
+        - { belowKg: 90, dose: 45 }
+        - { dose: 50 }
+      ageAdjust: { fromAge: 75, factor: 0.5 }
+    check: { source: esc-acs-2023, verified: false }
+sections:
+  - heading: Contraindications
+    body: "See 'Fibrinolysis: contraindications'."
+  - heading: Give with
+    body: "Aspirin, clopidogrel and an anticoagulant (enoxaparin preferred). Then transfer for angiography: rescue PCI if it fails, routine angiography within 2–24 hours if it succeeds."
+india: "Available in India; costs more than streptokinase."
+refs: [esc-acs-2023]
+check: { source: esc-acs-2023, verified: false, todo: "Confirm the India note and local availability." }

@@ -1,0 +1,12 @@
+id: chest-pain
+title: Chest Pain
+blurb: "Heavy, tight, tearing or stabbing: sort the time-critical causes from the rest."
+settings:
+  - id: pci-capable
+    label: PCI-capable centre
+    description: "Cath lab on site, available 24×7."
+  - id: non-pci
+    label: Non-PCI hospital
+    description: "No cath lab. The nearest PCI centre is about 2½ hours away by road."
+# Case files in play order (content/cvs/chest-pain/cases/<name>.yaml)
+cases: [cp-01]

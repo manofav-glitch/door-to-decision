@@ -1,0 +1,21 @@
+id: streptokinase
+title: Streptokinase
+summary: "Non-fibrin-specific fibrinolytic given by infusion. Less effective than fibrin-specific agents but still widely used where cost matters."
+doses:
+  - id: stemi
+    label: STEMI
+    route: IV infusion
+    text: "1.5 million units over 30–60 minutes"
+    rule: { unit: million units, fixed: 1.5 }
+    check: { source: esc-stemi-2017, verified: false }
+sections:
+  - heading: Cautions
+    body: >-
+      Hypotension during the infusion is common (slow or pause it). Allergic reactions occur. Do not repeat
+      if the patient has had streptokinase before, because antibodies reduce its effect and raise the
+      allergy risk.
+  - heading: Contraindications
+    body: "See 'Fibrinolysis: contraindications'."
+india: "Widely used in India because of its lower cost."
+refs: [esc-stemi-2017]
+check: { source: esc-stemi-2017, verified: false, todo: "Confirm current guideline status and the India note." }

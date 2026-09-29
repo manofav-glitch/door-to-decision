@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "validate": "node scripts/validate.ts",
-    "review": "node scripts/review.ts"
+    "review": "node scripts/review.ts",
+    "ecg": "node scripts/draw-ecg.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

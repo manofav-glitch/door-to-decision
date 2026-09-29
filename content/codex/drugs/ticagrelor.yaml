@@ -1,0 +1,18 @@
+id: ticagrelor
+title: Ticagrelor
+summary: "Reversible oral P2Y12 inhibitor. A preferred P2Y12 inhibitor with primary PCI; not the agent studied alongside fibrinolysis."
+doses:
+  - id: acs-loading
+    label: "Loading dose, ACS"
+    route: Oral
+    text: "180 mg once, then 90 mg twice daily"
+    rule: { unit: mg, fixed: 180 }
+    check: { source: esc-acs-2023, verified: false }
+sections:
+  - heading: Contraindications and cautions
+    body: "Previous intracranial haemorrhage; active bleeding; severe hepatic impairment; use with strong CYP3A4 inhibitors."
+  - heading: With fibrinolysis
+    body: "Clopidogrel is the P2Y12 inhibitor recommended with fibrinolysis."
+india: "Available in India."
+refs: [esc-acs-2023]
+check: { source: esc-acs-2023, verified: false }

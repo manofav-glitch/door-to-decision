@@ -1,0 +1,22 @@
+# Stylised drawing for cp-01, right-sided chest leads. ST elevation ~1.5 mm in V4R.
+title: "Right-sided ECG (V1R–V6R)"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 54 }
+labels: [I, II, III, aVR, aVL, aVF, V1R, V2R, V3R, V4R, V5R, V6R]
+leads:
+  II:  { q: 0.1, s: 0.05, st: 0.25, t: 0.45 }
+  III: { q: 0.15, r: 0.6, s: 0.03, st: 0.35, t: 0.5 }
+  aVF: { q: 0.1, s: 0.04, st: 0.3, t: 0.45 }
+  I:   { st: -0.08, t: -0.05 }
+  aVL: { st: -0.2, t: -0.15 }
+  aVR: { st: -0.05 }
+  V1R: { p: 0.05, r: 0.2, s: 0.9, st: 0.1, t: 0.15 }
+  V2R: { p: 0.05, r: 0.2, s: 0.7, st: 0.1, t: 0.2 }
+  V3R: { p: 0.05, q: 0, r: 0.25, s: 0.55, st: 0.12, t: 0.25 }
+  V4R: { p: 0.05, q: 0, r: 0.25, s: 0.5, st: 0.15, t: 0.3 }
+  V5R: { p: 0.05, q: 0, r: 0.25, s: 0.45, st: 0.12, t: 0.25 }
+  V6R: { p: 0.05, q: 0, r: 0.25, s: 0.4, st: 0.1, t: 0.2 }
+check:
+  source: [kinch-1994, esc-acs-2023]
+  verified: false
+  todo: "Check the drawing shows >= 1 mm ST elevation in V4R."

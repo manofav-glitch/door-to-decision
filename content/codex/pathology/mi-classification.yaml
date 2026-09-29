@@ -1,0 +1,31 @@
+id: mi-classification
+title: "Myocardial infarction: classification (Fifth UDMI)"
+summary: "Myocardial injury vs infarction, and the primary / secondary / procedure-related MI terms used in this app."
+sections:
+  - heading: Myocardial injury
+    body: >-
+      A cardiac troponin value above the sex-specific 99th-percentile upper reference limit. Injury is
+      acute if troponin values rise and/or fall.
+  - heading: Myocardial infarction
+    body: >-
+      Acute myocardial injury together with clinical evidence of acute ischaemia (symptoms, new ischaemic
+      ECG changes, imaging or angiographic findings).
+  - heading: Primary MI
+    body: >-
+      MI caused by an acute coronary event, e.g. atherothrombosis after plaque rupture or erosion. The case
+      list plans to also teach spontaneous coronary artery dissection under this heading.
+  - heading: Secondary MI
+    body: >-
+      MI from a mismatch between myocardial oxygen supply and demand without an acute coronary event
+      (e.g. sustained tachyarrhythmia, severe anaemia, hypotension or shock).
+  - heading: Procedure-related MI
+    body: "MI related to coronary procedures (PCI or cardiac surgery)."
+  - heading: MINOCA
+    body: >-
+      In this app, MINOCA means "myocardial injury with non-obstructive coronary arteries". The older
+      numbered Type 1–5 classification (2018) is deliberately not used.
+refs: [udmi5-2026]
+check:
+  source: udmi5-2026
+  verified: false
+  todo: "Claude could not confirm the Fifth UDMI's exact definitions. Please rewrite each section from the document itself."

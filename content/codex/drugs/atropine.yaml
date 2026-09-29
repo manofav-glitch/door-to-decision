@@ -1,0 +1,15 @@
+id: atropine
+title: Atropine
+summary: "Anticholinergic for symptomatic bradycardia. Often works in AV-nodal block after inferior MI; less likely to work in infranodal block."
+doses:
+  - id: bradycardia
+    label: Symptomatic bradycardia
+    route: IV
+    text: "1 mg, repeat every 3–5 minutes to a maximum of 3 mg"
+    rule: { unit: mg, fixed: 1 }
+    check: { source: aha-ecc-2025, verified: false, todo: "Confirm the 2025 AHA dose (it was 1 mg, max 3 mg, in 2020)." }
+sections:
+  - heading: If it doesn't work
+    body: "Transcutaneous pacing, or an adrenaline or dopamine infusion, then transvenous pacing. Reperfusion is the definitive treatment in inferior MI."
+refs: [aha-ecc-2025]
+check: { source: aha-ecc-2025, verified: false }

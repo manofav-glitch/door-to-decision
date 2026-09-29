@@ -1,0 +1,12 @@
+# Stylised rhythm strip for cp-01: complete heart block. P waves ~80/min march through
+# independently of narrow QRS complexes at ~36/min (junctional escape); inferior STE persists.
+title: "Rhythm strip, lead II"
+layout: strip
+rhythm: { kind: av-dissociation, atrialRate: 80, ventricularRate: 36 }
+rhythmLead: II
+leads:
+  II: { q: 0.1, st: 0.2, t: 0.45 }
+check:
+  source: aha-ecc-2025
+  verified: false
+  todo: "Check the strip reads as complete heart block with a narrow escape."

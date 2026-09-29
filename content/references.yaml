@@ -1,0 +1,43 @@
+# Every source cited anywhere in /content. Cite by id in `check: { source: ... }` and in `refs:`.
+# Citations were drafted by Claude from memory; `todo` marks details to confirm.
+
+- id: needs-source
+  citation: "No source yet: a draft value proposed by Claude for the content owner to replace with a real source."
+  year: 2026
+
+- id: esc-acs-2023
+  citation: "Byrne RA, Rossello X, Coughlan JJ, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720–3826."
+  year: 2023
+  url: https://doi.org/10.1093/eurheartj/ehad191
+
+- id: esc-stemi-2017
+  citation: "Ibanez B, James S, Agewall S, et al. 2017 ESC Guidelines for the management of acute myocardial infarction in patients presenting with ST-segment elevation. Eur Heart J. 2018;39(2):119–177."
+  year: 2018
+  url: https://doi.org/10.1093/eurheartj/ehx393
+
+- id: acc-aha-acs-2025
+  citation: "Rao SV, O'Donoghue ML, Ruel M, et al. 2025 ACC/AHA/ACEP/NAEMSP/SCAI Guideline for the Management of Patients With Acute Coronary Syndromes. Circulation. 2025."
+  year: 2025
+  todo: "Add volume, pages and DOI."
+
+- id: udmi5-2026
+  citation: "Fifth Universal Definition of Myocardial Infarction (ESC/ACC/AHA/WHF), August 2026."
+  year: 2026
+  todo: "Add authors, journal and DOI. Claude could not confirm this document's details."
+
+- id: zimetbaum-2003
+  citation: "Zimetbaum PJ, Josephson ME. Use of the electrocardiogram in acute myocardial infarction. N Engl J Med. 2003;348(10):933–940."
+  year: 2003
+
+- id: kinch-1994
+  citation: "Kinch JW, Ryan TJ. Right ventricular infarction. N Engl J Med. 1994;330(17):1211–1217."
+  year: 1994
+
+- id: commit-2005
+  citation: "COMMIT (ClOpidogrel and Metoprolol in Myocardial Infarction Trial) collaborative group. Early intravenous then oral metoprolol in 45 852 patients with acute myocardial infarction: randomised placebo-controlled trial. Lancet. 2005;366(9497):1622–1632."
+  year: 2005
+
+- id: aha-ecc-2025
+  citation: "American Heart Association. 2025 Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care: adult advanced life support. Circulation. 2025."
+  year: 2025
+  todo: "Add authors, volume, pages and DOI; confirm the bradycardia recommendations cited."

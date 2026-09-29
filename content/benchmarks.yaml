@@ -1,0 +1,39 @@
+# Time targets (the Time meter) and the monitor's "abnormal" ranges (values turn red on the HUD).
+# A time target runs from one milestone to another. Options stamp milestones with `milestone:`.
+# "door" is stamped automatically at arrival (minute 0).
+
+timeTargets:
+  - id: door-to-ecg
+    label: "Arrival to 12-lead ECG"
+    from: door
+    to: ecg
+    targetMin: 10
+    check: { source: esc-acs-2023, verified: false }
+
+  - id: dx-to-wire
+    label: "STEMI diagnosis to wire crossing (patient at a PCI centre)"
+    from: stemi-dx
+    to: wire
+    targetMin: 60
+    check: { source: esc-acs-2023, verified: false }
+
+  - id: dx-to-lysis
+    label: "STEMI diagnosis to fibrinolytic bolus"
+    from: stemi-dx
+    to: lysis
+    targetMin: 10
+    check: { source: esc-acs-2023, verified: false }
+
+vitalLimits:
+  # A value below `low` or above `high` shows in red.
+  check:
+    source: needs-source
+    verified: false
+    todo: "Choose the HUD alarm ranges (e.g. NEWS2 bands or local triage criteria) and cite them."
+  hr: { low: 60, high: 100 }
+  sbp: { low: 90, high: 180 }
+  dbp: { low: 50, high: 110 }
+  rr: { low: 12, high: 20 }
+  spo2: { low: 94, high: 100 }
+  gcs: { low: 15, high: 15 }
+  temp: { low: 36, high: 38 }

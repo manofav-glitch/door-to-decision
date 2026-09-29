@@ -1,0 +1,18 @@
+# Stylised drawing for cp-01, first ECG. Values are millivolts (1 mV = 10 small squares).
+# Intended picture: sinus bradycardia ~52/min; ST elevation in II, III, aVF (III > II);
+# reciprocal ST depression in I and aVL; slight ST elevation in V1.
+title: "12-lead ECG, first recording"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 52 }
+leads:
+  II:  { q: 0.1, s: 0.05, st: 0.25, t: 0.45 }
+  III: { q: 0.15, r: 0.6, s: 0.03, st: 0.35, t: 0.5 }
+  aVF: { q: 0.1, s: 0.04, st: 0.3, t: 0.45 }
+  I:   { st: -0.08, t: -0.05 }
+  aVL: { st: -0.2, t: -0.15 }
+  aVR: { st: -0.05 }
+  V1:  { st: 0.1, t: 0.15 }
+check:
+  source: [zimetbaum-2003, esc-acs-2023]
+  verified: false
+  todo: "Look at the drawing: does it show what the case says (inferior STE, III > II, reciprocal STD in I/aVL)?"

@@ -1,0 +1,729 @@
+# cp-01 — DRAFT. Every clinical item is `verified: false` until the content owner reviews it.
+# Hidden truth: inferior STEMI with RV involvement (proximal RCA occlusion).
+#
+# How this file works (short version — full guide comes in docs/CONTENT_GUIDE.md):
+#   nodes are the story beats. Each has a type: story | choice | ecg | multiselect | dose | ending.
+#   Options have a grade (best / acceptable / suboptimal / harmful), a one-line consequence,
+#   a one-line teaching point, optional effects, and next: (where the story goes).
+#   effects: minutes (clock), vital changes (sbp: -25), setVitals (absolute), addFlags, patient
+#   (meter change), milestone (stamps the clock for time targets: ecg, stemi-dx, wire, lysis).
+#   next: can be a list checked top to bottom: - { if: {...}, to: node } … - { to: fallback }
+#   "{clock}" in a caption shows the case clock.
+
+id: cvs-cp-01
+title: "58M, heavy chest, cold sweat"
+difficulty: 2
+minutes: 12
+settings: [pci-capable, non-pci]
+patient: { age: 58, sex: M, weightKg: 70 }
+initial:
+  clock: "02:10"
+  vitals: { hr: 52, sbp: 96, dbp: 60, rr: 20, spo2: 95, gcs: 15, temp: 36.8 }
+  flags: [rv_infarct]
+timeTargets:
+  pci-capable: [door-to-ecg, dx-to-wire]
+  non-pci: [door-to-ecg, dx-to-lysis]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Presentation and vitals are a teaching composite; confirm they are plausible."
+
+start: arrival
+
+nodes:
+  # ---------------------------------------------------------------- arrival & first move
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It's like someone is sitting on my chest, doctor. Started about 45 minutes ago." }
+      - scene: triage-desk
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "He's drenched in sweat. Diabetic, smokes a pack a day." }
+          - { who: nurse, text: "Pulse 52, BP 96 over 60, sats 95% on air." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is in your hand 4 minutes after arrival."
+        teaching: "Suspected ACS needs a 12-lead ECG within 10 minutes: STEMI is diagnosed on the ECG, not the troponin."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Send a troponin and review him with the result"
+        grade: suboptimal
+        consequence: "Nobody records an ECG until 25 minutes after arrival."
+        teaching: "Never wait for troponin to find a STEMI. The ECG comes first and changes management within minutes."
+        effects: { minutes: 25, milestone: ecg, patient: -10 }
+        next: ecg-1
+      - label: "Sublingual nitrate for the pain"
+        grade: harmful
+        consequence: "Within minutes his BP falls to 66/40; he turns grey and clammy."
+        teaching: "No nitrate before an ECG and BP check. With SBP < 90 or RV involvement, nitrates remove the preload the heart depends on."
+        effects: { minutes: 2, sbp: -30, dbp: -20, patient: -15, addFlags: [nitrate_early] }
+        next: nitrate-crash
+      - label: "Chest X-ray first to look for other causes"
+        grade: suboptimal
+        consequence: "The X-ray is unremarkable. The ECG is done at 15 minutes."
+        teaching: "The X-ray can wait. The ECG decides reperfusion; do it first."
+        effects: { minutes: 15, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  # ---------------------------------------------------------------- nitrate trap (reused later)
+  nitrate-crash:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse]
+        caption: "{clock} · Resus bay"
+        sfx: "BEEP · BEEP · BEEP"
+        bubbles:
+          - { who: nurse, text: "His pressure's crashed after the nitrate. He's grey and sweaty!" }
+          - { who: patient, text: "I feel like I'm going to pass out…" }
+    next: nitrate-rescue
+
+  nitrate-rescue:
+    type: choice
+    check: { source: [kinch-1994, esc-acs-2023], verified: false }
+    prompt: "His BP has fallen sharply after the nitrate. What now?"
+    options:
+      - label: "Lie him flat, raise his legs, give a small IV fluid bolus, and get the ECG"
+        grade: best
+        consequence: "His BP climbs back over the next few minutes."
+        teaching: "Nitrate-induced hypotension in a preload-dependent RV responds to volume. Stop nitrates and give small fluid boluses."
+        effects: { minutes: 5, sbp: 22, dbp: 14, milestone: ecg }
+        next: &after-rescue
+          - { if: { notFlag: stemi_dx }, to: ecg-1 }
+          - { if: { all: [{ setting: pci-capable }, { flag: gave_ufh }] }, to: dose-ufh }
+          - { if: { setting: pci-capable }, to: reperfusion-pci }
+          - { to: reperfusion-nonpci }
+      - label: "Start a noradrenaline infusion; no fluid"
+        grade: suboptimal
+        consequence: "It takes 10 minutes to set up; his BP improves only a little."
+        teaching: "Pressors may be needed, but here the first problem is preload: give a cautious fluid bolus first."
+        effects: { minutes: 10, sbp: 16, dbp: 10, patient: -5, milestone: ecg }
+        next: *after-rescue
+      - label: "Another nitrate: the pain is still there"
+        grade: harmful
+        consequence: "His blood pressure becomes unrecordable."
+        teaching: "A second nitrate in a hypotensive patient with RV infarction removes the last of the preload."
+        next: end-nitrate
+
+  # ---------------------------------------------------------------- the ECG
+  ecg-1:
+    type: ecg
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse, doctor]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "Here's his ECG." }
+    image: ecg/cp-01-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
+    prompt: "Read the ECG. What does it show?"
+    options:
+      - label: "Inferior STEMI: ST elevation in II, III, aVF with reciprocal ST depression in I and aVL"
+        grade: best
+        consequence: "You call an inferior STEMI and start the reperfusion clock."
+        teaching: "ST elevation in contiguous inferior leads with reciprocal depression in aVL is diagnostic. Reperfusion decisions start now."
+        effects: { minutes: 2, milestone: stemi-dx, addFlags: [stemi_dx] }
+        next: culprit
+      - label: "Acute pericarditis"
+        grade: suboptimal
+        consequence: "15 minutes pass before your senior looks at the ECG."
+        teaching: "Pericarditis gives widespread concave ST elevation without reciprocal depression (except in aVR and V1). Reciprocal change in aVL points to STEMI."
+        effects: { minutes: 15, patient: -10 }
+        next: senior-review
+      - label: "Early repolarisation"
+        grade: suboptimal
+        consequence: "10 minutes pass before your senior looks at the ECG."
+        teaching: "Early repolarisation doesn't cause reciprocal ST depression. With ischaemic pain, assume STEMI until proven otherwise."
+        effects: { minutes: 10, patient: -5 }
+        next: senior-review
+      - label: "Non-specific changes: repeat the ECG in 30 minutes"
+        grade: harmful
+        consequence: "20 minutes later, your senior spots the ST elevation."
+        teaching: "ST elevation with reciprocal depression in a patient with ischaemic pain is a STEMI. Delay costs myocardium."
+        effects: { minutes: 20, patient: -15 }
+        next: senior-review
+
+  senior-review:
+    type: story
+    onEnter: { minutes: 2, milestone: stemi-dx, addFlags: [stemi_dx] }
+    panels:
+      - scene: resus-bay
+        actors: [senior, doctor]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: senior, text: "Look at aVL: that's reciprocal ST depression. With elevation in II, III and aVF, this is an inferior STEMI." }
+    check: { source: zimetbaum-2003, verified: false }
+    next: culprit
+
+  culprit:
+    type: choice
+    check: { source: zimetbaum-2003, verified: false }
+    prompt: "Which artery is most likely blocked?"
+    options:
+      - label: "Right coronary artery (proximal)"
+        grade: best
+        consequence: "Your reasoning fits the ECG."
+        teaching: "ST elevation greater in III than II, with depression in I and aVL, favours the RCA. Bradycardia fits: the RCA usually supplies the SA and AV nodes."
+        next: right-leads
+      - label: "Left circumflex artery"
+        grade: suboptimal
+        consequence: "Your senior disagrees: this pattern points elsewhere."
+        teaching: "Circumflex occlusion tends to give ST elevation in II ≥ III, often with elevation in I, aVL, V5–V6 rather than depression in aVL."
+        next: right-leads
+      - label: "Left anterior descending artery"
+        grade: suboptimal
+        consequence: "Your senior disagrees: there's no anterior ST elevation."
+        teaching: "LAD occlusion causes anterior (V1–V4) ST elevation. A 'wraparound' LAD can add inferior changes, but not on their own."
+        next: right-leads
+      - label: "Left main stem"
+        grade: suboptimal
+        consequence: "Your senior disagrees: the pattern doesn't fit."
+        teaching: "Left main occlusion usually gives widespread ST depression with ST elevation in aVR, and shock."
+        next: right-leads
+
+  right-leads:
+    type: choice
+    check: { source: [esc-acs-2023, kinch-1994], verified: false }
+    prompt: "Inferior STEMI with a low BP and slow pulse. Next ECG step?"
+    options:
+      - label: "Record right-sided chest leads (V4R)"
+        grade: best
+        consequence: "Right-sided leads are recorded in 2 minutes."
+        teaching: "Record V4R in every inferior STEMI. ST elevation there means RV involvement, which changes your drug choices."
+        effects: { minutes: 2 }
+        next: v4r
+      - label: "Record posterior leads (V7–V9)"
+        grade: suboptimal
+        consequence: "Posterior leads are unremarkable; your nurse records right-sided leads as well."
+        teaching: "Posterior leads help when V1–V3 show ST depression. Here the question is the right ventricle."
+        effects: { minutes: 5 }
+        next: v4r
+      - label: "No more ECGs: start treatment"
+        grade: suboptimal
+        consequence: "RV involvement goes unrecognised for now."
+        teaching: "Missing RV infarction invites nitrates, diuretics or heavy opioids, all of which drop preload."
+        next: treatment
+
+  v4r:
+    type: ecg
+    check: { source: [kinch-1994, esc-acs-2023], verified: false }
+    image: ecg/cp-01-v4r.svg
+    alt: "Right-sided ECG. Limb leads as before. ST elevation about 1.5 mm in V4R, with smaller elevation in V3R and V5R."
+    prompt: "Right-sided leads. What do they show?"
+    options:
+      - label: "RV infarction: ST elevation in V4R"
+        grade: best
+        consequence: "You flag RV involvement to the team."
+        teaching: "≥ 1 mm ST elevation in V4R in inferior STEMI means RV involvement (proximal RCA). The RV is now preload-dependent: no nitrates, cautious fluid, watch for AV block."
+        effects: { addFlags: [rv_known] }
+        next: treatment
+      - label: "Normal right-sided leads"
+        grade: suboptimal
+        consequence: "RV involvement goes unrecognised for now."
+        teaching: "Look at V4R: its ST segment is raised. That's the lead that matters most."
+        next: treatment
+      - label: "Posterior extension of the infarct"
+        grade: suboptimal
+        consequence: "Your senior corrects you: these leads look at the right ventricle."
+        teaching: "Right-sided leads show the RV. Posterior MI shows in V7–V9, or as ST depression in V1–V3."
+        next: treatment
+
+  # ---------------------------------------------------------------- initial treatment
+  treatment:
+    type: multiselect
+    check:
+      source: esc-acs-2023
+      verified: false
+      todo: "Check the setting-specific grades for ticagrelor/clopidogrel and UFH/enoxaparin."
+    onEnter: { minutes: 2 }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "IV access is in. What do you want given?" }
+    prompt: "Initial treatment while reperfusion is arranged. Choose up to 5."
+    max: 5
+    options:
+      - id: aspirin
+        label: "Aspirin, loading dose"
+        grade: best
+        consequence: "Aspirin chewed and swallowed."
+        teaching: "Every suspected ACS gets aspirin unless there's a true contraindication."
+        missedEffects: { patient: -10 }
+      - id: ticagrelor-pci
+        showIf: { setting: pci-capable }
+        label: "Ticagrelor, loading dose"
+        grade: best
+        consequence: "Ticagrelor given."
+        teaching: "With primary PCI, a potent P2Y12 inhibitor such as ticagrelor is preferred."
+        missedEffects: { patient: -5 }
+      - id: ticagrelor-lysis
+        showIf: { setting: non-pci }
+        label: "Ticagrelor, loading dose"
+        grade: suboptimal
+        consequence: "Ticagrelor given."
+        teaching: "With fibrinolysis, clopidogrel is the P2Y12 inhibitor that was studied and is recommended."
+      - id: clopidogrel-pci
+        showIf: { setting: pci-capable }
+        label: "Clopidogrel, loading dose"
+        grade: acceptable
+        consequence: "Clopidogrel given."
+        teaching: "Clopidogrel is the fallback for PCI when ticagrelor or prasugrel can't be used."
+      - id: clopidogrel-lysis
+        showIf: { setting: non-pci }
+        label: "Clopidogrel, loading dose"
+        grade: best
+        consequence: "Clopidogrel given."
+        teaching: "Clopidogrel is the P2Y12 inhibitor of choice with fibrinolysis; the loading dose depends on age."
+        missedEffects: { patient: -5 }
+      - id: ufh-pci
+        showIf: { setting: pci-capable }
+        label: "Unfractionated heparin, IV bolus"
+        grade: best
+        consequence: "Heparin drawn up."
+        teaching: "UFH is the standard anticoagulant for primary PCI."
+        effects: { addFlags: [gave_ufh] }
+        missedEffects: { patient: -5 }
+      - id: ufh-lysis
+        showIf: { setting: non-pci }
+        label: "Unfractionated heparin, IV bolus"
+        grade: acceptable
+        consequence: "Heparin given."
+        teaching: "UFH can be used with fibrinolysis, but enoxaparin is preferred."
+      - id: enox-pci
+        showIf: { setting: pci-capable }
+        label: "Enoxaparin (IV bolus, then subcutaneous)"
+        grade: acceptable
+        consequence: "Enoxaparin given."
+        teaching: "Enoxaparin is an alternative in primary PCI; UFH is the usual choice."
+      - id: enox-lysis
+        showIf: { setting: non-pci }
+        label: "Enoxaparin (IV bolus, then subcutaneous)"
+        grade: best
+        consequence: "Enoxaparin given."
+        teaching: "Enoxaparin is the preferred anticoagulant with fibrinolysis; the regimen changes at age 75."
+        missedEffects: { patient: -5 }
+      - id: fluid
+        label: "Cautious IV fluid bolus for hypotension"
+        grade: best
+        consequence: "A small bolus runs in; his BP edges up."
+        teaching: "RV infarction is preload-dependent: give small boluses and reassess each time. Stop if the lungs crackle."
+        effects: { sbp: 8, dbp: 4 }
+        missedEffects: { sbp: -8, dbp: -4, patient: -5 }
+      - id: oxygen
+        label: "Oxygen by face mask"
+        grade: suboptimal
+        consequence: "Oxygen on; nothing changes."
+        teaching: "Oxygen is for SpO2 below 90%. Routine oxygen gives no benefit in MI."
+      - id: morphine
+        label: "IV morphine for the pain"
+        grade: suboptimal
+        consequence: "The pain eases a little; his BP dips."
+        teaching: "Opioids lower BP and slow oral P2Y12 absorption. Use cautiously, especially with RV involvement."
+        effects: { sbp: -6, dbp: -4 }
+      - id: nitrate
+        label: "Nitrate (sublingual or IV) for ongoing pain"
+        grade: harmful
+        consequence: "Within minutes his BP falls sharply."
+        teaching: "Nitrates are contraindicated with RV infarction and with SBP < 90: they drop preload and BP."
+        effects: { sbp: -30, dbp: -20, patient: -15, addFlags: [nitrate_in_treatment] }
+      - id: metoprolol
+        label: "IV metoprolol to limit infarct size"
+        grade: harmful
+        consequence: "His heart rate starts to fall further."
+        teaching: "IV beta-blockers are contraindicated with bradycardia, hypotension, heart failure or AV block, all present or threatened here."
+        effects: { hr: -14, sbp: -20, addFlags: [beta_blocker_given] }
+    next:
+      - { if: { flag: beta_blocker_given }, to: end-beta-blocker }
+      - { if: { flag: nitrate_in_treatment }, to: nitrate-crash }
+      - { if: { all: [{ setting: pci-capable }, { flag: gave_ufh }] }, to: dose-ufh }
+      - { if: { setting: pci-capable }, to: reperfusion-pci }
+      - { to: reperfusion-nonpci }
+
+  # ---------------------------------------------------------------- PCI-capable centre
+  dose-ufh:
+    type: dose
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Unfractionated heparin IV bolus for primary PCI. He weighs 70 kg. What dose, in units?"
+    drug: ufh
+    dose: ppci-bolus
+    tolerancePct: 5
+    correct:
+      consequence: "Heparin bolus given."
+      teaching: "For primary PCI without a GP IIb/IIIa inhibitor, UFH is given as a weight-based IV bolus."
+      effects: { minutes: 1 }
+    under:
+      consequence: "The cath team tops up the heparin later."
+      teaching: "An underdose leaves him under-anticoagulated for PCI. Dose by weight."
+      effects: { minutes: 1 }
+    over:
+      consequence: "The cath team is concerned about bleeding risk."
+      teaching: "An overdose raises bleeding risk without extra benefit. Dose by weight."
+      effects: { minutes: 1, patient: -5 }
+    next: reperfusion-pci
+
+  reperfusion-pci:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [doctor, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "Cath lab's free tonight." }
+    prompt: "You're in a PCI-capable centre. Reperfusion plan?"
+    options:
+      - label: "Activate the cath lab for primary PCI now"
+        grade: best
+        consequence: "The cath team is on its way."
+        teaching: "Primary PCI is the reperfusion of choice when it can be done within the target time."
+        effects: { minutes: 2, addFlags: [path_ppci] }
+        next: chb-alarm
+      - label: "Give a fibrinolytic first, then PCI"
+        grade: suboptimal
+        consequence: "Tenecteplase is given; the cath lab is activated afterwards."
+        teaching: "When primary PCI is available in time, adding lysis first brings bleeding risk without benefit."
+        effects: { minutes: 6, patient: -5, addFlags: [path_ppci] }
+        next: chb-alarm
+      - label: "Wait for the troponin before calling cardiology"
+        grade: harmful
+        showIf: { notFlag: waited_trop }
+        consequence: "45 minutes pass. The troponin is raised, as expected."
+        teaching: "STEMI is an ECG diagnosis. Waiting for troponin only delays reperfusion and costs myocardium."
+        effects: { minutes: 45, patient: -20, addFlags: [waited_trop] }
+        next: reperfusion-pci
+
+  # ---------------------------------------------------------------- non-PCI hospital
+  reperfusion-nonpci:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [doctor, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "Nearest cath lab is about two and a half hours away by road." }
+    prompt: "You're at a non-PCI hospital. Reperfusion plan?"
+    options:
+      - label: "Fibrinolysis here now, then transfer to the PCI centre (pharmaco-invasive)"
+        grade: best
+        consequence: "You prepare to give a fibrinolytic."
+        teaching: "If PCI can't happen within about 2 hours of diagnosis, give fibrinolysis within 10 minutes of diagnosis (if no contraindication), then transfer."
+        effects: { addFlags: [path_lysis] }
+        next: lysis-checklist
+      - label: "Transfer for primary PCI without fibrinolysis"
+        grade: suboptimal
+        consequence: "The ambulance is booked; the artery stays closed for hours."
+        teaching: "With an expected delay of more than 2 hours to PCI, fibrinolysis first is preferred."
+        effects: { minutes: 5, patient: -15, addFlags: [path_transfer] }
+        next: chb-alarm
+      - label: "Wait for the troponin before deciding"
+        grade: harmful
+        showIf: { notFlag: waited_trop }
+        consequence: "45 minutes pass. The troponin is raised, as expected."
+        teaching: "STEMI is an ECG diagnosis. Waiting for troponin only delays reperfusion."
+        effects: { minutes: 45, patient: -20, addFlags: [waited_trop] }
+        next: reperfusion-nonpci
+
+  lysis-checklist:
+    type: multiselect
+    check:
+      source: [esc-acs-2023, esc-stemi-2017]
+      verified: false
+      todo: "Confirm which items are absolute vs relative in the current guideline."
+    onEnter: { minutes: 1 }
+    prompt: "Before fibrinolysis you check for contraindications. Which of these are ABSOLUTE contraindications? Select all that apply."
+    min: 1
+    max: 8
+    options:
+      - label: "Intracranial haemorrhage at any time in the past"
+        grade: best
+        consequence: "Correct: absolute."
+        teaching: "Any previous intracranial haemorrhage is an absolute contraindication."
+      - label: "Ischaemic stroke within the last 6 months"
+        grade: best
+        consequence: "Correct: absolute."
+        teaching: "Ischaemic stroke in the preceding 6 months is an absolute contraindication."
+      - label: "Suspected aortic dissection"
+        grade: best
+        consequence: "Correct: absolute."
+        teaching: "Dissection can mimic inferior STEMI; lysis can be fatal. Think of it before every lytic."
+      - label: "Gastrointestinal bleeding within the past month"
+        grade: best
+        consequence: "Correct: absolute."
+        teaching: "Recent GI bleeding is an absolute contraindication."
+      - label: "BP above 180/110 that won't come down"
+        grade: suboptimal
+        consequence: "That one is relative, not absolute."
+        teaching: "Refractory hypertension is a relative contraindication: weigh the bleeding risk."
+      - label: "Taking an oral anticoagulant"
+        grade: suboptimal
+        consequence: "That one is relative, not absolute."
+        teaching: "Oral anticoagulation raises bleeding risk: a relative contraindication."
+      - label: "Age over 75"
+        grade: suboptimal
+        consequence: "Age alone is not a contraindication."
+        teaching: "Older patients benefit too. Consider the reduced tenecteplase dose instead."
+      - label: "Diabetic retinopathy"
+        grade: suboptimal
+        consequence: "Not a contraindication."
+        teaching: "Diabetic retinopathy is not a contraindication to fibrinolysis."
+    next: dose-tnk
+
+  dose-tnk:
+    type: dose
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "He has none of those. Tenecteplase is here. What dose?" }
+    prompt: "Tenecteplase single IV bolus. He is 58 and weighs 70 kg. Dose in mg?"
+    drug: tenecteplase
+    dose: stemi
+    tolerancePct: 0
+    correct:
+      consequence: "Tenecteplase given as a single bolus."
+      teaching: "Tenecteplase is dosed by weight band; consider half the dose at 75 or over."
+      effects: { minutes: 1, milestone: lysis }
+    under:
+      consequence: "The bolus is given, but it is below his weight band."
+      teaching: "An underdose may fail to open the artery. Use the weight band."
+      effects: { minutes: 1, milestone: lysis, patient: -10 }
+    over:
+      consequence: "The bolus is given, but it is above his weight band."
+      teaching: "An overdose raises the risk of major and intracranial bleeding. Use the weight band."
+      effects: { minutes: 1, milestone: lysis, patient: -5 }
+    next: chb-alarm
+
+  # ---------------------------------------------------------------- complication: AV block
+  chb-alarm:
+    type: story
+    onEnter: { minutes: 15, setVitals: { hr: 36, sbp: 78, dbp: 48 }, patient: -5 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "BEEP · BEEP · BEEP"
+      - scene: resus-bay
+        actors: [patient-supine, nurse]
+        bubbles:
+          - { who: nurse, text: "Rate's dropped into the thirties, and his BP is falling!" }
+          - { who: patient, text: "I feel faint…" }
+    next: chb-strip
+
+  chb-strip:
+    type: ecg
+    check: { source: aha-ecc-2025, verified: false }
+    image: ecg/cp-01-strip.svg
+    alt: "Rhythm strip, lead II. P waves at about 80 per minute and narrow QRS complexes at about 36 per minute, with no fixed relationship between them. ST elevation persists."
+    prompt: "Rhythm strip. What is the rhythm?"
+    options:
+      - label: "Complete (third-degree) heart block with a narrow-complex escape"
+        grade: best
+        consequence: "You name the rhythm and call for pads."
+        teaching: "P waves march through independently of the QRS. In inferior MI the block is usually at the AV node, often transient, with a narrow escape."
+        effects: { minutes: 1 }
+        next: chb-treat
+      - label: "Second-degree AV block, Mobitz I (Wenckebach)"
+        grade: suboptimal
+        consequence: "Your senior points out that no P wave is linked to a QRS."
+        teaching: "In Mobitz I the PR lengthens until a beat drops. Here P and QRS are completely dissociated."
+        effects: { minutes: 1 }
+        next: chb-treat
+      - label: "Sinus bradycardia"
+        grade: suboptimal
+        consequence: "Your senior points to P waves that aren't followed by a QRS."
+        teaching: "In sinus bradycardia every P is followed by a QRS. Count the P waves."
+        effects: { minutes: 1 }
+        next: chb-treat
+
+  chb-treat:
+    type: choice
+    check: { source: [aha-ecc-2025, esc-acs-2023], verified: false }
+    prompt: "HR 36, BP 78/48, drowsy but talking. What now?"
+    options:
+      - label: "IV atropine, pacing pads on and ready to pace; keep reperfusion on track"
+        grade: best
+        consequence: "His rate picks up to 50 and his BP to 92/58. Pads are on and pacing is on standby."
+        teaching: "AV block in inferior MI is usually nodal and often responds to atropine. Pace if he stays unstable. Reperfusion is the definitive fix."
+        effects: { minutes: 3, setVitals: { hr: 50, sbp: 92, dbp: 58 }, patient: 5 }
+        next: &after-chb
+          - { if: { flag: path_lysis }, to: after-lysis }
+          - { if: { flag: path_transfer }, to: ambulance }
+          - { to: cath }
+      - label: "Watch and wait: this usually settles by itself"
+        grade: suboptimal
+        consequence: "His BP drifts to 70/40 and he becomes confused. The team then gives atropine and starts pacing."
+        teaching: "It may settle after reperfusion, but a hypotensive, drowsy patient needs treatment now."
+        effects: { minutes: 10, patient: -15, setVitals: { hr: 50, sbp: 86, dbp: 52 } }
+        next: *after-chb
+      - label: "Large, rapid fluid boluses: 2 litres now"
+        grade: suboptimal
+        consequence: "His BP barely moves, his neck veins swell and he becomes breathless."
+        teaching: "Fluid helps RV infarction only up to a point: large volumes distend the RV and hurt LV filling. The rate is the problem here."
+        effects: { minutes: 10, patient: -10, rr: 6, spo2: -4, setVitals: { hr: 50, sbp: 88, dbp: 54 } }
+        next: *after-chb
+      - label: "IV amiodarone"
+        grade: harmful
+        consequence: "His rate falls further. Your senior stops the infusion and starts transcutaneous pacing."
+        teaching: "Amiodarone slows AV conduction and worsens heart block. It has no role here."
+        effects: { minutes: 8, patient: -15, setVitals: { hr: 60, sbp: 84, dbp: 50 } }
+        next: *after-chb
+
+  # ---------------------------------------------------------------- endings of each pathway
+  ambulance:
+    type: story
+    onEnter: { minutes: 150 }
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic, patient-supine]
+        caption: "{clock} · Two and a half hours on the road"
+        bubbles:
+          - { who: paramedic, text: "Still in pain the whole way. We're here." }
+    next: cath
+
+  cath:
+    type: story
+    onEnter: { minutes: 25, milestone: wire, setVitals: { hr: 64, sbp: 104, dbp: 66 } }
+    panels:
+      - scene: cath-lab-door
+        actors: [senior, patient-supine]
+        caption: "{clock} · Cath lab"
+        bubbles:
+          - { who: senior, text: "Proximal right coronary artery, completely blocked. Wire's across… stent's in. Good flow." }
+    check: { source: esc-acs-2023, verified: false }
+    next: &outcome
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  after-lysis:
+    type: story
+    onEnter: { minutes: 70, setVitals: { hr: 66, sbp: 106, dbp: 68 } }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse, doctor]
+        caption: "{clock} · Just over an hour after tenecteplase"
+        bubbles:
+          - { who: patient, text: "The pain's gone, doctor." }
+          - { who: nurse, text: "Repeat ECG: the ST elevation has come down by well over half." }
+    next: lysis-next
+
+  lysis-next:
+    type: choice
+    check:
+      source: esc-acs-2023
+      verified: false
+      todo: "Confirm the ST-resolution criterion (> 50% at 60–90 min) and the 2–24 h window."
+    prompt: "Pain gone and ST elevation down by more than half. Next?"
+    options:
+      - label: "Transfer for coronary angiography within 2–24 hours (pharmaco-invasive)"
+        grade: best
+        consequence: "He's transferred the same morning for angiography and stenting."
+        teaching: "After successful fibrinolysis, routine angiography within 2–24 hours is recommended."
+        next: *outcome
+      - label: "Emergency rescue PCI now"
+        grade: suboptimal
+        consequence: "An emergency transfer is arranged that he didn't need."
+        teaching: "Rescue PCI is for failed fibrinolysis (< 50% ST resolution at 60–90 minutes, ongoing pain or instability)."
+        next: *outcome
+      - label: "Manage on the ward; no angiography needed"
+        grade: suboptimal
+        consequence: "His artery is left with a residual narrowing; he re-infarcts two days later."
+        teaching: "Even after successful lysis, the culprit lesion remains: routine early angiography is recommended."
+        effects: { patient: -20 }
+        next: *outcome
+      - label: "Give a second dose of fibrinolytic"
+        grade: harmful
+        consequence: "Your senior stops you: the first dose worked."
+        teaching: "Repeating a fibrinolytic adds bleeding risk. It is not an alternative to rescue PCI."
+        effects: { patient: -10 }
+        next: *outcome
+
+  # ---------------------------------------------------------------- endings
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient, doctor]
+        caption: "Next morning · CCU"
+        bubbles:
+          - { who: patient, text: "I feel like myself again. Thank you, doctor." }
+    summary: "He was reperfused in good time. His RV function recovered and the heart block settled once the artery was open."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient, relative]
+        caption: "Three days later · CCU"
+        bubbles:
+          - { who: relative, text: "The doctors say part of his heart muscle was damaged." }
+    summary: "He survived, but delays or missteps along the way cost heart muscle. The debrief timeline shows where time and safety slipped."
+
+  end-nitrate:
+    type: ending
+    outcome: critical
+    onEnter: { setVitals: { sbp: 50, dbp: 30, gcs: 8 }, patient: -60 }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse, senior]
+        caption: "{clock} · Resus bay"
+        sfx: "ALARM"
+        bubbles:
+          - { who: nurse, text: "No BP reading, and he's not responding!" }
+          - { who: senior, text: "Start resuscitation. Fluids, and call cardiology now." }
+    summary: "A second nitrate in a hypotensive patient with RV infarction removed the preload his heart depended on. This is one of the classic traps in inferior MI: check the BP and think 'RV' before any nitrate."
+
+  end-beta-blocker:
+    type: ending
+    outcome: critical
+    onEnter: { setVitals: { hr: 28, sbp: 58, dbp: 30, gcs: 9 }, patient: -60 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine, senior, nurse]
+        bubbles:
+          - { who: nurse, text: "Complete heart block. Rate 28, BP 58 over 30!" }
+          - { who: senior, text: "Pads on, pace him, and start an adrenaline infusion." }
+    summary: "IV beta-blockade in a patient who was already bradycardic and hypotensive, with RV infarction, tipped him into complete heart block and cardiogenic shock. IV beta-blockers in acute MI are only for selected patients without these features."
+
+debrief:
+  diagnosis: "Inferior STEMI with right ventricular involvement from a proximal right coronary artery occlusion: a primary myocardial infarction."
+  keyPoints:
+    - "ECG within 10 minutes of arrival. STEMI is an ECG diagnosis; don't wait for troponin."
+    - "In inferior STEMI, ST elevation greater in III than II with reciprocal depression in aVL points to the RCA."
+    - "Record V4R in every inferior STEMI: RV involvement makes the patient preload-dependent."
+    - "With RV infarction or SBP < 90: no nitrates. With bradycardia, hypotension or AV block: no IV beta-blocker. Give cautious fluid."
+    - "Reperfusion depends on setting: primary PCI when it can be done in time; otherwise fibrinolysis within 10 minutes of diagnosis, then transfer (pharmaco-invasive)."
+    - "AV block in inferior MI is usually nodal and often responds to atropine. Pace if unstable. Reperfusion is the definitive treatment."
+  pitfalls:
+    - "Giving a nitrate for chest pain before the ECG and BP are checked."
+    - "Calling inferior ST elevation 'pericarditis' without looking for reciprocal change."
+    - "Routine oxygen for a patient with normal saturations."
+    - "Pairing ticagrelor with fibrinolysis: clopidogrel is the P2Y12 inhibitor used with lytics."
+    - "Transferring for primary PCI when the delay will be longer than about 2 hours."
+  unlocks: [rca-territory, rv-infarction, mi-classification, nitrates, aspirin, ticagrelor, clopidogrel, ufh, enoxaparin, fibrinolytics, tenecteplase, streptokinase, metoprolol, atropine]
+  refs: [esc-acs-2023, acc-aha-acs-2025, udmi5-2026, zimetbaum-2003, kinch-1994, commit-2005, aha-ecc-2025]
+  check:
+    source: [esc-acs-2023, udmi5-2026]
+    verified: false
+    todo: "Confirm 'primary myocardial infarction' is the right Fifth UDMI label for this case."

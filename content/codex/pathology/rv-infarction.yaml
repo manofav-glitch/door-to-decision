@@ -1,0 +1,24 @@
+id: rv-infarction
+title: "Right ventricular infarction"
+summary: "Why a proximal RCA occlusion makes the patient preload-dependent, and what that changes in the ED."
+sections:
+  - heading: What happens
+    body: >-
+      An ischaemic RV pumps poorly, so less blood reaches the left heart. LV filling and cardiac output
+      fall, and blood pressure drops, often with clear lung fields and a raised JVP.
+  - heading: Preload dependence
+    body: >-
+      Output now depends on venous return. Anything that lowers preload (nitrates, diuretics, and to a
+      lesser extent opioids) can cause sudden, severe hypotension.
+  - heading: Rhythm problems
+    body: >-
+      Bradycardia and AV block are common because the RCA usually supplies the nodes. Losing the atrial
+      contribution (AV dissociation) hurts a stiff, ischaemic RV, so restoring rate and AV synchrony helps.
+  - heading: ED management principles
+    body: >-
+      Record V4R in every inferior STEMI. Avoid nitrates and diuretics. Treat hypotension with cautious
+      fluid boluses and reassess after each one, because large volumes distend the RV and make things worse.
+      Treat symptomatic bradycardia or AV block, and pace if needed. Early reperfusion is the definitive
+      treatment and the RV often recovers.
+refs: [kinch-1994, esc-acs-2023]
+check: { source: [kinch-1994, esc-acs-2023], verified: false }
