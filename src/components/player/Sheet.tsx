@@ -19,7 +19,11 @@ function useKeys(keys: { digit?: (n: number) => void; confirm?: () => void }) {
       if (/^[1-9]$/.test(e.key) && ref.current.digit) {
         e.preventDefault();
         ref.current.digit(Number(e.key));
-      } else if ((e.key === 'Enter' || e.key === ' ') && ref.current.confirm && t.tagName !== 'BUTTON') {
+      } else if (
+        (e.key === 'Enter' || e.key === ' ') &&
+        ref.current.confirm &&
+        t.tagName !== 'BUTTON'
+      ) {
         e.preventDefault();
         ref.current.confirm();
       }
@@ -29,9 +33,16 @@ function useKeys(keys: { digit?: (n: number) => void; confirm?: () => void }) {
   }, []);
 }
 
-const keyHint = 'hidden lg:inline-flex size-6 shrink-0 items-center justify-center border-2 border-grey-2 text-xs font-bold text-grey-1';
+const keyHint =
+  'hidden lg:inline-flex size-6 shrink-0 items-center justify-center border-2 border-grey-2 text-xs font-bold text-grey-1';
 
-export function ContinueButton({ onClick, label = 'Continue' }: { onClick: () => void; label?: string }) {
+export function ContinueButton({
+  onClick,
+  label = 'Continue',
+}: {
+  onClick: () => void;
+  label?: string;
+}) {
   useKeys({ confirm: onClick });
   return (
     <button className="btn btn-primary w-full" onClick={onClick}>
@@ -40,13 +51,22 @@ export function ContinueButton({ onClick, label = 'Continue' }: { onClick: () =>
   );
 }
 
-export function ChoiceList({ options, onPick }: { options: Option[]; onPick: (id: string) => void }) {
+export function ChoiceList({
+  options,
+  onPick,
+}: {
+  options: Option[];
+  onPick: (id: string) => void;
+}) {
   useKeys({ digit: (n) => options[n - 1] && onPick(options[n - 1]!.id!) });
   return (
     <ol className="flex flex-col gap-2">
       {options.map((o, i) => (
         <li key={o.id}>
-          <button className="btn w-full justify-start text-left font-normal" onClick={() => onPick(o.id!)}>
+          <button
+            className="btn w-full justify-start text-left font-normal"
+            onClick={() => onPick(o.id!)}
+          >
             <span className={keyHint} aria-hidden="true">
               {i + 1}
             </span>
@@ -58,12 +78,25 @@ export function ChoiceList({ options, onPick }: { options: Option[]; onPick: (id
   );
 }
 
-export function MultiSelect({ node, options, onSubmit }: { node: NodeOf<'multiselect'>; options: Option[]; onSubmit: (ids: string[]) => void }) {
+export function MultiSelect({
+  node,
+  options,
+  onSubmit,
+}: {
+  node: NodeOf<'multiselect'>;
+  options: Option[];
+  onSubmit: (ids: string[]) => void;
+}) {
   const [chosen, setChosen] = useState<string[]>([]);
   const ok = chosen.length >= node.min && chosen.length <= node.max;
   const toggle = (id: string) =>
-    setChosen((c) => (c.includes(id) ? c.filter((x) => x !== id) : c.length < node.max ? [...c, id] : c));
-  useKeys({ digit: (n) => options[n - 1] && toggle(options[n - 1]!.id!), confirm: () => ok && onSubmit(chosen) });
+    setChosen((c) =>
+      c.includes(id) ? c.filter((x) => x !== id) : c.length < node.max ? [...c, id] : c,
+    );
+  useKeys({
+    digit: (n) => options[n - 1] && toggle(options[n - 1]!.id!),
+    confirm: () => ok && onSubmit(chosen),
+  });
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm text-grey-1" aria-live="polite">
@@ -93,7 +126,11 @@ export function MultiSelect({ node, options, onSubmit }: { node: NodeOf<'multise
           );
         })}
       </ul>
-      <button className="btn btn-primary mt-1 w-full" disabled={!ok} onClick={() => onSubmit(chosen)}>
+      <button
+        className="btn btn-primary mt-1 w-full"
+        disabled={!ok}
+        onClick={() => onSubmit(chosen)}
+      >
         Confirm {chosen.length > 0 ? `(${chosen.length})` : ''}
       </button>
     </div>
@@ -137,7 +174,10 @@ export function Feedback({ res, onContinue }: { res: ActResult; onContinue: () =
       {res.dose && <DoseWorking dose={res.dose.expected} />}
       <ul className="flex flex-col gap-3">
         {res.picks.map((p) => (
-          <li key={p.optionId} className={`border-l-4 pl-3 ${p.grade === 'harmful' ? 'border-alarm' : p.grade === 'best' ? 'border-ink' : 'border-grey-2'}`}>
+          <li
+            key={p.optionId}
+            className={`border-l-4 pl-3 ${p.grade === 'harmful' ? 'border-alarm' : p.grade === 'best' ? 'border-ink' : 'border-grey-2'}`}
+          >
             <div className="flex items-start gap-2">
               <GradeChip grade={p.grade} missed={p.missed} />
               <span className="font-semibold">{p.label}</span>
@@ -155,7 +195,13 @@ export function Feedback({ res, onContinue }: { res: ActResult; onContinue: () =
 export function DoseWorking({ dose }: { dose: DoseRange }) {
   return (
     <p className="border-2 border-dashed border-grey-2 p-2 text-sm">
-      Expected: <strong>{dose.min === dose.max ? formatNumber(dose.min) : `${formatNumber(dose.min)}–${formatNumber(dose.max)}`} {dose.unit}</strong>
+      Expected:{' '}
+      <strong>
+        {dose.min === dose.max
+          ? formatNumber(dose.min)
+          : `${formatNumber(dose.min)}–${formatNumber(dose.max)}`}{' '}
+        {dose.unit}
+      </strong>
       <span className="block text-grey-1">{dose.working}</span>
     </p>
   );

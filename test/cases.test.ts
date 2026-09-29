@@ -21,12 +21,12 @@ const { cases } = compileContent(process.cwd());
 
 // Small deterministic PRNG so failures are reproducible.
 function rng(seed: number) {
-  return () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+  return () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32;
 }
 
 function randomInput(c: CompiledCase, s: RunState, rand: () => number): Input {
   const node = currentNode(c, s);
-  const pickFrom = <T,>(xs: T[]) => xs[Math.floor(rand() * xs.length)]!;
+  const pickFrom = <T>(xs: T[]) => xs[Math.floor(rand() * xs.length)]!;
   switch (node.type) {
     case 'story':
       return { kind: 'continue' };

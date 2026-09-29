@@ -47,7 +47,8 @@ export const useProgress = create<ProgressState>()(
       finished: {},
       unlocked: [],
       mistakes: [],
-      begin: (run) => set((s) => ({ active: { ...s.active, [run.caseId]: { ...run, inputs: [] } } })),
+      begin: (run) =>
+        set((s) => ({ active: { ...s.active, [run.caseId]: { ...run, inputs: [] } } })),
       record: (caseId, inputs) =>
         set((s) => {
           const run = s.active[caseId];
@@ -75,7 +76,10 @@ export const useProgress = create<ProgressState>()(
           return {
             active,
             finished: { ...s.finished, [caseId]: run },
-            bestStars: { ...s.bestStars, [caseId]: Math.max(s.bestStars[caseId] ?? 0, result.stars) },
+            bestStars: {
+              ...s.bestStars,
+              [caseId]: Math.max(s.bestStars[caseId] ?? 0, result.stars),
+            },
             plays: { ...s.plays, [caseId]: (s.plays[caseId] ?? 0) + 1 },
             unlocked: [...new Set([...s.unlocked, ...unlocks])],
             mistakes: [...s.mistakes.filter((m) => !freshKeys.has(key(m))), ...fresh],

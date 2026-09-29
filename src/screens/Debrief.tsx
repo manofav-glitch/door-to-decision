@@ -32,7 +32,9 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
   } catch {
     return (
       <main>
-        <p className="panel mb-4 p-4">This case has changed since you played it, so the debrief can't be rebuilt.</p>
+        <p className="panel mb-4 p-4">
+          This case has changed since you played it, so the debrief can't be rebuilt.
+        </p>
         <Link to={`/case/${c.id}`} className="btn btn-primary">
           Play again
         </Link>
@@ -45,7 +47,12 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
   const settingLabel = c.settings.find((s) => s.id === saved.setting)?.label;
 
   const replayRun = () => {
-    begin({ caseId: c.id, setting: saved.setting, mode: saved.mode, contentVersion: index.version });
+    begin({
+      caseId: c.id,
+      setting: saved.setting,
+      mode: saved.mode,
+      contentVersion: index.version,
+    });
     navigate(`/play/${c.id}`);
   };
 
@@ -70,15 +77,27 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
       <section className="mb-8 grid gap-4 sm:grid-cols-3" aria-label="Result">
         <div className="panel p-4 sm:col-span-3">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <span className={`text-lg font-bold ${r.outcome === 'critical' ? 'text-alarm' : ''}`}>{outcomeText[r.outcome]}</span>
+            <span className={`text-lg font-bold ${r.outcome === 'critical' ? 'text-alarm' : ''}`}>
+              {outcomeText[r.outcome]}
+            </span>
             <span className="text-3xl">
               <Stars n={r.stars} />
             </span>
           </div>
         </div>
         <Meter label="Patient">
-          <div className="h-3 w-full border-2 border-ink" role="meter" aria-valuenow={r.patient} aria-valuemin={0} aria-valuemax={100} aria-label="Patient meter">
-            <div className={`h-full ${r.patient < 40 ? 'bg-alarm' : 'bg-ink'}`} style={{ width: `${r.patient}%` }} />
+          <div
+            className="h-3 w-full border-2 border-ink"
+            role="meter"
+            aria-valuenow={r.patient}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Patient meter"
+          >
+            <div
+              className={`h-full ${r.patient < 40 ? 'bg-alarm' : 'bg-ink'}`}
+              style={{ width: `${r.patient}%` }}
+            />
           </div>
           <span className="text-sm text-grey-1">{r.patient} / 100</span>
         </Meter>
@@ -96,7 +115,9 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
         </Meter>
         <Meter label="Safety">
           <span className={`text-lg font-bold ${r.safetyEvents ? 'text-alarm' : ''}`}>
-            {r.safetyEvents === 0 ? 'No harmful decisions' : `${r.safetyEvents} harmful decision${r.safetyEvents === 1 ? '' : 's'}`}
+            {r.safetyEvents === 0
+              ? 'No harmful decisions'
+              : `${r.safetyEvents} harmful decision${r.safetyEvents === 1 ? '' : 's'}`}
           </span>
         </Meter>
       </section>
@@ -110,11 +131,18 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
         </div>
         {showIdeal && (
           <ol className="panel mb-4 flex flex-col gap-2 border-dashed p-4">
-            <li className="text-sm font-bold tracking-wider text-grey-1 uppercase">Ideal path ({settingLabel ?? 'this case'})</li>
+            <li className="text-sm font-bold tracking-wider text-grey-1 uppercase">
+              Ideal path ({settingLabel ?? 'this case'})
+            </li>
             {ideal.log.map((e) => (
               <li key={e.nodeId}>
                 <span className="text-grey-1">{e.prompt}</span> →{' '}
-                <strong>{e.picks.filter((p) => !p.missed).map((p) => p.label).join('; ')}</strong>
+                <strong>
+                  {e.picks
+                    .filter((p) => !p.missed)
+                    .map((p) => p.label)
+                    .join('; ')}
+                </strong>
               </li>
             ))}
           </ol>

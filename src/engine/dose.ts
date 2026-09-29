@@ -13,7 +13,9 @@ export interface DoseRange {
 type Patient = { age: number; weightKg: number };
 
 const fmt = (n: number) =>
-  Number.isInteger(n) ? n.toLocaleString('en-IN') : n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  Number.isInteger(n)
+    ? n.toLocaleString('en-IN')
+    : n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
 const span = (min: number, max: number) => (min === max ? fmt(min) : `${fmt(min)}–${fmt(max)}`);
 const range = (r: number | { min: number; max: number }) =>
   typeof r === 'number' ? { min: r, max: r } : r;
@@ -38,7 +40,9 @@ export function expectedDose(rule: DoseRule, patient: Patient): DoseRange {
     }
   } else {
     const bands = rule.bands!;
-    const band = bands.find((b) => b.belowKg === undefined || patient.weightKg < b.belowKg) ?? bands[bands.length - 1]!;
+    const band =
+      bands.find((b) => b.belowKg === undefined || patient.weightKg < b.belowKg) ??
+      bands[bands.length - 1]!;
     min = max = band.dose;
     working =
       band.belowKg === undefined

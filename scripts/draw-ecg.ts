@@ -83,14 +83,22 @@ function simplify(pts: [number, number][], eps: number): [number, number][] {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
   for (let i = 1; i < pts.length - 1; i++) {
     const p = pts[i]!;
-    const d = Math.abs((b[1] - a[1]) * p[0] - (b[0] - a[0]) * p[1] + b[0] * a[1] - b[1] * a[0]) / len;
+    const d =
+      Math.abs((b[1] - a[1]) * p[0] - (b[0] - a[0]) * p[1] + b[0] * a[1] - b[1] * a[0]) / len;
     if (d > worst) [worst, idx] = [d, i];
   }
   if (worst <= eps) return [a, b];
   return [...simplify(pts.slice(0, idx + 1), eps).slice(0, -1), ...simplify(pts.slice(idx), eps)];
 }
 
-function trace(sh: Shape, t0: number, t1: number, x0mm: number, baseMm: number, beats: ReturnType<typeof beatTimes>) {
+function trace(
+  sh: Shape,
+  t0: number,
+  t1: number,
+  x0mm: number,
+  baseMm: number,
+  beats: ReturnType<typeof beatTimes>,
+) {
   const pts: [number, number][] = [];
   for (let t = t0; t <= t1 + 1e-9; t += DT) {
     const x = (x0mm + (t - t0) * MM_PER_S) * PX;
@@ -116,8 +124,10 @@ function draw(spec: EcgSpec): string {
   const H = hMm * PX;
 
   const grid: string[] = [];
-  for (let x = 0; x <= wMm; x++) grid.push(`<path d="M${x * PX},0V${H}" class="${x % 5 ? 'm' : 'M'}"/>`);
-  for (let y = 0; y <= hMm; y++) grid.push(`<path d="M0,${y * PX}H${W}" class="${y % 5 ? 'm' : 'M'}"/>`);
+  for (let x = 0; x <= wMm; x++)
+    grid.push(`<path d="M${x * PX},0V${H}" class="${x % 5 ? 'm' : 'M'}"/>`);
+  for (let y = 0; y <= hMm; y++)
+    grid.push(`<path d="M0,${y * PX}H${W}" class="${y % 5 ? 'm' : 'M'}"/>`);
 
   const paths: string[] = [];
   const text: string[] = [];
@@ -142,7 +152,9 @@ function draw(spec: EcgSpec): string {
   const stripStd = STANDARD.includes(spec.rhythmLead) ? spec.rhythmLead : 'II';
   paths.push(cal(rowBase(stripRow)));
   paths.push(trace(shapeOf(spec.rhythmLead, stripStd), 0, 10, LEFT_MM, rowBase(stripRow), beats));
-  text.push(`<text x="${(LEFT_MM + 1.5) * PX}" y="${(rowBase(stripRow) - 13) * PX}">${spec.rhythmLead}</text>`);
+  text.push(
+    `<text x="${(LEFT_MM + 1.5) * PX}" y="${(rowBase(stripRow) - 13) * PX}">${spec.rhythmLead}</text>`,
+  );
   text.push(
     `<text class="note" x="${W - 6}" y="${H - 8}" text-anchor="end">Stylised teaching drawing · not a real patient recording · 25 mm/s · 10 mm/mV</text>`,
   );

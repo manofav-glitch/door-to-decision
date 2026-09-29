@@ -1,7 +1,15 @@
 import { useRef } from 'react';
 
 /** ECG image with a full-screen view (scroll and pinch-zoom). Hotspots come in Phase 3. */
-export function EcgFigure({ src, alt, unverified }: { src: string; alt: string; unverified?: React.ReactNode }) {
+export function EcgFigure({
+  src,
+  alt,
+  unverified,
+}: {
+  src: string;
+  alt: string;
+  unverified?: React.ReactNode;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
   return (
     <figure className="panel col-span-full p-2">

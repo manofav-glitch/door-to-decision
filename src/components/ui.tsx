@@ -27,7 +27,9 @@ const gradeText: Record<Grade, string> = {
 
 export function GradeChip({ grade, missed }: { grade: Grade; missed?: boolean }) {
   return (
-    <span className={`inline-block shrink-0 border-2 px-1.5 text-xs font-bold tracking-wider uppercase ${gradeStyle[grade]}`}>
+    <span
+      className={`inline-block shrink-0 border-2 px-1.5 text-xs font-bold tracking-wider uppercase ${gradeStyle[grade]}`}
+    >
       {missed ? 'Missed' : gradeText[grade]}
     </span>
   );
@@ -35,7 +37,11 @@ export function GradeChip({ grade, missed }: { grade: Grade; missed?: boolean })
 
 export function Stars({ n, of = 3, label }: { n: number; of?: number; label?: string }) {
   return (
-    <span role="img" aria-label={label ?? `${n} of ${of} stars`} className="tracking-widest whitespace-nowrap">
+    <span
+      role="img"
+      aria-label={label ?? `${n} of ${of} stars`}
+      className="tracking-widest whitespace-nowrap"
+    >
       {Array.from({ length: of }, (_, i) => (i < n ? '★' : '☆')).join('')}
     </span>
   );
@@ -43,7 +49,10 @@ export function Stars({ n, of = 3, label }: { n: number; of?: number; label?: st
 
 export function BackLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <Link to={to} className="mb-3 inline-flex min-h-11 items-center text-grey-1 underline-offset-4 hover:underline">
+    <Link
+      to={to}
+      className="mb-3 inline-flex min-h-11 items-center text-grey-1 underline-offset-4 hover:underline"
+    >
       ← {children}
     </Link>
   );

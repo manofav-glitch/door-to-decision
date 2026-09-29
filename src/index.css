@@ -38,8 +38,12 @@
   color-scheme: dark;
 }
 
-:root[data-text-size='large'] { font-size: 112.5%; }
-:root[data-text-size='xlarge'] { font-size: 125%; }
+:root[data-text-size='large'] {
+  font-size: 112.5%;
+}
+:root[data-text-size='xlarge'] {
+  font-size: 125%;
+}
 
 @theme inline {
   --color-paper: var(--paper);
@@ -53,72 +57,152 @@
 }
 
 @layer base {
-body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-ui);
-  font-size: 1rem; /* >=16px on phones */
-  line-height: 1.5;
-}
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 1rem; /* >=16px on phones */
+    line-height: 1.5;
+  }
 
-
-:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
 }
 
 /* Bold comic-panel border used across the app. In a layer so utilities (bg-ink etc.) can override. */
 @layer components {
-  .panel { border: var(--stroke) solid var(--ink); background: var(--paper); }
+  .panel {
+    border: var(--stroke) solid var(--ink);
+    background: var(--paper);
+  }
 
   .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-    min-height: 44px; padding: 0.5rem 1rem; border: var(--stroke) solid var(--ink);
-    background: var(--paper); color: var(--ink); font-weight: 600; text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border: var(--stroke) solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 600;
+    text-align: center;
   }
-  .btn:hover { background: var(--paper-2); }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .btn-primary { background: var(--ink); color: var(--paper); }
-  .btn-primary:hover { background: var(--grey-1); }
+  .btn:hover {
+    background: var(--paper-2);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover {
+    background: var(--grey-1);
+  }
 
   /* Comic caption box: time/place, top-left of a panel. */
   .caption-box {
-    display: inline-block; border: 2px solid var(--ink); background: var(--paper-2);
-    padding: 0.125rem 0.5rem; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.04em;
+    display: inline-block;
+    border: 2px solid var(--ink);
+    background: var(--paper-2);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
   /* Speech bubble with a tail. data-side="left|right" sets which side the tail points from. */
   .bubble {
-    position: relative; border: 2px solid var(--ink); border-radius: 1.25rem;
-    background: var(--paper); padding: 0.5rem 0.875rem; font-family: var(--font-bubble);
-    font-size: 1.1875rem; line-height: 1.3; max-width: 88%;
+    position: relative;
+    border: 2px solid var(--ink);
+    border-radius: 1.25rem;
+    background: var(--paper);
+    padding: 0.5rem 0.875rem;
+    font-family: var(--font-bubble);
+    font-size: 1.1875rem;
+    line-height: 1.3;
+    max-width: 88%;
   }
-  .bubble::before, .bubble::after {
-    content: ''; position: absolute; bottom: -12px; width: 0; height: 0;
-    border-left: 10px solid transparent; border-right: 10px solid transparent;
+  .bubble::before,
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
   }
-  .bubble::before { border-top: 12px solid var(--ink); }
-  .bubble::after { bottom: -9px; border-top: 10px solid var(--paper); border-left-width: 8px; border-right-width: 8px; }
-  .bubble[data-side='left']::before { left: 18px; }
-  .bubble[data-side='left']::after { left: 20px; }
-  .bubble[data-side='right']::before { right: 18px; }
-  .bubble[data-side='right']::after { right: 20px; }
+  .bubble::before {
+    border-top: 12px solid var(--ink);
+  }
+  .bubble::after {
+    bottom: -9px;
+    border-top: 10px solid var(--paper);
+    border-left-width: 8px;
+    border-right-width: 8px;
+  }
+  .bubble[data-side='left']::before {
+    left: 18px;
+  }
+  .bubble[data-side='left']::after {
+    left: 20px;
+  }
+  .bubble[data-side='right']::before {
+    right: 18px;
+  }
+  .bubble[data-side='right']::after {
+    right: 20px;
+  }
 
   .sfx {
-    font-family: var(--font-bubble); font-size: 1.75rem; line-height: 1; color: var(--alarm);
-    transform: rotate(-6deg); letter-spacing: 0.05em; -webkit-text-stroke: 0.5px var(--alarm);
+    font-family: var(--font-bubble);
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--alarm);
+    transform: rotate(-6deg);
+    letter-spacing: 0.05em;
+    -webkit-text-stroke: 0.5px var(--alarm);
   }
 }
 
 /* Monitor sweep line in the HUD. */
-@keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-.sweep { animation: sweep 3s linear infinite; }
-@media (prefers-reduced-motion: reduce) { .sweep { animation: none; } }
-:root[data-reduce-motion='on'] .sweep { animation: none; }
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+.sweep {
+  animation: sweep 3s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sweep {
+    animation: none;
+  }
+}
+:root[data-reduce-motion='on'] .sweep {
+  animation: none;
+}
 
 /* Reduced motion: honoured from the OS setting or the in-app switch. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 :root[data-reduce-motion='on'] *,
 :root[data-reduce-motion='on'] *::before,

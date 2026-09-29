@@ -65,7 +65,10 @@ export function CaseSetup() {
         <div className="panel mb-6 flex flex-wrap items-center justify-between gap-3 p-4">
           <span>
             You have a case in progress ({saved.mode === 'learn' ? 'Learn' : 'Exam'} mode
-            {saved.setting ? `, ${summary.settings.find((s) => s.id === saved.setting)?.label}` : ''}).
+            {saved.setting
+              ? `, ${summary.settings.find((s) => s.id === saved.setting)?.label}`
+              : ''}
+            ).
           </span>
           <Link to={`/play/${caseId}`} className="btn btn-primary">
             Resume
@@ -78,8 +81,17 @@ export function CaseSetup() {
           <legend className="mb-2 text-lg font-bold">Where are you working?</legend>
           <div className="grid gap-3 sm:grid-cols-2">
             {summary.settings.map((s) => (
-              <label key={s.id} className={`panel flex cursor-pointer gap-3 p-4 ${chosenSetting === s.id ? 'bg-paper-2 ring-2 ring-ink' : ''}`}>
-                <input type="radio" name="setting" className="mt-1 size-5 shrink-0" checked={chosenSetting === s.id} onChange={() => setSetting(s.id)} />
+              <label
+                key={s.id}
+                className={`panel flex cursor-pointer gap-3 p-4 ${chosenSetting === s.id ? 'bg-paper-2 ring-2 ring-ink' : ''}`}
+              >
+                <input
+                  type="radio"
+                  name="setting"
+                  className="mt-1 size-5 shrink-0"
+                  checked={chosenSetting === s.id}
+                  onChange={() => setSetting(s.id)}
+                />
                 <span>
                   <span className="block font-semibold">{s.label}</span>
                   <span className="text-sm text-grey-1">{s.description}</span>
@@ -99,8 +111,17 @@ export function CaseSetup() {
               ['exam', 'Exam', 'No feedback until the debrief.'],
             ] as const
           ).map(([id, label, desc]) => (
-            <label key={id} className={`panel flex cursor-pointer gap-3 p-4 ${mode === id ? 'bg-paper-2 ring-2 ring-ink' : ''}`}>
-              <input type="radio" name="mode" className="mt-1 size-5 shrink-0" checked={mode === id} onChange={() => setMode(id)} />
+            <label
+              key={id}
+              className={`panel flex cursor-pointer gap-3 p-4 ${mode === id ? 'bg-paper-2 ring-2 ring-ink' : ''}`}
+            >
+              <input
+                type="radio"
+                name="mode"
+                className="mt-1 size-5 shrink-0"
+                checked={mode === id}
+                onChange={() => setMode(id)}
+              />
               <span>
                 <span className="block font-semibold">{label}</span>
                 <span className="text-sm text-grey-1">{desc}</span>
@@ -113,7 +134,9 @@ export function CaseSetup() {
       <button className="btn btn-primary w-full text-lg sm:w-auto" onClick={start}>
         {resumable ? 'Start again' : 'Start case'}
       </button>
-      <p className="mt-3 text-sm text-grey-1">Decisions are final within a run. You can replay after the debrief.</p>
+      <p className="mt-3 text-sm text-grey-1">
+        Decisions are final within a run. You can replay after the debrief.
+      </p>
     </main>
   );
 }

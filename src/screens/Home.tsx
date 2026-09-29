@@ -10,12 +10,20 @@ export function Home() {
         {index.systems.map((s) => (
           <li key={s.id}>
             {s.status === 'active' ? (
-              <Link to={`/s/${s.id}`} className="panel flex min-h-28 flex-col justify-between p-4 hover:bg-paper-2">
+              <Link
+                to={`/s/${s.id}`}
+                className="panel flex min-h-28 flex-col justify-between p-4 hover:bg-paper-2"
+              >
                 <span className="text-xl font-semibold">{s.name}</span>
-                <span className="text-sm text-grey-1">{s.blurb ?? s.modules.map((m) => m.title).join(' · ')}</span>
+                <span className="text-sm text-grey-1">
+                  {s.blurb ?? s.modules.map((m) => m.title).join(' · ')}
+                </span>
               </Link>
             ) : (
-              <div className="panel flex min-h-28 flex-col justify-between border-dashed p-4 text-grey-1" aria-disabled="true">
+              <div
+                className="panel flex min-h-28 flex-col justify-between border-dashed p-4 text-grey-1"
+                aria-disabled="true"
+              >
                 <span className="text-xl font-semibold">{s.name}</span>
                 <span className="text-sm">Coming soon</span>
               </div>

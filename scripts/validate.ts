@@ -11,7 +11,9 @@ try {
       `${c.checks.length} clinical item(s), ${unverified} unverified.`,
   );
   for (const k of cases)
-    console.log(`  ${k.id}  ${Object.keys(k.nodes).length} nodes  ${k.draft ? `DRAFT (${k.unverifiedCount} unverified)` : 'verified'}`);
+    console.log(
+      `  ${k.id}  ${Object.keys(k.nodes).length} nodes  ${k.draft ? `DRAFT (${k.unverifiedCount} unverified)` : 'verified'}`,
+    );
 } catch (e) {
   if (e instanceof ContentError) {
     console.error(`✗ ${e.message}`);

@@ -2,7 +2,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCodex } from '../content/client';
 import { Loading, NotFound, UnverifiedBadge } from '../components/ui';
 
-const kindLabel = { anatomy: 'Anatomy', pathology: 'Pathology', drugs: 'Drugs', scores: 'Scores', ecg: 'ECG' };
+const kindLabel = {
+  anatomy: 'Anatomy',
+  pathology: 'Pathology',
+  drugs: 'Drugs',
+  scores: 'Scores',
+  ecg: 'ECG',
+};
 
 // Minimal card view for Phase 1 (unlocked from the debrief). Browsing and search come in Phase 2.
 export function CodexCard() {
@@ -15,10 +21,15 @@ export function CodexCard() {
 
   return (
     <main className="max-w-2xl">
-      <button className="mb-3 inline-flex min-h-11 items-center text-grey-1 hover:underline" onClick={() => navigate(-1)}>
+      <button
+        className="mb-3 inline-flex min-h-11 items-center text-grey-1 hover:underline"
+        onClick={() => navigate(-1)}
+      >
         ← Back
       </button>
-      <p className="text-sm font-semibold tracking-wider text-grey-1 uppercase">Codex · {kindLabel[card.kind]}</p>
+      <p className="text-sm font-semibold tracking-wider text-grey-1 uppercase">
+        Codex · {kindLabel[card.kind]}
+      </p>
       <h1 className="mb-2 flex flex-wrap items-center gap-3 text-2xl font-bold">
         {card.title} {!card.check.verified && <UnverifiedBadge />}
       </h1>

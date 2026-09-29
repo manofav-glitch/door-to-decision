@@ -33,7 +33,12 @@ const out: string[] = [
   '',
 ];
 for (const [file, items] of byFile) {
-  out.push(`## ${file}`, '', '| ✓ | Line | Where | What | Source | TODO |', '|---|---|---|---|---|---|');
+  out.push(
+    `## ${file}`,
+    '',
+    '| ✓ | Line | Where | What | Source | TODO |',
+    '|---|---|---|---|---|---|',
+  );
   for (const i of items)
     out.push(
       `| ☐ | ${i.line} | \`${cell(i.where)}\` | ${cell(i.what)} | ${i.source.map((s) => `\`${s}\``).join(', ')} | ${cell(i.todo ?? '')} |`,
@@ -43,7 +48,8 @@ for (const [file, items] of byFile) {
 const allRefs = new Set(pending.flatMap((p) => p.source));
 if (allRefs.size) {
   out.push('## Sources cited above', '');
-  for (const r of [...allRefs].sort()) out.push(`- \`${r}\`${refs.has(r) ? ` — ${refs.get(r)}` : ''}`);
+  for (const r of [...allRefs].sort())
+    out.push(`- \`${r}\`${refs.has(r) ? ` — ${refs.get(r)}` : ''}`);
   out.push('');
 }
 

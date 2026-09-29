@@ -2,3 +2,6 @@ dist
 dev-dist
 package-lock.json
 docs/SPEC.md
+content
+docs/CLINICAL_REVIEW.md
+test/fixtures

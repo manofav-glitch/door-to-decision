@@ -13,7 +13,10 @@ export function System() {
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {system.modules.map((m) => (
           <li key={m.id}>
-            <Link to={`/s/${system.id}/${m.id}`} className="panel flex min-h-28 flex-col justify-between gap-2 p-4 hover:bg-paper-2">
+            <Link
+              to={`/s/${system.id}/${m.id}`}
+              className="panel flex min-h-28 flex-col justify-between gap-2 p-4 hover:bg-paper-2"
+            >
               <span className="text-xl font-semibold">{m.title}</span>
               {m.blurb && <span className="text-grey-1">{m.blurb}</span>}
               <span className="text-sm text-grey-1">

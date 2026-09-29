@@ -68,7 +68,9 @@ export class EngineError extends Error {}
 
 export function startRun(c: CompiledCase, setting: string | null): RunState {
   if (c.settings.length && !c.settings.some((s) => s.id === setting))
-    throw new EngineError(`Case ${c.id} needs a setting: ${c.settings.map((s) => s.id).join(', ')}`);
+    throw new EngineError(
+      `Case ${c.id} needs a setting: ${c.settings.map((s) => s.id).join(', ')}`,
+    );
   const state: RunState = {
     caseId: c.id,
     setting: c.settings.length ? setting : null,
@@ -113,7 +115,14 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
   const decidedAt = s.minutes;
   const log = (picks: Pick[], dose?: LogEntry['dose']) => {
     if (node.type === 'story' || node.type === 'ending') return;
-    s.log.push({ nodeId: s.nodeId, type: node.type, prompt: node.prompt, atMinutes: decidedAt, picks, dose });
+    s.log.push({
+      nodeId: s.nodeId,
+      type: node.type,
+      prompt: node.prompt,
+      atMinutes: decidedAt,
+      picks,
+      dose,
+    });
   };
 
   switch (node.type) {
@@ -140,7 +149,8 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       if (chosen.size < node.min || chosen.size > node.max)
         throw new EngineError(`Choose between ${node.min} and ${node.max} options`);
       for (const id of chosen)
-        if (!visible.some((o) => o.id === id)) throw new EngineError(`Option "${id}" is not available here`);
+        if (!visible.some((o) => o.id === id))
+          throw new EngineError(`Option "${id}" is not available here`);
       const picks: Pick[] = [];
       for (const o of visible) {
         if (chosen.has(o.id!)) {
@@ -163,9 +173,17 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       const expected = doseFor(c, node);
       const tol = node.tolerancePct / 100;
       const outcome =
-        value < expected.min * (1 - tol) ? 'under' : value > expected.max * (1 + tol) ? 'over' : 'correct';
+        value < expected.min * (1 - tol)
+          ? 'under'
+          : value > expected.max * (1 + tol)
+            ? 'over'
+            : 'correct';
       const o = node[outcome];
-      const defaultGrade: Record<typeof outcome, Grade> = { correct: 'best', under: 'suboptimal', over: 'harmful' };
+      const defaultGrade: Record<typeof outcome, Grade> = {
+        correct: 'best',
+        under: 'suboptimal',
+        over: 'harmful',
+      };
       const p: Pick = {
         optionId: outcome,
         label: `${formatNumber(value)} ${expected.unit}`,
@@ -176,7 +194,11 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       applyGrade(s, p);
       applyEffects(s, o.effects);
       log([p], { value, expected });
-      return { state: goto(c, s, o.next ?? node.next), picks: [p], dose: { value, expected, outcome } };
+      return {
+        state: goto(c, s, o.next ?? node.next),
+        picks: [p],
+        dose: { value, expected, outcome },
+      };
     }
 
     case 'ending':
@@ -208,7 +230,10 @@ export function idealInput(c: CompiledCase, s: RunState): Input {
     case 'choice':
     case 'ecg': {
       const opts = visibleOptions(s, node);
-      const best = opts.find((o) => o.grade === 'best') ?? opts.find((o) => o.grade === 'acceptable') ?? opts[0]!;
+      const best =
+        opts.find((o) => o.grade === 'best') ??
+        opts.find((o) => o.grade === 'acceptable') ??
+        opts[0]!;
       return { kind: 'pick', optionId: best.id! };
     }
     case 'multiselect': {
@@ -263,7 +288,13 @@ export function timeResults(c: CompiledCase, s: RunState): TimeResult[] {
     const from = s.milestones[t.from];
     const to = s.milestones[t.to];
     const actual = from !== undefined && to !== undefined ? to - from : null;
-    return { id: t.id, label: t.label, targetMin: t.targetMin, actualMin: actual, met: actual !== null && actual <= t.targetMin };
+    return {
+      id: t.id,
+      label: t.label,
+      targetMin: t.targetMin,
+      actualMin: actual,
+      met: actual !== null && actual <= t.targetMin,
+    };
   });
 }
 
@@ -334,7 +365,8 @@ export function applyEffects(s: RunState, e: Effects | undefined): void {
   for (const f of e.addFlags ?? []) if (!s.flags.includes(f)) s.flags.push(f);
   if (e.removeFlags) s.flags = s.flags.filter((f) => !e.removeFlags!.includes(f));
   s.patient = Math.min(100, Math.max(0, s.patient + (e.patient ?? 0)));
-  const ms = e.milestone === undefined ? [] : Array.isArray(e.milestone) ? e.milestone : [e.milestone];
+  const ms =
+    e.milestone === undefined ? [] : Array.isArray(e.milestone) ? e.milestone : [e.milestone];
   for (const m of ms) if (s.milestones[m] === undefined) s.milestones[m] = s.minutes;
 }
 
@@ -357,7 +389,13 @@ function applyGrade(s: RunState, p: Pick) {
 }
 
 function toPick(o: Option): Pick {
-  return { optionId: o.id!, label: o.label, grade: o.grade, consequence: o.consequence, teaching: o.teaching };
+  return {
+    optionId: o.id!,
+    label: o.label,
+    grade: o.grade,
+    consequence: o.consequence,
+    teaching: o.teaching,
+  };
 }
 
 function expect<K extends Input['kind']>(input: Input, kind: K): Extract<Input, { kind: K }> {
@@ -366,5 +404,7 @@ function expect<K extends Input['kind']>(input: Input, kind: K): Extract<Input, 
 }
 
 export function formatNumber(n: number): string {
-  return Number.isInteger(n) ? n.toLocaleString('en-IN') : n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  return Number.isInteger(n)
+    ? n.toLocaleString('en-IN')
+    : n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
 }

@@ -15,7 +15,9 @@ import {
   type RunState,
 } from './engine.ts';
 
-const kase = compileContent(join(import.meta.dirname, '../../test/fixtures/mini')).cases['demo-c-01']!;
+const kase = compileContent(join(import.meta.dirname, '../../test/fixtures/mini')).cases[
+  'demo-c-01'
+]!;
 
 function play(c: CompiledCase, setting: string, inputs: Input[]): RunState {
   return replay(c, setting, inputs);
@@ -73,7 +75,9 @@ describe('engine', () => {
   it('enforces multiselect limits', () => {
     const s = play(kase, 'big', [go, pick('o1')]);
     expect(() => act(kase, s, { kind: 'multi', optionIds: [] })).toThrow(/between 1 and 2/);
-    expect(() => act(kase, s, { kind: 'multi', optionIds: ['a', 'b', 'c'] })).toThrow(/between 1 and 2/);
+    expect(() => act(kase, s, { kind: 'multi', optionIds: ['a', 'b', 'c'] })).toThrow(
+      /between 1 and 2/,
+    );
   });
 
   it('grades doses against the drug card rule with tolerance', () => {
@@ -91,11 +95,21 @@ describe('engine', () => {
   });
 
   it('scores stars from safety, time and patient', () => {
-    const perfect = play(kase, 'big', [go, pick('o1'), { kind: 'multi', optionIds: ['a', 'b'] }, { kind: 'dose', value: 900 }]);
+    const perfect = play(kase, 'big', [
+      go,
+      pick('o1'),
+      { kind: 'multi', optionIds: ['a', 'b'] },
+      { kind: 'dose', value: 900 },
+    ]);
     expect(result(kase, perfect)).toMatchObject({ outcome: 'good', stars: 3, safetyEvents: 0 });
     expect(result(kase, perfect).time[0]).toMatchObject({ actualMin: 5, met: true });
 
-    const slow = play(kase, 'big', [go, pick('o3'), { kind: 'multi', optionIds: ['a', 'b'] }, { kind: 'dose', value: 900 }]);
+    const slow = play(kase, 'big', [
+      go,
+      pick('o3'),
+      { kind: 'multi', optionIds: ['a', 'b'] },
+      { kind: 'dose', value: 900 },
+    ]);
     expect(result(kase, slow).time[0]).toMatchObject({ actualMin: 20, met: false });
     expect(result(kase, slow).stars).toBe(2);
   });
@@ -134,14 +148,26 @@ describe('expectedDose', () => {
   const p = { age: 58, weightKg: 70 };
   it('fixed and ranged fixed doses', () => {
     expect(expectedDose({ unit: 'mg', fixed: 300 }, p)).toMatchObject({ min: 300, max: 300 });
-    expect(expectedDose({ unit: 'mg', fixed: { min: 150, max: 300 } }, p)).toMatchObject({ min: 150, max: 300 });
+    expect(expectedDose({ unit: 'mg', fixed: { min: 150, max: 300 } }, p)).toMatchObject({
+      min: 150,
+      max: 300,
+    });
   });
   it('per-kg with cap', () => {
-    expect(expectedDose({ unit: 'units', perKg: 60, maxDose: 4000 }, p)).toMatchObject({ min: 4000, max: 4000 });
-    expect(expectedDose({ unit: 'units', perKg: { min: 70, max: 100 } }, p)).toMatchObject({ min: 4900, max: 7000 });
+    expect(expectedDose({ unit: 'units', perKg: 60, maxDose: 4000 }, p)).toMatchObject({
+      min: 4000,
+      max: 4000,
+    });
+    expect(expectedDose({ unit: 'units', perKg: { min: 70, max: 100 } }, p)).toMatchObject({
+      min: 4900,
+      max: 7000,
+    });
   });
   it('weight bands, including boundaries and the top band', () => {
-    const rule = { unit: 'mg', bands: [{ belowKg: 60, dose: 1 }, { belowKg: 70, dose: 2 }, { dose: 3 }] };
+    const rule = {
+      unit: 'mg',
+      bands: [{ belowKg: 60, dose: 1 }, { belowKg: 70, dose: 2 }, { dose: 3 }],
+    };
     expect(expectedDose(rule, { age: 50, weightKg: 59.9 }).min).toBe(1);
     expect(expectedDose(rule, { age: 50, weightKg: 60 }).min).toBe(2);
     expect(expectedDose(rule, { age: 50, weightKg: 70 }).min).toBe(3);
