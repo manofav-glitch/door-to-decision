@@ -54,6 +54,8 @@ export interface Compiled {
   caseAssets: Record<string, string[]>;
   ecgSpecs: Record<string, { file: string; spec: z.infer<typeof EcgSpec> }>;
   references: Reference[];
+  /** style hints that don't block the build */
+  warnings: ContentProblem[];
 }
 
 export class ContentError extends Error {
@@ -83,6 +85,7 @@ interface Loaded<T> {
 export function compileContent(root: string): Compiled {
   const contentDir = join(root, 'content');
   const problems: ContentProblem[] = [];
+  const warnings: ContentProblem[] = [];
   const files: string[] = [];
   const rel = (f: string) => relative(root, f);
 
@@ -251,6 +254,7 @@ export function compileContent(root: string): Compiled {
           contentDir,
           ecgSpecs,
           problems,
+          warnings,
         });
         if (!compiled || problems.length > before) return;
         const checksBefore = checks.length;
@@ -294,7 +298,17 @@ export function compileContent(root: string): Compiled {
     systems: systemSummaries,
     codex: codex.map((c) => ({ id: c.id, kind: c.kind, title: c.title, draft: c.draft })),
   };
-  return { index, cases, codex, checks, files, caseAssets, ecgSpecs, references: [...refs.values()] };
+  return {
+    index,
+    cases,
+    codex,
+    checks,
+    files,
+    caseAssets,
+    ecgSpecs,
+    references: [...refs.values()],
+    warnings,
+  };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -311,12 +325,17 @@ interface CaseContext {
   contentDir: string;
   ecgSpecs: Compiled['ecgSpecs'];
   problems: ContentProblem[];
+  warnings: ContentProblem[];
 }
 
 function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | undefined {
   const c = loaded.data;
   const err = (path: Path, message: string) =>
     ctx.problems.push({ file: loaded.file, line: loaded.lineOf(path), where: path.join('.'), message });
+
+  const warn = (path: Path, message: string) =>
+    ctx.warnings.push({ file: loaded.file, line: loaded.lineOf(path), where: path.join('.'), message });
+  styleWarnings(c, warn);
 
   const expectedId = `${ctx.system}-${ctx.name}`;
   if (c.id !== expectedId) err(['id'], `id must be "${expectedId}" (system + file name)`);
@@ -563,6 +582,41 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     unverifiedCount: 0,
     imageChecks,
   };
+}
+
+// ---------- style warnings (never block the build) ----------
+
+/** Words that give away a diagnosis if they appear in a case title. Editorial, not clinical. */
+const SPOILERS = [
+  'stemi', 'nstemi', 'nste-acs', 'acs', 'mi', 'infarct', 'infarction', 'angina', 'dissection',
+  'pe', 'embolism', 'embolus', 'pericarditis', 'tamponade', 'scad', 'wellens', 'de winter',
+  'takotsubo', 'pneumothorax', 'aneurysm', 'heart block',
+];
+export const MAX_LINE = 220; // characters: roughly what fits in a feedback card without scrolling
+
+function styleWarnings(c: Case, warn: (path: Path, message: string) => void) {
+  const title = c.title.toLowerCase();
+  const hit = SPOILERS.find((w) => new RegExp(`(^|[^a-z])${w}([^a-z]|$)`).test(title));
+  if (hit) warn(['title'], `the title may give away the diagnosis ("${hit}"); describe the presentation instead`);
+  for (const [id, node] of Object.entries(c.nodes)) {
+    const p: Path = ['nodes', id];
+    if ((node.type === 'choice' || node.type === 'ecg') && !node.options.some((o) => o.grade === 'best'))
+      warn(p, 'no option is graded best; the ideal path will use the first acceptable one');
+    const lines: { text: string; path: Path }[] = [];
+    if ('options' in node)
+      node.options.forEach((o, i) => {
+        lines.push({ text: o.consequence, path: [...p, 'options', i, 'consequence'] });
+        lines.push({ text: o.teaching, path: [...p, 'options', i, 'teaching'] });
+      });
+    for (const k of ['correct', 'under', 'over', 'close', 'wrong', 'partial'] as const) {
+      const o = (node as Record<string, unknown>)[k] as { consequence?: string; teaching?: string } | undefined;
+      if (o?.consequence) lines.push({ text: o.consequence, path: [...p, k, 'consequence'] });
+      if (o?.teaching) lines.push({ text: o.teaching, path: [...p, k, 'teaching'] });
+    }
+    for (const l of lines)
+      if (l.text.length > MAX_LINE)
+        warn(l.path, `${l.text.length} characters: keep consequences and teaching points to one short line (≤ ${MAX_LINE})`);
+  }
 }
 
 function collectAssets(c: CompiledCase): string[] {

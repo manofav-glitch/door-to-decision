@@ -10,6 +10,12 @@ try {
     `✓ Content OK (version ${c.index.version}): ${cases.length} case(s), ${c.codex.length} codex card(s), ` +
       `${c.checks.length} clinical item(s), ${unverified} unverified.`,
   );
+  if (c.warnings.length) {
+    console.log(`\n⚠ ${c.warnings.length} style warning(s) (these don't block the build):`);
+    for (const w of c.warnings)
+      console.log(`  ${w.file}:${w.line ?? ''}  [${w.where}]\n      ${w.message}`);
+    console.log('');
+  }
   for (const k of cases)
     console.log(
       `  ${k.id}  ${Object.keys(k.nodes).length} nodes  ${k.draft ? `DRAFT (${k.unverifiedCount} unverified)` : 'verified'}`,

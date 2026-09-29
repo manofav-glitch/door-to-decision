@@ -12,7 +12,9 @@
     "test": "vitest run",
     "validate": "node scripts/validate.ts",
     "review": "node scripts/review.ts",
-    "ecg": "node scripts/draw-ecg.ts"
+    "ecg": "node scripts/draw-ecg.ts",
+    "graph": "node scripts/graph.ts",
+    "new-case": "node scripts/new-case.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

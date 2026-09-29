@@ -487,6 +487,11 @@ export function applyEffects(s: RunState, e: Effects | undefined): void {
   for (const m of ms) if (s.milestones[m] === undefined) s.milestones[m] = s.minutes;
 }
 
+/** Dev mode only: jump straight to a node, keeping the current state. Not replayable. */
+export function devJump(c: CompiledCase, prev: RunState, nodeId: string): RunState {
+  return enter(c, structuredClone(prev), nodeId);
+}
+
 function enter(c: CompiledCase, s: RunState, nodeId: string): RunState {
   const node = c.nodes[nodeId];
   if (!node) throw new EngineError(`No node "${nodeId}"`);
