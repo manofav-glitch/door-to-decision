@@ -39,6 +39,7 @@ export interface LogEntry {
   nodeId: string;
   type: 'choice' | 'ecg' | 'multiselect' | 'dose';
   prompt: string;
+  /** case clock when the decision was made */
   atMinutes: number;
   picks: Pick[];
   dose?: { value: number; expected: DoseRange };
@@ -56,6 +57,8 @@ export interface RunState {
   milestones: Record<string, number>;
   log: LogEntry[];
   inputs: Input[];
+  /** every node entered, in order */
+  path: string[];
   ended: boolean;
 }
 
@@ -78,6 +81,7 @@ export function startRun(c: CompiledCase, setting: string | null): RunState {
     milestones: { door: 0 },
     log: [],
     inputs: [],
+    path: [],
     ended: false,
   };
   return enter(c, state, c.start);
@@ -106,6 +110,11 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
   const s: RunState = structuredClone(prev);
   s.inputs.push(input);
   const node = currentNode(c, s);
+  const decidedAt = s.minutes;
+  const log = (picks: Pick[], dose?: LogEntry['dose']) => {
+    if (node.type === 'story' || node.type === 'ending') return;
+    s.log.push({ nodeId: s.nodeId, type: node.type, prompt: node.prompt, atMinutes: decidedAt, picks, dose });
+  };
 
   switch (node.type) {
     case 'story':
@@ -120,7 +129,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       const p = toPick(option);
       applyGrade(s, p);
       applyEffects(s, option.effects);
-      log(s, node, [p]);
+      log([p]);
       return { state: goto(c, s, option.next!), picks: [p] };
     }
 
@@ -144,7 +153,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
           picks.push({ ...toPick(o), grade: 'suboptimal', missed: true });
         }
       }
-      log(s, node, picks);
+      log(picks);
       return { state: goto(c, s, node.next), picks };
     }
 
@@ -166,7 +175,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       };
       applyGrade(s, p);
       applyEffects(s, o.effects);
-      log(s, node, [p], { value, expected });
+      log([p], { value, expected });
       return { state: goto(c, s, o.next ?? node.next), picks: [p], dose: { value, expected, outcome } };
     }
 
@@ -333,6 +342,7 @@ function enter(c: CompiledCase, s: RunState, nodeId: string): RunState {
   const node = c.nodes[nodeId];
   if (!node) throw new EngineError(`No node "${nodeId}"`);
   s.nodeId = nodeId;
+  s.path.push(nodeId);
   applyEffects(s, node.onEnter);
   if (node.type === 'ending') s.ended = true;
   return s;
@@ -348,11 +358,6 @@ function applyGrade(s: RunState, p: Pick) {
 
 function toPick(o: Option): Pick {
   return { optionId: o.id!, label: o.label, grade: o.grade, consequence: o.consequence, teaching: o.teaching };
-}
-
-function log(s: RunState, node: Node, picks: Pick[], dose?: LogEntry['dose']) {
-  if (node.type === 'story' || node.type === 'ending') return;
-  s.log.push({ nodeId: s.nodeId, type: node.type, prompt: node.prompt, atMinutes: s.minutes, picks, dose });
 }
 
 function expect<K extends Input['kind']>(input: Input, kind: K): Extract<Input, { kind: K }> {

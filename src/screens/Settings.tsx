@@ -1,8 +1,6 @@
 import { DISCLAIMER } from '../components/Disclaimer';
+import { index } from '../content/client';
 import { useSettings, type TextSize, type Theme } from '../store/settings';
-
-// TODO(Phase 1): show real content version once the content compiler exists.
-const CONTENT_VERSION = 'none yet (Phase 0)';
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -85,7 +83,7 @@ export function Settings() {
       <p className="panel mb-3 p-4" role="note">
         {DISCLAIMER}
       </p>
-      <p className="text-sm text-grey-1">Content version: {CONTENT_VERSION}</p>
+      <p className="text-sm text-grey-1">Content version: {index.version}</p>
     </main>
   );
 }

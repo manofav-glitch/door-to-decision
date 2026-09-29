@@ -2,9 +2,14 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { DisclaimerGate } from './components/Disclaimer';
 import { Layout } from './components/Layout';
 import { ThemeSync } from './components/ThemeSync';
+import { CaseSetup } from './screens/CaseSetup';
+import { CodexCard } from './screens/CodexCard';
+import { Debrief } from './screens/Debrief';
 import { Home } from './screens/Home';
+import { Module } from './screens/Module';
+import { Player } from './screens/Player';
 import { Settings } from './screens/Settings';
-import { SystemPlaceholder } from './screens/SystemPlaceholder';
+import { System } from './screens/System';
 
 export function App() {
   return (
@@ -13,9 +18,14 @@ export function App() {
       <DisclaimerGate>
         <HashRouter>
           <Routes>
+            <Route path="play/:caseId" element={<Player />} />
             <Route element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="system/:id" element={<SystemPlaceholder />} />
+              <Route path="s/:systemId" element={<System />} />
+              <Route path="s/:systemId/:moduleId" element={<Module />} />
+              <Route path="case/:caseId" element={<CaseSetup />} />
+              <Route path="debrief/:caseId" element={<Debrief />} />
+              <Route path="codex/:cardId" element={<CodexCard />} />
               <Route path="settings" element={<Settings />} />
               <Route path="*" element={<Home />} />
             </Route>

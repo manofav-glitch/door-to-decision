@@ -270,6 +270,8 @@ export const ReferencesFile = z.array(
   }),
 );
 
+const Limit = z.strictObject({ low: z.number(), high: z.number() });
+
 export const BenchmarksFile = z.strictObject({
   timeTargets: z.array(
     z.strictObject({
@@ -283,9 +285,13 @@ export const BenchmarksFile = z.strictObject({
   ),
   vitalLimits: z.strictObject({
     check: Check,
-    ...Object.fromEntries(
-      VITALS.map((k) => [k, z.strictObject({ low: z.number(), high: z.number() })]),
-    ),
+    hr: Limit,
+    sbp: Limit,
+    dbp: Limit,
+    rr: Limit,
+    spo2: Limit,
+    gcs: Limit,
+    temp: Limit,
   }),
 });
 

@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { contentPlugin } from './src/content/vite-plugin.ts';
 
 // GitHub Pages serves the site under /<repo-name>/, so the deploy workflow sets BASE_PATH.
 const base = process.env.BASE_PATH ?? '/';
@@ -9,6 +10,7 @@ const base = process.env.BASE_PATH ?? '/';
 export default defineConfig({
   base,
   plugins: [
+    contentPlugin(import.meta.dirname),
     react(),
     tailwindcss(),
     VitePWA({

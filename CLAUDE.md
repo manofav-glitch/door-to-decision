@@ -23,30 +23,37 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `npm run preview` — serve the production build (after `npm run build`); this is how to test the PWA/offline
 - `npm run build` — production build (fails on invalid content)
 - `npm run lint` / `npm run format` / `npm test`
-- `npm run validate` — (Phase 4) content checks: schema, broken `next`, unreachable nodes, dead ends, missing IDs/assets
+- `npm run validate` — content checks with file:line: schema, broken `next`, unreachable nodes, dead ends, unset flags, missing refs/unlocks/doses/assets
+- `npm run review` — checklist of every unverified clinical item → `docs/CLINICAL_REVIEW.md` (regenerate after content edits)
+- `npm run ecg` — redraw ECG SVGs from `content/assets/ecg/*.ecg.yaml`
 - `npm run graph` — (Phase 4) Mermaid flowchart per case → `docs/graphs/`
-- `npm run review` — (Phase 4) checklist of every unverified clinical value → `docs/CLINICAL_REVIEW.md`
-- Dev mode: append `?dev=1` (node IDs, jump-to-node, state inspector)
+- Dev mode: (Phase 4) append `?dev=1` (node IDs, jump-to-node, state inspector)
 
-## Folder map (✓ = exists; rest planned; update when it changes)
-- ✓ `docs/` — SPEC.md, CLINICAL_REVIEW.md (generated), CONTENT_GUIDE.md, graphs/ (generated)
-- `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml`, `benchmarks.yaml`,
-  `<system>/<module>/module.yaml`, `<system>/<module>/cases/*.yaml`, `codex/{anatomy,pathology,drugs,scores,ecg}/`, `assets/`
-- `src/engine/` — pure TS game engine (state, effects, conditions, navigation). No React, no clinical facts.
-- `src/clinical/` — pure, unit-tested score functions (HEART, TIMI, GRACE)
-- `src/content/` — Zod schemas + build-time YAML compiler
-- ✓ `src/components/` (Layout, Disclaimer gate, ThemeSync), ✓ `src/screens/` (Home, Settings, SystemPlaceholder), ✓ `src/store/settings.ts`, `src/art/` (SVG characters/scenes/props)
-- ✓ `scripts/make-icons.mjs` — dependency-free generator for `public/icon*.{svg,png}`
-- ✓ `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
-- `scripts/` — validate, graph, review (Phase 4)
+## Folder map (update when it changes)
+- `docs/` — SPEC.md, CLINICAL_REVIEW.md (generated); planned: CONTENT_GUIDE.md, graphs/
+- `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml` (incl. `needs-source` placeholder),
+  `benchmarks.yaml` (time targets, HUD vital limits), `cvs/chest-pain/{module.yaml,cases/cp-01.yaml}`,
+  `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`
+- `src/content/` — `schema.ts` (Zod: the authoring format), `compile.ts` (YAML → validated JSON, cross-checks),
+  `vite-plugin.ts` (virtual modules; each case and the codex are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
+- `src/engine/` — pure TS: `engine.ts` (state, effects, conditions, branching, grading, stars, ideal path, replay), `dose.ts`. No React, no clinical facts.
+- `src/screens/` — Home, System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, CodexCard, Settings
+- `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), `player/` (Hud, PanelView, EcgFigure, Sheet)
+- `src/store/` — `settings.ts`, `progress.ts` (runs saved as inputs and replayed; stars, unlocks, mistakes deck)
+- `src/art/registry.ts` — scene/actor names (Phase 3 draws them); `src/clinical/` — (Phase 2) score functions
+- `scripts/` — validate.ts, review.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs
+- `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `fixtures/mini/` for compiler/engine tests
+- `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
 
 ## Architecture rules
 - The engine is content-agnostic: new systems/modules/cases are added by adding content files only.
 - Hierarchy: System → Module → Case → Nodes → Panels. Codex (anatomy, pathology, drugs, scores, ECG) is unlocked by cases and browsable anytime.
-- Node types: story, choice, multiselect, order, calculator, dose, ecg, ending (extensible).
+- Node types built: story, choice, ecg, multiselect, dose, ending. Planned: order, calculator. Add a type = schema + engine `act`/`idealInput` + a Sheet view.
 - Options are graded best / acceptable / suboptimal / harmful, with a one-line consequence and a teaching point.
 - Hidden patient state: vitals, case clock, flags. Meters: Patient, Time, Safety. End grade 1–3 stars. Modes: Learn / Exam.
 - Case titles never reveal the diagnosis. Setting toggle (PCI-capable vs non-PCI) changes the correct pathway.
+- Harmful picks count as safety events automatically. Stars: 3, −1 for any harmful pick, −1 for a missed time target or Patient < 70; critical ending = 1. These game rules live in the engine, not content.
+- A case is a draft if ANY check it depends on is unverified (its own, doses it asks, time targets, HUD limits, ECG drawings).
 
 ## CLINICAL CONTENT RULES — NON-NEGOTIABLE
 1. Clinical facts (doses, thresholds, score point tables, time targets, contraindications) live ONLY in `/content`. Never hard-code them in components, engine, or tests' expected clinical values outside score test vectors.
@@ -82,8 +89,11 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Vite `base` comes from env `BASE_PATH` (set by the deploy workflow). Hash routing means no server rewrites needed.
 - Fonts: Inter (UI) + Patrick Hand (bubbles), Latin subset only, via `@fontsource`, bundled and precached.
 - Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180.
+- `src/content/*` and `src/engine/*` import siblings with `.ts` extensions so Node can run them directly (scripts, tests).
+- YAML anchors (`&name` / `*name`) are used in cp-01 to reuse conditional `next:` lists.
 
 ## Status
-Phase 0 deployed: https://manofav-glitch.github.io/door-to-decision/ (repo github.com/manofav-glitch/door-to-decision,
-public; Pages source = GitHub Actions). Service worker + precache verified on the live site; owner's phone
-install + airplane-mode test PASSED 2026-09-29 → Phase 0 done. Owner pushes with a GitHub token (no `gh` CLI on this Mac). Phase 1 awaits go-ahead.
+- Phase 0 done (2026-09-29): live at https://manofav-glitch.github.io/door-to-decision/ (public repo
+  github.com/manofav-glitch/door-to-decision; Pages source = GitHub Actions). Owner pushes with a GitHub token (no `gh` on this Mac).
+- Phase 1 built locally, not pushed: engine, compiler, player, debrief, progress, cp-01 (all 52 clinical items unverified).
+  Awaiting owner's play-test and clinical review.
