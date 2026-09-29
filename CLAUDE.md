@@ -38,18 +38,18 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   `vite-plugin.ts` (virtual modules; each case and the codex are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
 - `src/engine/` — pure TS: `engine.ts` (state, effects, conditions, branching, grading, stars, ideal path, replay), `dose.ts`. No React, no clinical facts.
 - `src/screens/` — Home, System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, Codex (tabs + search), CodexCard (with standalone calculator for scores), Settings
-- `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), ScoreParts.tsx (CalcForm, ScoreBreakdown, ScoreCalculator), `player/` (Hud, PanelView, EcgFigure, Sheet)
+- `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), ScoreParts.tsx (CalcForm, ScoreBreakdown, ScoreCalculator), `player/` (Hud, PanelView, EcgFigure with zoom view + lead hotspots, Sheet incl. LeadGrid)
 - `src/store/` — `settings.ts`, `progress.ts` (runs saved as inputs and replayed; stars, unlocks, mistakes deck)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
-- `src/art/registry.ts` — scene/actor names (Phase 3 draws them)
+- `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (8 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
 - `scripts/` — validate.ts, review.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs
-- `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`; `fixtures/mini/` for compiler/engine tests
+- `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`; `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
 - `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
 
 ## Architecture rules
 - The engine is content-agnostic: new systems/modules/cases are added by adding content files only.
 - Hierarchy: System → Module → Case → Nodes → Panels. Codex (anatomy, pathology, drugs, scores, ECG) is unlocked by cases and browsable anytime.
-- Node types built: story, choice, ecg, multiselect, dose, calculator, ending. Planned: order. Add a type = schema + engine `act`/`idealInput` + a Sheet view.
+- Node types built: story, choice, ecg, ecg-leads (tap the leads), multiselect, dose, calculator, ending. Planned: order. Add a type = schema + engine `act`/`idealInput` + a Sheet view.
 - Options are graded best / acceptable / suboptimal / harmful, with a one-line consequence and a teaching point.
 - Hidden patient state: vitals, case clock, flags. Meters: Patient, Time, Safety. End grade 1–3 stars. Modes: Learn / Exam.
 - Case titles never reveal the diagnosis. Setting toggle (PCI-capable vs non-PCI) changes the correct pathway.
@@ -57,6 +57,8 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - A case is a draft if ANY check it depends on is unverified (its own, doses it asks, scores it uses, time targets, HUD limits, ECG drawings).
 - Calculator grading: every item's points right = best; same band (or risk row) = acceptable; different band = suboptimal. Number-item bins: a value on an edge goes to the higher bin (`value < below`).
 - Codex: every card is always browsable; cards unlocked by cases get a "✓ Unlocked" mark.
+- Lead-tap grading: exact set = best; ≥ half found and ≤ 1 extra = acceptable; else suboptimal.
+- Art: ONE stroke width via `.art` (non-scaling); props grey, people ink, red only for alarms. Panels are ≥ square and grow downwards (grid + aspect spacer); grids use `minmax(0,1fr)` so long bubble text can't widen them.
 
 ## CLINICAL CONTENT RULES — NON-NEGOTIABLE
 1. Clinical facts (doses, thresholds, score point tables, time targets, contraindications) live ONLY in `/content`. Never hard-code them in components, engine, or tests' expected clinical values outside score test vectors.
@@ -91,13 +93,15 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `showDrafts` defaults to ON in dev builds, OFF in deployed builds (persisted per device).
 - Vite `base` comes from env `BASE_PATH` (set by the deploy workflow). Hash routing means no server rewrites needed.
 - Fonts: Inter (UI) + Patrick Hand (bubbles), Latin subset only, via `@fontsource`, bundled and precached.
-- Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180.
+- Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180 (or the owner's `npm run dev` on 5173).
+- The in-app browser's screenshots are often stale under viewport emulation; confirm with DOM checks. Clicks miss when a large viewport is scaled down; use the keyboard or 360 px.
 - `src/content/*` and `src/engine/*` import siblings with `.ts` extensions so Node can run them directly (scripts, tests).
 - YAML anchors (`&name` / `*name`) are used in cp-01 to reuse conditional `next:` lists.
 
 ## Status
 - Phase 0 done (2026-09-29): live at https://manofav-glitch.github.io/door-to-decision/ (public repo
   github.com/manofav-glitch/door-to-decision; Pages source = GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
-- Phase 1 done (owner approved 2026-09-29): engine, compiler, player, debrief, progress, cp-01.
-- Phase 2 built 2026-09-29: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores + tests, calculator node,
-  Codex browse/search/cards with calculators, draft cp-02 (HEART + serial troponin). All clinical items unverified (67).
+- Phase 1 done: engine, compiler, player, debrief, progress, cp-01.
+- Phase 2 done: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores, calculator node, Codex, draft cp-02.
+- Phase 3 built 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
+  69 clinical items unverified. Next: Phase 4 (authoring tools: graph, dev mode, /new-case, CONTENT_GUIDE.md).
