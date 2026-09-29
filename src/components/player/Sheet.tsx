@@ -169,6 +169,61 @@ export function DoseForm({ unit, onSubmit }: { unit: string; onSubmit: (value: n
   );
 }
 
+/** Lead toggles in ECG reading order; mirrors the taps on the tracing. */
+export function LeadGrid({
+  leads,
+  selected,
+  onToggle,
+  onSubmit,
+}: {
+  leads: string[];
+  selected: string[];
+  onToggle: (lead: string) => void;
+  onSubmit: () => void;
+}) {
+  useKeys({ confirm: () => selected.length > 0 && onSubmit() });
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="text-sm text-grey-1">Tap leads on the ECG, or here.</p>
+      <div className="grid grid-cols-4 gap-2">
+        {leads.map((l) => {
+          const on = selected.includes(l);
+          return (
+            <button
+              key={l}
+              type="button"
+              aria-pressed={on}
+              className={`btn px-1 ${on ? 'btn-primary' : 'font-normal'}`}
+              onClick={() => onToggle(l)}
+            >
+              {l}
+            </button>
+          );
+        })}
+      </div>
+      <button
+        className="btn btn-primary mt-1 w-full"
+        disabled={selected.length === 0}
+        onClick={onSubmit}
+      >
+        Confirm {selected.length > 0 ? `(${selected.length})` : ''}
+      </button>
+    </div>
+  );
+}
+
+export function LeadsResult({ chosen, answer }: { chosen: string[]; answer: string[] }) {
+  const missed = answer.filter((l) => !chosen.includes(l));
+  const extra = chosen.filter((l) => !answer.includes(l));
+  return (
+    <p className="border-2 border-dashed border-grey-2 p-2 text-sm">
+      Correct leads: <strong>{answer.join(', ')}</strong>
+      {missed.length > 0 && <span className="block">Missed: {missed.join(', ')}</span>}
+      {extra.length > 0 && <span className="block">Not affected: {extra.join(', ')}</span>}
+    </p>
+  );
+}
+
 export function Feedback({
   res,
   onContinue,
@@ -181,6 +236,7 @@ export function Feedback({
   return (
     <div className="flex flex-col gap-3" aria-live="polite">
       {res.dose && <DoseWorking dose={res.dose.expected} />}
+      {res.leads && <LeadsResult chosen={res.leads.chosen} answer={res.leads.answer} />}
       {res.calc && (
         <ScoreBreakdown
           title={res.calc.title}

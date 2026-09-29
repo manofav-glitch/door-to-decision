@@ -26,7 +26,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
-        actors: [patient, relative, nurse]
+        actors: [relative:worried, patient, nurse]
         caption: "{clock} · Triage"
         bubbles:
           - { who: relative, text: "He's had chest pain since this morning. Please check his heart." }
@@ -138,7 +138,7 @@ nodes:
     onEnter: { minutes: 45 }
     panels:
       - scene: resus-bay
-        actors: [nurse, doctor]
+        actors: [doctor, nurse]
         caption: "{clock} · Results"
         bubbles:
           - { who: nurse, text: "First hs-troponin is back: below the 99th-percentile limit for men." }
@@ -205,7 +205,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
-        actors: [nurse, patient]
+        actors: [patient:relieved, nurse]
         caption: "{clock} · Repeat troponin"
         bubbles:
           - { who: nurse, text: "Second hs-troponin: still below the limit, and no change from the first." }
@@ -249,7 +249,7 @@ nodes:
     outcome: good
     panels:
       - scene: triage-desk
-        actors: [patient, relative]
+        actors: [patient:relieved, relative:relieved]
         caption: "{clock} · Going home"
         bubbles:
           - { who: relative, text: "Thank you for explaining it all, doctor." }

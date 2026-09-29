@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, index, useCase, type LoadedCase } from '../content/client';
-import { DoseWorking } from '../components/player/Sheet';
+import { DoseWorking, LeadsResult } from '../components/player/Sheet';
 import { ScoreBreakdown } from '../components/ScoreParts';
 import { BackLink, GradeChip, Loading, NotFound, Stars, UnverifiedBadge } from '../components/ui';
 import { idealRun, replay, result, type LogEntry, type RunState } from '../engine/engine';
@@ -225,6 +225,7 @@ function Decision({ entry, ideal }: { entry: LogEntry; ideal?: LogEntry }) {
         +{entry.atMinutes} min · <span className="font-semibold text-ink">{entry.prompt}</span>
       </p>
       {entry.dose && <DoseWorking dose={entry.dose.expected} />}
+      {entry.leads && <LeadsResult chosen={entry.leads.chosen} answer={entry.leads.answer} />}
       {entry.calc && (
         <ScoreBreakdown
           title={entry.calc.title}
@@ -248,7 +249,8 @@ function Decision({ entry, ideal }: { entry: LogEntry; ideal?: LogEntry }) {
         idealLabels &&
         entry.type !== 'multiselect' &&
         entry.type !== 'dose' &&
-        entry.type !== 'calculator' && (
+        entry.type !== 'calculator' &&
+        entry.type !== 'ecg-leads' && (
           <p className="mt-3 border-t-2 border-dashed border-grey-2 pt-2 text-sm">
             <span className="font-semibold">Ideal:</span> {idealLabels.join('; ')}
           </p>

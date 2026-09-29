@@ -36,12 +36,12 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
-        actors: [patient, nurse]
+        actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "It's like someone is sitting on my chest, doctor. Started about 45 minutes ago." }
       - scene: triage-desk
-        actors: [nurse, doctor]
+        actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "He's drenched in sweat. Diabetic, smokes a pack a day." }
           - { who: nurse, text: "Pulse 52, BP 96 over 60, sats 95% on air." }
@@ -57,13 +57,13 @@ nodes:
         consequence: "The ECG is in your hand 4 minutes after arrival."
         teaching: "Suspected ACS needs a 12-lead ECG within 10 minutes: STEMI is diagnosed on the ECG, not the troponin."
         effects: { minutes: 4, milestone: ecg }
-        next: ecg-1
+        next: ste-leads
       - label: "Send a troponin and review him with the result"
         grade: suboptimal
         consequence: "Nobody records an ECG until 25 minutes after arrival."
         teaching: "Never wait for troponin to find a STEMI. The ECG comes first and changes management within minutes."
         effects: { minutes: 25, milestone: ecg, patient: -10 }
-        next: ecg-1
+        next: ste-leads
       - label: "Sublingual nitrate for the pain"
         grade: harmful
         consequence: "Within minutes his BP falls to 66/40; he turns grey and clammy."
@@ -75,14 +75,14 @@ nodes:
         consequence: "The X-ray is unremarkable. The ECG is done at 15 minutes."
         teaching: "The X-ray can wait. The ECG decides reperfusion; do it first."
         effects: { minutes: 15, milestone: ecg, patient: -5 }
-        next: ecg-1
+        next: ste-leads
 
   # ---------------------------------------------------------------- nitrate trap (reused later)
   nitrate-crash:
     type: story
     panels:
       - scene: resus-bay
-        actors: [patient-supine, nurse]
+        actors: [patient-supine:pain, nurse:alarmed]
         caption: "{clock} · Resus bay"
         sfx: "BEEP · BEEP · BEEP"
         bubbles:
@@ -101,7 +101,7 @@ nodes:
         teaching: "Nitrate-induced hypotension in a preload-dependent RV responds to volume. Stop nitrates and give small fluid boluses."
         effects: { minutes: 5, sbp: 22, dbp: 14, milestone: ecg }
         next: &after-rescue
-          - { if: { notFlag: stemi_dx }, to: ecg-1 }
+          - { if: { notFlag: stemi_dx }, to: ste-leads }
           - { if: { all: [{ setting: pci-capable }, { flag: gave_ufh }] }, to: dose-ufh }
           - { if: { setting: pci-capable }, to: reperfusion-pci }
           - { to: reperfusion-nonpci }
@@ -118,18 +118,54 @@ nodes:
         next: end-nitrate
 
   # ---------------------------------------------------------------- the ECG
+  ste-leads:
+    type: ecg-leads
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: nurse, text: "ECG's done. Have a look." }
+    image: ecg/cp-01-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
+    prompt: "Tap every lead that shows ST elevation."
+    answer: [II, III, aVF]
+    correct:
+      consequence: "Right: ST elevation in II, III and aVF."
+      teaching: "II, III and aVF look at the inferior wall. ST elevation in two or more contiguous leads meets the STEMI criterion."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Check each inferior lead (II, III, aVF): a raised ST segment starts at the J point and runs up into the T wave."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "Look for the ST segment sitting above the baseline after the QRS. Here it's the inferior leads: II, III and aVF."
+    next: reciprocal-leads
+
+  reciprocal-leads:
+    type: ecg-leads
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    image: ecg/cp-01-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
+    prompt: "Now tap the leads with reciprocal ST depression."
+    answer: [I, aVL]
+    correct:
+      consequence: "Right: ST depression in I and aVL."
+      teaching: "aVL looks at the heart from the opposite side to the inferior leads, so inferior ST elevation appears there as ST depression. It can be the earliest clue."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Reciprocal change to inferior ST elevation shows in the high lateral leads: I and aVL."
+    wrong:
+      consequence: "Those aren't the leads with reciprocal depression."
+      teaching: "Reciprocal ST depression to an inferior STEMI appears in I and aVL, the leads facing the opposite wall."
+    next: ecg-1
+
   ecg-1:
     type: ecg
     check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
-    panels:
-      - scene: resus-bay
-        actors: [patient-supine, nurse, doctor]
-        caption: "{clock} · Resus bay"
-        bubbles:
-          - { who: nurse, text: "Here's his ECG." }
     image: ecg/cp-01-ecg-1.svg
     alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
-    prompt: "Read the ECG. What does it show?"
+    prompt: "Put it together. What does this ECG show?"
     options:
       - label: "Inferior STEMI: ST elevation in II, III, aVF with reciprocal ST depression in I and aVL"
         grade: best
@@ -161,7 +197,7 @@ nodes:
     onEnter: { minutes: 2, milestone: stemi-dx, addFlags: [stemi_dx] }
     panels:
       - scene: resus-bay
-        actors: [senior, doctor]
+        actors: [doctor:worried, senior]
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: senior, text: "Look at aVL: that's reciprocal ST depression. With elevation in II, III and aVF, this is an inferior STEMI." }
@@ -251,7 +287,7 @@ nodes:
     onEnter: { minutes: 2 }
     panels:
       - scene: resus-bay
-        actors: [patient-supine, nurse]
+        actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: nurse, text: "IV access is in. What do you want given?" }
@@ -520,7 +556,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "BEEP · BEEP · BEEP"
       - scene: resus-bay
-        actors: [patient-supine, nurse]
+        actors: [patient-supine:pain, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "Rate's dropped into the thirties, and his BP is falling!" }
           - { who: patient, text: "I feel faint…" }
@@ -591,7 +627,7 @@ nodes:
     onEnter: { minutes: 150 }
     panels:
       - scene: ambulance-bay
-        actors: [paramedic, patient-supine]
+        actors: [paramedic:worried, patient-supine:pain]
         caption: "{clock} · Two and a half hours on the road"
         bubbles:
           - { who: paramedic, text: "Still in pain the whole way. We're here." }
@@ -602,7 +638,7 @@ nodes:
     onEnter: { minutes: 25, milestone: wire, setVitals: { hr: 64, sbp: 104, dbp: 66 } }
     panels:
       - scene: cath-lab-door
-        actors: [senior, patient-supine]
+        actors: [patient-supine, senior:relieved]
         caption: "{clock} · Cath lab"
         bubbles:
           - { who: senior, text: "Proximal right coronary artery, completely blocked. Wire's across… stent's in. Good flow." }
@@ -616,7 +652,7 @@ nodes:
     onEnter: { minutes: 70, setVitals: { hr: 66, sbp: 106, dbp: 68 } }
     panels:
       - scene: resus-bay
-        actors: [patient-supine, nurse, doctor]
+        actors: [patient-supine:relieved, nurse, doctor:relieved]
         caption: "{clock} · Just over an hour after tenecteplase"
         bubbles:
           - { who: patient, text: "The pain's gone, doctor." }
@@ -660,7 +696,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
-        actors: [patient, doctor]
+        actors: [patient:relieved, doctor:relieved]
         caption: "Next morning · CCU"
         bubbles:
           - { who: patient, text: "I feel like myself again. Thank you, doctor." }
@@ -671,7 +707,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
-        actors: [patient, relative]
+        actors: [patient:worried, relative:worried]
         caption: "Three days later · CCU"
         bubbles:
           - { who: relative, text: "The doctors say part of his heart muscle was damaged." }
@@ -683,7 +719,7 @@ nodes:
     onEnter: { setVitals: { sbp: 50, dbp: 30, gcs: 8 }, patient: -60 }
     panels:
       - scene: resus-bay
-        actors: [patient-supine, nurse, senior]
+        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
         bubbles:
@@ -700,7 +736,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
       - scene: resus-bay
-        actors: [patient-supine, senior, nurse]
+        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
         bubbles:
           - { who: nurse, text: "Complete heart block. Rate 28, BP 58 over 30!" }
           - { who: senior, text: "Pads on, pace him, and start an adrenaline infusion." }

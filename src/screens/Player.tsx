@@ -11,6 +11,7 @@ import {
   ContinueButton,
   DoseForm,
   Feedback,
+  LeadGrid,
   MultiSelect,
 } from '../components/player/Sheet';
 import { Loading, NotFound, UnverifiedBadge } from '../components/ui';
@@ -60,6 +61,10 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   });
   const [pending, setPending] = useState<{ prev: RunState; res: ActResult } | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
+  const [leadSel, setLeadSel] = useState<{ node: string; leads: string[] }>({
+    node: '',
+    leads: [],
+  });
 
   const view = pending?.prev ?? run;
   const viewNodeId = view?.nodeId;
@@ -102,7 +107,17 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   const longSheet = viewNode.type === 'calculator';
   const panels = lastPanels(c.nodes, view.path);
   const nodeUnverified = 'check' in viewNode && viewNode.check && !viewNode.check.verified;
-  const ecg = viewNode.type === 'ecg' ? viewNode : undefined;
+  const ecg = viewNode.type === 'ecg' || viewNode.type === 'ecg-leads' ? viewNode : undefined;
+  const leadNode = viewNode.type === 'ecg-leads' ? viewNode : undefined;
+  const layout = leadNode ? c.leadLayouts[leadNode.image] : undefined;
+  const selectedLeads = leadSel.node === viewNodeId ? leadSel.leads : [];
+  const toggleLead = (l: string) =>
+    setLeadSel({
+      node: viewNodeId!,
+      leads: selectedLeads.includes(l)
+        ? selectedLeads.filter((x) => x !== l)
+        : [...selectedLeads, l],
+    });
 
   let title: string;
   let body: React.ReactNode;
@@ -151,6 +166,17 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
             key={viewNode.drug + viewNode.dose}
             unit={doseFor(c, viewNode).unit}
             onSubmit={(value) => doAct({ kind: 'dose', value })}
+          />
+        );
+        break;
+      case 'ecg-leads':
+        title = viewNode.prompt;
+        body = (
+          <LeadGrid
+            leads={layout?.leads.map((l) => l.label) ?? []}
+            selected={selectedLeads}
+            onToggle={toggleLead}
+            onSubmit={() => doAct({ kind: 'leads', leads: selectedLeads })}
           />
         );
         break;
@@ -213,6 +239,18 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
                 c.imageChecks[ecg.image] && !c.imageChecks[ecg.image]!.verified ? (
                   <UnverifiedBadge />
                 ) : undefined
+              }
+              width={layout?.width}
+              hotspots={
+                layout
+                  ? pending?.res.leads
+                    ? {
+                        layout,
+                        selected: pending.res.leads.chosen,
+                        answer: pending.res.leads.answer,
+                      }
+                    : { layout, selected: selectedLeads, onToggle: toggleLead }
+                  : undefined
               }
             />
           )}

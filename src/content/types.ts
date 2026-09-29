@@ -1,6 +1,7 @@
 // Shapes of the compiled content the app and engine consume (produced by compile.ts).
 import type { Case, CodexCard, DoseRule, Node, ScoreDef } from './schema.ts';
 import type { z } from 'zod';
+import type { EcgLayout } from '../art/ecgLayout.ts';
 import type { Check as CheckSchema, BenchmarksFile, ReferencesFile } from './schema.ts';
 
 export type Check = z.infer<typeof CheckSchema>;
@@ -52,6 +53,8 @@ export interface CompiledCase extends Omit<Case, 'settings' | 'timeTargets' | 'd
   /** true if any clinical item this case depends on is unverified */
   draft: boolean;
   unverifiedCount: number;
+  /** lead positions for ecg-leads nodes, keyed by image path */
+  leadLayouts: Record<string, EcgLayout>;
   /** checks of the ECG drawings used, keyed by image path */
   imageChecks: Record<string, Check>;
 }

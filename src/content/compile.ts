@@ -20,6 +20,7 @@ import {
   type Node,
 } from './schema.ts';
 import { itemResult, ScoreError } from '../clinical/score.ts';
+import { ecgLayout, type EcgLayout } from '../art/ecgLayout.ts';
 import {
   CODEX_KINDS,
   type CaseSummary,
@@ -334,6 +335,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
   const milestones = new Set<string>(['door']);
   const doses: Record<string, ResolvedDose> = {};
   const scores: Record<string, ResolvedScore> = {};
+  const leadLayouts: Record<string, EcgLayout> = {};
   const imageChecks: Record<string, Check> = {};
 
   const noteEffects = (e: Effects | undefined) => {
@@ -364,7 +366,25 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     const p: Path = ['nodes', id];
     noteEffects(node.onEnter);
     node.panels?.forEach((panel, i) => panel.image && checkImage(panel.image, [...p, 'panels', i, 'image']));
-    if (node.type === 'ecg') checkImage(node.image, [...p, 'image']);
+    if (node.type === 'ecg' || node.type === 'ecg-leads') checkImage(node.image, [...p, 'image']);
+    if (node.type === 'ecg-leads') {
+      for (const k of ['correct', 'partial', 'wrong'] as const) {
+        noteEffects(node[k].effects);
+        noteNext(node[k].next, [...p, k, 'next']);
+      }
+      const spec = ctx.ecgSpecs[node.image]?.spec;
+      if (!spec || spec.layout !== '12-lead')
+        err([...p, 'image'], 'tap-the-lead needs a 12-lead drawing made from a .ecg.yaml file');
+      else {
+        const layout = ecgLayout(spec.labels);
+        leadLayouts[node.image] = layout;
+        const labels = layout.leads.map((l) => l.label);
+        node.answer.forEach((a, i) => {
+          if (!labels.includes(a))
+            err([...p, 'answer', i], `"${a}" is not a lead on this ECG (${labels.join(', ')})`);
+        });
+      }
+    }
     if ('next' in node) noteNext(node.next, [...p, 'next']);
 
     if (node.type === 'choice' || node.type === 'ecg' || node.type === 'multiselect') {
@@ -454,6 +474,8 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
       for (const k of ['correct', 'under', 'over'] as const) add(node[k].next, ['nodes', id, k, 'next']);
     if (node.type === 'calculator')
       for (const k of ['correct', 'close', 'wrong'] as const) add(node[k].next, ['nodes', id, k, 'next']);
+    if (node.type === 'ecg-leads')
+      for (const k of ['correct', 'partial', 'wrong'] as const) add(node[k].next, ['nodes', id, k, 'next']);
     for (const o of out) if (!nodes[o.to]) err(o.path, `goes to "${o.to}", which is not a node in this case`);
     edges.set(id, out.map((o) => o.to).filter((t) => nodes[t]));
   }
@@ -535,6 +557,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     vitalLimits: vitalLimits as CompiledCase['vitalLimits'],
     doses,
     scores,
+    leadLayouts,
     debrief: { ...c.debrief, unlocks, refs: refList },
     draft: true,
     unverifiedCount: 0,
@@ -546,7 +569,7 @@ function collectAssets(c: CompiledCase): string[] {
   const out = new Set<string>();
   for (const node of Object.values(c.nodes)) {
     node.panels?.forEach((p) => p.image && out.add(p.image));
-    if (node.type === 'ecg') out.add(node.image);
+    if (node.type === 'ecg' || node.type === 'ecg-leads') out.add(node.image);
   }
   return [...out];
 }

@@ -5,6 +5,17 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import { EcgSpec } from '../src/content/schema.ts';
+import {
+  ecgSize,
+  GRID,
+  LEFT_MM,
+  MM_PER_MV,
+  MM_PER_S,
+  PX,
+  ROW_MM,
+  STANDARD_LEADS as STANDARD,
+  TOP_MM,
+} from '../src/art/ecgLayout.ts';
 
 type Shape = { p: number; q: number; r: number; s: number; t: number; st: number };
 
@@ -23,21 +34,7 @@ const NORMAL: Record<string, Shape> = {
   V5: { p: 0.05, q: 0.05, r: 1.3, s: 0.3, t: 0.35, st: 0 },
   V6: { p: 0.05, q: 0.05, r: 1.0, s: 0.15, t: 0.3, st: 0 },
 };
-const STANDARD = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'];
-// Conventional 3×4 layout: columns of leads, top to bottom.
-const GRID = [
-  ['I', 'II', 'III'],
-  ['aVR', 'aVL', 'aVF'],
-  ['V1', 'V2', 'V3'],
-  ['V4', 'V5', 'V6'],
-];
 
-const PX = 4; // px per mm
-const MM_PER_S = 25;
-const MM_PER_MV = 10;
-const ROW_MM = 30;
-const LEFT_MM = 10;
-const TOP_MM = 6;
 const DT = 0.004;
 
 const g = (x: number, sd: number) => Math.exp(-(x * x) / (2 * sd * sd));
@@ -117,11 +114,9 @@ function draw(spec: EcgSpec): string {
     ...(spec.leads[label] as Partial<Shape> | undefined),
   });
   const beats = beatTimes(spec);
-  const rows = spec.layout === '12-lead' ? 4 : 1;
-  const wMm = LEFT_MM + 250 + 4;
-  const hMm = TOP_MM + rows * ROW_MM + 8;
-  const W = wMm * PX;
-  const H = hMm * PX;
+  const { width: W, height: H, rows } = ecgSize(spec.layout);
+  const wMm = W / PX;
+  const hMm = H / PX;
 
   const grid: string[] = [];
   for (let x = 0; x <= wMm; x++)

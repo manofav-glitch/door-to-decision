@@ -283,6 +283,19 @@ const CalculatorNode = z.strictObject({
   wrong: CalcOutcome, // different band (default suboptimal)
   next: Next,
 });
+const LeadsNode = z.strictObject({
+  type: z.literal('ecg-leads'),
+  ...nodeBase,
+  check: Check,
+  image: z.string(), // a 12-lead drawing with a .ecg.yaml spec, so lead positions are known
+  alt: Text,
+  prompt: Text, // e.g. "Tap every lead that shows ST elevation."
+  answer: z.array(z.string()).min(1), // lead labels, e.g. [II, III, aVF]
+  correct: CalcOutcome, // exactly the right leads (default best)
+  partial: CalcOutcome, // at least half found, at most one extra (default acceptable)
+  wrong: CalcOutcome, // anything else (default suboptimal)
+  next: Next,
+});
 const EndingNode = z.strictObject({
   type: z.literal('ending'),
   ...nodeBase,
@@ -297,6 +310,7 @@ export const Node = z.discriminatedUnion('type', [
   MultiNode,
   DoseNode,
   CalculatorNode,
+  LeadsNode,
   EndingNode,
 ]);
 export type Node = z.infer<typeof Node>;

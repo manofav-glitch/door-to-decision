@@ -56,6 +56,11 @@ function randomInput(c: CompiledCase, s: RunState, rand: () => number): Input {
       );
       return { kind: 'calc', answers };
     }
+    case 'ecg-leads': {
+      const labels = c.leadLayouts[node.image]!.leads.map((l) => l.label);
+      const n = 1 + Math.floor(rand() * 4);
+      return { kind: 'leads', leads: [...labels].sort(() => rand() - 0.5).slice(0, n) };
+    }
     case 'ending':
       throw new Error('ended');
   }

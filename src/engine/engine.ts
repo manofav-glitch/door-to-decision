@@ -34,7 +34,8 @@ export type Input =
   | { kind: 'pick'; optionId: string }
   | { kind: 'multi'; optionIds: string[] }
   | { kind: 'dose'; value: number }
-  | { kind: 'calc'; answers: Record<string, ScoreAnswer> };
+  | { kind: 'calc'; answers: Record<string, ScoreAnswer> }
+  | { kind: 'leads'; leads: string[] };
 
 export interface Pick {
   optionId: string;
@@ -48,13 +49,19 @@ export interface Pick {
 
 export interface LogEntry {
   nodeId: string;
-  type: 'choice' | 'ecg' | 'multiselect' | 'dose' | 'calculator';
+  type: 'choice' | 'ecg' | 'multiselect' | 'dose' | 'calculator' | 'ecg-leads';
   prompt: string;
   /** case clock when the decision was made */
   atMinutes: number;
   picks: Pick[];
   dose?: { value: number; expected: DoseRange };
   calc?: CalcComparison;
+  leads?: LeadsComparison;
+}
+
+export interface LeadsComparison {
+  chosen: string[];
+  answer: string[];
 }
 
 export interface CalcComparison {
@@ -124,6 +131,7 @@ export interface ActResult {
   picks: Pick[];
   dose?: { value: number; expected: DoseRange; outcome: 'correct' | 'under' | 'over' };
   calc?: CalcComparison;
+  leads?: LeadsComparison;
 }
 
 export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
@@ -132,7 +140,12 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
   s.inputs.push(input);
   const node = currentNode(c, s);
   const decidedAt = s.minutes;
-  const log = (picks: Pick[], dose?: LogEntry['dose'], calc?: CalcComparison) => {
+  const log = (
+    picks: Pick[],
+    dose?: LogEntry['dose'],
+    calc?: CalcComparison,
+    leads?: LeadsComparison,
+  ) => {
     if (node.type === 'story' || node.type === 'ending') return;
     s.log.push({
       nodeId: s.nodeId,
@@ -142,6 +155,7 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       picks,
       dose,
       calc,
+      leads,
     });
   };
 
@@ -259,6 +273,41 @@ export function act(c: CompiledCase, prev: RunState, input: Input): ActResult {
       return { state: goto(c, s, o.next ?? node.next), picks: [p], calc };
     }
 
+    case 'ecg-leads': {
+      const { leads: tapped } = expect(input, 'leads');
+      if (tapped.length === 0) throw new EngineError('Tap at least one lead');
+      const order = c.leadLayouts[node.image]?.leads.map((l) => l.label) ?? [];
+      for (const l of tapped)
+        if (!order.includes(l)) throw new EngineError(`"${l}" is not a lead on this ECG`);
+      const chosen = order.filter((l) => tapped.includes(l));
+      const hits = chosen.filter((l) => node.answer.includes(l)).length;
+      const extra = chosen.length - hits;
+      const outcome =
+        hits === node.answer.length && extra === 0
+          ? 'correct'
+          : hits * 2 >= node.answer.length && extra <= 1
+            ? 'partial'
+            : 'wrong';
+      const defaultGrade: Record<typeof outcome, Grade> = {
+        correct: 'best',
+        partial: 'acceptable',
+        wrong: 'suboptimal',
+      };
+      const o = node[outcome];
+      const p: Pick = {
+        optionId: outcome,
+        label: `You tapped: ${chosen.join(', ')}`,
+        grade: o.grade ?? defaultGrade[outcome],
+        consequence: o.consequence,
+        teaching: o.teaching,
+      };
+      const leads = { chosen, answer: order.filter((l) => node.answer.includes(l)) };
+      applyGrade(s, p);
+      applyEffects(s, o.effects);
+      log([p], undefined, undefined, leads);
+      return { state: goto(c, s, o.next ?? node.next), picks: [p], leads };
+    }
+
     case 'ending':
       throw new EngineError('The case has ended');
   }
@@ -312,6 +361,8 @@ export function idealInput(c: CompiledCase, s: RunState): Input {
     }
     case 'calculator':
       return { kind: 'calc', answers: node.answers };
+    case 'ecg-leads':
+      return { kind: 'leads', leads: node.answer };
     case 'ending':
       throw new EngineError('The case has ended');
   }

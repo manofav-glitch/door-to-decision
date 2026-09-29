@@ -1,6 +1,6 @@
 // Composes one panel's drawing from data: scene props + actors in their places.
 import { CAST } from './cast';
-import { parseActor, sceneLabel, type Scene } from './registry';
+import { parseActor, type Scene } from './registry';
 import { placeActors, SCENE_ART, type SceneContext } from './scenes';
 
 export const ART_W = 400;
@@ -48,13 +48,8 @@ export function PanelArt({
       aria-hidden="true"
       focusable="false"
     >
-      {def?.back?.(ctx)}
-      {!def && (
-        <text x={ART_W / 2} y={60} textAnchor="middle" className="art-label">
-          {sceneLabel(scene)}
-        </text>
-      )}
-      {!def?.noActors &&
+      {def.back?.(ctx)}
+      {!def.noActors &&
         order.map(({ r, slot }, i) => {
           const Figure = CAST[r.name];
           return (
@@ -63,7 +58,7 @@ export function PanelArt({
             </g>
           );
         })}
-      {def?.front?.(ctx)}
+      {def.front?.(ctx)}
     </svg>
   );
 }
