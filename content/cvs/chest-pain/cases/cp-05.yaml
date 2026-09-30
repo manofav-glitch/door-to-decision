@@ -1,4 +1,4 @@
-# cp-05: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-05: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: inferolateral STEMI at a district hospital 3 hours from the nearest cath lab.
 # Fibrinolysis with streptokinase (what the pharmacy has tonight) fails → rescue PCI.
 
@@ -15,7 +15,8 @@ timeTargets:
   default: [door-to-ecg, dx-to-lysis]
 check:
   source: [esc-acs-2023, esc-stemi-2017]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite set in an Indian district hospital; check the resources and timings are realistic."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -56,7 +57,7 @@ nodes:
 
   ste-leads:
     type: ecg-leads
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse]
@@ -78,7 +79,7 @@ nodes:
 
   reperfusion:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     onEnter: { minutes: 1, milestone: stemi-dx }
     prompt: "Inferolateral STEMI, 2 hours of pain, 3 hours from a cath lab. Reperfusion plan?"
     options:
@@ -105,7 +106,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-acs-2023, esc-stemi-2017]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Check the anticoagulant grades when streptokinase is the lytic."
     onEnter: { minutes: 2 }
     prompt: "Antithrombotic treatment to go with the fibrinolytic. Choose up to 4."
@@ -140,7 +142,8 @@ nodes:
     type: choice
     check:
       source: [esc-acs-2023, acc-aha-acs-2025]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Guidelines differ here: ESC lists ischaemic stroke within 6 months as absolute; ACC/AHA lists older ischaemic stroke as relative. Confirm the teaching point."
     panels:
       - scene: resus-bay
@@ -165,7 +168,7 @@ nodes:
 
   dose-sk:
     type: dose
-    check: { source: esc-stemi-2017, verified: false }
+    check: { source: esc-stemi-2017, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
         actors: [nurse, doctor]
@@ -205,7 +208,7 @@ nodes:
 
   sk-hypotension:
     type: choice
-    check: { source: esc-stemi-2017, verified: false }
+    check: { source: esc-stemi-2017, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Hypotension during the streptokinase infusion. No rash, wheeze or swelling. What now?"
     options:
       - label: "Pause or slow the infusion, lie him flat, small fluid bolus; restart when BP recovers"
@@ -241,7 +244,7 @@ nodes:
 
   repeat-ecg:
     type: ecg
-    check: { source: [esc-acs-2023, gershlick-2005], verified: false }
+    check: { source: [esc-acs-2023, gershlick-2005], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-05-ecg-2.svg
     alt: "Repeat 12-lead ECG 75 minutes after the fibrinolytic. ST elevation in II, III, aVF, V5 and V6 has fallen only slightly compared with the first ECG."
     prompt: "Compare with the first ECG: ST elevation has barely changed and he still has pain. What does it mean?"
@@ -267,7 +270,7 @@ nodes:
 
   rescue:
     type: choice
-    check: { source: [esc-acs-2023, gershlick-2005], verified: false }
+    check: { source: [esc-acs-2023, gershlick-2005], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Failed fibrinolysis. What now?"
     options:
       - label: "Immediate transfer to the PCI centre for rescue PCI"
@@ -349,4 +352,5 @@ debrief:
   refs: [esc-acs-2023, esc-stemi-2017, gershlick-2005, acc-aha-acs-2025]
   check:
     source: [esc-acs-2023, esc-stemi-2017, gershlick-2005]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30

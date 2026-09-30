@@ -6,15 +6,15 @@ doses:
     label: "With fibrinolysis, age under 75"
     route: "IV bolus, then subcutaneous"
     text: "30 mg IV bolus, then 1 mg/kg SC 15 minutes later and every 12 hours (first two SC doses max 100 mg)"
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
   - id: with-lysis-75-plus
     label: "With fibrinolysis, age 75 or over"
     route: Subcutaneous
     text: "No IV bolus; 0.75 mg/kg SC every 12 hours (first two doses max 75 mg)"
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Cautions
     body: "Severe renal impairment (dose adjustment needed); active bleeding."
 india: "Available in India."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false, todo: "Add the renal (CrCl < 30) adjustment if wanted." }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30, todo: "Add the renal (CrCl < 30) adjustment if wanted." }

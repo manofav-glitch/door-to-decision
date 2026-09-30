@@ -7,7 +7,7 @@ doses:
     route: Subcutaneous
     text: "2.5 mg once daily"
     rule: { unit: mg, fixed: 2.5 }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: At PCI
     body: "Give an unfractionated heparin bolus during PCI because of the risk of catheter thrombosis with fondaparinux alone."
@@ -17,5 +17,6 @@ india: "Available in India."
 refs: [esc-acs-2023]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Confirm its current place vs enoxaparin in NSTE-ACS (depends on timing of angiography) and the renal cut-off."

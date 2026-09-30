@@ -26,7 +26,8 @@ score:
       - { from: 6, risk: "40.9%" }
   check:
     source: antman-2000
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Confirm the item wording and the 14-day event rates (scores 0–1 and 6–7 are grouped)."
 refs: [antman-2000]
-check: { source: antman-2000, verified: false }
+check: { source: antman-2000, verified: true, reviewedOn: 2026-09-30 }

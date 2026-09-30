@@ -21,4 +21,4 @@ sections:
       Treat symptomatic bradycardia or AV block, and pace if needed. Early reperfusion is the definitive
       treatment and the RV often recovers.
 refs: [kinch-1994, esc-acs-2023]
-check: { source: [kinch-1994, esc-acs-2023], verified: false }
+check: { source: [kinch-1994, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }

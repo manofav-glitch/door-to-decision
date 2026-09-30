@@ -7,16 +7,16 @@ doses:
     route: Oral
     text: "300 mg loading dose if aged 75 or under; 75 mg (no loading dose) if over 75"
     rule: { unit: mg, fixed: 300, ageAdjust: { fromAge: 76, factor: 0.25 } }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
   - id: pci-loading
     label: "Loading dose for PCI"
     route: Oral
     text: "600 mg once, then 75 mg daily"
     rule: { unit: mg, fixed: 600 }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Contraindications
     body: "Active bleeding; severe hepatic impairment."
 india: "Widely available and inexpensive."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

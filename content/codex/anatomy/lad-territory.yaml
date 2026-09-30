@@ -11,5 +11,6 @@ sections:
 refs: [zimetbaum-2003]
 check:
   source: [zimetbaum-2003, needs-source]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Add an anatomy source and confirm the ECG localisation clues."

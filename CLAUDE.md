@@ -109,6 +109,9 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Phase 2 done: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores, calculator node, Codex, draft cp-02.
 - Phase 3 done 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
 - Phase 4 built 2026-09-30: graph, dev mode, new-case script + skill, CONTENT_GUIDE.md, style warnings. 69 clinical items unverified.
+- 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
+  items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
+  `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
 - Phase 5 in progress: Revise mode done; batch 1 done (cp-03 NSTE-ACS TIMI+GRACE, cp-04 anterior STEMI + shock,
   cp-05 district-hospital SK → failed lysis → rescue PCI). Next: batch 2 (cp-06 dissection, cp-07 PE, cp-08 pericarditis/tamponade),
   then batch 3 (cp-09 high-risk ECGs, cp-10 SCAD, cp-11 troponin-positive not ACS; 5th UDMI-heavy, owner input wanted).

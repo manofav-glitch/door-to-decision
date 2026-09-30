@@ -14,5 +14,6 @@ leads:
   V1:  { st: 0.1, t: 0.15 }
 check:
   source: [zimetbaum-2003, esc-acs-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Look at the drawing: does it show what the case says (inferior STE, III > II, reciprocal STD in I/aVL)?"

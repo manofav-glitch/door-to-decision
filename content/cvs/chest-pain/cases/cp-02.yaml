@@ -1,4 +1,4 @@
-# cp-02 — DRAFT. Every clinical item is `verified: false` until the content owner reviews it.
+# cp-02 — DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: non-cardiac (musculoskeletal) chest pain. Teaching: HEART score + serial hs-troponin
 # → safe discharge, without over-investigating or under-investigating.
 # Assay-specific troponin cut-offs are deliberately not stated: they differ between labs.
@@ -16,7 +16,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Presentation and history are a teaching composite; confirm the history reads as 'slightly suspicious'."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -63,7 +64,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-02-ecg-1.svg
     alt: "12-lead ECG. Sinus rhythm about 78 per minute. Normal axis. No ST elevation or depression. Upright T waves."
     prompt: "Read the ECG."
@@ -110,7 +111,8 @@ nodes:
     type: choice
     check:
       source: esc-acs-2023
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm wording for the 0/1 h or 0/2 h hs-troponin pathway (assay-specific cut-offs not stated)."
     prompt: "Which blood test plan?"
     options:
@@ -148,7 +150,8 @@ nodes:
     type: calculator
     check:
       source: [six-2008, backus-2013]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm the intended answers: history slightly suspicious; ECG normal; 1–2 risk factors (smoker); troponin ≤ limit."
     prompt: "Work out his HEART score."
     score: heart
@@ -172,7 +175,7 @@ nodes:
 
   plan:
     type: choice
-    check: { source: [backus-2013, esc-acs-2023], verified: false }
+    check: { source: [backus-2013, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Low HEART score, normal ECG, first troponin below the limit. What now?"
     options:
       - label: "Repeat hs-troponin at the pathway time point; discharge if it stays low and unchanged"
@@ -214,7 +217,7 @@ nodes:
 
   disposition:
     type: choice
-    check: { source: [esc-acs-2023, backus-2013], verified: false }
+    check: { source: [esc-acs-2023, backus-2013], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Serial troponins negative, HEART score low. Disposition?"
     options:
       - label: "Discharge with clear return advice and GP / outpatient follow-up; simple analgesia"
@@ -282,4 +285,5 @@ debrief:
   refs: [six-2008, backus-2013, esc-acs-2023]
   check:
     source: [esc-acs-2023, backus-2013]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30

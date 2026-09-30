@@ -8,11 +8,12 @@ doses:
     text: "Start low (e.g. 0.05 µg/kg/min) and titrate to a mean arterial pressure of about 65 mmHg"
     check:
       source: esc-acs-2023
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm starting dose and MAP target; add your local infusion concentration."
 sections:
   - heading: Remember
     body: "Pressors buy time; they don't fix the cause. In MI-related shock the priority is emergency revascularisation."
 india: "Available in India."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

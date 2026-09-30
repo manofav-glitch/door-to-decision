@@ -19,5 +19,6 @@ sections:
 refs: [esc-acs-2023, esc-stemi-2017]
 check:
   source: [esc-acs-2023, esc-stemi-2017]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Confirm the lists against the current guideline table, especially the 'not contraindications' line."

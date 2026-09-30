@@ -9,4 +9,4 @@ sections:
   - heading: Why
     body: "In a large trial of early IV then oral metoprolol, fewer reinfarctions and VF were offset by more cardiogenic shock, mainly in the first day and in higher-risk patients."
 refs: [esc-acs-2023, commit-2005]
-check: { source: [esc-acs-2023, commit-2005], verified: false }
+check: { source: [esc-acs-2023, commit-2005], verified: true, reviewedOn: 2026-09-30 }

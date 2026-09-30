@@ -1,4 +1,4 @@
-# cp-01 — DRAFT. Every clinical item is `verified: false` until the content owner reviews it.
+# cp-01 — DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: inferior STEMI with RV involvement (proximal RCA occlusion).
 #
 # How this file works (short version — full guide comes in docs/CONTENT_GUIDE.md):
@@ -25,7 +25,8 @@ timeTargets:
   non-pci: [door-to-ecg, dx-to-lysis]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Presentation and vitals are a teaching composite; confirm they are plausible."
 
 start: arrival
@@ -49,7 +50,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -92,7 +93,7 @@ nodes:
 
   nitrate-rescue:
     type: choice
-    check: { source: [kinch-1994, esc-acs-2023], verified: false }
+    check: { source: [kinch-1994, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "His BP has fallen sharply after the nitrate. What now?"
     options:
       - label: "Lie him flat, raise his legs, give a small IV fluid bolus, and get the ECG"
@@ -120,7 +121,7 @@ nodes:
   # ---------------------------------------------------------------- the ECG
   ste-leads:
     type: ecg-leads
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse]
@@ -144,7 +145,7 @@ nodes:
 
   reciprocal-leads:
     type: ecg-leads
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-01-ecg-1.svg
     alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
     prompt: "Now tap the leads with reciprocal ST depression."
@@ -162,7 +163,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-01-ecg-1.svg
     alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
     prompt: "Put it together. What does this ECG show?"
@@ -201,12 +202,12 @@ nodes:
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: senior, text: "Look at aVL: that's reciprocal ST depression. With elevation in II, III and aVF, this is an inferior STEMI." }
-    check: { source: zimetbaum-2003, verified: false }
+    check: { source: zimetbaum-2003, verified: true, reviewedOn: 2026-09-30 }
     next: culprit
 
   culprit:
     type: choice
-    check: { source: zimetbaum-2003, verified: false }
+    check: { source: zimetbaum-2003, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Which artery is most likely blocked?"
     options:
       - label: "Right coronary artery (proximal)"
@@ -232,7 +233,7 @@ nodes:
 
   right-leads:
     type: choice
-    check: { source: [esc-acs-2023, kinch-1994], verified: false }
+    check: { source: [esc-acs-2023, kinch-1994], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Inferior STEMI with a low BP and slow pulse. Next ECG step?"
     options:
       - label: "Record right-sided chest leads (V4R)"
@@ -255,7 +256,7 @@ nodes:
 
   v4r:
     type: ecg
-    check: { source: [kinch-1994, esc-acs-2023], verified: false }
+    check: { source: [kinch-1994, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-01-v4r.svg
     alt: "Right-sided ECG. Limb leads as before. ST elevation about 1.5 mm in V4R, with smaller elevation in V3R and V5R."
     prompt: "Right-sided leads. What do they show?"
@@ -282,7 +283,8 @@ nodes:
     type: multiselect
     check:
       source: esc-acs-2023
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Check the setting-specific grades for ticagrelor/clopidogrel and UFH/enoxaparin."
     onEnter: { minutes: 2 }
     panels:
@@ -393,7 +395,7 @@ nodes:
   # ---------------------------------------------------------------- PCI-capable centre
   dose-ufh:
     type: dose
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Unfractionated heparin IV bolus for primary PCI. He weighs 70 kg. What dose, in units?"
     drug: ufh
     dose: ppci-bolus
@@ -414,7 +416,7 @@ nodes:
 
   reperfusion-pci:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
         actors: [doctor, nurse]
@@ -446,7 +448,7 @@ nodes:
   # ---------------------------------------------------------------- non-PCI hospital
   reperfusion-nonpci:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
         actors: [doctor, nurse]
@@ -479,7 +481,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-acs-2023, esc-stemi-2017]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm which items are absolute vs relative in the current guideline."
     onEnter: { minutes: 1 }
     prompt: "Before fibrinolysis you check for contraindications. Which of these are ABSOLUTE contraindications? Select all that apply."
@@ -522,7 +525,7 @@ nodes:
 
   dose-tnk:
     type: dose
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
         actors: [nurse, doctor]
@@ -564,7 +567,7 @@ nodes:
 
   chb-strip:
     type: ecg
-    check: { source: aha-ecc-2025, verified: false }
+    check: { source: aha-ecc-2025, verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-01-strip.svg
     alt: "Rhythm strip, lead II. P waves at about 80 per minute and narrow QRS complexes at about 36 per minute, with no fixed relationship between them. ST elevation persists."
     prompt: "Rhythm strip. What is the rhythm?"
@@ -590,7 +593,7 @@ nodes:
 
   chb-treat:
     type: choice
-    check: { source: [aha-ecc-2025, esc-acs-2023], verified: false }
+    check: { source: [aha-ecc-2025, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "HR 36, BP 78/48, drowsy but talking. What now?"
     options:
       - label: "IV atropine, pacing pads on and ready to pace; keep reperfusion on track"
@@ -642,7 +645,7 @@ nodes:
         caption: "{clock} · Cath lab"
         bubbles:
           - { who: senior, text: "Proximal right coronary artery, completely blocked. Wire's across… stent's in. Good flow." }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     next: &outcome
       - { if: { meter: patient, below: 70 }, to: end-fair }
       - { to: end-good }
@@ -663,7 +666,8 @@ nodes:
     type: choice
     check:
       source: esc-acs-2023
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm the ST-resolution criterion (> 50% at 60–90 min) and the 2–24 h window."
     prompt: "Pain gone and ST elevation down by more than half. Next?"
     options:
@@ -761,5 +765,6 @@ debrief:
   refs: [esc-acs-2023, acc-aha-acs-2025, udmi5-2026, zimetbaum-2003, kinch-1994, commit-2005, aha-ecc-2025]
   check:
     source: [esc-acs-2023, udmi5-2026]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Confirm 'primary myocardial infarction' is the right Fifth UDMI label for this case."

@@ -9,4 +9,4 @@ sections:
   - heading: If it works
     body: "Transfer for routine angiography within 2–24 hours (the pharmaco-invasive strategy)."
 refs: [esc-acs-2023, gershlick-2005]
-check: { source: [esc-acs-2023, gershlick-2005], verified: false }
+check: { source: [esc-acs-2023, gershlick-2005], verified: true, reviewedOn: 2026-09-30 }

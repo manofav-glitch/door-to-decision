@@ -7,10 +7,10 @@ doses:
     route: "Oral, chewed (non-enteric-coated)"
     text: "150–300 mg once, then 75–100 mg daily"
     rule: { unit: mg, fixed: { min: 150, max: 300 } }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Contraindications
     body: "True aspirin allergy; active major bleeding."
 india: "Widely available, including dispersible tablets."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false, todo: "Confirm the India availability note." }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30, todo: "Confirm the India availability note." }

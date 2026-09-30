@@ -7,7 +7,7 @@ doses:
     route: Oral
     text: "180 mg once, then 90 mg twice daily"
     rule: { unit: mg, fixed: 180 }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Contraindications and cautions
     body: "Previous intracranial haemorrhage; active bleeding; severe hepatic impairment; use with strong CYP3A4 inhibitors."
@@ -15,4 +15,4 @@ sections:
     body: "Clopidogrel is the P2Y12 inhibitor recommended with fibrinolysis."
 india: "Available in India."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

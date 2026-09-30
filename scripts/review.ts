@@ -45,6 +45,28 @@ for (const [file, items] of byFile) {
     );
   out.push('');
 }
+const noted = compiled.checks.filter((c) => c.verified && c.todo);
+if (noted.length) {
+  out.push(
+    '## Verified, but still carrying a note',
+    '',
+    'These items are marked verified; their `todo` notes are kept here so nothing is lost. Delete a note once it is resolved.',
+    '',
+    '| Line | File | Where | Note | Reviewed |',
+    '|---|---|---|---|---|',
+  );
+  for (const i of noted)
+    out.push(
+      `| ${i.line} | ${i.file} | \`${cell(i.where)}\` | ${cell(i.todo ?? '')} | ${i.reviewedOn ?? ''} |`,
+    );
+  out.push('');
+}
+const needsSource = compiled.checks.filter((c) => c.source.includes('needs-source'));
+if (needsSource.length) {
+  out.push('## Items with no source yet (`needs-source`)', '');
+  for (const i of needsSource) out.push(`- ${i.file}:${i.line} \`${i.where}\`: ${cell(i.what)}`);
+  out.push('');
+}
 const allRefs = new Set(pending.flatMap((p) => p.source));
 if (allRefs.size) {
   out.push('## Sources cited above', '');

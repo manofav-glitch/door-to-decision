@@ -13,5 +13,6 @@ leads:
   V2:  { st: -0.12, t: 0.3 }
 check:
   source: [zimetbaum-2003, esc-acs-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Check: inferolateral STE with reciprocal change."

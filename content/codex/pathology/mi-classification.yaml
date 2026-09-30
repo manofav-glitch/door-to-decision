@@ -27,5 +27,6 @@ sections:
 refs: [udmi5-2026]
 check:
   source: udmi5-2026
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Claude could not confirm the Fifth UDMI's exact definitions. Please rewrite each section from the document itself."

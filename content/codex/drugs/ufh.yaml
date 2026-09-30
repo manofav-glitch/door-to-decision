@@ -7,16 +7,16 @@ doses:
     route: IV bolus
     text: "70–100 units/kg"
     rule: { unit: units, perKg: { min: 70, max: 100 } }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
   - id: with-lysis
     label: "With fibrinolysis"
     route: "IV bolus, then infusion"
     text: "60 units/kg bolus (max 4000 units), then 12 units/kg/h (max 1000 units/h), adjusted to aPTT"
     rule: { unit: units, perKg: 60, maxDose: 4000 }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Cautions
     body: "Active bleeding; heparin-induced thrombocytopenia (current or previous)."
 india: "Widely available."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

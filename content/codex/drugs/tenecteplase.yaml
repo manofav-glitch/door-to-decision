@@ -15,7 +15,7 @@ doses:
         - { belowKg: 90, dose: 45 }
         - { dose: 50 }
       ageAdjust: { fromAge: 75, factor: 0.5 }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Contraindications
     body: "See 'Fibrinolysis: contraindications'."
@@ -23,4 +23,4 @@ sections:
     body: "Aspirin, clopidogrel and an anticoagulant (enoxaparin preferred). Then transfer for angiography: rescue PCI if it fails, routine angiography within 2–24 hours if it succeeds."
 india: "Available in India; costs more than streptokinase."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false, todo: "Confirm the India note and local availability." }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30, todo: "Confirm the India note and local availability." }

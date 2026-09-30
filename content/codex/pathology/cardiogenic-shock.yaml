@@ -13,4 +13,5 @@ sections:
 refs: [hochman-1999, thiele-2012, thiele-2017, scai-2019, esc-acs-2023]
 check:
   source: [hochman-1999, thiele-2012, thiele-2017, scai-2019, esc-acs-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30

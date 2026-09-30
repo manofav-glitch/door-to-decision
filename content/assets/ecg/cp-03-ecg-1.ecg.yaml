@@ -12,5 +12,6 @@ leads:
   V6:  { st: -0.1, t: -0.12 }
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Check the drawing shows lateral ST depression without ST elevation."

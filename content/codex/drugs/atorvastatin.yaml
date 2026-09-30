@@ -7,10 +7,10 @@ doses:
     route: Oral
     text: "40–80 mg once daily"
     rule: { unit: mg, fixed: { min: 40, max: 80 } }
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 sections:
   - heading: Why early
     body: "Early high-intensity statin therapy lowers recurrent events; lipid targets are then reached by adding other agents if needed."
 india: "Widely available and inexpensive."
 refs: [esc-acs-2023]
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

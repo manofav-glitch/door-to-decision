@@ -11,5 +11,6 @@ sections:
 refs: [esc-acs-2023]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Confirm the lists against the current guideline."

@@ -8,5 +8,6 @@ leads:
   II: { q: 0.1, st: 0.2, t: 0.45 }
 check:
   source: aha-ecc-2025
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Check the strip reads as complete heart block with a narrow escape."

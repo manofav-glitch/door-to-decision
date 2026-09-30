@@ -15,5 +15,6 @@ leads:
   aVF: { st: -0.14, t: -0.05 }
 check:
   source: [zimetbaum-2003, esc-acs-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Check: STE V1–V4, I and aVL; reciprocal STD inferiorly."

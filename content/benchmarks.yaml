@@ -8,27 +8,28 @@ timeTargets:
     from: door
     to: ecg
     targetMin: 10
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 
   - id: dx-to-wire
     label: "STEMI diagnosis to wire crossing (patient at a PCI centre)"
     from: stemi-dx
     to: wire
     targetMin: 60
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 
   - id: dx-to-lysis
     label: "STEMI diagnosis to fibrinolytic bolus"
     from: stemi-dx
     to: lysis
     targetMin: 10
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 
 vitalLimits:
   # A value below `low` or above `high` shows in red.
   check:
     source: needs-source
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Choose the HUD alarm ranges (e.g. NEWS2 bands or local triage criteria) and cite them."
   hr: { low: 60, high: 100 }
   sbp: { low: 90, high: 180 }

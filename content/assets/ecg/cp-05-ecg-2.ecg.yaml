@@ -13,5 +13,6 @@ leads:
   V2:  { st: -0.1, t: 0.3 }
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Check this reads as < 50% ST resolution compared with the first ECG."

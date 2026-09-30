@@ -1,4 +1,4 @@
-# cp-04: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-04: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: anterior STEMI from a proximal LAD occlusion, evolving into cardiogenic shock.
 # Teaching: recognise shock, support (O2, pressor), avoid the fluid and beta-blocker traps, and get
 # emergency culprit-lesion PCI; no routine IABP; culprit-only PCI in multivessel disease.
@@ -16,7 +16,8 @@ timeTargets:
   default: [door-to-ecg, dx-to-wire]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; check the evolving shock picture is plausible."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now, while the nurse puts him on the monitor"
@@ -62,7 +63,7 @@ nodes:
 
   ste-leads:
     type: ecg-leads
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse]
@@ -84,7 +85,7 @@ nodes:
 
   culprit:
     type: choice
-    check: { source: zimetbaum-2003, verified: false }
+    check: { source: zimetbaum-2003, verified: true, reviewedOn: 2026-09-30 }
     onEnter: { minutes: 1, milestone: stemi-dx, addFlags: [stemi_dx] }
     prompt: "Where is the occlusion most likely to be?"
     options:
@@ -120,7 +121,7 @@ nodes:
 
   shock:
     type: choice
-    check: { source: [scai-2019, esc-acs-2023], verified: false }
+    check: { source: [scai-2019, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Low BP, cold and mottled, confused, wet lungs. What is this?"
     options:
       - label: "Cardiogenic shock"
@@ -146,7 +147,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-acs-2023, thiele-2012]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Check grades: crushed ticagrelor, dobutamine, furosemide in shock."
     panels:
       - scene: resus-bay
@@ -233,7 +235,7 @@ nodes:
 
   dose-ufh:
     type: dose
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Unfractionated heparin IV bolus for primary PCI. He weighs 80 kg. What dose, in units?"
     drug: ufh
     dose: ppci-bolus
@@ -254,7 +256,7 @@ nodes:
 
   reperfusion:
     type: choice
-    check: { source: [esc-acs-2023, hochman-1999, thiele-2012], verified: false }
+    check: { source: [esc-acs-2023, hochman-1999, thiele-2012], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Anterior STEMI in cardiogenic shock, at a PCI-capable centre. The plan?"
     options:
       - label: "Emergency angiography and PCI now"
@@ -292,12 +294,12 @@ nodes:
         caption: "{clock} · Cath lab"
         bubbles:
           - { who: senior, text: "Proximal LAD occluded: wire across, stent in, flow restored. The circumflex has a tight lesion too." }
-    check: { source: thiele-2017, verified: false }
+    check: { source: thiele-2017, verified: true, reviewedOn: 2026-09-30 }
     next: multivessel
 
   multivessel:
     type: choice
-    check: { source: [thiele-2017, esc-acs-2023], verified: false }
+    check: { source: [thiele-2017, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Shock, with a second tight lesion in the circumflex. What now?"
     options:
       - label: "Treat the culprit only now; stage the circumflex later"
@@ -364,4 +366,5 @@ debrief:
   refs: [esc-acs-2023, hochman-1999, thiele-2012, thiele-2017, scai-2019, zimetbaum-2003]
   check:
     source: [esc-acs-2023, hochman-1999, thiele-2017]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30

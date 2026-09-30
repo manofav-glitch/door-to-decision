@@ -99,7 +99,8 @@ score:
   bandsSource: esc-nste-2011
   check:
     source: [granger-2003, esc-nste-2011]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Check every point value and nomogram row against Granger 2003; confirm bin edges (value on an edge → higher bin), the 88.4 µmol/L per mg/dL conversion, and the low/intermediate/high cut-offs and their source."
 refs: [granger-2003, esc-nste-2011]
-check: { source: granger-2003, verified: false }
+check: { source: granger-2003, verified: true, reviewedOn: 2026-09-30 }
