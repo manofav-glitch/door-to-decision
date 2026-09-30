@@ -1,9 +1,7 @@
 # Door to Decision
 
-Minimalist, decision-based, comic-panel learning game for Emergency Medicine, organised by organ system.
-The learner is the ED doctor: panels tell the story → learner decides → patient responds (vitals, events) →
-debrief explains why. Each case teaches clinical decisions, pathophysiology, applied anatomy, pharmacology and
-validated risk scores. First module: Cardiovascular → Chest Pain (HEART, TIMI, GRACE).
+Decision-based comic-panel EM learning game by organ system: panels → learner decides → patient responds → debrief.
+Cases teach decisions, pathophysiology, anatomy, pharmacology and risk scores. First module: Cardiovascular → Chest Pain.
 
 **Full spec: `docs/SPEC.md` (the owner's original brief, verbatim). Read the relevant section before working.**
 
@@ -13,9 +11,8 @@ validated risk scores. First module: Cardiovascular → Chest Pain (HEART, TIMI,
 - Separate from the Expo app in `~/Desktop/EM app` — do not touch that repo.
 
 ## Stack
-Vite + React + TypeScript (strict) · Tailwind CSS (tokens as CSS variables) · hash routing (GitHub Pages) ·
-Zod (content validation) · Vitest · vite-plugin-pwa · Zustand + localStorage (progress, settings) ·
-YAML content compiled at build time · GitHub Actions → GitHub Pages.
+Vite + React + TS (strict) · Tailwind (tokens as CSS vars) · hash routing · Zod · Vitest · vite-plugin-pwa · Zustand +
+localStorage · YAML content compiled at build time · GitHub Actions → GitHub Pages.
 No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fonts self-hosted. SVG/WebP only.
 
 ## Commands
@@ -118,5 +115,5 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
   `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
 - Phase 5 done: Revise mode; all 11 chest-pain cases (cp-01…05 owner-verified; cp-06…11 drafts, 84 unverified items).
-- Phase 6 done 2026-09-30: accessibility audit + fixes, performance (PageSpeed mobile 98 / a11y 100 / best practices 100 before
-  the changes), woff2-only fonts, lazy screens, meta description, presenter mode. Pending: owner's low-end Android check.
+- Phase 6 done 2026-09-30: accessibility audit + fixes, performance (PageSpeed mobile after changes: 98 perf / 100 a11y / 100 best
+  practices / 100 SEO), woff2-only fonts, lazy screens, meta description, presenter mode. Pending: owner's low-end Android check.
