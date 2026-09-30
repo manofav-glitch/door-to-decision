@@ -69,3 +69,29 @@ describe('Revise deck', () => {
     expect(useProgress.getState().mistakes).toEqual([]);
   });
 });
+
+describe('presenter mode', () => {
+  beforeEach(() =>
+    useProgress.setState({
+      mistakes: [],
+      reviseStreak: {},
+      active: {},
+      finished: {},
+      bestStars: {},
+      plays: {},
+      unlocked: [],
+    }),
+  );
+  it("doesn't change the presenter's stars, unlocks or mistakes deck", () => {
+    useProgress
+      .getState()
+      .begin({ caseId: 'c1', setting: null, mode: 'present', contentVersion: 'x' });
+    useProgress.getState().finish('c1', result(mistake('first', 'X')), ['card']);
+    const s = useProgress.getState();
+    expect(s.mistakes).toEqual([]);
+    expect(s.bestStars).toEqual({});
+    expect(s.unlocked).toEqual([]);
+    expect(s.finished.c1?.mode).toBe('present'); // the debrief still works
+    expect(s.active.c1).toBeUndefined();
+  });
+});

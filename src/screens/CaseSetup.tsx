@@ -64,7 +64,8 @@ export function CaseSetup() {
       {resumable && saved && (
         <div className="panel mb-6 flex flex-wrap items-center justify-between gap-3 p-4">
           <span>
-            You have a case in progress ({saved.mode === 'learn' ? 'Learn' : 'Exam'} mode
+            You have a case in progress (
+            {{ learn: 'Learn', exam: 'Exam', present: 'Presenter' }[saved.mode]} mode
             {saved.setting
               ? `, ${summary.settings.find((s) => s.id === saved.setting)?.label}`
               : ''}
@@ -107,11 +108,16 @@ export function CaseSetup() {
 
       <fieldset className="mb-8">
         <legend className="mb-2 text-lg font-bold">Mode</legend>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-3">
           {(
             [
               ['learn', 'Learn', 'Feedback after every decision.'],
               ['exam', 'Exam', 'No feedback until the debrief.'],
+              [
+                'present',
+                'Present',
+                'For teaching: big text, panels one click at a time, answers revealed on click.',
+              ],
             ] as const
           ).map(([id, label, desc]) => (
             <label

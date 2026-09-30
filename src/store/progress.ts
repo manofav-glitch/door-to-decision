@@ -5,7 +5,7 @@ import { persist } from 'zustand/middleware';
 import type { Grade } from '../content/schema';
 import type { Input, RunResult } from '../engine/engine';
 
-export type Mode = 'learn' | 'exam';
+export type Mode = 'learn' | 'exam' | 'present';
 
 export interface SavedRun {
   caseId: string;
@@ -105,6 +105,8 @@ export const useProgress = create<ProgressState>()(
           if (!run) return {};
           const { [caseId]: _done, ...active } = s.active;
           void _done;
+          // presenting to a group shouldn't change the presenter's own stars, unlocks or mistakes deck
+          if (run.mode === 'present') return { active, finished: { ...s.finished, [caseId]: run } };
           const at = new Date().toISOString();
           const fresh: Mistake[] = result.mistakes.map((m) => ({
             caseId,

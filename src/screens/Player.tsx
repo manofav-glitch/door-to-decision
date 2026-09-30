@@ -10,6 +10,7 @@ import {
   ChoiceList,
   ContinueButton,
   DoseForm,
+  AllOptions,
   Feedback,
   LeadGrid,
   MultiSelect,
@@ -62,7 +63,14 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
       return null;
     }
   });
-  const [pending, setPending] = useState<{ prev: RunState; res: ActResult } | null>(null);
+  const [pending, setPending] = useState<{
+    prev: RunState;
+    res: ActResult;
+    revealed?: boolean;
+  } | null>(null);
+  const present = saved.mode === 'present';
+  // presenter mode: how many of the current step's panels are showing
+  const [shown, setShown] = useState<{ node: string; count: number }>({ node: '', count: 1 });
   const heading = useRef<HTMLHeadingElement>(null);
   const dev = useDevMode();
   // after a dev jump the run can't be replayed from its inputs, so it is no longer saved
@@ -81,6 +89,30 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   const view = pending?.prev ?? run;
   const viewNodeId = view?.nodeId;
   const viewNode = view ? currentNode(c, view) : undefined;
+
+  // Presenter mode: big type for the whole screen, and F toggles full screen.
+  useEffect(() => {
+    if (!present) return;
+    const root = document.documentElement;
+    root.dataset.present = 'on';
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (
+        e.key.toLowerCase() !== 'f' ||
+        e.metaKey ||
+        e.ctrlKey ||
+        ['INPUT', 'TEXTAREA'].includes(t.tagName)
+      )
+        return;
+      if (document.fullscreenElement) void document.exitFullscreen();
+      else void root.requestFullscreen?.().catch(() => undefined);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      delete root.dataset.present;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [present]);
 
   // New beat: scroll up and move focus to the sheet heading.
   useEffect(() => {
@@ -101,7 +133,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
       </main>
     );
 
-  const learn = saved.mode === 'learn';
+  const learn = saved.mode === 'learn' || present; // presenter mode shows feedback, after a reveal
   const doAct = (input: Input) => {
     const res = act(c, run, input);
     if (!devJumped) record(c.id, res.state.inputs);
@@ -116,8 +148,19 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
   };
 
   const clock = clockAt(c, view.minutes);
+  // presenter mode: the monitor mustn't give the answer away before the reveal
+  const hudState = present && pending && !pending.revealed ? pending.prev : run;
   const longSheet = viewNode.type === 'calculator';
-  const panels = lastPanels(c.nodes, view.path);
+  const allPanels = lastPanels(c.nodes, view.path);
+  const ownPanels = viewNode.panels?.length ?? 0;
+  const revealedPanels =
+    present && ownPanels && !pending
+      ? shown.node === viewNodeId
+        ? shown.count
+        : 1
+      : allPanels.length;
+  const panels = allPanels.slice(0, revealedPanels);
+  const morePanels = revealedPanels < allPanels.length;
   const nodeUnverified = 'check' in viewNode && viewNode.check && !viewNode.check.verified;
   const ecg = viewNode.type === 'ecg' || viewNode.type === 'ecg-leads' ? viewNode : undefined;
   const leadNode = viewNode.type === 'ecg-leads' ? viewNode : undefined;
@@ -133,16 +176,49 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
 
   let title: string;
   let body: React.ReactNode;
-  if (pending) {
+  if (pending && present && !pending.revealed) {
+    title = 'Answer locked in';
+    body = (
+      <div className="flex flex-col gap-3">
+        <ul className="flex list-disc flex-col gap-1 pl-5">
+          {pending.res.picks
+            .filter((p) => !p.missed)
+            .map((p) => (
+              <li key={p.optionId} className="font-semibold">
+                {p.label}
+              </li>
+            ))}
+        </ul>
+        <p className="text-grey-1">Discuss, then reveal the answer.</p>
+        <ContinueButton label="Reveal" onClick={() => setPending({ ...pending, revealed: true })} />
+      </div>
+    );
+  } else if (pending) {
     title = 'What happened';
     const node = currentNode(c, pending.prev);
     body = (
-      <Feedback
-        res={pending.res}
-        onContinue={() => setPending(null)}
-        sources={
-          node.type === 'calculator' ? scoreFor(c, node).refs.map((r) => r.citation) : undefined
-        }
+      <>
+        <Feedback
+          res={pending.res}
+          onContinue={() => setPending(null)}
+          sources={
+            node.type === 'calculator' ? scoreFor(c, node).refs.map((r) => r.citation) : undefined
+          }
+        />
+        {present && 'options' in node && (
+          <AllOptions
+            options={visibleOptions(pending.prev, node)}
+            chosen={pending.res.picks.filter((p) => !p.missed).map((p) => p.optionId)}
+          />
+        )}
+      </>
+    );
+  } else if (morePanels) {
+    title = 'Next panel';
+    body = (
+      <ContinueButton
+        label="Show the next panel"
+        onClick={() => setShown({ node: viewNodeId!, count: revealedPanels + 1 })}
       />
     );
   } else {
@@ -237,18 +313,22 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
           </Link>
           <h1 className="min-w-0 truncate text-base font-semibold">{c.title}</h1>
           {c.draft && <UnverifiedBadge className="shrink-0" />}
-          <span className="ml-auto shrink-0 text-sm text-grey-1">{learn ? 'Learn' : 'Exam'}</span>
+          <span className="ml-auto shrink-0 text-sm text-grey-1">
+            {present ? 'Present' : learn ? 'Learn' : 'Exam'}
+          </span>
           {dev && <DevTag />}
         </div>
         <Hud
-          vitals={run.vitals}
+          vitals={hudState.vitals}
           limits={c.vitalLimits}
-          clock={clockAt(c, run.minutes)}
-          minutes={run.minutes}
+          clock={clockAt(c, hudState.minutes)}
+          minutes={hudState.minutes}
         />
       </header>
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6">
+      <main
+        className={`mx-auto flex w-full ${present ? 'max-w-[96rem]' : 'max-w-6xl'} flex-1 flex-col px-4 pt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-start lg:gap-6`}
+      >
         <section
           aria-label="Story panels"
           className="grid flex-1 grid-cols-[minmax(0,1fr)] content-start gap-4 pb-4 sm:grid-cols-[repeat(2,minmax(0,1fr))]"

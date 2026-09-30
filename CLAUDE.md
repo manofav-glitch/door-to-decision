@@ -53,7 +53,9 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Hierarchy: System → Module → Case → Nodes → Panels. Codex (anatomy, pathology, drugs, scores, ECG) is unlocked by cases and browsable anytime.
 - Node types built: story, choice, ecg, ecg-leads (tap the leads), multiselect, dose, calculator, ending. Planned: order. Add a type = schema + engine `act`/`idealInput` + a Sheet view.
 - Options are graded best / acceptable / suboptimal / harmful, with a one-line consequence and a teaching point.
-- Hidden patient state: vitals, case clock, flags. Meters: Patient, Time, Safety. End grade 1–3 stars. Modes: Learn / Exam.
+- Hidden patient state: vitals, case clock, flags. Meters: Patient, Time, Safety. End grade 1–3 stars. Modes: Learn / Exam / Present
+  (presenter: `data-present` on <html> scales rem to 137.5%; panels one click at a time; answers locked in, then Reveal shows
+  every option's grade; the HUD waits for Reveal; F = full screen; present runs don't touch stars, unlocks or the mistakes deck).
 - Case titles never reveal the diagnosis. Setting toggle (PCI-capable vs non-PCI) changes the correct pathway.
 - Harmful picks count as safety events automatically. Stars: 3, −1 for any harmful pick, −1 for a missed time target or Patient < 70; critical ending = 1. These game rules live in the engine, not content.
 - A case is a draft if ANY check it depends on is unverified (its own, doses it asks, scores it uses, time targets, HUD limits, ECG drawings).
@@ -62,6 +64,9 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Style warnings (non-blocking, in compile.ts): spoiler words in titles, choice/ecg with no best option, consequence/teaching > 220 chars.
 - When the schema changes, update docs/CONTENT_GUIDE.md and docs/templates/case.yaml in the same commit.
 - Lead-tap grading: exact set = best; ≥ half found and ≤ 1 extra = acceptable; else suboptimal.
+- Accessibility: axe (WCAG 2.1 A/AA) clean on every screen in both themes (checked 2026-09-30); `test/a11y.test.ts` guards token
+  contrast and text alternatives. Tap targets ≥ 44 px (checkbox rows are whole-row labels). Heavy screens are React.lazy chunks;
+  fonts are woff2-only @font-face in index.css. Full offline download ≈ 435 KB compressed.
 - Art: ONE stroke width via `.art` (non-scaling); props grey, people ink, red only for alarms. Panels are ≥ square and grow downwards (grid + aspect spacer); grids use `minmax(0,1fr)` so long bubble text can't widen them.
 
 ## CLINICAL CONTENT RULES — NON-NEGOTIABLE
@@ -112,6 +117,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
   items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
   `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
-- Phase 5 built 2026-09-30: Revise mode; all 11 chest-pain cases (cp-01…cp-11). cp-01…05 owner-verified; cp-06…11 are
-  drafts (84 unverified items; cp-10/cp-11 hinge on 5th UDMI wording Claude couldn't confirm). ECG codex cards exist
-  (posterior-mi, de-winter, wellens). Next: Phase 6 (accessibility audit, Lighthouse ≥ 90, low-end Android, presenter mode).
+- Phase 5 done: Revise mode; all 11 chest-pain cases (cp-01…05 owner-verified; cp-06…11 drafts, 84 unverified items).
+- Phase 6 done 2026-09-30: accessibility audit + fixes, performance (PageSpeed mobile 98 / a11y 100 / best practices 100 before
+  the changes), woff2-only fonts, lazy screens, meta description, presenter mode. Pending: owner's low-end Android check.

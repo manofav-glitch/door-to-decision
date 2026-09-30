@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, index, useCase, type LoadedCase } from '../content/client';
 import { DoseWorking, LeadsResult } from '../components/player/Sheet';
@@ -25,6 +25,14 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
   const navigate = useNavigate();
   const begin = useProgress((s) => s.begin);
   const [showIdeal, setShowIdeal] = useState(false);
+  // keep the presenter's big type on the debrief
+  useEffect(() => {
+    if (saved.mode !== 'present') return;
+    document.documentElement.dataset.present = 'on';
+    return () => {
+      delete document.documentElement.dataset.present;
+    };
+  }, [saved.mode]);
   const found = findCase(c.id)!;
 
   let run: RunState;
@@ -64,7 +72,9 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
       <h1 className="mb-1 text-2xl font-bold">{c.title}</h1>
       <p className="mb-6 flex flex-wrap items-center gap-x-3 text-grey-1">
         {settingLabel && <span>{settingLabel}</span>}
-        <span>{saved.mode === 'learn' ? 'Learn mode' : 'Exam mode'}</span>
+        <span>
+          {{ learn: 'Learn mode', exam: 'Exam mode', present: 'Presenter mode' }[saved.mode]}
+        </span>
         {c.draft && <UnverifiedBadge />}
       </p>
 

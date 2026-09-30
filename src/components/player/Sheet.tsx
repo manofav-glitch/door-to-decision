@@ -15,7 +15,7 @@ function useKeys(keys: { digit?: (n: number) => void; confirm?: () => void }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const t = e.target as HTMLElement;
+      const t = e.target instanceof HTMLElement ? e.target : document.body;
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName) || t.closest('dialog[open]')) return;
       if (/^[1-9]$/.test(e.key) && ref.current.digit) {
         e.preventDefault();
@@ -221,6 +221,32 @@ export function LeadsResult({ chosen, answer }: { chosen: string[]; answer: stri
       {missed.length > 0 && <span className="block">Missed: {missed.join(', ')}</span>}
       {extra.length > 0 && <span className="block">Not affected: {extra.join(', ')}</span>}
     </p>
+  );
+}
+
+/** Presenter mode: every option with its grade, so the room sees why each was right or wrong. */
+export function AllOptions({ options, chosen }: { options: Option[]; chosen: string[] }) {
+  return (
+    <section className="mt-4 border-t-[3px] border-ink pt-3" aria-label="All options">
+      <h3 className="mb-2 text-sm font-bold tracking-wider text-grey-1 uppercase">All options</h3>
+      <ul className="flex flex-col gap-3">
+        {options.map((o) => (
+          <li
+            key={o.id}
+            className={`border-l-4 pl-3 ${o.grade === 'harmful' ? 'border-alarm' : o.grade === 'best' ? 'border-ink' : 'border-grey-2'}`}
+          >
+            <div className="flex flex-wrap items-start gap-2">
+              <GradeChip grade={o.grade} />
+              <span className="font-semibold">{o.label}</span>
+              {chosen.includes(o.id!) && (
+                <span className="text-xs font-bold tracking-wider uppercase">· chosen</span>
+              )}
+            </div>
+            <p className="mt-1 text-grey-1">{o.teaching}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
