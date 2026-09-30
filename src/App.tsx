@@ -10,6 +10,7 @@ import { Debrief } from './screens/Debrief';
 import { Home } from './screens/Home';
 import { Module } from './screens/Module';
 import { Player } from './screens/Player';
+import { Revise } from './screens/Revise';
 import { Settings } from './screens/Settings';
 import { System } from './screens/System';
 
@@ -29,6 +30,7 @@ export function App() {
               <Route path="debrief/:caseId" element={<Debrief />} />
               <Route path="codex" element={<Codex />} />
               <Route path="codex/:cardId" element={<CodexCard />} />
+              <Route path="revise" element={<Revise />} />
               <Route path="settings" element={<Settings />} />
               {import.meta.env.DEV && <Route path="dev/art" element={<ArtSheet />} />}
               <Route path="*" element={<Home />} />

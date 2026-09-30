@@ -1,5 +1,6 @@
 import { DISCLAIMER } from '../components/Disclaimer';
 import { index } from '../content/client';
+import { useProgress } from '../store/progress';
 import { useSettings, type TextSize, type Theme } from '../store/settings';
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -64,6 +65,17 @@ export function Settings() {
       <p className="py-2 text-sm text-grey-1">
         Draft cases contain clinical content that has not been verified by the content owner.
       </p>
+      <Row label="Clear revise deck">
+        <button
+          className="panel min-h-11 px-3"
+          onClick={() => {
+            if (window.confirm('Remove every question from your Revise deck?'))
+              useProgress.getState().clearDeck();
+          }}
+        >
+          Clear
+        </button>
+      </Row>
       <Row label="Reset progress">
         <button
           className="panel min-h-11 px-3"
