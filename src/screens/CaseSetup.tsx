@@ -93,7 +93,10 @@ export function CaseSetup() {
                   onChange={() => setSetting(s.id)}
                 />
                 <span>
-                  <span className="block font-semibold">{s.label}</span>
+                  <span className="block font-semibold">
+                    {s.label}
+                    <span className="sr-only">. </span>
+                  </span>
                   <span className="text-sm text-grey-1">{s.description}</span>
                 </span>
               </label>
@@ -123,7 +126,10 @@ export function CaseSetup() {
                 onChange={() => setMode(id)}
               />
               <span>
-                <span className="block font-semibold">{label}</span>
+                <span className="block font-semibold">
+                  {label}
+                  <span className="sr-only">. </span>
+                </span>
                 <span className="text-sm text-grey-1">{desc}</span>
               </span>
             </label>

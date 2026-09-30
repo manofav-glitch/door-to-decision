@@ -3,12 +3,24 @@ import { index } from '../content/client';
 import { useProgress } from '../store/progress';
 import { useSettings, type TextSize, type Theme } from '../store/settings';
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({
+  label,
+  children,
+  asLabel,
+}: {
+  label: string;
+  children: React.ReactNode;
+  asLabel?: boolean;
+}) {
+  // asLabel: the whole row is the tap target for a checkbox (≥ 44 px), not just the box
+  const Tag = asLabel ? 'label' : 'div';
   return (
-    <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-grey-2 py-2">
+    <Tag
+      className={`flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-grey-2 py-2 ${asLabel ? 'cursor-pointer' : ''}`}
+    >
       <span className="font-semibold">{label}</span>
       {children}
-    </div>
+    </Tag>
   );
 }
 
@@ -44,7 +56,7 @@ export function Settings() {
           <option value="xlarge">Extra large</option>
         </select>
       </Row>
-      <Row label="Reduce motion">
+      <Row label="Reduce motion" asLabel>
         <input
           type="checkbox"
           className="size-6"
@@ -53,7 +65,7 @@ export function Settings() {
           onChange={(e) => s.set({ reduceMotion: e.target.checked })}
         />
       </Row>
-      <Row label="Show draft cases">
+      <Row label="Show draft cases" asLabel>
         <input
           type="checkbox"
           className="size-6"

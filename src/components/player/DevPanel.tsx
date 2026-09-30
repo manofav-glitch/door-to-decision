@@ -23,7 +23,7 @@ export function DevPanel({
   );
   return (
     <details className="mt-4 border-2 border-dashed border-grey-1 p-2 text-sm" open>
-      <summary className="cursor-pointer font-bold tracking-wider text-grey-1 uppercase">
+      <summary className="flex min-h-11 cursor-pointer items-center font-bold tracking-wider text-grey-1 uppercase">
         Dev tools
       </summary>
       <div className="mt-2 flex flex-wrap items-center gap-2">

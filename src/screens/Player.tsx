@@ -230,12 +230,12 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-1">
           <Link
             to={`/case/${c.id}`}
-            className="btn min-h-10 px-3"
+            className="btn min-h-11 min-w-11 px-3"
             aria-label="Exit case (progress is saved)"
           >
             ✕
           </Link>
-          <span className="min-w-0 truncate font-semibold">{c.title}</span>
+          <h1 className="min-w-0 truncate text-base font-semibold">{c.title}</h1>
           {c.draft && <UnverifiedBadge className="shrink-0" />}
           <span className="ml-auto shrink-0 text-sm text-grey-1">{learn ? 'Learn' : 'Exam'}</span>
           {dev && <DevTag />}
@@ -248,7 +248,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         />
       </header>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-6">
         <section
           aria-label="Story panels"
           className="grid flex-1 grid-cols-[minmax(0,1fr)] content-start gap-4 pb-4 sm:grid-cols-[repeat(2,minmax(0,1fr))]"
@@ -320,7 +320,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
           {body}
           {dev && <DevPanel c={c} run={run} onJump={jump} />}
         </aside>
-      </div>
+      </main>
     </div>
   );
 }

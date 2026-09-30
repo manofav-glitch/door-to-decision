@@ -198,7 +198,7 @@ export function ScoreCalculator({
     <section className="panel mb-6 p-4" aria-label="Calculator">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-lg font-bold">Calculator</h2>
-        <button type="button" className="btn min-h-10 px-3 text-sm" onClick={() => setEntries({})}>
+        <button type="button" className="btn px-3 text-sm" onClick={() => setEntries({})}>
           Reset
         </button>
       </div>
