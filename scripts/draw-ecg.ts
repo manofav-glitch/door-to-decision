@@ -17,22 +17,22 @@ import {
   TOP_MM,
 } from '../src/art/ecgLayout.ts';
 
-type Shape = { p: number; q: number; r: number; s: number; t: number; st: number };
+type Shape = { p: number; q: number; r: number; s: number; t: number; st: number; pr: number };
 
 // Generic normal morphology per standard lead (mV). Specs override per lead.
 const NORMAL: Record<string, Shape> = {
-  I: { p: 0.1, q: 0.05, r: 0.7, s: 0.1, t: 0.25, st: 0 },
-  II: { p: 0.15, q: 0.05, r: 1.0, s: 0.15, t: 0.35, st: 0 },
-  III: { p: 0.05, q: 0.05, r: 0.5, s: 0.2, t: 0.15, st: 0 },
-  aVR: { p: -0.1, q: 0, r: 0.1, s: 0.7, t: -0.25, st: 0 },
-  aVL: { p: 0.05, q: 0.05, r: 0.4, s: 0.2, t: 0.1, st: 0 },
-  aVF: { p: 0.1, q: 0.05, r: 0.7, s: 0.15, t: 0.25, st: 0 },
-  V1: { p: 0.05, q: 0, r: 0.2, s: 1.0, t: 0.05, st: 0 },
-  V2: { p: 0.05, q: 0, r: 0.4, s: 1.4, t: 0.5, st: 0 },
-  V3: { p: 0.05, q: 0, r: 0.7, s: 0.9, t: 0.5, st: 0 },
-  V4: { p: 0.05, q: 0.05, r: 1.2, s: 0.5, t: 0.45, st: 0 },
-  V5: { p: 0.05, q: 0.05, r: 1.3, s: 0.3, t: 0.35, st: 0 },
-  V6: { p: 0.05, q: 0.05, r: 1.0, s: 0.15, t: 0.3, st: 0 },
+  I: { p: 0.1, q: 0.05, r: 0.7, s: 0.1, t: 0.25, st: 0, pr: 0 },
+  II: { p: 0.15, q: 0.05, r: 1.0, s: 0.15, t: 0.35, st: 0, pr: 0 },
+  III: { p: 0.05, q: 0.05, r: 0.5, s: 0.2, t: 0.15, st: 0, pr: 0 },
+  aVR: { p: -0.1, q: 0, r: 0.1, s: 0.7, t: -0.25, st: 0, pr: 0 },
+  aVL: { p: 0.05, q: 0.05, r: 0.4, s: 0.2, t: 0.1, st: 0, pr: 0 },
+  aVF: { p: 0.1, q: 0.05, r: 0.7, s: 0.15, t: 0.25, st: 0, pr: 0 },
+  V1: { p: 0.05, q: 0, r: 0.2, s: 1.0, t: 0.05, st: 0, pr: 0 },
+  V2: { p: 0.05, q: 0, r: 0.4, s: 1.4, t: 0.5, st: 0, pr: 0 },
+  V3: { p: 0.05, q: 0, r: 0.7, s: 0.9, t: 0.5, st: 0, pr: 0 },
+  V4: { p: 0.05, q: 0.05, r: 1.2, s: 0.5, t: 0.45, st: 0, pr: 0 },
+  V5: { p: 0.05, q: 0.05, r: 1.3, s: 0.3, t: 0.35, st: 0, pr: 0 },
+  V6: { p: 0.05, q: 0.05, r: 1.0, s: 0.15, t: 0.3, st: 0, pr: 0 },
 };
 
 const DT = 0.004;
@@ -48,26 +48,45 @@ function beatTimes(spec: EcgSpec) {
   if (r.kind === 'sinus') {
     const rr = 60 / r.rate;
     const qrs = Array.from({ length: Math.ceil(10 / rr) + 1 }, (_, k) => 0.3 + k * rr);
-    return { qrs, p: qrs.map((t) => t - 0.16) };
+    return { qrs, p: qrs.map((t) => t - 0.16), af: false, alternans: r.alternans ?? 0 };
+  }
+  if (r.kind === 'af') {
+    // irregularly irregular: intervals 0.6–1.4 × the mean, from a fixed seed so drawings are stable
+    let seed = 7;
+    const rand = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32;
+    const mean = 60 / r.rate;
+    const qrs: number[] = [];
+    for (let t = 0.25; t < 10.2; t += mean * (0.6 + 0.8 * rand())) qrs.push(t);
+    return { qrs, p: [], af: true, alternans: 0 };
   }
   const pp = 60 / r.atrialRate;
   const rr = 60 / r.ventricularRate;
   return {
     qrs: Array.from({ length: Math.ceil(10 / rr) + 1 }, (_, k) => 0.55 + k * rr),
     p: Array.from({ length: Math.ceil(10 / pp) + 1 }, (_, k) => 0.12 + k * pp),
+    af: false,
+    alternans: 0,
   };
 }
 
-function voltage(sh: Shape, t: number, beats: { qrs: number[]; p: number[] }) {
+function voltage(sh: Shape, t: number, beats: ReturnType<typeof beatTimes>) {
   let v = 0;
   for (const tp of beats.p) if (Math.abs(t - tp) < 0.1) v += sh.p * g(t - tp, 0.022);
-  for (const tq of beats.qrs) {
+  // fibrillatory baseline for AF, scaled by how visible P waves are in this lead
+  if (beats.af)
+    v +=
+      (Math.abs(sh.p) / 0.1) *
+      (0.035 * Math.sin(2 * Math.PI * 6.3 * t) + 0.025 * Math.sin(2 * Math.PI * 8.9 * t + 1));
+  beats.qrs.forEach((tq, k) => {
     const x = t - tq;
-    if (x < -0.1 || x > 0.6) continue;
-    v += -sh.q * g(x + 0.022, 0.008) + sh.r * g(x, 0.01) - sh.s * g(x - 0.024, 0.01);
+    if (x < -0.15 || x > 0.6) return;
+    const a = k % 2 === 1 ? 1 - beats.alternans : 1; // electrical alternans
+    if (beats.p.length && !beats.af)
+      v += sh.pr * smooth(-0.13, -0.11, x) * (1 - smooth(-0.06, -0.04, x));
+    v += a * (-sh.q * g(x + 0.022, 0.008) + sh.r * g(x, 0.01) - sh.s * g(x - 0.024, 0.01));
     v += sh.st * smooth(0.035, 0.06, x) * (1 - smooth(0.22, 0.4, x));
     v += sh.t * g(x - 0.28, 0.05);
-  }
+  });
   return v;
 }
 
@@ -95,11 +114,12 @@ function trace(
   x0mm: number,
   baseMm: number,
   beats: ReturnType<typeof beatTimes>,
+  scale = 1,
 ) {
   const pts: [number, number][] = [];
   for (let t = t0; t <= t1 + 1e-9; t += DT) {
     const x = (x0mm + (t - t0) * MM_PER_S) * PX;
-    const y = (baseMm - voltage(sh, t, beats) * MM_PER_MV) * PX;
+    const y = (baseMm - voltage(sh, t, beats) * scale * MM_PER_MV) * PX;
     pts.push([x, y]);
   }
   const s = simplify(pts, 0.35);
@@ -137,7 +157,9 @@ function draw(spec: EcgSpec): string {
         const std = col[r]!;
         const label = nameOf(std);
         const x0 = LEFT_MM + c * 62.5;
-        paths.push(trace(shapeOf(label, std), c * 2.5, c * 2.5 + 2.5, x0, rowBase(r), beats));
+        paths.push(
+          trace(shapeOf(label, std), c * 2.5, c * 2.5 + 2.5, x0, rowBase(r), beats, spec.voltage),
+        );
         text.push(`<text x="${(x0 + 1.5) * PX}" y="${(rowBase(r) - 13) * PX}">${label}</text>`);
         if (c > 0) paths.push(`M${x0 * PX},${(rowBase(r) - 4) * PX}v${8 * PX}`);
       });
@@ -146,7 +168,17 @@ function draw(spec: EcgSpec): string {
   const stripRow = rows - 1;
   const stripStd = STANDARD.includes(spec.rhythmLead) ? spec.rhythmLead : 'II';
   paths.push(cal(rowBase(stripRow)));
-  paths.push(trace(shapeOf(spec.rhythmLead, stripStd), 0, 10, LEFT_MM, rowBase(stripRow), beats));
+  paths.push(
+    trace(
+      shapeOf(spec.rhythmLead, stripStd),
+      0,
+      10,
+      LEFT_MM,
+      rowBase(stripRow),
+      beats,
+      spec.voltage,
+    ),
+  );
   text.push(
     `<text x="${(LEFT_MM + 1.5) * PX}" y="${(rowBase(stripRow) - 13) * PX}">${spec.rhythmLead}</text>`,
   );

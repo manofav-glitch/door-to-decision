@@ -210,7 +210,54 @@ function WardBack() {
   );
 }
 
+function CtBack() {
+  return (
+    <g className="prop">
+      {/* scanner gantry (a ring) and its table */}
+      <circle cx="120" cy="120" r="92" />
+      <circle cx="120" cy="120" r="46" />
+      <path d="M40 228 L200 228 M60 228 L60 240 M180 228 L180 240" />
+      <rect x="252" y="30" width="120" height="70" rx="4" />
+      <path d="M262 84 h30 M262 72 h60 M262 60 h45" />
+      <text x="312" y="118" textAnchor="middle" className="art-label" style={{ fontSize: 10 }}>
+        CT
+      </text>
+    </g>
+  );
+}
+
+function UltrasoundBack() {
+  return (
+    <g className="prop">
+      {/* bedside ultrasound cart: screen showing a fan-shaped image, probe cable */}
+      <rect x="290" y="30" width="96" height="70" rx="4" />
+      <path d="M338 42 L310 90 Q338 100 366 90 Z" />
+      <path d="M326 70 Q338 62 350 70" />
+      <path d="M300 100 L376 100 L376 118 L300 118 Z M314 118 L314 226 M362 118 L362 226" />
+      <circle cx="314" cy="232" r="6" />
+      <circle cx="362" cy="232" r="6" />
+      <path d="M300 110 Q250 120 240 150" />
+    </g>
+  );
+}
+
 export const SCENE_ART: Record<Scene, SceneDef> = {
+  'ct-scanner': {
+    back: CtBack,
+    bed: { x: 150, s: 0.85 },
+    besideBed: [
+      { x: 330, s: 0.8 },
+      { x: 360, s: 0.75 },
+    ],
+  },
+  ultrasound: {
+    back: UltrasoundBack,
+    bed: { x: 170, s: 0.9 },
+    besideBed: [
+      { x: 330, s: 0.8 },
+      { x: 44, s: 0.75 },
+    ],
+  },
   'resus-bay': {
     back: ResusBack,
     bed: { x: 212, s: 0.95 },

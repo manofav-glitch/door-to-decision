@@ -1,0 +1,13 @@
+# cp-07: pulmonary embolism. Sinus tachycardia ~112/min; S wave in I, Q wave and T inversion in III
+# (S1Q3T3); T wave inversion V1–V3 (right ventricular strain).
+title: "12-lead ECG"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 112 }
+leads:
+  I:   { s: 0.4 }
+  III: { q: 0.2, r: 0.4, s: 0.1, t: -0.25 }
+  aVF: { t: -0.05 }
+  V1:  { t: -0.3 }
+  V2:  { t: -0.35 }
+  V3:  { t: -0.25 }
+check: { source: esc-pe-2019, verified: false, todo: "Check: sinus tachycardia, S1Q3T3, T inversion V1–V3." }

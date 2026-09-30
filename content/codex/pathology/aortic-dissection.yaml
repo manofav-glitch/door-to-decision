@@ -1,0 +1,17 @@
+id: aortic-dissection
+title: "Acute aortic dissection"
+summary: "A tear in the aortic wall. It can mimic STEMI when the flap reaches a coronary ostium (usually the right), and antithrombotics or fibrinolysis can be fatal."
+sections:
+  - heading: Red flags
+    body: "Abrupt, severe (often tearing) chest or back pain; a pulse deficit or a BP difference between arms; a new aortic regurgitation murmur; neurological signs; hypotension or shock."
+  - heading: Mimicking STEMI
+    body: "Type A dissection can occlude a coronary ostium, most often the right, giving inferior ST elevation. Pause before giving antithrombotics when the story or examination doesn't fit."
+  - heading: Imaging
+    body: "CT aortic angiography is the usual test; bedside echo may show a flap, aortic root dilatation, aortic regurgitation or pericardial effusion, but can't exclude dissection."
+  - heading: Early management
+    body: "Pain relief; IV beta-blocker first to lower heart rate, then a vasodilator if BP is still high. Type A: emergency cardiac surgery. Type B: usually medical therapy unless complicated."
+refs: [esc-aortic-2024, acc-aha-aortic-2022]
+check:
+  source: [esc-aortic-2024, acc-aha-aortic-2022]
+  verified: false
+  todo: "Confirm the heart-rate and blood-pressure targets you teach (commonly HR < 60, SBP 100–120 mmHg)."

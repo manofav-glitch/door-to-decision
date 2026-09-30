@@ -1,0 +1,20 @@
+id: labetalol
+title: "Labetalol (IV) / esmolol"
+summary: "IV beta-blockade is the first step in controlling heart rate and blood pressure in acute aortic dissection, to reduce the force on the aortic wall."
+doses:
+  - id: dissection
+    label: "Aortic dissection"
+    route: "IV bolus, then infusion"
+    text: "Labetalol 20 mg IV over 2 minutes, then repeated doses or an infusion titrated to heart rate and BP"
+    check:
+      source: [acc-aha-aortic-2022, esc-aortic-2024]
+      verified: false
+      todo: "Confirm dose and your local protocol; esmolol is the short-acting alternative."
+sections:
+  - heading: Order matters
+    body: "Beta-blocker first, then a vasodilator if BP is still high: a vasodilator alone causes a reflex tachycardia."
+  - heading: Cautions
+    body: "Bradycardia, heart block, decompensated heart failure, severe asthma; aortic regurgitation causing heart failure."
+india: "Labetalol and esmolol are available in India; confirm local stock."
+refs: [acc-aha-aortic-2022, esc-aortic-2024]
+check: { source: [acc-aha-aortic-2022, esc-aortic-2024], verified: false }

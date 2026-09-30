@@ -42,7 +42,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), ScoreParts.tsx (CalcForm, ScoreBreakdown, ScoreCalculator), `player/` (Hud, PanelView, EcgFigure with zoom view + lead hotspots, Sheet incl. LeadGrid)
 - `src/store/` — `settings.ts`, `progress.ts` (v2; runs saved as inputs and replayed; stars, unlocks, mistakes deck + Revise streaks: a card leaves after 2 correct in a row)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
-- `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (8 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
+- `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (10 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
 - `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
 - `.claude/skills/new-case/` — the /new-case project skill
 - `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`, `authoring.test.ts` (graph, scaffold, warnings); `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
@@ -112,6 +112,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
   items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
   `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
-- Phase 5 in progress: Revise mode done; batch 1 done (cp-03 NSTE-ACS TIMI+GRACE, cp-04 anterior STEMI + shock,
-  cp-05 district-hospital SK → failed lysis → rescue PCI). Next: batch 2 (cp-06 dissection, cp-07 PE, cp-08 pericarditis/tamponade),
-  then batch 3 (cp-09 high-risk ECGs, cp-10 SCAD, cp-11 troponin-positive not ACS; 5th UDMI-heavy, owner input wanted).
+- Phase 5 in progress: Revise mode done; batch 1 (cp-03…cp-05) done and owner-verified; batch 2 done as drafts
+  (cp-06 aortic dissection, cp-07 PE with Wells, cp-08 pericarditis → tamponade; new scores wells-pe, perc; scenes
+  ct-scanner, ultrasound; ECG drawer gained pr, af, alternans, voltage). Next: batch 3 (cp-09 high-risk ECGs,
+  cp-10 SCAD, cp-11 troponin-positive not ACS; 5th UDMI-heavy, owner input wanted).

@@ -1,0 +1,14 @@
+id: pulmonary-embolism
+title: "Pulmonary embolism: diagnosis and risk"
+summary: "Clinical probability decides the test; haemodynamic status and RV strain decide the treatment."
+sections:
+  - heading: Testing
+    body: "Low probability: PERC, then D-dimer. PE unlikely (Wells ≤ 4): D-dimer; normal rules out. PE likely: CT pulmonary angiography, anticoagulating while you wait if bleeding risk allows."
+  - heading: Risk groups
+    body: "High risk: shock or sustained hypotension. Intermediate-high: RV dysfunction on imaging AND a raised troponin, but normotensive. Intermediate-low: one or neither. Low: none, and a low clinical severity score."
+  - heading: Treatment
+    body: "Anticoagulate everyone without a contraindication. High risk: systemic thrombolysis. Intermediate-high: anticoagulate, monitor closely, rescue thrombolysis only if they deteriorate."
+  - heading: Fluids
+    body: "Be cautious: a large fluid load can worsen a failing right ventricle."
+refs: [esc-pe-2019, meyer-2014]
+check: { source: [esc-pe-2019, meyer-2014], verified: false }

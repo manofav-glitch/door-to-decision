@@ -139,3 +139,77 @@ describe('GRACE in-hospital mortality (Granger 2003)', () => {
     expect(() => toBaseUnit(c, 1, 'mmol/L')).toThrow(ScoreError);
   });
 });
+
+describe('Wells for PE (Wells 2000; two-level)', () => {
+  const wells = def('wells-pe');
+  const ids = ['dvt-signs', 'pe-likely', 'hr', 'immobilised', 'previous', 'haemoptysis', 'cancer'];
+  const score = (...yes: string[]) =>
+    scoreResult(wells, Object.fromEntries(ids.map((id) => [id, yes.includes(id)])));
+
+  it.each([
+    ['nothing', [], 0, 'PE unlikely'],
+    ['HR only', ['hr'], 1.5, 'PE unlikely'],
+    ['DVT signs only', ['dvt-signs'], 3, 'PE unlikely'],
+    ['4 = top of unlikely', ['dvt-signs', 'haemoptysis'], 4, 'PE unlikely'],
+    ['4.5 = bottom of likely', ['dvt-signs', 'hr'], 4.5, 'PE likely'],
+    ['cp-07: DVT signs + PE most likely + HR', ['dvt-signs', 'pe-likely', 'hr'], 7.5, 'PE likely'],
+    ['everything', ids, 12.5, 'PE likely'],
+  ] as const)('%s', (_n, yes, total, band) => {
+    const r = score(...yes);
+    expect(r.total).toBe(total);
+    expect(r.band?.label).toBe(band);
+  });
+});
+
+describe('PERC (Kline 2004)', () => {
+  const perc = def('perc');
+  const base = {
+    age: 30,
+    hr: 80,
+    spo2: 98,
+    'leg-swelling': false,
+    haemoptysis: false,
+    'surgery-trauma': false,
+    previous: false,
+    hormones: false,
+  };
+  const score = (patch: Partial<Record<keyof typeof base, number | boolean>>) =>
+    scoreResult(perc, { ...base, ...patch });
+
+  it('all criteria absent → PERC negative', () => {
+    expect(score({})).toMatchObject({ total: 0, band: { label: 'PERC negative' } });
+  });
+  it('age edge 49/50', () => {
+    expect(score({ age: 49 }).total).toBe(0);
+    expect(score({ age: 50 }).total).toBe(1);
+  });
+  it('heart rate edge 99/100', () => {
+    expect(score({ hr: 99 }).total).toBe(0);
+    expect(score({ hr: 100 }).total).toBe(1);
+  });
+  it('SpO2 edge 95/94', () => {
+    expect(score({ spo2: 95 }).total).toBe(0);
+    expect(score({ spo2: 94 }).total).toBe(1);
+  });
+  it('any one yes/no item makes it positive', () => {
+    expect(score({ hormones: true }).band?.label).toBe('PERC positive');
+  });
+  it('cp-07 patient is PERC positive (4)', () => {
+    expect(score({ age: 34, hr: 112, spo2: 93, 'leg-swelling': true, hormones: true }).total).toBe(
+      4,
+    );
+  });
+  it('all eight → 8', () => {
+    const all = {
+      age: 60,
+      hr: 120,
+      spo2: 90,
+      'leg-swelling': true,
+      haemoptysis: true,
+      'surgery-trauma': true,
+      previous: true,
+      hormones: true,
+    };
+    expect(score(all).total).toBe(8);
+  });
+});

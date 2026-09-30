@@ -1,0 +1,12 @@
+id: cardiac-tamponade
+title: "Cardiac tamponade"
+summary: "Fluid in the pericardium under pressure stops the heart filling: tachycardia, hypotension, raised JVP and a falling cardiac output."
+sections:
+  - heading: Signs
+    body: "Tachycardia, hypotension, raised JVP, muffled heart sounds, pulsus paradoxus (a fall in systolic BP of more than 10 mmHg on inspiration). ECG: low voltage and electrical alternans."
+  - heading: Bedside echo
+    body: "A pericardial effusion with right atrial or right ventricular diastolic collapse and a plethoric IVC."
+  - heading: Treatment
+    body: "Urgent pericardiocentesis (or surgical drainage). A small fluid bolus may help briefly. Avoid diuretics and vasodilators, and be careful with intubation, which can precipitate collapse."
+refs: [esc-pericardial-2015]
+check: { source: esc-pericardial-2015, verified: false }

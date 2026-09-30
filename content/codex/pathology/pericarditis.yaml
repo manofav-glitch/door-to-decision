@@ -1,0 +1,14 @@
+id: pericarditis
+title: "Acute pericarditis vs STEMI"
+summary: "Sharp, pleuritic pain eased by sitting forward, often after a viral illness. The ECG can look alarming but has a different pattern from STEMI."
+sections:
+  - heading: Diagnosis (at least 2 of 4)
+    body: "Pericarditic chest pain; a pericardial friction rub; new widespread ST elevation or PR depression; a new or worsening pericardial effusion."
+  - heading: ECG clues vs STEMI
+    body: "Pericarditis: widespread concave ST elevation, PR depression, PR elevation and ST depression in aVR, no reciprocal change elsewhere, no Q waves. STEMI: territorial ST elevation with reciprocal depression."
+  - heading: Treatment
+    body: "An NSAID or high-dose aspirin plus colchicine, with gastric protection; restrict strenuous exercise. Avoid steroids as first line (they increase recurrence)."
+  - heading: Admit if high risk
+    body: "Fever over 38 °C, a large effusion or tamponade, no response to NSAIDs, myopericarditis, immunosuppression, trauma or anticoagulant use."
+refs: [esc-pericardial-2015, imazio-2013]
+check: { source: [esc-pericardial-2015, imazio-2013], verified: false }

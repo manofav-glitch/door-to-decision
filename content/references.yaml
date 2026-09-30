@@ -87,3 +87,37 @@
 - id: gershlick-2005
   citation: "Gershlick AH, Stephens-Lloyd A, Hughes S, et al. Rescue angioplasty after failed thrombolytic therapy for acute myocardial infarction (REACT). N Engl J Med. 2005;353(26):2758–2768."
   year: 2005
+
+- id: esc-aortic-2024
+  citation: "Mazzolai L, Teixido-Tura G, Lanzi S, et al. 2024 ESC Guidelines for the management of peripheral arterial and aortic diseases. Eur Heart J. 2024;45(36):3538–3700."
+  year: 2024
+  todo: "Confirm authors and pages."
+
+- id: acc-aha-aortic-2022
+  citation: "Isselbacher EM, Preventza O, Hamilton Black J 3rd, et al. 2022 ACC/AHA Guideline for the Diagnosis and Management of Aortic Disease. Circulation. 2022;146(24):e334–e482."
+  year: 2022
+
+- id: esc-pe-2019
+  citation: "Konstantinides SV, Meyer G, Becattini C, et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism developed in collaboration with the ERS. Eur Heart J. 2020;41(4):543–603."
+  year: 2019
+
+- id: wells-2000
+  citation: "Wells PS, Anderson DR, Rodger M, et al. Derivation of a simple clinical model to categorize patients' probability of pulmonary embolism: increasing the model's utility with the SimpliRED D-dimer. Thromb Haemost. 2000;83(3):416–420."
+  year: 2000
+
+- id: kline-2004
+  citation: "Kline JA, Mitchell AM, Kabrhel C, Richman PB, Courtney DM. Clinical criteria to prevent unnecessary diagnostic testing in emergency department patients with suspected pulmonary embolism. J Thromb Haemost. 2004;2(8):1247–1255."
+  year: 2004
+
+- id: meyer-2014
+  citation: "Meyer G, Vicaut E, Danays T, et al. Fibrinolysis for patients with intermediate-risk pulmonary embolism (PEITHO). N Engl J Med. 2014;370(15):1402–1411."
+  year: 2014
+
+- id: esc-pericardial-2015
+  citation: "Adler Y, Charron P, Imazio M, et al. 2015 ESC Guidelines for the diagnosis and management of pericardial diseases. Eur Heart J. 2015;36(42):2921–2964."
+  year: 2015
+  todo: "A newer ESC guideline on myocarditis and pericarditis (2025) may supersede this; confirm which to cite."
+
+- id: imazio-2013
+  citation: "Imazio M, Brucato A, Cemin R, et al. A randomized trial of colchicine for acute pericarditis (ICAP). N Engl J Med. 2013;369(16):1522–1528."
+  year: 2013

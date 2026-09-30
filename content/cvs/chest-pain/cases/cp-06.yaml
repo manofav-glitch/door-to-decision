@@ -1,0 +1,292 @@
+# cp-06: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: Stanford type A aortic dissection with the flap involving the right coronary ostium,
+# giving inferior ST elevation. The trap: treating it as STEMI with antithrombotics or fibrinolysis.
+# Setting: a district hospital with CT but no cath lab or cardiac surgery.
+
+id: cvs-cp-06
+title: "59M, sudden chest pain, sweaty and pale"
+difficulty: 3
+minutes: 12
+patient: { age: 59, sex: M, weightKg: 80 }
+initial:
+  clock: "16:20"
+  vitals: { hr: 104, sbp: 178, dbp: 96, rr: 22, spo2: 97, gcs: 15, temp: 36.6 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-aortic-2024, acc-aha-aortic-2022]
+  verified: false
+  todo: "Teaching composite; check the examination findings and the district-hospital setting."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative:worried]
+        caption: "{clock} · District hospital casualty"
+        bubbles:
+          - { who: patient, text: "It hit me all at once while I was lifting a gas cylinder. Worst pain of my life, going through to my back." }
+          - { who: relative, text: "He has high BP. He stopped his tablets last month." }
+      - scene: triage-desk
+        actors: [nurse:worried, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 104, BP 178 over 96 in the right arm, sats 97%." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "Every severe chest pain gets an early ECG, whatever you suspect."
+        effects: { minutes: 5, milestone: ecg }
+        next: ste-leads
+      - label: "Sublingual nitrate for the pain"
+        grade: suboptimal
+        consequence: "It barely touches the pain. The ECG is done at 10 minutes."
+        teaching: "Treat pain properly (IV opioid), and get the ECG first."
+        effects: { minutes: 10, milestone: ecg }
+        next: ste-leads
+
+  ste-leads:
+    type: ecg-leads
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Casualty"
+    image: ecg/cp-06-ecg-1.svg
+    alt: "12-lead ECG. Sinus tachycardia about 104 per minute. ST elevation in II, III and aVF; ST depression in aVL. Tall QRS voltages in the chest leads."
+    prompt: "Tap every lead with ST elevation."
+    answer: [II, III, aVF]
+    correct:
+      consequence: "Right: inferior ST elevation, II, III and aVF."
+      teaching: "This looks like an inferior STEMI, which is exactly why the next step matters."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "The inferior leads are II, III and aVF."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "The ST elevation is in the inferior leads: II, III and aVF."
+    next: pause
+
+  pause:
+    type: choice
+    check:
+      source: [esc-aortic-2024, acc-aha-aortic-2022]
+      verified: false
+      todo: "Check the grades; the teaching is 'pause when the story doesn't fit', not 'delay every STEMI'."
+    prompt: "Inferior ST elevation, but the pain was abrupt, maximal at onset and through to the back. What now?"
+    options:
+      - label: "Pause: check both-arm BPs, pulses, heart sounds and neurology before any antithrombotic"
+        grade: best
+        consequence: "Two minutes of examination changes everything."
+        teaching: "Abrupt, maximal-at-onset pain radiating to the back doesn't fit STEMI. A focused look for dissection takes minutes and can save a life."
+        effects: { minutes: 2 }
+        next: exam
+      - label: "It's a STEMI: aspirin, clopidogrel, enoxaparin and a fibrinolytic now"
+        grade: harmful
+        consequence: "The fibrinolytic is running when his BP suddenly falls to 70/40."
+        teaching: "Fibrinolysis in aortic dissection can cause rupture or tamponade. Pause when the story doesn't fit."
+        effects: { minutes: 10, addFlags: [lysed] }
+        next: end-critical
+      - label: "Aspirin and enoxaparin now, then examine him"
+        grade: harmful
+        consequence: "The examination that follows raises alarm bells, but the antithrombotics are already in."
+        teaching: "Antithrombotics before excluding dissection increase bleeding and complicate emergency surgery."
+        effects: { minutes: 5, patient: -20, addFlags: [antithrombotics] }
+        next: exam
+
+  exam:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:pain, doctor:worried]
+        caption: "{clock} · Casualty"
+        bubbles:
+          - { who: doctor, text: "BP right arm 178 over 96, left arm 132 over 80. The left radial pulse is weak." }
+          - { who: doctor, text: "There's an early diastolic murmur at the left sternal edge." }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    next: suspicion
+
+  suspicion:
+    type: choice
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    prompt: "Abrupt tearing pain, a 46 mmHg arm BP difference, a pulse deficit and a new aortic regurgitation murmur. Leading diagnosis?"
+    options:
+      - label: "Acute aortic dissection involving the right coronary ostium"
+        grade: best
+        consequence: "You stop the STEMI pathway and arrange urgent imaging."
+        teaching: "Pain features, a pulse or BP differential and a new AR murmur are high-risk features; inferior ST elevation can come from the flap covering the right coronary ostium."
+        effects: { minutes: 1, addFlags: [dissection_suspected] }
+        next: imaging
+      - label: "Inferior STEMI; the arm BP difference is measurement error"
+        grade: harmful
+        consequence: "Your senior on the phone asks you to repeat both BPs. The difference is real."
+        teaching: "Never explain away a pulse deficit in chest pain. Repeat it, and think of the aorta."
+        effects: { minutes: 10, patient: -10, addFlags: [dissection_suspected] }
+        next: imaging
+
+  imaging:
+    type: choice
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    prompt: "How do you confirm it?"
+    options:
+      - label: "Urgent CT aortic angiography; bedside echo while it's arranged"
+        grade: best
+        consequence: "Echo shows a dilated aortic root and aortic regurgitation; he goes straight to CT."
+        teaching: "CT angiography confirms dissection and its extent; bedside echo can support it but can't rule it out."
+        effects: { minutes: 20 }
+        next: ct
+      - label: "D-dimer: if negative, it's not a dissection"
+        grade: suboptimal
+        consequence: "The D-dimer takes 40 minutes; it's raised."
+        teaching: "With high-risk features, go straight to imaging. D-dimer shouldn't delay CT in a high-probability patient."
+        effects: { minutes: 40, patient: -10 }
+        next: ct
+      - label: "Chest X-ray; if the mediastinum is normal, treat as STEMI"
+        grade: harmful
+        consequence: "The X-ray looks unremarkable; your senior insists on CT anyway."
+        teaching: "A normal chest X-ray does not exclude aortic dissection."
+        effects: { minutes: 25, patient: -10 }
+        next: ct
+
+  ct:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine:worried, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: doctor, text: "Dissection flap from the aortic root into the arch. It runs into the right coronary ostium. Small pericardial effusion." }
+    next: management
+
+  management:
+    type: multiselect
+    check:
+      source: [esc-aortic-2024, acc-aha-aortic-2022]
+      verified: false
+      todo: "Confirm targets (commonly HR < 60/min, SBP 100–120 mmHg) and drug choices."
+    onEnter: { minutes: 2 }
+    prompt: "Type A dissection. Management while you arrange transfer. Choose up to 4."
+    max: 4
+    options:
+      - label: "IV beta-blocker first (labetalol or esmolol) to bring the heart rate down"
+        grade: best
+        consequence: "His heart rate falls to 64 and the BP to 128/76."
+        teaching: "Lower the heart rate first to reduce the force on the aortic wall; add a vasodilator only if BP stays high."
+        effects: { hr: -40, sbp: -50, dbp: -20 }
+        missedEffects: { patient: -15 }
+      - label: "IV opioid for the pain"
+        grade: best
+        consequence: "His pain settles to 3 out of 10."
+        teaching: "Pain drives tachycardia and hypertension; treat it well."
+        missedEffects: { patient: -5 }
+      - label: "Two large-bore IV lines, group and crossmatch"
+        grade: best
+        consequence: "Blood is crossmatched for surgery."
+        teaching: "Prepare for bleeding and surgery."
+      - label: "A vasodilator alone, without a beta-blocker"
+        grade: suboptimal
+        consequence: "BP falls, but his heart rate climbs to 124."
+        teaching: "Vasodilators alone cause a reflex tachycardia, increasing the force on the aortic wall."
+        effects: { hr: 20, sbp: -30 }
+      - label: "Aspirin and heparin: the flap involves a coronary"
+        grade: harmful
+        consequence: "Your senior stops the heparin."
+        teaching: "No antithrombotics in acute aortic dissection; coronary involvement is fixed at surgery."
+        effects: { patient: -15 }
+      - label: "A fibrinolytic for the inferior ST elevation"
+        grade: harmful
+        consequence: "His BP collapses as the pericardial effusion grows."
+        teaching: "Fibrinolysis in dissection can cause fatal haemorrhage and tamponade."
+        effects: { addFlags: [lysed] }
+    next:
+      - { if: { flag: lysed }, to: end-critical }
+      - { to: disposition }
+
+  disposition:
+    type: choice
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    prompt: "Type A dissection involving the right coronary. Who needs to see him, and where?"
+    options:
+      - label: "Emergency transfer to cardiothoracic surgery"
+        grade: best
+        consequence: "The nearest cardiac surgical centre accepts him; he leaves within 30 minutes with a doctor escort."
+        teaching: "Type A dissection is a surgical emergency: mortality rises with every hour without repair."
+        effects: { minutes: 30 }
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Transfer for coronary angiography and a stent to the right coronary"
+        grade: suboptimal
+        consequence: "The cardiologist reviews the CT and redirects him to cardiac surgery."
+        teaching: "Coronary malperfusion from a type A dissection is treated by surgical repair of the aorta, not a coronary stent."
+        effects: { minutes: 60, patient: -15 }
+        next: *outcome
+      - label: "ICU for BP control; surgery only if he deteriorates"
+        grade: harmful
+        consequence: "Four hours later he becomes hypotensive with a growing effusion."
+        teaching: "Medical management is for uncomplicated type B dissection. Type A needs emergency surgery."
+        effects: { minutes: 240, patient: -35 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "A week later · Cardiac surgical centre"
+        bubbles:
+          - { who: relative, text: "The surgeon said stopping to examine him saved his life." }
+    summary: "You paused when the story didn't fit a STEMI, found the dissection, controlled rate and BP, and sent him for emergency surgery. No antithrombotics."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Two weeks later · Cardiac surgical centre"
+    summary: "He survived surgery after a difficult course. Delays or antithrombotics made things harder. The debrief shows where."
+
+  end-critical:
+    type: ending
+    outcome: critical
+    onEnter: { setVitals: { hr: 140, sbp: 60, dbp: 34, gcs: 8 }, patient: -70 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Casualty"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:pain, nurse:alarmed, doctor:alarmed]
+        bubbles:
+          - { who: nurse, text: "No radial pulse! Neck veins are up." }
+    summary: "The inferior ST elevation came from a dissection flap, not a clot. Fibrinolysis led to haemorrhage into the pericardium. When pain is abrupt, tearing and radiates to the back, pause and look before you lyse."
+
+debrief:
+  diagnosis: "Stanford type A aortic dissection involving the right coronary ostium, mimicking inferior STEMI."
+  keyPoints:
+    - "Inferior ST elevation can be caused by a dissection flap over the right coronary ostium."
+    - "Pause before antithrombotics when the pain is abrupt, maximal at onset, tearing or radiating to the back."
+    - "Look for a pulse deficit or arm BP difference, a new aortic regurgitation murmur, and neurological signs."
+    - "Confirm with CT aortic angiography; a normal chest X-ray or D-dimer shouldn't delay it in a high-risk patient."
+    - "Beta-blocker first to lower the heart rate, then a vasodilator if needed. Type A goes to emergency surgery."
+  pitfalls:
+    - "Reflex STEMI treatment (antiplatelets, heparin, fibrinolysis) without a second look."
+    - "Explaining away an arm BP difference as measurement error."
+    - "Vasodilator without a beta-blocker."
+    - "Sending a type A dissection for coronary stenting."
+  unlocks: [aortic-dissection, labetalol, fibrinolytics, rca-territory]
+  refs: [esc-aortic-2024, acc-aha-aortic-2022, esc-acs-2023]
+  check:
+    source: [esc-aortic-2024, acc-aha-aortic-2022]
+    verified: false

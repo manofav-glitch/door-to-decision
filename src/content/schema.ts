@@ -474,12 +474,19 @@ const LeadShape = z.strictObject({
   s: z.number().optional(),
   t: z.number().optional(),
   st: z.number().optional(),
+  pr: z.number().optional(), // PR-segment shift (negative = PR depression, e.g. pericarditis)
 });
 export const EcgSpec = z.strictObject({
   title: Text,
   layout: z.enum(['12-lead', 'strip']),
   rhythm: z.union([
-    z.strictObject({ kind: z.literal('sinus'), rate: z.number() }),
+    z.strictObject({
+      kind: z.literal('sinus'),
+      rate: z.number(),
+      alternans: z.number().min(0).max(0.9).optional(), // every other QRS smaller by this fraction
+    }),
+    z.strictObject({ kind: z.literal('af'), rate: z.number() }), // irregular, no P waves
+
     z.strictObject({
       kind: z.literal('av-dissociation'),
       atrialRate: z.number(),
@@ -488,6 +495,7 @@ export const EcgSpec = z.strictObject({
   ]),
   labels: z.array(Text).length(12).optional(), // e.g. right-sided V1R…V6R
   rhythmLead: Text.default('II'),
+  voltage: z.number().min(0.1).max(2).default(1), // scales every wave (e.g. 0.4 = low voltage)
   leads: z.record(z.string(), LeadShape).default({}),
   check: Check,
 });

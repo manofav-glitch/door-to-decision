@@ -1,0 +1,15 @@
+# cp-06: aortic dissection involving the right coronary ostium. Sinus ~104/min; inferior ST elevation
+# (II, III, aVF) with reciprocal ST depression in aVL; tall voltages from long-standing hypertension.
+title: "12-lead ECG, on arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 104 }
+leads:
+  II:  { st: 0.15, t: 0.4 }
+  III: { r: 0.6, s: 0.05, st: 0.2, t: 0.45 }
+  aVF: { st: 0.18, t: 0.4 }
+  aVL: { st: -0.1, t: -0.05 }
+  V1:  { s: 1.8 }
+  V2:  { s: 2.0 }
+  V5:  { r: 2.0 }
+  V6:  { r: 1.6 }
+check: { source: [esc-aortic-2024, zimetbaum-2003], verified: false, todo: "Check it reads as inferior STE (a STEMI look-alike)." }

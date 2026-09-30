@@ -9,6 +9,8 @@ export const SCENES = [
   'cath-lab-door',
   'corridor',
   'ward',
+  'ct-scanner',
+  'ultrasound',
 ] as const;
 
 export const ACTORS = [

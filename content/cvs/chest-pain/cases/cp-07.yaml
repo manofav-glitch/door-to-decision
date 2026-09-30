@@ -1,0 +1,256 @@
+# cp-07: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: bilateral pulmonary embolism with RV strain (intermediate-high risk) that deteriorates
+# to high risk; systemic thrombolysis at that point.
+
+id: cvs-cp-07
+title: "34F, sharp chest pain and short of breath"
+difficulty: 2
+minutes: 12
+patient: { age: 34, sex: F, weightKg: 70 }
+initial:
+  clock: "10:10"
+  vitals: { hr: 112, sbp: 118, dbp: 76, rr: 24, spo2: 93, gcs: 15, temp: 37.4 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-pe-2019
+  verified: false
+  todo: "Teaching composite; check the findings fit intermediate-high-risk PE."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It's sharp, on the right, worse when I breathe in. I get breathless climbing stairs since yesterday." }
+          - { who: nurse, text: "Pulse 112, BP 118 over 76, breathing 24, sats 93% on air." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-pe-2019, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG and oxygen to keep SpO2 in the mid-90s"
+        grade: best
+        consequence: "ECG done at 5 minutes; her saturations come up to 96% on 2 L."
+        teaching: "Chest pain gets an early ECG; oxygen is indicated because she is hypoxic."
+        effects: { minutes: 5, milestone: ecg, spo2: 3 }
+        next: ecg-1
+      - label: "Young and well-looking: probably musculoskeletal; NSAIDs and review"
+        grade: harmful
+        consequence: "Your senior notices the pulse of 112 and sats of 93% and asks for an ECG."
+        teaching: "Tachycardia and hypoxia are never explained by a pulled muscle."
+        effects: { minutes: 20, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-pe-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/cp-07-ecg-1.svg
+    alt: "12-lead ECG. Sinus tachycardia about 112 per minute. S wave in lead I, Q wave and T wave inversion in lead III, T wave inversion in V1 to V3."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus tachycardia with a right heart strain pattern: think PE"
+        grade: best
+        consequence: "You keep PE high on your list."
+        teaching: "T inversion in V1–V3 and S1Q3T3 suggest right heart strain. They support PE but are neither sensitive nor specific."
+        effects: { minutes: 1 }
+        next: history
+      - label: "Anterior NSTE-ACS: T inversion V1–V3"
+        grade: suboptimal
+        consequence: "Your senior points out the tachycardia, hypoxia and S1Q3T3."
+        teaching: "T inversion in V1–V3 with sinus tachycardia and hypoxia should make you think of the right heart."
+        effects: { minutes: 3 }
+        next: history
+      - label: "Normal apart from a fast rate"
+        grade: suboptimal
+        consequence: "Your senior points to the T wave inversion."
+        teaching: "Look at the T waves in V1–V3 and lead III: they're inverted."
+        effects: { minutes: 3 }
+        next: history
+
+  history:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: patient, text: "I flew back from Canada five days ago. I'm on the pill. No previous clots, no cancer, no coughing blood." }
+          - { who: narrator, text: "Her left calf is swollen and tender along the deep veins." }
+    next: wells
+
+  wells:
+    type: calculator
+    check:
+      source: [wells-2000, esc-pe-2019]
+      verified: false
+      todo: "Confirm the intended answers: DVT signs yes; PE most likely yes; HR > 100 yes; a long flight doesn't count as immobilisation. Total 7.5."
+    prompt: "Work out her Wells score for PE."
+    score: wells-pe
+    answers:
+      dvt-signs: true
+      pe-likely: true
+      hr: true
+      immobilised: false
+      previous: false
+      haemoptysis: false
+      cancer: false
+    correct:
+      consequence: "Wells 7.5: PE likely."
+      teaching: "Signs of DVT (3), PE the most likely diagnosis (3) and HR over 100 (1.5). A long-haul flight isn't 'immobilisation' in this score."
+    close:
+      consequence: "Right group (PE likely), but some items were scored differently."
+      teaching: "Compare your breakdown: the flight is a risk factor, but it isn't an item in the Wells score."
+    wrong:
+      consequence: "Your score puts her in the wrong group."
+      teaching: "Score each item honestly: she has DVT signs, PE is the leading diagnosis, and her pulse is over 100."
+    next: testing
+
+  testing:
+    type: choice
+    check: { source: [esc-pe-2019, kline-2004], verified: false }
+    prompt: "PE likely. What next?"
+    options:
+      - label: "CT pulmonary angiography; start anticoagulation while you wait"
+        grade: best
+        consequence: "Enoxaparin is given and she goes to CT within the hour."
+        teaching: "When PE is likely, go to imaging. Start anticoagulation while waiting if bleeding risk allows."
+        effects: { minutes: 45 }
+        next: ctpa
+      - label: "D-dimer first; CT only if it's raised"
+        grade: suboptimal
+        consequence: "The D-dimer is raised, as expected; CT happens an hour later."
+        teaching: "In PE-likely patients a negative D-dimer doesn't safely exclude PE; go straight to imaging."
+        effects: { minutes: 90, patient: -5 }
+        next: ctpa
+      - label: "Apply PERC: she's young"
+        grade: suboptimal
+        consequence: "PERC is positive (tachycardia, hypoxia, leg swelling, the pill); CT follows later."
+        teaching: "PERC is only for patients you already think are low probability. She isn't."
+        effects: { minutes: 60, patient: -5 }
+        next: ctpa
+
+  ctpa:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine:worried, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: doctor, text: "Bilateral pulmonary emboli. The right ventricle is bigger than the left." }
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "Troponin is mildly raised. BP still 116 over 74." }
+    next: risk
+
+  risk:
+    type: choice
+    check: { source: [esc-pe-2019, meyer-2014], verified: false }
+    prompt: "Normal BP, RV dilated on CT, troponin raised. Risk group and plan?"
+    options:
+      - label: "Intermediate-high risk: anticoagulate, monitored bed, thrombolysis only if she deteriorates"
+        grade: best
+        consequence: "She's moved to a monitored bed on enoxaparin."
+        teaching: "RV dysfunction plus a raised troponin, with a normal BP: intermediate-high risk. Watch closely; rescue thrombolysis if she becomes unstable."
+        effects: { minutes: 20 }
+        next: deteriorate
+      - label: "Systemic thrombolysis now"
+        grade: suboptimal
+        consequence: "Your senior advises anticoagulation and close monitoring instead."
+        teaching: "In a large trial, routine thrombolysis in intermediate-risk PE prevented collapse but caused more major and intracranial bleeding."
+        effects: { minutes: 20 }
+        next: deteriorate
+      - label: "Low risk: start an oral anticoagulant and discharge"
+        grade: harmful
+        consequence: "Your senior stops the discharge: RV strain and troponin put her at real risk."
+        teaching: "RV dysfunction or a raised troponin rules out early discharge."
+        effects: { minutes: 20, patient: -15 }
+        next: deteriorate
+
+  deteriorate:
+    type: story
+    onEnter: { minutes: 90, setVitals: { hr: 132, sbp: 82, dbp: 52, spo2: 89, rr: 30 }, patient: -5 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Monitored bed"
+        sfx: "BEEP · BEEP · BEEP"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "BP 82 over 52, pulse 132. She's grey and confused." }
+    next: high-risk
+
+  high-risk:
+    type: choice
+    check: { source: [esc-pe-2019], verified: false }
+    prompt: "She is now hypotensive and confused. What now?"
+    options:
+      - label: "High-risk PE: systemic thrombolysis now, cautious fluids, noradrenaline if needed"
+        grade: best
+        consequence: "Within an hour her BP is 108/70 and she is talking again."
+        teaching: "PE with shock or sustained hypotension is high risk: give systemic thrombolysis unless contraindicated."
+        effects: { minutes: 60, setVitals: { hr: 104, sbp: 108, dbp: 70, spo2: 95, rr: 22 } }
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Two litres of fluid, fast"
+        grade: harmful
+        consequence: "Her BP doesn't improve and her JVP rises; your senior then gives thrombolysis."
+        teaching: "Large fluid loads can overdistend a failing right ventricle; give no more than a cautious bolus, and treat the cause."
+        effects: { minutes: 45, patient: -20, setVitals: { hr: 110, sbp: 100, dbp: 64, spo2: 93, rr: 24 } }
+        next: *outcome
+      - label: "Keep going with heparin; repeat the echo in the morning"
+        grade: harmful
+        consequence: "She arrests an hour later and is thrombolysed during CPR."
+        teaching: "Haemodynamic collapse changes the plan immediately: thrombolysis now, not in the morning."
+        effects: { minutes: 60, patient: -45, setVitals: { hr: 118, sbp: 94, dbp: 60, spo2: 91, rr: 26 } }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Four days later · Ward"
+        bubbles:
+          - { who: patient, text: "I'll stop the pill. When can I fly again?" }
+    summary: "You thought of PE despite her age, imaged her promptly, stratified risk correctly and thrombolysed when she became unstable."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried]
+        caption: "A week later · ICU step-down"
+    summary: "She recovered, but delays or the wrong treatment at key moments made her illness more dangerous. The debrief shows where."
+
+debrief:
+  diagnosis: "Bilateral pulmonary embolism with RV strain (intermediate-high risk) progressing to high-risk PE; oral contraceptive and long-haul flight as risk factors, with a left calf DVT."
+  keyPoints:
+    - "Tachycardia and hypoxia with chest pain in a young patient: think PE."
+    - "Clinical probability decides the test: PERC only when low; D-dimer when unlikely; CT when likely."
+    - "Start anticoagulation while waiting for imaging if PE is likely and bleeding risk allows."
+    - "Risk groups: shock = high (thrombolyse); RV strain + raised troponin = intermediate-high (anticoagulate, watch closely)."
+    - "Be cautious with fluids in RV failure."
+  pitfalls:
+    - "Dismissing chest pain as musculoskeletal in a tachycardic, hypoxic patient."
+    - "Using PERC or D-dimer to 'rule out' PE in a high-probability patient."
+    - "Routine thrombolysis in intermediate-risk PE; or failing to thrombolyse when she collapses."
+  unlocks: [pulmonary-embolism, wells-pe, perc, alteplase, enoxaparin]
+  refs: [esc-pe-2019, wells-2000, kline-2004, meyer-2014]
+  check: { source: [esc-pe-2019, meyer-2014], verified: false }

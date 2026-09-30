@@ -1,0 +1,26 @@
+id: wells-pe
+title: "Wells score for pulmonary embolism"
+summary: "Estimates the clinical probability of PE before testing. Two-level version: 4 or less = PE unlikely; more than 4 = PE likely."
+sections:
+  - heading: How to use it
+    body: "PE unlikely: a normal D-dimer can rule out PE. PE likely: go to imaging (CT pulmonary angiography); a D-dimer doesn't safely rule it out."
+  - heading: The subjective item
+    body: "'PE is the most likely diagnosis' carries 3 points: be honest about your gestalt before you score it."
+score:
+  items:
+    - { type: yesno, id: dvt-signs, label: "Clinical signs of DVT (leg swelling and pain on palpating the deep veins)", points: 3 }
+    - { type: yesno, id: pe-likely, label: "PE is the most likely diagnosis", points: 3 }
+    - { type: yesno, id: hr, label: "Heart rate over 100", points: 1.5 }
+    - { type: yesno, id: immobilised, label: "Immobilised ≥ 3 days, or surgery in the last 4 weeks", points: 1.5 }
+    - { type: yesno, id: previous, label: "Previous DVT or PE", points: 1.5 }
+    - { type: yesno, id: haemoptysis, label: "Haemoptysis", points: 1 }
+    - { type: yesno, id: cancer, label: "Active cancer (treated in the last 6 months, or palliative)", points: 1 }
+  bands:
+    - { from: 0, label: "PE unlikely", risk: "Score 4 or less" }
+    - { from: 4.5, label: "PE likely", risk: "Score more than 4" }
+  check:
+    source: [wells-2000, esc-pe-2019]
+    verified: false
+    todo: "Confirm item wording, points and the two-level cut-off."
+refs: [wells-2000, esc-pe-2019]
+check: { source: [wells-2000, esc-pe-2019], verified: false }

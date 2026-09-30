@@ -12,9 +12,14 @@ doses:
     route: Subcutaneous
     text: "No IV bolus; 0.75 mg/kg SC every 12 hours (first two doses max 75 mg)"
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
+  - id: pe-treatment
+    label: "Treatment of pulmonary embolism"
+    route: Subcutaneous
+    text: "1 mg/kg every 12 hours (or 1.5 mg/kg once daily); adjust in renal impairment"
+    check: { source: esc-pe-2019, verified: false }
 sections:
   - heading: Cautions
     body: "Severe renal impairment (dose adjustment needed); active bleeding."
 india: "Available in India."
-refs: [esc-acs-2023]
+refs: [esc-acs-2023, esc-pe-2019]
 check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30, todo: "Add the renal (CrCl < 30) adjustment if wanted." }

@@ -1,0 +1,7 @@
+# cp-08: cardiac tamponade, three days later. Sinus tachycardia ~124/min; low voltage throughout;
+# electrical alternans (QRS size alternates beat to beat).
+title: "12-lead ECG, second visit"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 124, alternans: 0.4 }
+voltage: 0.45
+check: { source: esc-pericardial-2015, verified: false, todo: "Check low voltage and alternans are visible." }

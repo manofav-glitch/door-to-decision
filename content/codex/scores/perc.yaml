@@ -1,0 +1,43 @@
+id: perc
+title: "PERC rule (PE rule-out criteria)"
+summary: "Only for patients you already judge LOW probability for PE. If all eight criteria are absent (score 0), PE can be ruled out without a D-dimer."
+sections:
+  - heading: Don't misuse it
+    body: "PERC is not a risk score for everyone: apply it only when your clinical gestalt is low (roughly under 15%). In moderate or high probability, it can't rule PE out."
+score:
+  items:
+    - type: number
+      id: age
+      label: Age
+      unit: years
+      bins:
+        - { below: 50, points: 0, label: "Under 50" }
+        - { points: 1, label: "50 or over" }
+    - type: number
+      id: hr
+      label: Heart rate
+      unit: /min
+      bins:
+        - { below: 100, points: 0, label: "Under 100" }
+        - { points: 1, label: "100 or more" }
+    - type: number
+      id: spo2
+      label: SpO2 on room air
+      unit: "%"
+      bins:
+        - { below: 95, points: 1, label: "Under 95" }
+        - { points: 0, label: "95 or more" }
+    - { type: yesno, id: leg-swelling, label: "Unilateral leg swelling", points: 1 }
+    - { type: yesno, id: haemoptysis, label: "Haemoptysis", points: 1 }
+    - { type: yesno, id: surgery-trauma, label: "Surgery or trauma needing general anaesthesia in the last 4 weeks", points: 1 }
+    - { type: yesno, id: previous, label: "Previous DVT or PE", points: 1 }
+    - { type: yesno, id: hormones, label: "Hormone use (oral contraceptive, HRT or oestrogen)", points: 1 }
+  bands:
+    - { from: 0, label: "PERC negative", risk: "With low clinical probability, no further testing for PE" }
+    - { from: 1, label: "PERC positive", risk: "Can't rule out PE with PERC: use D-dimer or imaging" }
+  check:
+    source: [kline-2004, esc-pe-2019]
+    verified: false
+    todo: "Confirm the eight criteria and thresholds."
+refs: [kline-2004, esc-pe-2019]
+check: { source: [kline-2004, esc-pe-2019], verified: false }

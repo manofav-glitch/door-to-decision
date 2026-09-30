@@ -1,0 +1,296 @@
+# cp-08: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: acute (viral) pericarditis mistaken for STEMI is the first trap; three days later a
+# large effusion causes cardiac tamponade.
+
+id: cvs-cp-08
+title: "28M, sharp chest pain, worse lying flat"
+difficulty: 2
+minutes: 12
+patient: { age: 28, sex: M, weightKg: 68 }
+initial:
+  clock: "21:30"
+  vitals: { hr: 102, sbp: 124, dbp: 78, rr: 18, spo2: 98, gcs: 15, temp: 37.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-pericardial-2015
+  verified: false
+  todo: "Teaching composite; check the first visit is low risk and the second visit fits tamponade."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It's sharp, right in the middle. Worse when I lie back or breathe in, better sitting forward." }
+          - { who: nurse, text: "Pulse 102, BP 124 over 78, temperature 37.9. He had a cold last week." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "Every chest pain gets an early ECG, even when the story sounds pleuritic."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Paracetamol and wait to see if it settles"
+        grade: suboptimal
+        consequence: "The ECG isn't done until 30 minutes after arrival."
+        teaching: "Don't let a reassuring story delay the ECG."
+        effects: { minutes: 30, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-pericardial-2015, esc-acs-2023], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/cp-08-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 102 per minute. Widespread concave ST elevation in I, II, III, aVF, aVL and V2 to V6, with PR segment depression. In aVR, PR elevation and ST depression. No reciprocal ST depression elsewhere."
+    prompt: "Widespread ST elevation. What is it?"
+    options:
+      - label: "Acute pericarditis: widespread concave ST elevation, PR depression, no reciprocal change"
+        grade: best
+        consequence: "You record pericarditis and examine him."
+        teaching: "Widespread concave ST elevation with PR depression, PR elevation in aVR and no territorial reciprocal change points to pericarditis, not STEMI."
+        effects: { minutes: 1 }
+        next: features
+      - label: "Extensive STEMI: activate the cath lab"
+        grade: suboptimal
+        consequence: "The interventional cardiologist reviews the ECG and stands the team down."
+        teaching: "STEMI is territorial with reciprocal change. ST elevation in almost every lead with PR depression is pericarditis until proven otherwise."
+        effects: { minutes: 20 }
+        next: features
+      - label: "Extensive STEMI: give a fibrinolytic now"
+        grade: harmful
+        consequence: "The fibrinolytic is running before your senior sees the ECG."
+        teaching: "Fibrinolysis in pericarditis risks bleeding into the pericardium. Look for PR depression and the absence of reciprocal change."
+        effects: { minutes: 10, addFlags: [lysed] }
+        next: features
+
+  features:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient:pain, doctor]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: doctor, text: "There's a scratchy rub at the left sternal edge, loudest when he leans forward." }
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "Troponin is normal. CRP is raised." }
+    next:
+      - { if: { flag: lysed }, to: end-critical }
+      - { to: treatment }
+
+  treatment:
+    type: multiselect
+    check:
+      source: [esc-pericardial-2015, imazio-2013]
+      verified: false
+      todo: "Confirm first-line treatment and the grades for steroids and anticoagulation."
+    prompt: "Acute pericarditis. Treatment? Choose up to 4."
+    max: 4
+    options:
+      - label: "NSAID (e.g. ibuprofen) or high-dose aspirin"
+        grade: best
+        consequence: "Ibuprofen started."
+        teaching: "An NSAID or high-dose aspirin is first-line, tapered once symptoms and CRP settle."
+        missedEffects: { patient: -10 }
+      - label: "Colchicine"
+        grade: best
+        consequence: "Colchicine started."
+        teaching: "Adding colchicine roughly halves the rate of recurrent pericarditis."
+        missedEffects: { patient: -5 }
+      - label: "Gastric protection (a proton-pump inhibitor)"
+        grade: best
+        consequence: "PPI added."
+        teaching: "Protect the stomach while on high-dose NSAID or aspirin."
+      - label: "Advice to avoid strenuous exercise until recovered"
+        grade: best
+        consequence: "He agrees to stop gym sessions for now."
+        teaching: "Restrict strenuous exercise until symptoms and markers settle (longer if there's myocardial involvement)."
+      - label: "Prednisolone as first-line"
+        grade: suboptimal
+        consequence: "Prednisolone started."
+        teaching: "Steroids first-line increase recurrence; keep them for contraindications to NSAIDs or specific causes."
+      - label: "Therapeutic heparin"
+        grade: harmful
+        consequence: "Your senior stops the heparin."
+        teaching: "Anticoagulation in acute pericarditis raises the risk of bleeding into the pericardium."
+        effects: { patient: -10 }
+    next: echo-1
+
+  echo-1:
+    type: story
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Bedside echo"
+        bubbles:
+          - { who: doctor, text: "Small rim of pericardial fluid. Heart squeezing well. No collapse of the right heart." }
+    next: disposition
+
+  disposition:
+    type: choice
+    check: { source: esc-pericardial-2015, verified: false }
+    prompt: "Low-grade temperature, normal troponin, small effusion, pain easing. Where does he go?"
+    options:
+      - label: "Home with treatment, review in 1 week, and clear advice to return if breathless or faint"
+        grade: best
+        consequence: "He goes home with a written plan."
+        teaching: "No high-risk features (fever > 38 °C, large effusion, tamponade, NSAID failure, myopericarditis): he can be managed as an outpatient with safety-netting."
+        effects: { minutes: 30 }
+        next: return
+      - label: "Admit for observation"
+        grade: suboptimal
+        consequence: "He spends two nights in hospital and feels much better."
+        teaching: "Admission is for high-risk features; low-risk pericarditis can be treated at home."
+        effects: { minutes: 30 }
+        next: return
+      - label: "Discharge; no follow-up needed"
+        grade: suboptimal
+        consequence: "He goes home unsure what to watch for."
+        teaching: "Always safety-net: breathlessness, dizziness or fainting can mean the effusion is growing."
+        effects: { minutes: 30, patient: -10 }
+        next: return
+
+  return:
+    type: story
+    onEnter: { minutes: 4320, setVitals: { hr: 124, sbp: 88, dbp: 72, rr: 26, spo2: 95, temp: 37.6 } }
+    panels:
+      - scene: triage-desk
+        actors: [patient:alarmed, relative:worried]
+        caption: "Three days later · {clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He's so breathless he can't finish a sentence. He nearly fainted at home." }
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, doctor:worried]
+        bubbles:
+          - { who: doctor, text: "Neck veins are right up, heart sounds are quiet, and his BP falls by 18 when he breathes in." }
+    next: ecg-2
+
+  ecg-2:
+    type: ecg
+    check: { source: esc-pericardial-2015, verified: false }
+    image: ecg/cp-08-ecg-2.svg
+    alt: "12-lead ECG. Sinus tachycardia about 124 per minute. Low QRS voltages in all leads; the QRS height alternates from beat to beat."
+    prompt: "His new ECG. What does it suggest?"
+    options:
+      - label: "Low voltage with electrical alternans: a large effusion, likely tamponade"
+        grade: best
+        consequence: "You call for the ultrasound machine straight away."
+        teaching: "Low voltage and electrical alternans (the heart swinging in fluid) suggest a large effusion; with his signs, think tamponade."
+        effects: { minutes: 2 }
+        next: pocus
+      - label: "Recurrent pericarditis: increase the ibuprofen"
+        grade: harmful
+        consequence: "His BP drops to 80/66 while you write the prescription."
+        teaching: "Hypotension, raised JVP and quiet heart sounds are Beck's triad: this is tamponade, not simple recurrence."
+        effects: { minutes: 10, patient: -15, sbp: -8, dbp: -6 }
+        next: pocus
+      - label: "Normal apart from a fast rate"
+        grade: suboptimal
+        consequence: "Your senior points out the small, alternating QRS complexes."
+        teaching: "Compare with the first ECG: the QRS complexes are much smaller, and they alternate in size."
+        effects: { minutes: 5, patient: -5 }
+        next: pocus
+
+  pocus:
+    type: story
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine:alarmed, doctor:worried]
+        caption: "{clock} · Bedside echo"
+        bubbles:
+          - { who: doctor, text: "Large effusion all round the heart. The right ventricle collapses in diastole. The IVC is full and doesn't move." }
+    next: tamponade
+
+  tamponade:
+    type: choice
+    check: { source: esc-pericardial-2015, verified: false }
+    prompt: "Cardiac tamponade. What now?"
+    options:
+      - label: "Urgent echo-guided pericardiocentesis; a small fluid bolus while it's set up"
+        grade: best
+        consequence: "600 mL of straw-coloured fluid is drained; his BP rises to 118/76 on the table."
+        teaching: "Tamponade needs drainage. A small bolus may buy time; avoid diuretics and vasodilators."
+        effects: { minutes: 30, setVitals: { hr: 96, sbp: 118, dbp: 76, rr: 18, spo2: 98 } }
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "IV furosemide for heart failure"
+        grade: harmful
+        consequence: "His BP falls to 70/50 before your senior drains the fluid."
+        teaching: "Diuretics reduce the filling pressure that keeps a tamponaded heart going. Drain the fluid."
+        effects: { minutes: 30, patient: -25, setVitals: { hr: 104, sbp: 110, dbp: 72, rr: 20, spo2: 97 } }
+        next: *outcome
+      - label: "Intubate and ventilate first to help his breathing"
+        grade: harmful
+        consequence: "He arrests on induction; he is drained during CPR and survives."
+        teaching: "Positive-pressure ventilation and induction drugs can precipitate collapse in tamponade. Drain first if at all possible."
+        effects: { minutes: 30, patient: -40, setVitals: { hr: 110, sbp: 104, dbp: 68, rr: 16, spo2: 97 } }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Two days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "I can breathe again!" }
+    summary: "You didn't mistake pericarditis for STEMI, treated it well, safety-netted him, and recognised and drained his tamponade when he came back."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Cardiology ward"
+    summary: "He recovered, but some decisions along the way made him sicker than he needed to be. The debrief shows where."
+
+  end-critical:
+    type: ending
+    outcome: critical
+    onEnter: { setVitals: { hr: 138, sbp: 62, dbp: 48, gcs: 9 }, patient: -70 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Majors"
+        sfx: "ALARM"
+      - scene: ultrasound
+        actors: [patient-supine:alarmed, doctor:alarmed]
+        bubbles:
+          - { who: doctor, text: "Blood around the heart. Call cardiothoracics now." }
+    summary: "The widespread ST elevation was pericarditis. Fibrinolysis caused bleeding into the inflamed pericardium and haemorrhagic tamponade. Check for PR depression and reciprocal change before you lyse."
+
+debrief:
+  diagnosis: "Acute (presumed viral) pericarditis, complicated three days later by a large effusion with cardiac tamponade."
+  keyPoints:
+    - "Pericarditis: widespread concave ST elevation, PR depression, PR elevation in aVR, no territorial reciprocal change."
+    - "Diagnose with 2 of 4: typical pain, friction rub, ECG changes, effusion."
+    - "Treat with an NSAID or high-dose aspirin plus colchicine and gastric protection; avoid steroids first-line and anticoagulants."
+    - "Low-risk patients go home with follow-up and clear safety-netting."
+    - "Tamponade: tachycardia, hypotension, raised JVP, quiet heart sounds, pulsus paradoxus; ECG low voltage and alternans. Drain it."
+  pitfalls:
+    - "Calling widespread ST elevation an 'extensive STEMI' and giving a fibrinolytic."
+    - "Anticoagulating a patient with pericarditis."
+    - "Treating tamponade with diuretics, or intubating before drainage."
+  unlocks: [pericarditis, cardiac-tamponade, colchicine]
+  refs: [esc-pericardial-2015, imazio-2013]
+  check: { source: [esc-pericardial-2015, imazio-2013], verified: false }

@@ -1,0 +1,15 @@
+id: alteplase
+title: "Alteplase (for high-risk PE)"
+summary: "Systemic thrombolysis for pulmonary embolism with shock or sustained hypotension."
+doses:
+  - id: pe
+    label: "High-risk PE"
+    route: IV infusion
+    text: "100 mg over 2 hours (an accelerated regimen of 0.6 mg/kg over 15 minutes, max 50 mg, is an alternative)"
+    check: { source: esc-pe-2019, verified: false, todo: "Confirm regimen; add local practice if tenecteplase is used instead." }
+sections:
+  - heading: Contraindications
+    body: "See 'Fibrinolysis: contraindications'; in peri-arrest PE the balance shifts towards treatment."
+india: "Available but expensive; tenecteplase is sometimes used instead. Confirm local practice."
+refs: [esc-pe-2019]
+check: { source: esc-pe-2019, verified: false }

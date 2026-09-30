@@ -1,0 +1,18 @@
+# cp-08: acute pericarditis. Sinus ~102/min; widespread concave ST elevation with PR depression;
+# aVR shows PR elevation and ST depression; no reciprocal ST depression elsewhere.
+title: "12-lead ECG, first visit"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 102 }
+leads:
+  I:   { st: 0.12, pr: -0.07 }
+  II:  { st: 0.15, pr: -0.08 }
+  III: { st: 0.08, pr: -0.05 }
+  aVF: { st: 0.12, pr: -0.07 }
+  aVL: { st: 0.06, pr: -0.04 }
+  aVR: { st: -0.1, pr: 0.08 }
+  V2:  { st: 0.12, pr: -0.06 }
+  V3:  { st: 0.15, pr: -0.07 }
+  V4:  { st: 0.15, pr: -0.07 }
+  V5:  { st: 0.15, pr: -0.07 }
+  V6:  { st: 0.12, pr: -0.06 }
+check: { source: esc-pericardial-2015, verified: false, todo: "Check: widespread concave STE, PR depression, aVR PR elevation, no reciprocal change." }
