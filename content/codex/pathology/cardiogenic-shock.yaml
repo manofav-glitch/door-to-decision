@@ -1,0 +1,16 @@
+id: cardiogenic-shock
+title: "Cardiogenic shock after MI"
+summary: "Low cardiac output with hypoperfusion (cold, clammy, confused, oliguric, rising lactate), usually with hypotension. The leading cause of death in hospitalised MI."
+sections:
+  - heading: Recognise it early
+    body: "Hypotension or needing a pressor, plus signs of hypoperfusion. Staging systems (e.g. SCAI A–E) describe severity and help communication."
+  - heading: What works
+    body: "Emergency revascularisation of the culprit artery. In multivessel disease, treat the culprit lesion first and stage the others."
+  - heading: Support while you get there
+    body: "Oxygen or ventilation for hypoxia; a vasopressor (noradrenaline) for hypotension; an inotrope for low output. Avoid large fluid boluses when the lungs are wet."
+  - heading: Not routinely
+    body: "Intra-aortic balloon pump: no survival benefit in a large trial and not recommended routinely. Mechanical support is for selected patients in specialist centres."
+refs: [hochman-1999, thiele-2012, thiele-2017, scai-2019, esc-acs-2023]
+check:
+  source: [hochman-1999, thiele-2012, thiele-2017, scai-2019, esc-acs-2023]
+  verified: false

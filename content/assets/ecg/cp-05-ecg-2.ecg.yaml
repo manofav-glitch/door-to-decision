@@ -1,0 +1,17 @@
+# cp-05: repeat ECG 75 min after fibrinolysis. ST elevation reduced by only ~25–30% (failed reperfusion).
+title: "12-lead ECG, 75 minutes after the fibrinolytic"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 92 }
+leads:
+  II:  { q: 0.15, s: 0.05, st: 0.2, t: 0.45 }
+  III: { q: 0.18, r: 0.55, s: 0.03, st: 0.22, t: 0.45 }
+  aVF: { q: 0.15, s: 0.04, st: 0.2, t: 0.42 }
+  V5:  { st: 0.16, t: 0.45 }
+  V6:  { st: 0.15, t: 0.4 }
+  aVL: { st: -0.1, t: -0.08 }
+  V1:  { st: -0.08 }
+  V2:  { st: -0.1, t: 0.3 }
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Check this reads as < 50% ST resolution compared with the first ECG."

@@ -1,0 +1,21 @@
+id: fondaparinux
+title: Fondaparinux
+summary: "Factor Xa inhibitor given subcutaneously once daily. An anticoagulant option in NSTE-ACS, especially when angiography is not immediate."
+doses:
+  - id: nste-acs
+    label: "NSTE-ACS"
+    route: Subcutaneous
+    text: "2.5 mg once daily"
+    rule: { unit: mg, fixed: 2.5 }
+    check: { source: esc-acs-2023, verified: false }
+sections:
+  - heading: At PCI
+    body: "Give an unfractionated heparin bolus during PCI because of the risk of catheter thrombosis with fondaparinux alone."
+  - heading: Cautions
+    body: "Severe renal impairment; active bleeding."
+india: "Available in India."
+refs: [esc-acs-2023]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Confirm its current place vs enoxaparin in NSTE-ACS (depends on timing of angiography) and the renal cut-off."

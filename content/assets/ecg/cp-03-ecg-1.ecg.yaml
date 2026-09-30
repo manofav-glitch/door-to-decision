@@ -1,0 +1,16 @@
+# cp-03: NSTE-ACS. Sinus ~96/min; ST depression ~1 mm in I, aVL, V4–V6 with T inversion in V5–V6;
+# no ST elevation anywhere (aVR only slightly raised).
+title: "12-lead ECG: ST depression, no ST elevation"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 96 }
+leads:
+  I:   { st: -0.1, t: 0.05 }
+  aVL: { st: -0.1, t: -0.05 }
+  aVR: { st: 0.05 }
+  V4:  { st: -0.12, t: 0.1 }
+  V5:  { st: -0.12, t: -0.15 }
+  V6:  { st: -0.1, t: -0.12 }
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Check the drawing shows lateral ST depression without ST elevation."

@@ -1,0 +1,367 @@
+# cp-04: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: anterior STEMI from a proximal LAD occlusion, evolving into cardiogenic shock.
+# Teaching: recognise shock, support (O2, pressor), avoid the fluid and beta-blocker traps, and get
+# emergency culprit-lesion PCI; no routine IABP; culprit-only PCI in multivessel disease.
+
+id: cvs-cp-04
+title: "52M, crushing pain, grey and breathless"
+difficulty: 3
+minutes: 12
+patient: { age: 52, sex: M, weightKg: 80 }
+initial:
+  clock: "19:05"
+  vitals: { hr: 112, sbp: 96, dbp: 64, rr: 26, spo2: 92, gcs: 15, temp: 36.4 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg, dx-to-wire]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Teaching composite; check the evolving shock picture is plausible."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic:worried, patient-supine:pain]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: paramedic, text: "52-year-old, crushing central chest pain for an hour. Smoker. Getting more breathless on the way in." }
+      - scene: resus-bay
+        actors: [patient-supine:pain, nurse:worried]
+        bubbles:
+          - { who: nurse, text: "Pulse 112, BP 96 over 64, sats 92% on air. He's grey." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now, while the nurse puts him on the monitor"
+        grade: best
+        consequence: "The ECG is in your hand 3 minutes after arrival."
+        teaching: "In a sick patient with chest pain, get the ECG within minutes, in parallel with resuscitation."
+        effects: { minutes: 3, milestone: ecg }
+        next: ste-leads
+      - label: "Nitrate spray for the pain"
+        grade: harmful
+        consequence: "His BP falls to 78/50."
+        teaching: "No nitrates with SBP < 90–100 or signs of shock: they drop preload and blood pressure further."
+        effects: { minutes: 3, milestone: ecg, sbp: -18, dbp: -14, patient: -15 }
+        next: ste-leads
+      - label: "Chest X-ray first: he's breathless"
+        grade: suboptimal
+        consequence: "The X-ray shows pulmonary oedema; the ECG is done at 15 minutes."
+        teaching: "The ECG decides reperfusion. Do it first; the X-ray can follow."
+        effects: { minutes: 15, milestone: ecg, patient: -10 }
+        next: ste-leads
+
+  ste-leads:
+    type: ecg-leads
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/cp-04-ecg-1.svg
+    alt: "12-lead ECG. Sinus tachycardia about 112 per minute. ST elevation in V1 to V4 and in I and aVL. ST depression in II, III and aVF."
+    prompt: "Tap every lead with ST elevation."
+    answer: [I, aVL, V1, V2, V3, V4]
+    correct:
+      consequence: "Right: ST elevation in V1–V4, I and aVL."
+      teaching: "Anterior (V1–V4) plus high lateral (I, aVL) ST elevation: a large anterior STEMI."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Don't forget the high lateral leads, I and aVL: they tell you how proximal the occlusion is."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "Here the ST segments are raised across the front of the heart: V1–V4, with I and aVL."
+    next: culprit
+
+  culprit:
+    type: choice
+    check: { source: zimetbaum-2003, verified: false }
+    onEnter: { minutes: 1, milestone: stemi-dx, addFlags: [stemi_dx] }
+    prompt: "Where is the occlusion most likely to be?"
+    options:
+      - label: "Proximal LAD, before the first diagonal"
+        grade: best
+        consequence: "You tell the cath lab: large anterior STEMI, proximal LAD likely."
+        teaching: "Anterior ST elevation plus elevation in I and aVL (with inferior reciprocal change) points to a proximal LAD lesion."
+        next: exam
+      - label: "Distal LAD"
+        grade: suboptimal
+        consequence: "Your senior points out the high lateral involvement."
+        teaching: "A distal LAD lesion spares I and aVL; here they're elevated, so the occlusion is proximal."
+        next: exam
+      - label: "Right coronary artery"
+        grade: suboptimal
+        consequence: "Your senior points to the anterior leads."
+        teaching: "The RCA gives an inferior pattern. Here the inferior leads show only reciprocal depression."
+        next: exam
+
+  exam:
+    type: story
+    onEnter: { minutes: 2, sbp: -10, dbp: -6, hr: 4, spo2: -2, rr: 2 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "BEEP · BEEP"
+      - scene: resus-bay
+        actors: [patient-supine:pain, doctor:worried]
+        bubbles:
+          - { who: doctor, text: "Crackles to the mid-zones. Cold, mottled knees. He's confused." }
+          - { who: patient, text: "Can't… catch my breath." }
+    next: shock
+
+  shock:
+    type: choice
+    check: { source: [scai-2019, esc-acs-2023], verified: false }
+    prompt: "Low BP, cold and mottled, confused, wet lungs. What is this?"
+    options:
+      - label: "Cardiogenic shock"
+        grade: best
+        consequence: "You call it early and ask for noradrenaline and the cath team."
+        teaching: "Hypotension plus hypoperfusion (cold, mottled, confused, rising lactate) with pulmonary congestion after a large MI: cardiogenic shock."
+        effects: { minutes: 1 }
+        next: resus
+      - label: "Hypovolaemia: he needs fluid"
+        grade: harmful
+        consequence: "Your senior points to the crackles before any fluid is hung."
+        teaching: "Wet lungs and a failing ventricle: large fluid boluses will worsen pulmonary oedema."
+        effects: { minutes: 2, patient: -5 }
+        next: resus
+      - label: "A vasovagal reaction to the pain"
+        grade: suboptimal
+        consequence: "His BP keeps falling while you wait for it to settle."
+        teaching: "Vasovagal hypotension doesn't cause cold peripheries with a fast pulse and wet lungs."
+        effects: { minutes: 5, patient: -10, sbp: -6 }
+        next: resus
+
+  resus:
+    type: multiselect
+    check:
+      source: [esc-acs-2023, thiele-2012]
+      verified: false
+      todo: "Check grades: crushed ticagrelor, dobutamine, furosemide in shock."
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: senior, text: "Cath lab's on its way in. What do you want now?" }
+    prompt: "Resuscitation and treatment. Choose up to 5."
+    max: 5
+    options:
+      - id: oxygen
+        label: "Oxygen to keep SpO2 at 90% or above; non-invasive ventilation if needed"
+        grade: best
+        consequence: "His saturations climb to 94%."
+        teaching: "He is hypoxic with pulmonary oedema: oxygen is indicated here, unlike in a normoxic patient."
+        effects: { spo2: 5 }
+        missedEffects: { spo2: -4, patient: -10 }
+      - id: aspirin
+        label: "Aspirin, loading dose"
+        grade: best
+        consequence: "Aspirin given."
+        teaching: "Every STEMI gets aspirin."
+        missedEffects: { patient: -5 }
+      - id: ufh
+        label: "Unfractionated heparin, IV bolus"
+        grade: best
+        consequence: "Heparin drawn up for the cath lab."
+        teaching: "UFH is the standard anticoagulant for primary PCI."
+        effects: { addFlags: [gave_ufh] }
+        missedEffects: { patient: -5 }
+      - id: noradrenaline
+        label: "Noradrenaline infusion for blood pressure"
+        grade: best
+        consequence: "His BP rises to 94/62."
+        teaching: "A vasopressor supports perfusion pressure while you get him to reperfusion."
+        effects: { sbp: 16, dbp: 10 }
+        missedEffects: { sbp: -8, patient: -10 }
+      - id: ticagrelor
+        label: "Ticagrelor, crushed, loading dose"
+        grade: acceptable
+        consequence: "Ticagrelor given via crushed tablets."
+        teaching: "Oral absorption is poor in shock; crushing helps. The cath team may prefer to decide on the P2Y12 at angiography."
+      - id: dobutamine
+        label: "Dobutamine infusion"
+        grade: acceptable
+        consequence: "Dobutamine started; his heart rate edges up."
+        teaching: "An inotrope can support low output, but it can worsen hypotension and arrhythmias; usually alongside a pressor."
+      - id: furosemide
+        label: "High-dose IV furosemide"
+        grade: suboptimal
+        consequence: "His BP dips further."
+        teaching: "Diuretics can help congestion, but in hypotensive shock they risk worsening perfusion."
+        effects: { sbp: -6 }
+      - id: fluid
+        label: "30 mL/kg crystalloid bolus"
+        grade: harmful
+        consequence: "His breathing gets much worse; saturations fall to 84%."
+        teaching: "Large fluid boluses worsen pulmonary oedema in left-ventricular cardiogenic shock."
+        effects: { spo2: -10, rr: 6, patient: -15, addFlags: [fluid_overload] }
+      - id: metoprolol
+        label: "IV metoprolol to slow his heart rate"
+        grade: harmful
+        consequence: "His BP falls to 70/40 and he stops responding."
+        teaching: "The tachycardia is compensating for a failing ventricle. IV beta-blockers are contraindicated in shock and heart failure."
+        effects: { sbp: -20, hr: -30, addFlags: [beta_blocker_given] }
+    next:
+      - { if: { flag: beta_blocker_given }, to: end-critical }
+      - { if: { flag: fluid_overload }, to: flash-oedema }
+      - { if: { flag: gave_ufh }, to: dose-ufh }
+      - { to: reperfusion }
+
+  flash-oedema:
+    type: story
+    onEnter: { minutes: 8 }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, senior:worried, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: senior, text: "Stop the fluid. Sit him up and start non-invasive ventilation." }
+    next:
+      - { if: { flag: gave_ufh }, to: dose-ufh }
+      - { to: reperfusion }
+
+  dose-ufh:
+    type: dose
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Unfractionated heparin IV bolus for primary PCI. He weighs 80 kg. What dose, in units?"
+    drug: ufh
+    dose: ppci-bolus
+    tolerancePct: 5
+    correct:
+      consequence: "Heparin bolus given."
+      teaching: "For primary PCI without a GP IIb/IIIa inhibitor, UFH is given as a weight-based IV bolus."
+      effects: { minutes: 1 }
+    under:
+      consequence: "The cath team tops up the heparin."
+      teaching: "An underdose leaves him under-anticoagulated for PCI. Dose by weight."
+      effects: { minutes: 1 }
+    over:
+      consequence: "The cath team is concerned about bleeding risk."
+      teaching: "An overdose raises bleeding risk without extra benefit. Dose by weight."
+      effects: { minutes: 1, patient: -5 }
+    next: reperfusion
+
+  reperfusion:
+    type: choice
+    check: { source: [esc-acs-2023, hochman-1999, thiele-2012], verified: false }
+    prompt: "Anterior STEMI in cardiogenic shock, at a PCI-capable centre. The plan?"
+    options:
+      - label: "Emergency angiography and PCI now"
+        grade: best
+        consequence: "He goes straight to the cath lab."
+        teaching: "Emergency revascularisation is the one treatment shown to improve survival in MI-related cardiogenic shock."
+        effects: { minutes: 3 }
+        next: cath
+      - label: "Insert an intra-aortic balloon pump first, then PCI"
+        grade: suboptimal
+        consequence: "Twenty minutes pass placing the balloon pump."
+        teaching: "Routine IABP didn't improve survival in a large trial and isn't recommended routinely; don't delay reperfusion for it."
+        effects: { minutes: 20, patient: -10 }
+        next: cath
+      - label: "Give a fibrinolytic now: it's faster"
+        grade: suboptimal
+        consequence: "Your senior stops you: the cath lab is ready."
+        teaching: "Primary PCI is preferred, and particularly so in shock, when it can be done promptly."
+        effects: { minutes: 8, patient: -5 }
+        next: cath
+      - label: "Stabilise in ICU overnight; angiography when he's better"
+        grade: harmful
+        showIf: { notFlag: delayed_pci }
+        consequence: "By midnight he needs two pressors and his lactate is rising."
+        teaching: "He won't get better without reperfusion. Shock is a reason for emergency PCI, not a reason to wait."
+        effects: { minutes: 90, patient: -30, sbp: -10, addFlags: [delayed_pci] }
+        next: reperfusion
+
+  cath:
+    type: story
+    onEnter: { minutes: 30, milestone: wire, setVitals: { hr: 104, sbp: 100, dbp: 66 } }
+    panels:
+      - scene: cath-lab-door
+        actors: [patient-supine, senior]
+        caption: "{clock} · Cath lab"
+        bubbles:
+          - { who: senior, text: "Proximal LAD occluded: wire across, stent in, flow restored. The circumflex has a tight lesion too." }
+    check: { source: thiele-2017, verified: false }
+    next: multivessel
+
+  multivessel:
+    type: choice
+    check: { source: [thiele-2017, esc-acs-2023], verified: false }
+    prompt: "Shock, with a second tight lesion in the circumflex. What now?"
+    options:
+      - label: "Treat the culprit only now; stage the circumflex later"
+        grade: best
+        consequence: "The procedure ends; the circumflex is planned for later."
+        teaching: "In cardiogenic shock, culprit-only PCI (with staged treatment of other lesions) had better outcomes than immediate multivessel PCI."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Stent the circumflex now as well"
+        grade: suboptimal
+        consequence: "It takes another 40 minutes and more contrast."
+        teaching: "Immediate multivessel PCI in shock added risk without benefit in the key trial. Culprit first."
+        effects: { minutes: 40, patient: -10 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Five days later · CCU"
+        bubbles:
+          - { who: patient, text: "They tell me I was very lucky." }
+    summary: "Off pressors by day two. Rapid recognition of shock and emergency PCI gave him the best chance; his heart function is reduced but recovering."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · CCU"
+    summary: "He survived a stormy course with a large anterior infarct and poor heart function. The debrief shows where time and safety slipped."
+
+  end-critical:
+    type: ending
+    outcome: critical
+    onEnter: { setVitals: { hr: 40, sbp: 50, dbp: 30, gcs: 6 }, patient: -60 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
+        bubbles:
+          - { who: senior, text: "He's peri-arrest. Adrenaline, pads on, get the cath lab." }
+    summary: "The fast heart rate was keeping him alive. IV beta-blockade in cardiogenic shock removed that compensation. Treat the cause, not the number."
+
+debrief:
+  diagnosis: "Anterior STEMI from a proximal LAD occlusion (a primary MI), complicated by cardiogenic shock."
+  keyPoints:
+    - "Anterior ST elevation plus I and aVL means a proximal LAD lesion and a large area at risk."
+    - "Recognise shock early: hypotension plus hypoperfusion (cold, mottled, confused, lactate)."
+    - "Support while you move: oxygen or ventilation for hypoxia, noradrenaline for hypotension; no big fluid boluses with wet lungs."
+    - "Emergency PCI is the treatment that improves survival; don't delay it for a balloon pump or ICU."
+    - "In multivessel disease with shock, treat the culprit lesion first and stage the rest."
+  pitfalls:
+    - "Nitrates or beta-blockers in a hypotensive, tachycardic patient."
+    - "Treating shock as hypovolaemia when the lungs are wet."
+    - "Waiting to 'stabilise' before reperfusion."
+  unlocks: [lad-territory, cardiogenic-shock, noradrenaline, dobutamine, ufh, aspirin]
+  refs: [esc-acs-2023, hochman-1999, thiele-2012, thiele-2017, scai-2019, zimetbaum-2003]
+  check:
+    source: [esc-acs-2023, hochman-1999, thiele-2017]
+    verified: false

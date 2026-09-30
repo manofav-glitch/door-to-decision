@@ -1,0 +1,15 @@
+id: lad-territory
+title: "Left anterior descending artery: territory"
+summary: "The LAD supplies the anterior wall, the apex and most of the septum. A proximal occlusion puts a large area of muscle at risk."
+sections:
+  - heading: Branches
+    body: "Septal perforators supply the anterior two-thirds of the septum (including much of the conduction system); diagonal branches supply the anterolateral wall."
+  - heading: Proximal vs distal
+    body: "ST elevation in I and aVL with anterior ST elevation suggests an occlusion before the first diagonal; ST elevation in aVR or new right bundle branch block suggests a very proximal (pre-septal) lesion."
+  - heading: Wraparound LAD
+    body: "An LAD that wraps around the apex can add inferior ST elevation to an anterior pattern."
+refs: [zimetbaum-2003]
+check:
+  source: [zimetbaum-2003, needs-source]
+  verified: false
+  todo: "Add an anatomy source and confirm the ECG localisation clues."

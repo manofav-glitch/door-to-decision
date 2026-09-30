@@ -51,7 +51,7 @@ describe('new-case scaffold', () => {
     });
     expect(file).toBe('content/cvs/chest-pain/cases/cp-99.yaml');
     expect(readFileSync(join(dir, 'content/cvs/chest-pain/module.yaml'), 'utf8')).toMatch(
-      /cases: \[cp-01, cp-02, cp-99\]/,
+      /cases: \[cp-01, .*, cp-99\]/,
     );
     const k = compileContent(dir).cases['cvs-cp-99']!;
     expect(k.title).toBe('62F, back pain');
@@ -60,12 +60,17 @@ describe('new-case scaffold', () => {
   it('handles block-style case lists', () => {
     const dir = tempCopy(ROOT, ['content', 'docs/templates']);
     const mod = join(dir, 'content/cvs/chest-pain/module.yaml');
+    const flow = readFileSync(mod, 'utf8');
+    const names = flow
+      .match(/cases: \[(.*)\]/)![1]!
+      .split(',')
+      .map((x) => x.trim());
     writeFileSync(
       mod,
-      readFileSync(mod, 'utf8').replace(/cases: \[.*\]/, 'cases:\n  - cp-01\n  - cp-02'),
+      flow.replace(/cases: \[.*\]/, `cases:\n${names.map((n) => `  - ${n}`).join('\n')}`),
     );
     scaffoldCase(dir, { system: 'cvs', module: 'chest-pain', name: 'cp-98', title: 'x' });
-    expect(readFileSync(mod, 'utf8')).toContain('  - cp-02\n  - cp-98');
+    expect(readFileSync(mod, 'utf8')).toContain(`  - ${names.at(-1)}\n  - cp-98`);
     expect(compileContent(dir).cases['cvs-cp-98']).toBeDefined();
   });
   it('refuses duplicates, bad names and unknown modules', () => {

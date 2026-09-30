@@ -1,0 +1,18 @@
+id: noradrenaline
+title: "Noradrenaline (norepinephrine)"
+summary: "Vasopressor of choice when hypotension persists in cardiogenic shock; raises perfusion pressure while reperfusion is arranged."
+doses:
+  - id: infusion
+    label: "Infusion"
+    route: "IV infusion, ideally via a central line"
+    text: "Start low (e.g. 0.05 µg/kg/min) and titrate to a mean arterial pressure of about 65 mmHg"
+    check:
+      source: esc-acs-2023
+      verified: false
+      todo: "Confirm starting dose and MAP target; add your local infusion concentration."
+sections:
+  - heading: Remember
+    body: "Pressors buy time; they don't fix the cause. In MI-related shock the priority is emergency revascularisation."
+india: "Available in India."
+refs: [esc-acs-2023]
+check: { source: esc-acs-2023, verified: false }

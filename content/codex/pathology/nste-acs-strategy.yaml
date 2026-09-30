@@ -1,0 +1,15 @@
+id: nste-acs-strategy
+title: "NSTE-ACS: timing of the invasive strategy"
+summary: "How quickly a patient with NSTE-ACS goes for coronary angiography depends on their risk."
+sections:
+  - heading: Immediate (within about 2 hours)
+    body: "Very high risk: haemodynamic instability or cardiogenic shock; recurrent or refractory chest pain despite treatment; life-threatening arrhythmias or cardiac arrest; mechanical complications; acute heart failure from ischaemia; recurrent dynamic ST changes, especially intermittent ST elevation."
+  - heading: Early (within 24 hours)
+    body: "High risk: confirmed NSTEMI; dynamic new ST/T changes; transient ST elevation; GRACE score above 140."
+  - heading: Selective
+    body: "Lower risk: non-invasive testing or angiography guided by symptoms and findings."
+refs: [esc-acs-2023]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Confirm the lists against the current guideline."

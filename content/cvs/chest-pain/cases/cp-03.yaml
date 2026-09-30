@@ -1,0 +1,346 @@
+# cp-03: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: NSTEMI (a primary MI) in a 67-year-old woman; high risk (GRACE > 140) → early invasive
+# strategy, which becomes immediate when pain recurs with dynamic ST changes.
+
+id: cvs-cp-03
+title: "67F, chest pressure on and off since dawn"
+difficulty: 2
+minutes: 12
+patient: { age: 67, sex: F, weightKg: 62 }
+initial:
+  clock: "08:40"
+  vitals: { hr: 96, sbp: 148, dbp: 86, rr: 18, spo2: 96, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Teaching composite; check the history supports TIMI 6 and GRACE 149."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It's a pressure, here. It came three times since dawn, ten minutes each. It's gone now." }
+          - { who: relative, text: "She's diabetic, on BP tablets and cholesterol tablets. She takes an aspirin every day." }
+      - scene: triage-desk
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 96, BP 148 over 86, sats 96%. Pain-free right now." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "She's pain-free now. Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "Pain-free doesn't mean low risk: ischaemia comes and goes. ECG within 10 minutes for every possible ACS."
+        effects: { minutes: 5, milestone: ecg }
+        next: std-leads
+      - label: "She's pain-free: bloods and wait for the troponin"
+        grade: suboptimal
+        consequence: "The ECG isn't done until 30 minutes after arrival."
+        teaching: "The ECG comes first. Dynamic ST changes can be present even when the pain has settled."
+        effects: { minutes: 30, milestone: ecg, patient: -10 }
+        next: std-leads
+
+  std-leads:
+    type: ecg-leads
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/cp-03-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 96 per minute. ST depression of about 1 mm in I, aVL and V4 to V6, with T wave inversion in V5 and V6. No ST elevation."
+    prompt: "Tap every lead with ST depression."
+    answer: [I, aVL, V4, V5, V6]
+    correct:
+      consequence: "Right: ST depression in I, aVL and V4–V6."
+      teaching: "Horizontal or down-sloping ST depression of 0.5 mm or more in two contiguous leads, with ischaemic symptoms, suggests NSTE-ACS."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Check the lateral leads (I, aVL, V4–V6): the ST segment sits below the baseline after the QRS."
+    wrong:
+      consequence: "Those aren't the leads with ST depression."
+      teaching: "Look for the ST segment sagging below the baseline: here I, aVL and V4–V6."
+    next: ecg-read
+
+  ecg-read:
+    type: ecg
+    check: { source: esc-acs-2023, verified: false }
+    image: ecg/cp-03-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 96 per minute. ST depression of about 1 mm in I, aVL and V4 to V6, with T wave inversion in V5 and V6. No ST elevation."
+    prompt: "What does this ECG mean for her?"
+    options:
+      - label: "Ischaemic ST depression: treat as NSTE-ACS"
+        grade: best
+        consequence: "You start the ACS pathway and send a high-sensitivity troponin."
+        teaching: "ST depression with ischaemic symptoms is NSTE-ACS until proven otherwise; troponin separates NSTEMI from unstable angina."
+        effects: { minutes: 1 }
+        next: trop
+      - label: "STEMI: activate the cath lab now"
+        grade: suboptimal
+        consequence: "The cardiologist on call reviews it and stands the cath lab down."
+        teaching: "There's no ST elevation. ST depression confined to V1–V3 would suggest posterior MI, but lateral depression is not a STEMI equivalent."
+        effects: { minutes: 15 }
+        next: trop
+      - label: "Rate-related changes: probably nothing"
+        grade: harmful
+        consequence: "Your senior disagrees and starts the ACS pathway."
+        teaching: "Don't explain away ST depression in a patient with ischaemic symptoms and risk factors."
+        effects: { minutes: 10, patient: -10 }
+        next: trop
+
+  trop:
+    type: story
+    onEnter: { minutes: 60 }
+    panels:
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: nurse, text: "hs-troponin is above the 99th-percentile limit for women, and the repeat has risen further." }
+    next: diagnosis
+
+  diagnosis:
+    type: choice
+    check:
+      source: [udmi5-2026, esc-acs-2023]
+      verified: false
+      todo: "Confirm Fifth UDMI wording: rising troponin above the sex-specific limit + ischaemic symptoms + ECG change = primary MI (NSTEMI)."
+    prompt: "What's the working diagnosis?"
+    options:
+      - label: "NSTEMI: a primary myocardial infarction"
+        grade: best
+        consequence: "You record NSTEMI and plan risk stratification."
+        teaching: "A rise in troponin above the sex-specific 99th percentile, with ischaemic symptoms and ECG changes, from a presumed acute coronary event: primary MI."
+        next: timi
+      - label: "Unstable angina"
+        grade: suboptimal
+        consequence: "Your senior points to the rising troponin."
+        teaching: "Unstable angina means ischaemia without myocardial injury. A rising troponin above the limit makes this an MI."
+        next: timi
+      - label: "Secondary MI from a fast heart rate"
+        grade: suboptimal
+        consequence: "Your senior notes a heart rate of 96 can't explain this."
+        teaching: "Secondary MI needs a clear supply–demand cause (e.g. sustained tachyarrhythmia, severe anaemia, shock). None is present here."
+        next: timi
+
+  timi:
+    type: calculator
+    check:
+      source: antman-2000
+      verified: false
+      todo: "Confirm the intended answers (no known coronary stenosis ≥ 50%; three risk factors: diabetes, hypertension, hypercholesterolaemia)."
+    prompt: "Work out her TIMI risk score (UA/NSTEMI)."
+    score: timi-ua-nstemi
+    answers:
+      age: true
+      risk-factors: true
+      known-cad: false
+      aspirin: true
+      angina: true
+      st-deviation: true
+      markers: true
+    correct:
+      consequence: "TIMI 6: high risk."
+      teaching: "Age ≥ 65, three risk factors, aspirin in the last 7 days, 3 episodes in 24 hours, ST deviation and raised troponin: 6 of 7."
+    close:
+      consequence: "Right risk group, but some items were scored differently."
+      teaching: "Compare your breakdown with the correct one item by item."
+    wrong:
+      consequence: "Your score puts her in a different risk group."
+      teaching: "Score each of the seven items from what you actually know about her."
+    next: grace
+
+  grace:
+    type: calculator
+    check:
+      source: [granger-2003, esc-acs-2023]
+      verified: false
+      todo: "Confirm creatinine 1.3 mg/dL and Killip I; total 149 (> 140 = high risk)."
+    panels:
+      - scene: resus-bay
+        actors: [patient, doctor]
+        caption: "{clock} · Assessment"
+        bubbles:
+          - { who: doctor, text: "Chest's clear, no raised JVP. Creatinine is 1.3 mg/dL." }
+    prompt: "Now her GRACE score (in-hospital mortality)."
+    score: grace-in-hospital
+    answers:
+      killip: i
+      sbp: 148
+      hr: 96
+      age: 67
+      creatinine: 1.3
+      arrest: false
+      st-deviation: true
+      enzymes: true
+    correct:
+      consequence: "GRACE 149: high risk."
+      teaching: "A GRACE score above 140 is one of the markers that supports early invasive angiography within 24 hours."
+    close:
+      consequence: "Right risk band, but some items were scored differently."
+      teaching: "Small slips matter near cut-offs like 140; check each bin."
+    wrong:
+      consequence: "Your score puts her in a different risk band."
+      teaching: "Recheck the bins: Killip I, SBP 140–159, HR 90–109, age 60–69, creatinine 1.2–1.59, ST deviation, raised enzymes."
+    next: treatment
+
+  treatment:
+    type: multiselect
+    check:
+      source: esc-acs-2023
+      verified: false
+      todo: "Check grades: fondaparinux vs enoxaparin; P2Y12 pretreatment when angiography is planned within 24 h."
+    prompt: "Medical treatment now. Choose up to 5."
+    max: 5
+    options:
+      - label: "Continue aspirin"
+        grade: best
+        consequence: "Aspirin continued."
+        teaching: "Every patient with NSTE-ACS takes aspirin unless contraindicated."
+        missedEffects: { patient: -10 }
+      - label: "Fondaparinux, subcutaneous"
+        grade: best
+        consequence: "Fondaparinux given."
+        teaching: "Every NSTE-ACS patient needs a parenteral anticoagulant; fondaparinux is a common choice when angiography isn't immediate."
+        missedEffects: { patient: -5 }
+      - label: "Enoxaparin, subcutaneous"
+        grade: acceptable
+        consequence: "Enoxaparin given."
+        teaching: "Enoxaparin is a reasonable alternative anticoagulant."
+      - label: "High-intensity statin"
+        grade: best
+        consequence: "Atorvastatin started."
+        teaching: "Start a high-intensity statin early in every ACS."
+        missedEffects: { patient: -3 }
+      - label: "Ticagrelor loading dose now"
+        grade: acceptable
+        consequence: "Ticagrelor given."
+        teaching: "When angiography is planned within 24 hours, routine P2Y12 pretreatment isn't required; it can be given at angiography."
+      - label: "Oxygen by face mask"
+        grade: suboptimal
+        consequence: "Oxygen on; nothing changes."
+        teaching: "Oxygen is for SpO2 below 90%."
+      - label: "Fibrinolysis"
+        grade: harmful
+        consequence: "Your senior stops the fibrinolytic before it's drawn up."
+        teaching: "Fibrinolysis has no benefit in NSTE-ACS and increases bleeding. It is only for STEMI when PCI can't be done in time."
+        effects: { patient: -10 }
+    next: timing
+
+  timing:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "NSTEMI, TIMI 6, GRACE 149, now pain-free and stable. When should she have angiography?"
+    options:
+      - label: "Early invasive: within 24 hours"
+        grade: best
+        consequence: "Cardiology books her for tomorrow morning's list."
+        teaching: "Confirmed NSTEMI or a GRACE score above 140 puts her in the high-risk group: angiography within 24 hours."
+        effects: { minutes: 30 }
+        next: recurrence
+      - label: "Immediate: now, within 2 hours"
+        grade: suboptimal
+        consequence: "Cardiology asks what makes her very high risk; she's stable and pain-free."
+        teaching: "Immediate angiography is for very high risk: instability, refractory pain, arrhythmia, heart failure, mechanical complications."
+        effects: { minutes: 30 }
+        next: recurrence
+      - label: "Stress test first; angiography only if positive"
+        grade: suboptimal
+        consequence: "Cardiology recommends angiography instead."
+        teaching: "A selective strategy is for low-risk patients. Confirmed NSTEMI is not low risk."
+        effects: { minutes: 30, patient: -10 }
+        next: recurrence
+
+  recurrence:
+    type: story
+    onEnter: { minutes: 150, hr: 14, sbp: 12, patient: -5, addFlags: [recurrent_pain] }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Observation bay"
+        sfx: "BEEP · BEEP"
+      - scene: resus-bay
+        actors: [patient:pain, nurse:worried]
+        bubbles:
+          - { who: patient, text: "It's back, and it's worse this time." }
+          - { who: nurse, text: "Repeat ECG shows deeper ST depression than before." }
+    next: replan
+
+  replan:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Recurrent pain with new, deeper ST depression despite treatment. Now what?"
+    options:
+      - label: "Anti-ischaemic treatment and call cardiology for immediate angiography"
+        grade: best
+        consequence: "She goes to the cath lab within the hour: a tight proximal circumflex lesion is stented."
+        teaching: "Recurrent or refractory pain with dynamic ST changes makes her very high risk: the plan changes from early to immediate."
+        effects: { minutes: 45, hr: -16, sbp: -10 }
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Stick to tomorrow's list: she's already booked"
+        grade: harmful
+        consequence: "The pain continues for hours; her troponin climbs much higher before angiography."
+        teaching: "Risk is dynamic. Reassess after every change: recurrent ischaemia upgrades the urgency."
+        effects: { minutes: 240, patient: -30 }
+        next: *outcome
+      - label: "Add a second antiplatelet and more heparin, then reassess in the morning"
+        grade: suboptimal
+        consequence: "The pain settles slowly, but she has more damage by morning."
+        teaching: "Escalating drugs doesn't replace immediate angiography for refractory ischaemia."
+        effects: { minutes: 240, patient: -15 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Two days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "No more pressure. They say I can go home tomorrow." }
+    summary: "You recognised NSTE-ACS, scored her risk, planned early angiography and upgraded to immediate when the pain came back."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Three days later · Cardiology ward"
+    summary: "She was stented, but delays meant a larger infarct than necessary. The debrief shows where time was lost."
+
+debrief:
+  diagnosis: "NSTEMI (a primary MI) from a proximal circumflex lesion in a 67-year-old diabetic woman; high risk by TIMI and GRACE."
+  keyPoints:
+    - "Pain-free on arrival doesn't mean low risk: record the ECG within 10 minutes."
+    - "ST depression with ischaemic symptoms is NSTE-ACS; a rising hs-troponin above the sex-specific 99th percentile makes it NSTEMI."
+    - "TIMI and GRACE estimate risk; GRACE > 140 supports angiography within 24 hours."
+    - "Every NSTE-ACS patient needs aspirin, a parenteral anticoagulant and a high-intensity statin. No fibrinolysis."
+    - "Risk is dynamic: recurrent pain with dynamic ST changes means immediate angiography."
+  pitfalls:
+    - "Waiting for troponin before the ECG because the patient is pain-free."
+    - "Calling lateral ST depression a STEMI, or dismissing it as rate-related."
+    - "Giving a fibrinolytic in NSTE-ACS."
+    - "Not changing the plan when ischaemia recurs."
+  unlocks: [timi-ua-nstemi, grace-in-hospital, nste-acs-strategy, fondaparinux, atorvastatin, mi-classification]
+  refs: [esc-acs-2023, antman-2000, granger-2003, udmi5-2026]
+  check:
+    source: [esc-acs-2023, udmi5-2026]
+    verified: false
+    todo: "Confirm the Fifth UDMI label and the invasive-timing criteria."

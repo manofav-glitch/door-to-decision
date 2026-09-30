@@ -1,0 +1,352 @@
+# cp-05: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: inferolateral STEMI at a district hospital 3 hours from the nearest cath lab.
+# Fibrinolysis with streptokinase (what the pharmacy has tonight) fails → rescue PCI.
+
+id: cvs-cp-05
+title: "61M, district hospital, pain for two hours"
+difficulty: 2
+minutes: 12
+patient: { age: 61, sex: M, weightKg: 65 }
+initial:
+  clock: "23:15"
+  vitals: { hr: 88, sbp: 138, dbp: 84, rr: 18, spo2: 97, gcs: 15, temp: 36.7 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg, dx-to-lysis]
+check:
+  source: [esc-acs-2023, esc-stemi-2017]
+  verified: false
+  todo: "Teaching composite set in an Indian district hospital; check the resources and timings are realistic."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative:worried]
+        caption: "{clock} · District hospital casualty"
+        bubbles:
+          - { who: relative, text: "He's had chest pain for two hours. The nearest big hospital is three hours away." }
+          - { who: patient, text: "It's heavy… going into my left arm." }
+      - scene: triage-desk
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 88, BP 138 over 84, sats 97%. You're the only doctor on tonight." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "The ECG is the same in every hospital: within 10 minutes, and it decides everything that follows."
+        effects: { minutes: 5, milestone: ecg }
+        next: ste-leads
+      - label: "Arrange transfer to the big hospital straight away"
+        grade: suboptimal
+        consequence: "The ambulance crew asks for an ECG before they'll take him; it's done at 20 minutes."
+        teaching: "Diagnose first: the ECG decides between fibrinolysis here and other options."
+        effects: { minutes: 20, milestone: ecg, patient: -10 }
+        next: ste-leads
+
+  ste-leads:
+    type: ecg-leads
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Casualty"
+    image: ecg/cp-05-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 88 per minute. ST elevation in II, III, aVF, V5 and V6. ST depression in aVL, V1 and V2."
+    prompt: "Tap every lead with ST elevation."
+    answer: [II, III, aVF, V5, V6]
+    correct:
+      consequence: "Right: ST elevation in II, III, aVF, V5 and V6."
+      teaching: "Inferior plus lateral (V5–V6) ST elevation: an inferolateral STEMI."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Check both the inferior leads (II, III, aVF) and the lateral chest leads (V5, V6)."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "The ST segments are raised in the inferior and lateral leads: II, III, aVF, V5, V6."
+    next: reperfusion
+
+  reperfusion:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    onEnter: { minutes: 1, milestone: stemi-dx }
+    prompt: "Inferolateral STEMI, 2 hours of pain, 3 hours from a cath lab. Reperfusion plan?"
+    options:
+      - label: "Fibrinolysis here, now; then transfer"
+        grade: best
+        consequence: "You prepare to give a fibrinolytic."
+        teaching: "When PCI can't happen within about 2 hours of diagnosis, give fibrinolysis within 10 minutes of diagnosis if there's no contraindication."
+        next: treatment
+      - label: "Transfer for primary PCI (about 3 hours away)"
+        grade: suboptimal
+        consequence: "Your senior on the phone advises fibrinolysis first."
+        teaching: "Three hours to the cath lab is too long for primary PCI to be the better choice. Lyse first, then transfer."
+        effects: { minutes: 5, patient: -10 }
+        next: treatment
+      - label: "Wait for troponin to confirm the diagnosis"
+        grade: harmful
+        showIf: { notFlag: waited_trop }
+        consequence: "An hour passes. The troponin is raised, as expected."
+        teaching: "STEMI is an ECG diagnosis. Every hour of delay costs myocardium, and fibrinolysis works best early."
+        effects: { minutes: 60, patient: -20, addFlags: [waited_trop] }
+        next: reperfusion
+
+  treatment:
+    type: multiselect
+    check:
+      source: [esc-acs-2023, esc-stemi-2017]
+      verified: false
+      todo: "Check the anticoagulant grades when streptokinase is the lytic."
+    onEnter: { minutes: 2 }
+    prompt: "Antithrombotic treatment to go with the fibrinolytic. Choose up to 4."
+    max: 4
+    options:
+      - label: "Aspirin, loading dose"
+        grade: best
+        consequence: "Aspirin chewed."
+        teaching: "Aspirin with every fibrinolytic."
+        missedEffects: { patient: -10 }
+      - label: "Clopidogrel, loading dose"
+        grade: best
+        consequence: "Clopidogrel given."
+        teaching: "Clopidogrel is the P2Y12 inhibitor used with fibrinolysis; the loading dose depends on age."
+        missedEffects: { patient: -5 }
+      - label: "Enoxaparin"
+        grade: best
+        consequence: "Enoxaparin given."
+        teaching: "An anticoagulant is needed with fibrinolysis; enoxaparin is preferred."
+        missedEffects: { patient: -5 }
+      - label: "Ticagrelor, loading dose"
+        grade: suboptimal
+        consequence: "Ticagrelor given."
+        teaching: "With fibrinolysis, clopidogrel is the P2Y12 inhibitor that was studied and is recommended."
+      - label: "Oxygen by face mask"
+        grade: suboptimal
+        consequence: "Oxygen on; nothing changes."
+        teaching: "Oxygen is for SpO2 below 90%."
+    next: stroke-history
+
+  stroke-history:
+    type: choice
+    check:
+      source: [esc-acs-2023, acc-aha-acs-2025]
+      verified: false
+      todo: "Guidelines differ here: ESC lists ischaemic stroke within 6 months as absolute; ACC/AHA lists older ischaemic stroke as relative. Confirm the teaching point."
+    panels:
+      - scene: resus-bay
+        actors: [relative:worried, doctor]
+        caption: "{clock} · Casualty"
+        bubbles:
+          - { who: relative, text: "He had a small stroke three years ago. His arm weakness recovered completely." }
+    prompt: "An ischaemic stroke 3 years ago, fully recovered. Can he have a fibrinolytic?"
+    options:
+      - label: "Yes: it isn't an absolute contraindication; weigh it as a relative one"
+        grade: best
+        consequence: "You explain the small extra bleeding risk to the family, and they agree."
+        teaching: "Ischaemic stroke is an absolute contraindication only within the last 6 months; an older one is at most relative. Haemorrhagic stroke at any time is absolute."
+        effects: { minutes: 1 }
+        next: dose-sk
+      - label: "No: any previous stroke rules it out"
+        grade: suboptimal
+        consequence: "Your senior on the phone disagrees, and you give it after a delay."
+        teaching: "Only haemorrhagic stroke (or stroke of unknown type) is an absolute contraindication at any time."
+        effects: { minutes: 15, patient: -10 }
+        next: dose-sk
+
+  dose-sk:
+    type: dose
+    check: { source: esc-stemi-2017, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        caption: "{clock} · Casualty"
+        bubbles:
+          - { who: nurse, text: "Pharmacy only has streptokinase tonight, no tenecteplase." }
+    prompt: "Streptokinase for STEMI. Total dose, in million units?"
+    drug: streptokinase
+    dose: stemi
+    tolerancePct: 0
+    correct:
+      consequence: "The streptokinase infusion is running."
+      teaching: "Streptokinase is given by infusion over 30–60 minutes, not as a bolus. Don't give it if he has had streptokinase before."
+      effects: { minutes: 1, milestone: lysis }
+    under:
+      consequence: "The infusion runs, but below the standard dose."
+      teaching: "An underdose may fail to open the artery."
+      effects: { minutes: 1, milestone: lysis, patient: -10 }
+    over:
+      consequence: "The infusion runs, but above the standard dose."
+      teaching: "More fibrinolytic means more bleeding risk, with no extra benefit."
+      effects: { minutes: 1, milestone: lysis, patient: -5 }
+    next: sk-drop
+
+  sk-drop:
+    type: story
+    onEnter: { minutes: 15, sbp: -44, dbp: -26 }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Casualty"
+        sfx: "BEEP · BEEP"
+      - scene: resus-bay
+        actors: [patient-supine, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "BP has dropped to 94 over 58 during the streptokinase. He says he feels a bit light-headed." }
+    next: sk-hypotension
+
+  sk-hypotension:
+    type: choice
+    check: { source: esc-stemi-2017, verified: false }
+    prompt: "Hypotension during the streptokinase infusion. No rash, wheeze or swelling. What now?"
+    options:
+      - label: "Pause or slow the infusion, lie him flat, small fluid bolus; restart when BP recovers"
+        grade: best
+        consequence: "BP recovers to 126/78 in ten minutes; the infusion finishes."
+        teaching: "Hypotension is common with streptokinase and usually responds to slowing or pausing the infusion."
+        effects: { minutes: 10, sbp: 32, dbp: 20 }
+        next: failure
+      - label: "Stop it for good and give tenecteplase instead"
+        grade: harmful
+        consequence: "Your senior stops you: two fibrinolytics, twice the bleeding risk."
+        teaching: "Don't switch or stack fibrinolytics. Manage the hypotension and complete the infusion."
+        effects: { minutes: 10, patient: -10, sbp: 24, dbp: 14 }
+        next: failure
+      - label: "IM adrenaline for anaphylaxis"
+        grade: suboptimal
+        consequence: "His heart rate shoots up to 130 before your senior stops the second dose."
+        teaching: "Without rash, wheeze or swelling this is streptokinase hypotension, not anaphylaxis. Treat what you see."
+        effects: { minutes: 10, patient: -5, sbp: 30, dbp: 18 }
+        next: failure
+
+  failure:
+    type: story
+    onEnter: { minutes: 50 }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:pain, doctor:worried]
+        caption: "{clock} · 75 minutes after the fibrinolytic"
+        bubbles:
+          - { who: patient, text: "The pain is still there, doctor." }
+          - { who: doctor, text: "Let's repeat the ECG." }
+    next: repeat-ecg
+
+  repeat-ecg:
+    type: ecg
+    check: { source: [esc-acs-2023, gershlick-2005], verified: false }
+    image: ecg/cp-05-ecg-2.svg
+    alt: "Repeat 12-lead ECG 75 minutes after the fibrinolytic. ST elevation in II, III, aVF, V5 and V6 has fallen only slightly compared with the first ECG."
+    prompt: "Compare with the first ECG: ST elevation has barely changed and he still has pain. What does it mean?"
+    options:
+      - label: "Failed reperfusion: less than 50% ST resolution at 60–90 minutes"
+        grade: best
+        consequence: "You call the PCI centre for rescue PCI."
+        teaching: "Less than 50% resolution of ST elevation at 60–90 minutes, especially with ongoing pain, means the fibrinolytic has failed."
+        effects: { minutes: 2, addFlags: [failed_lysis] }
+        next: rescue
+      - label: "Successful reperfusion: some ST has come down"
+        grade: harmful
+        consequence: "Your senior on the phone asks you to measure it: it has fallen by less than a third."
+        teaching: "Measure it: the lead with the most ST elevation must fall by more than half. A small fall with ongoing pain is failure."
+        effects: { minutes: 20, patient: -10, addFlags: [failed_lysis] }
+        next: rescue
+      - label: "Wait another two hours and repeat the ECG"
+        grade: suboptimal
+        consequence: "Two hours later, nothing has changed."
+        teaching: "Assess at 60–90 minutes and act; waiting longer only loses myocardium."
+        effects: { minutes: 120, patient: -20, addFlags: [failed_lysis] }
+        next: rescue
+
+  rescue:
+    type: choice
+    check: { source: [esc-acs-2023, gershlick-2005], verified: false }
+    prompt: "Failed fibrinolysis. What now?"
+    options:
+      - label: "Immediate transfer to the PCI centre for rescue PCI"
+        grade: best
+        consequence: "The ambulance leaves within 15 minutes, with a nurse and a defibrillator."
+        teaching: "Failed fibrinolysis needs rescue PCI as soon as possible."
+        effects: { minutes: 15 }
+        next: transfer
+      - label: "Give a second dose of fibrinolytic"
+        grade: harmful
+        consequence: "Your senior on the phone stops you."
+        teaching: "Repeating a fibrinolytic adds bleeding risk and isn't recommended; rescue PCI is the answer."
+        effects: { minutes: 10, patient: -10 }
+        next: transfer
+      - label: "Keep him here; routine angiography in a few days"
+        grade: suboptimal
+        consequence: "The next day his echo shows a large akinetic inferolateral wall."
+        teaching: "An artery that hasn't opened needs rescue PCI now, not routine angiography later."
+        effects: { minutes: 30, patient: -25 }
+        next: transfer
+
+  transfer:
+    type: story
+    onEnter: { minutes: 180 }
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic, patient-supine:worried]
+        caption: "{clock} · Three hours on the road"
+        bubbles:
+          - { who: paramedic, text: "Pain on and off the whole way. We're at the PCI centre." }
+    next: rescue-pci
+
+  rescue-pci:
+    type: story
+    onEnter: { minutes: 30, milestone: wire, setVitals: { hr: 78, sbp: 128, dbp: 78 } }
+    panels:
+      - scene: cath-lab-door
+        actors: [patient-supine, senior:relieved]
+        caption: "{clock} · Cath lab"
+        bubbles:
+          - { who: senior, text: "Right coronary still occluded. Wire across… stent in. Good flow now." }
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Two days later · PCI centre"
+        bubbles:
+          - { who: relative, text: "Thank you for not waiting." }
+    summary: "You lysed quickly, managed the streptokinase hypotension, recognised failed reperfusion on time and sent him for rescue PCI."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Two days later · PCI centre"
+    summary: "The artery was opened in the end, but delays cost heart muscle. The debrief shows where time was lost."
+
+debrief:
+  diagnosis: "Inferolateral STEMI (a primary MI) at a non-PCI hospital: failed fibrinolysis with streptokinase, then rescue PCI of the right coronary artery."
+  keyPoints:
+    - "More than about 2 hours to PCI: fibrinolysis within 10 minutes of diagnosis if there's no contraindication."
+    - "Old ischaemic stroke (> 6 months) is not an absolute contraindication; haemorrhagic stroke at any time is."
+    - "Streptokinase is an infusion; hypotension during it usually responds to slowing or pausing it."
+    - "Check at 60–90 minutes: < 50% ST resolution or ongoing pain means failed reperfusion."
+    - "Failed fibrinolysis → rescue PCI. Never a second fibrinolytic."
+  pitfalls:
+    - "Waiting for troponin before reperfusion."
+    - "Treating streptokinase hypotension as anaphylaxis, or switching to another fibrinolytic."
+    - "Calling reperfusion 'successful' without measuring ST resolution."
+  unlocks: [streptokinase, fibrinolytics, failed-fibrinolysis, clopidogrel, enoxaparin]
+  refs: [esc-acs-2023, esc-stemi-2017, gershlick-2005, acc-aha-acs-2025]
+  check:
+    source: [esc-acs-2023, esc-stemi-2017, gershlick-2005]
+    verified: false

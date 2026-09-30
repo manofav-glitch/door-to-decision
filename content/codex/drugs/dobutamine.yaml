@@ -1,0 +1,14 @@
+id: dobutamine
+title: Dobutamine
+summary: "Inotrope that can support cardiac output in cardiogenic shock with low output; may worsen hypotension and arrhythmias."
+doses:
+  - id: infusion
+    label: "Infusion"
+    route: IV infusion
+    text: "2–20 µg/kg/min, titrated to effect"
+    check: { source: esc-acs-2023, verified: false, todo: "Confirm the dose range." }
+sections:
+  - heading: With a vasopressor
+    body: "Often combined with noradrenaline when both low output and low blood pressure are present."
+refs: [esc-acs-2023]
+check: { source: esc-acs-2023, verified: false }

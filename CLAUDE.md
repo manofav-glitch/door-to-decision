@@ -33,14 +33,14 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 ## Folder map (update when it changes)
 - `docs/` — SPEC.md, CONTENT_GUIDE.md (owner's plain-language authoring guide — keep in sync with the schema), CLINICAL_REVIEW.md + graphs/ (generated), templates/case.yaml
 - `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml` (incl. `needs-source` placeholder),
-  `benchmarks.yaml` (time targets, HUD vital limits), `cvs/chest-pain/{module.yaml,cases/cp-01.yaml,cp-02.yaml}`,
+  `benchmarks.yaml` (time targets, HUD vital limits), `cvs/chest-pain/{module.yaml,cases/cp-NN.yaml}`,
   `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`
 - `src/content/` — `schema.ts` (Zod: the authoring format), `compile.ts` (YAML → validated JSON, cross-checks),
   `vite-plugin.ts` (virtual modules; each case and the codex are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
 - `src/engine/` — pure TS: `engine.ts` (state, effects, conditions, branching, grading, stars, ideal path, replay), `dose.ts`. No React, no clinical facts.
-- `src/screens/` — Home, System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, Codex (tabs + search), CodexCard (with standalone calculator for scores), Settings
+- `src/screens/` — Home (+ Revise banner), System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, Revise (mistakes deck), Codex (tabs + search), CodexCard (with standalone calculator for scores), Settings
 - `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), ScoreParts.tsx (CalcForm, ScoreBreakdown, ScoreCalculator), `player/` (Hud, PanelView, EcgFigure with zoom view + lead hotspots, Sheet incl. LeadGrid)
-- `src/store/` — `settings.ts`, `progress.ts` (runs saved as inputs and replayed; stars, unlocks, mistakes deck)
+- `src/store/` — `settings.ts`, `progress.ts` (v2; runs saved as inputs and replayed; stars, unlocks, mistakes deck + Revise streaks: a card leaves after 2 correct in a row)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
 - `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (8 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
 - `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
@@ -109,4 +109,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Phase 2 done: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores, calculator node, Codex, draft cp-02.
 - Phase 3 done 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
 - Phase 4 built 2026-09-30: graph, dev mode, new-case script + skill, CONTENT_GUIDE.md, style warnings. 69 clinical items unverified.
-  Next: Phase 5 (remaining chest-pain cases, Learn/Exam polish, stars, mistakes deck + Revise mode).
+- Phase 5 in progress: Revise mode done; batch 1 done (cp-03 NSTE-ACS TIMI+GRACE, cp-04 anterior STEMI + shock,
+  cp-05 district-hospital SK → failed lysis → rescue PCI). Next: batch 2 (cp-06 dissection, cp-07 PE, cp-08 pericarditis/tamponade),
+  then batch 3 (cp-09 high-risk ECGs, cp-10 SCAD, cp-11 troponin-positive not ACS; 5th UDMI-heavy, owner input wanted).

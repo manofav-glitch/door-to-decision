@@ -1,0 +1,17 @@
+# cp-05: inferolateral STEMI. Sinus ~88/min; ST elevation II, III, aVF, V5, V6; reciprocal STD aVL, V1–V2.
+title: "12-lead ECG, on arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 88 }
+leads:
+  II:  { q: 0.1, s: 0.05, st: 0.28, t: 0.5 }
+  III: { q: 0.12, r: 0.6, s: 0.03, st: 0.3, t: 0.5 }
+  aVF: { q: 0.1, s: 0.04, st: 0.28, t: 0.48 }
+  V5:  { st: 0.22, t: 0.5 }
+  V6:  { st: 0.2, t: 0.45 }
+  aVL: { st: -0.15, t: -0.1 }
+  V1:  { st: -0.1 }
+  V2:  { st: -0.12, t: 0.3 }
+check:
+  source: [zimetbaum-2003, esc-acs-2023]
+  verified: false
+  todo: "Check: inferolateral STE with reciprocal change."

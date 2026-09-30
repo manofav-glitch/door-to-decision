@@ -1,0 +1,12 @@
+id: failed-fibrinolysis
+title: "Failed fibrinolysis and rescue PCI"
+summary: "After a fibrinolytic, check whether the artery has opened. If not, the patient needs rescue PCI, not another dose."
+sections:
+  - heading: Signs of failure (60–90 minutes)
+    body: "ST elevation falls by less than half in the lead with the greatest elevation, ongoing ischaemic pain, or haemodynamic or electrical instability."
+  - heading: What to do
+    body: "Immediate transfer for rescue PCI. Repeating the fibrinolytic is not recommended."
+  - heading: If it works
+    body: "Transfer for routine angiography within 2–24 hours (the pharmaco-invasive strategy)."
+refs: [esc-acs-2023, gershlick-2005]
+check: { source: [esc-acs-2023, gershlick-2005], verified: false }
