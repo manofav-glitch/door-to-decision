@@ -1,0 +1,10 @@
+# cp-11: AF with a fast ventricular rate (~150/min), irregularly irregular, no P waves;
+# rate-related ST depression ~1 mm in V4–V6.
+title: "12-lead ECG"
+layout: 12-lead
+rhythm: { kind: af, rate: 150 }
+leads:
+  V4: { st: -0.1 }
+  V5: { st: -0.1 }
+  V6: { st: -0.08 }
+check: { source: esc-af-2024, verified: false, todo: "Check it reads as AF with a fast ventricular rate." }

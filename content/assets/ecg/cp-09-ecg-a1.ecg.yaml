@@ -1,0 +1,10 @@
+# cp-09 patient A: posterior MI. Sinus ~84/min; horizontal ST depression V1–V3 with tall R waves and
+# upright T waves (the mirror image of posterior ST elevation). No ST elevation in the standard leads.
+title: "12-lead ECG, patient A"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 84 }
+leads:
+  V1: { r: 0.6, s: 0.3, st: -0.15, t: 0.4 }
+  V2: { r: 0.9, s: 0.4, st: -0.2, t: 0.55 }
+  V3: { r: 1.0, s: 0.4, st: -0.15, t: 0.5 }
+check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "Check: ST depression V1–V3 with tall R and upright T." }

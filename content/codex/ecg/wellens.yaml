@@ -1,0 +1,10 @@
+id: wellens
+title: "Wellens pattern"
+summary: "In a patient who is now pain-free after chest pain, deep symmetrical T inversion (type B) or biphasic T waves (type A) in V2–V3 warn of a critical proximal LAD stenosis."
+sections:
+  - heading: What you see
+    body: "Type A: biphasic T waves in V2–V3 (up then down). Type B: deep, symmetrical T inversion in V2–V3, sometimes V1–V6. Preserved R waves, no Q waves, little or no ST elevation, and normal or mildly raised troponin."
+  - heading: Why it matters
+    body: "The artery may be critically narrowed and re-occlude. These patients need early coronary angiography, not a stress test, which can provoke a large anterior MI."
+refs: [de-zwaan-1982, esc-acs-2023]
+check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }

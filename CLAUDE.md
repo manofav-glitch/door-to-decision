@@ -112,7 +112,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
   items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
   `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
-- Phase 5 in progress: Revise mode done; batch 1 (cp-03…cp-05) done and owner-verified; batch 2 done as drafts
-  (cp-06 aortic dissection, cp-07 PE with Wells, cp-08 pericarditis → tamponade; new scores wells-pe, perc; scenes
-  ct-scanner, ultrasound; ECG drawer gained pr, af, alternans, voltage). Next: batch 3 (cp-09 high-risk ECGs,
-  cp-10 SCAD, cp-11 troponin-positive not ACS; 5th UDMI-heavy, owner input wanted).
+- Phase 5 built 2026-09-30: Revise mode; all 11 chest-pain cases (cp-01…cp-11). cp-01…05 owner-verified; cp-06…11 are
+  drafts (84 unverified items; cp-10/cp-11 hinge on 5th UDMI wording Claude couldn't confirm). ECG codex cards exist
+  (posterior-mi, de-winter, wellens). Next: Phase 6 (accessibility audit, Lighthouse ≥ 90, low-end Android, presenter mode).

@@ -121,3 +121,24 @@
 - id: imazio-2013
   citation: "Imazio M, Brucato A, Cemin R, et al. A randomized trial of colchicine for acute pericarditis (ICAP). N Engl J Med. 2013;369(16):1522–1528."
   year: 2013
+
+- id: de-winter-2008
+  citation: "de Winter RJ, Verouden NJW, Wellens HJJ, Wilde AAM. A new ECG sign of proximal LAD occlusion. N Engl J Med. 2008;359(19):2071–2073."
+  year: 2008
+
+- id: de-zwaan-1982
+  citation: "de Zwaan C, Bär FW, Wellens HJ. Characteristic electrocardiographic pattern indicating a critical stenosis high in left anterior descending coronary artery in patients admitted because of impending myocardial infarction. Am Heart J. 1982;103(4 Pt 2):730–736."
+  year: 1982
+
+- id: hayes-2018
+  citation: "Hayes SN, Kim ESH, Saw J, et al. Spontaneous coronary artery dissection: current state of the science. A scientific statement from the American Heart Association. Circulation. 2018;137(19):e523–e557."
+  year: 2018
+
+- id: adlam-2018
+  citation: "Adlam D, Alfonso F, Maas A, Vrints C. European Society of Cardiology, Acute Cardiovascular Care Association, SCAD Study Group: a position paper on spontaneous coronary artery dissection. Eur Heart J. 2018;39(36):3353–3368."
+  year: 2018
+
+- id: esc-af-2024
+  citation: "Van Gelder IC, Rienstra M, Bunting KV, et al. 2024 ESC Guidelines for the management of atrial fibrillation. Eur Heart J. 2024;45(36):3314–3414."
+  year: 2024
+  todo: "Confirm authors and pages."

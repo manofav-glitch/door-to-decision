@@ -1,0 +1,17 @@
+id: scad
+title: "Spontaneous coronary artery dissection (SCAD)"
+summary: "A tear or bleed in the coronary artery wall, not atherosclerosis. A leading cause of MI in young and middle-aged women, including around pregnancy and after childbirth."
+sections:
+  - heading: Who
+    body: "Mostly women, often with few or no traditional risk factors; associations include the peripartum period, fibromuscular dysplasia, extreme physical or emotional stress."
+  - heading: Presentation
+    body: "Like any ACS: STEMI or NSTEMI. Don't dismiss chest pain in a young woman as anxiety."
+  - heading: Management
+    body: "Diagnosed at angiography. If stable with preserved flow, conservative treatment is usually preferred because most dissections heal; PCI is for ongoing ischaemia or instability and is technically harder. Fibrinolysis may extend the dissection."
+  - heading: Afterwards
+    body: "Beta-blocker, BP control, screening for fibromuscular dysplasia, counselling about future pregnancy, and cardiac rehabilitation."
+refs: [hayes-2018, adlam-2018, esc-acs-2023]
+check:
+  source: [hayes-2018, adlam-2018, esc-acs-2023]
+  verified: false
+  todo: "Confirm antithrombotic advice after SCAD (aspirin; role of DAPT and heparin) and the fibrinolysis statement."

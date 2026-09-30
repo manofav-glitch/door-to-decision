@@ -1,0 +1,12 @@
+id: posterior-mi
+title: "Posterior MI: the mirror image"
+summary: "Standard leads don't face the posterior wall, so a posterior STEMI shows as ST depression in V1–V3. Record V7–V9 to see it directly."
+sections:
+  - heading: On the standard ECG
+    body: "Horizontal ST depression in V1–V3 (often V1–V4), with tall, broad R waves and upright T waves: the mirror image of posterior ST elevation and Q waves."
+  - heading: Confirm it
+    body: "Record posterior leads V7–V9 (left back, at the level of V6). ST elevation of 0.5 mm or more there confirms a posterior STEMI."
+  - heading: Why it matters
+    body: "It's a STEMI equivalent: reperfusion as for any STEMI. Often from a circumflex or right coronary occlusion, sometimes with inferior or lateral changes."
+refs: [esc-acs-2023, zimetbaum-2003]
+check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "Confirm the V7–V9 threshold (0.5 mm; some sources use 1 mm in men under 40)." }

@@ -1,0 +1,17 @@
+id: myocardial-injury
+title: "Troponin-positive, but not ACS"
+summary: "A raised troponin means myocardial injury. It is only an MI when there is evidence of ischaemia, and only a primary MI when caused by an acute coronary event."
+sections:
+  - heading: Injury
+    body: "Troponin above the sex-specific 99th percentile. Acute if the values rise and/or fall; chronic if stable (e.g. chronic kidney disease, heart failure)."
+  - heading: Secondary MI
+    body: "Acute injury with evidence of ischaemia caused by an oxygen supply–demand mismatch without an acute coronary event, e.g. fast AF, severe anaemia, hypotension or sepsis."
+  - heading: Non-ischaemic injury
+    body: "Myocarditis, sepsis, pulmonary embolism, heart failure, renal failure, stroke, cardiotoxic drugs, trauma."
+  - heading: Why it matters
+    body: "Treat the cause. Loading antiplatelets and heparin, or rushing to the cath lab, helps a primary MI but only adds bleeding risk when the cause is elsewhere."
+refs: [udmi5-2026]
+check:
+  source: udmi5-2026
+  verified: false
+  todo: "Claude could not confirm the Fifth UDMI definitions of myocardial injury and secondary MI. Please rewrite this card from the document."

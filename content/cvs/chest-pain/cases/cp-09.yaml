@@ -1,0 +1,243 @@
+# cp-09: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: three patients, three high-risk ECG patterns that don't meet classic STEMI criteria:
+#   A: posterior STEMI (ST depression V1–V3, confirmed on V7–V9)
+#   B: de Winter pattern (proximal LAD occlusion; a STEMI equivalent)
+#   C: Wellens pattern (pain-free; critical proximal LAD stenosis)
+# The monitor shows each patient's numbers in turn.
+
+id: cvs-cp-09
+title: "Night shift: three ECGs arrive at once"
+difficulty: 3
+minutes: 12
+patient: { age: 64, sex: M, weightKg: 72 }
+initial:
+  clock: "01:30"
+  vitals: { hr: 84, sbp: 136, dbp: 82, rr: 18, spo2: 97, gcs: 15, temp: 36.7 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-acs-2023
+  verified: false
+  todo: "Three teaching composites; check each ECG and plan."
+
+start: shift
+
+nodes:
+  shift:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [senior, doctor]
+        caption: "{clock} · Night shift"
+        bubbles:
+          - { who: senior, text: "Three chest pains, three ECGs, and none of them is a textbook STEMI. Take them one at a time." }
+    next: a-intro
+
+  # ---------------------------------------------------------------- patient A
+  a-intro:
+    type: story
+    onEnter: { minutes: 5, milestone: ecg }
+    panels:
+      - scene: resus-bay
+        actors: [patient:pain, nurse]
+        caption: "Patient A · {clock}"
+        bubbles:
+          - { who: patient, text: "Pressure in my chest for forty minutes. It goes through to my back a little." }
+          - { who: nurse, text: "64-year-old man, smoker, diabetic. Pulse 84, BP 136 over 82." }
+    next: a-ecg
+
+  a-ecg:
+    type: ecg
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    image: ecg/cp-09-ecg-a1.svg
+    alt: "12-lead ECG, patient A. Sinus rhythm about 84 per minute. Horizontal ST depression in V1 to V3 with tall R waves and upright T waves. No ST elevation."
+    prompt: "Patient A. What does the ECG show, and what do you do next?"
+    options:
+      - label: "ST depression V1–V3 with tall R waves: possible posterior STEMI. Record V7–V9"
+        grade: best
+        consequence: "The nurse records the posterior leads."
+        teaching: "Horizontal ST depression in V1–V3 with tall R and upright T waves is the mirror image of posterior ST elevation."
+        effects: { minutes: 3 }
+        next: a-posterior
+      - label: "Anterior ischaemia: treat as NSTE-ACS and admit"
+        grade: suboptimal
+        consequence: "Your senior asks for posterior leads before the patient leaves resus."
+        teaching: "ST depression confined to V1–V3 should always prompt posterior leads: it may be a STEMI in disguise."
+        effects: { minutes: 20, patient: -10 }
+        next: a-posterior
+      - label: "No ST elevation, so not a STEMI: troponin in 3 hours"
+        grade: harmful
+        consequence: "Your senior disagrees and records posterior leads."
+        teaching: "The standard 12 leads don't look at the posterior wall. Absence of ST elevation doesn't exclude a posterior STEMI."
+        effects: { minutes: 30, patient: -20 }
+        next: a-posterior
+
+  a-posterior:
+    type: ecg-leads
+    check: { source: esc-acs-2023, verified: false }
+    image: ecg/cp-09-ecg-a2.svg
+    alt: "ECG with posterior leads for patient A: V7, V8 and V9 replace V4 to V6. ST elevation of about 1.5 mm in V7 to V9. ST depression persists in V1 to V3."
+    prompt: "Posterior leads (V7–V9 replace V4–V6). Tap the leads with ST elevation."
+    answer: [V7, V8, V9]
+    correct:
+      consequence: "Right: ST elevation in V7, V8 and V9."
+      teaching: "ST elevation of 0.5 mm or more in V7–V9 confirms a posterior STEMI."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "Look at the three posterior leads, V7–V9."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "The ST elevation is in the posterior leads, V7–V9; V1–V3 still show the mirror-image depression."
+    next: a-plan
+
+  a-plan:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "Posterior STEMI confirmed. Plan?"
+    options:
+      - label: "STEMI pathway: primary PCI (or fibrinolysis if PCI isn't timely)"
+        grade: best
+        consequence: "The cath lab is activated; a circumflex occlusion is opened."
+        teaching: "A posterior STEMI is a STEMI: reperfuse with the same urgency."
+        effects: { minutes: 3 }
+        next: b-intro
+      - label: "NSTE-ACS pathway: angiography within 24 hours"
+        grade: harmful
+        consequence: "Your senior upgrades him to the STEMI pathway, but an hour is lost."
+        teaching: "Treating a posterior STEMI as NSTE-ACS delays reperfusion of an occluded artery."
+        effects: { minutes: 3, patient: -20 }
+        next: b-intro
+
+  # ---------------------------------------------------------------- patient B
+  b-intro:
+    type: story
+    onEnter: { minutes: 5, setVitals: { hr: 90, sbp: 142, dbp: 88, rr: 20, spo2: 97 } }
+    panels:
+      - scene: resus-bay
+        actors: [patient:pain, nurse:worried]
+        caption: "Patient B · {clock}"
+        bubbles:
+          - { who: patient, text: "Crushing pain for half an hour. I feel sick." }
+          - { who: nurse, text: "48-year-old man. Pulse 90, BP 142 over 88." }
+    next: b-ecg
+
+  b-ecg:
+    type: ecg
+    check: { source: [de-winter-2008, esc-acs-2023], verified: false }
+    image: ecg/cp-09-ecg-b.svg
+    alt: "12-lead ECG, patient B. Sinus rhythm about 90 per minute. J-point ST depression in V2 to V5, up-sloping into tall, symmetrical T waves. Slight ST elevation in aVR."
+    prompt: "Patient B. What does the ECG show?"
+    options:
+      - label: "de Winter pattern: a STEMI equivalent. Activate the cath lab"
+        grade: best
+        consequence: "The cath lab finds an occluded proximal LAD and opens it."
+        teaching: "J-point depression up-sloping into tall symmetrical T waves across the chest leads signals an acute proximal LAD occlusion."
+        effects: { minutes: 3 }
+        next: c-intro
+      - label: "Hyperacute T waves: repeat the ECG in 20 minutes before deciding"
+        grade: suboptimal
+        consequence: "The repeat ECG looks the same; your senior activates the cath lab."
+        teaching: "The de Winter pattern is often static: it may never evolve into classic ST elevation. Act on it."
+        effects: { minutes: 25, patient: -15 }
+        next: c-intro
+      - label: "Up-sloping ST depression is normal at faster heart rates"
+        grade: harmful
+        consequence: "Your senior spots the tall T waves and activates the cath lab."
+        teaching: "With ischaemic pain, J-point depression plus tall, broad T waves is not a normal variant."
+        effects: { minutes: 30, patient: -25 }
+        next: c-intro
+
+  # ---------------------------------------------------------------- patient C
+  c-intro:
+    type: story
+    onEnter: { minutes: 5, setVitals: { hr: 72, sbp: 128, dbp: 78, rr: 16, spo2: 98 } }
+    panels:
+      - scene: resus-bay
+        actors: [patient, relative:worried]
+        caption: "Patient C · {clock}"
+        bubbles:
+          - { who: patient, text: "I had bad chest pain yesterday for half an hour. I feel fine now." }
+          - { who: relative, text: "Her first troponin was normal. Can we go home?" }
+    next: c-ecg
+
+  c-ecg:
+    type: ecg
+    check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }
+    image: ecg/cp-09-ecg-c.svg
+    alt: "12-lead ECG, patient C, pain-free. Sinus rhythm about 72 per minute. Deep symmetrical T wave inversion in V2 to V4, milder in V5. Preserved R waves, no Q waves, no significant ST elevation."
+    prompt: "Patient C, 55, pain-free now. What does the ECG show?"
+    options:
+      - label: "Wellens pattern: likely a critical proximal LAD stenosis"
+        grade: best
+        consequence: "You don't let the normal troponin reassure you."
+        teaching: "Deep symmetrical T inversion (or biphasic T waves) in V2–V3 after chest pain, in a pain-free patient, warns of a critical LAD lesion."
+        effects: { minutes: 2 }
+        next: c-plan
+      - label: "Non-specific T wave changes"
+        grade: suboptimal
+        consequence: "Your senior looks again and calls it Wellens."
+        teaching: "Deep, symmetrical T inversion across V2–V4 is a specific warning pattern, not 'non-specific'."
+        effects: { minutes: 5, patient: -5 }
+        next: c-plan
+
+  c-plan:
+    type: choice
+    check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }
+    prompt: "Wellens pattern, pain-free, first troponin normal. Plan?"
+    options:
+      - label: "Admit, treat as NSTE-ACS, early coronary angiography; no stress test"
+        grade: best
+        consequence: "Angiography next morning shows a 95% proximal LAD stenosis, which is stented."
+        teaching: "Wellens syndrome needs early angiography. A stress test can provoke a large anterior MI."
+        effects: { minutes: 5 }
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Exercise stress test in the morning"
+        grade: harmful
+        consequence: "Four minutes into the test she develops crushing pain and anterior ST elevation."
+        teaching: "Stress testing is contraindicated in Wellens syndrome: the LAD is critically narrowed."
+        effects: { minutes: 5, patient: -30 }
+        next: *outcome
+      - label: "Troponin is normal: discharge with outpatient follow-up"
+        grade: harmful
+        consequence: "She returns two days later with an anterior STEMI."
+        teaching: "A normal troponin doesn't make Wellens safe: the pattern predicts an impending anterior MI."
+        effects: { minutes: 5, patient: -35 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, senior:relieved]
+        caption: "Morning handover"
+        bubbles:
+          - { who: senior, text: "Three near-misses caught in one night. Well done." }
+    summary: "You spotted a posterior STEMI, a de Winter STEMI equivalent and Wellens syndrome, none of which meets classic ST-elevation criteria."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [senior:worried, doctor:worried]
+        caption: "Morning handover"
+    summary: "All three got the right treatment in the end, but not all on time. The debrief shows where each pattern was missed or delayed."
+
+debrief:
+  diagnosis: "A: posterior STEMI (circumflex). B: de Winter pattern, a STEMI equivalent (proximal LAD occlusion). C: Wellens syndrome (critical proximal LAD stenosis)."
+  keyPoints:
+    - "ST depression in V1–V3 with tall R waves: record V7–V9. ST elevation there confirms a posterior STEMI."
+    - "de Winter: J-point depression up-sloping into tall symmetrical T waves in the chest leads is a STEMI equivalent."
+    - "Wellens: deep symmetrical or biphasic T waves in V2–V3 in a pain-free patient means early angiography, not a stress test."
+    - "No classic ST elevation doesn't mean no occlusion: look for these patterns."
+  pitfalls:
+    - "Treating posterior STEMI as NSTE-ACS."
+    - "Waiting for the de Winter pattern to 'evolve'."
+    - "Being reassured by a normal troponin in Wellens, or sending the patient for a stress test."
+  unlocks: [posterior-mi, de-winter, wellens, lad-territory]
+  refs: [esc-acs-2023, de-winter-2008, de-zwaan-1982, zimetbaum-2003]
+  check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: false }

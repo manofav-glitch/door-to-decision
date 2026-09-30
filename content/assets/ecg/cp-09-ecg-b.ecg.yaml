@@ -1,0 +1,13 @@
+# cp-09 patient B: de Winter pattern. Sinus ~90/min; up-sloping ST depression at the J point in V2–V5
+# running into tall, symmetrical T waves; slight ST elevation in aVR.
+title: "12-lead ECG, patient B"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 90 }
+leads:
+  aVR: { st: 0.08 }
+  V1:  { st: -0.05, t: 0.4 }
+  V2:  { st: -0.25, t: 1.0 }
+  V3:  { st: -0.3, t: 1.1 }
+  V4:  { st: -0.28, t: 1.0 }
+  V5:  { st: -0.18, t: 0.75 }
+check: { source: [esc-acs-2023, de-winter-2008], verified: false, todo: "Stylised: the drawer makes a flat ST shift; check it still reads as J-point depression with tall T waves." }

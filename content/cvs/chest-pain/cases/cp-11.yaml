@@ -1,0 +1,231 @@
+# cp-11: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: AF with a fast ventricular rate triggered by pneumonia/sepsis; a rising troponin from
+# supply–demand mismatch: acute myocardial injury / secondary MI, NOT an acute coronary syndrome.
+# NOTE: this case depends on Fifth UDMI definitions Claude could not confirm; heavily flagged.
+
+id: cvs-cp-11
+title: "71M, palpitations and breathless for a day"
+difficulty: 3
+minutes: 10
+patient: { age: 71, sex: M, weightKg: 68 }
+initial:
+  clock: "15:10"
+  vitals: { hr: 150, sbp: 104, dbp: 68, rr: 24, spo2: 94, gcs: 15, temp: 38.4 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-af-2024, udmi5-2026]
+  verified: false
+  todo: "Teaching composite; confirm the case fits 'secondary MI' as the Fifth UDMI defines it."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "My heart is racing since yesterday, and I'm short of breath. Some tightness, but it's not bad now." }
+          - { who: relative, text: "He's had a cough and fever for three days." }
+      - scene: triage-desk
+        actors: [nurse:worried, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse about 150 and irregular, BP 104 over 68, temperature 38.4, sats 94%." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG and monitoring now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "A fast irregular pulse with breathlessness needs an ECG and monitoring straight away."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Chest X-ray first: it sounds like pneumonia"
+        grade: suboptimal
+        consequence: "The X-ray shows right basal consolidation; the ECG is done at 20 minutes."
+        teaching: "ECG first when the heart rate is 150; the X-ray can follow."
+        effects: { minutes: 20, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-af-2024, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/cp-11-ecg-1.svg
+    alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 150 per minute with no P waves. ST depression of about 1 mm in V4 to V6."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "AF with a fast ventricular rate; rate-related ST depression"
+        grade: best
+        consequence: "You start looking for why he's in fast AF."
+        teaching: "Irregularly irregular, no P waves: AF. ST depression at a rate of 150 may simply reflect the rate; interpret it again once the rate is controlled."
+        effects: { minutes: 1 }
+        next: stability
+      - label: "SVT: give adenosine"
+        grade: suboptimal
+        consequence: "Adenosine briefly slows the rate and reveals chaotic fibrillation."
+        teaching: "An irregular rhythm is AF until proven otherwise; adenosine won't treat it."
+        effects: { minutes: 5 }
+        next: stability
+      - label: "NSTEMI: ST depression"
+        grade: suboptimal
+        consequence: "Your senior points out the rhythm and the rate."
+        teaching: "ST depression during a very fast rate is often demand-related. Read the rhythm first."
+        effects: { minutes: 3 }
+        next: stability
+
+  stability:
+    type: choice
+    check: { source: esc-af-2024, verified: false, todo: "Confirm what counts as 'unstable' for immediate cardioversion." }
+    prompt: "Is he unstable?"
+    options:
+      - label: "Not shocked, alert, no ongoing chest pain, BP 104/68: stable. Look for a trigger"
+        grade: best
+        consequence: "You examine him for a cause."
+        teaching: "Immediate electrical cardioversion is for haemodynamic instability (shock, syncope, ongoing ischaemia or acute heart failure). He is stable."
+        effects: { minutes: 2 }
+        next: trigger
+      - label: "Unstable: immediate synchronised DC cardioversion"
+        grade: suboptimal
+        consequence: "He cardioverts, then slips back into AF within minutes: the fever and infection are still there."
+        teaching: "Cardioverting without treating the trigger often fails, and in AF of more than a day it carries stroke risk without anticoagulation."
+        effects: { minutes: 15, patient: -10 }
+        next: trigger
+
+  trigger:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, doctor]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: doctor, text: "Crackles at the right base. Chest X-ray: right lower lobe consolidation. Lactate 2.4." }
+    next: treat
+
+  treat:
+    type: choice
+    check: { source: esc-af-2024, verified: false, todo: "Confirm rate-control choices at SBP ~ 100 with sepsis." }
+    prompt: "Fast AF driven by pneumonia and sepsis. Treatment?"
+    options:
+      - label: "Treat the sepsis (antibiotics, fluids) and control the rate cautiously"
+        grade: best
+        consequence: "Over two hours his rate settles to 104 and his BP to 118/72."
+        teaching: "Treat the trigger. Rate control helps, but pick agents with care at this BP; the rate often falls as the sepsis is treated."
+        effects: { minutes: 120, setVitals: { hr: 104, sbp: 118, dbp: 72, rr: 20, spo2: 96 } }
+        next: trop
+      - label: "IV amiodarone to cardiovert him chemically now"
+        grade: suboptimal
+        consequence: "The rate slows a little; the infection is untreated for another hour."
+        teaching: "Rhythm control before anticoagulation in AF of more than a day risks stroke, and ignoring the sepsis keeps driving the rate."
+        effects: { minutes: 120, patient: -10, setVitals: { hr: 112, sbp: 112, dbp: 70, rr: 22, spo2: 95 } }
+        next: trop
+
+  trop:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [nurse, doctor]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: nurse, text: "hs-troponin is above the 99th-percentile limit for men, and the repeat is a little higher." }
+          - { who: doctor, text: "He's had no chest pain since he arrived, and the ECG at a rate of 104 has no ST depression." }
+    next: classify
+
+  classify:
+    type: choice
+    check:
+      source: udmi5-2026
+      verified: false
+      todo: "Confirm the Fifth UDMI terms 'acute myocardial injury' and 'secondary MI' and when each applies."
+    prompt: "What do you tell the admitting team about the troponin?"
+    options:
+      - label: "Acute myocardial injury, likely a secondary MI from fast AF and sepsis: treat the cause"
+        grade: best
+        consequence: "The medical team continues antibiotics and rate control, with no antiplatelets or heparin for ACS."
+        teaching: "A rising troponin with ischaemia from supply–demand mismatch, and no acute coronary event, is a secondary MI: treat the cause."
+        next: anticoag
+      - label: "NSTEMI (primary MI): ticagrelor, heparin and early angiography"
+        grade: harmful
+        consequence: "Your senior stops the ACS pathway; he has a bleeding risk and no evidence of an acute coronary event."
+        teaching: "Not every raised troponin is an ACS. Antithrombotics for a primary MI only add bleeding risk when the cause is elsewhere."
+        effects: { patient: -15 }
+        next: anticoag
+      - label: "Troponin is often raised in older people: ignore it"
+        grade: suboptimal
+        consequence: "Your senior points out the rise between samples."
+        teaching: "A rising troponin means acute injury and has prognostic weight, even when the cause isn't coronary."
+        effects: { patient: -5 }
+        next: anticoag
+
+  anticoag:
+    type: choice
+    check: { source: esc-af-2024, verified: false, todo: "Confirm the stroke-prevention teaching point (score used, and timing in acute illness)." }
+    prompt: "He's 71, hypertensive and has had AF for over a day. Stroke prevention?"
+    options:
+      - label: "Assess stroke and bleeding risk and start anticoagulation, unless contraindicated"
+        grade: best
+        consequence: "Anticoagulation is started, with a plan for rhythm review once he recovers."
+        teaching: "AF raises stroke risk even when triggered by acute illness; decide on anticoagulation by risk score and bleeding risk, not by the trigger."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Aspirin is enough for AF"
+        grade: suboptimal
+        consequence: "Your senior switches it to an anticoagulant."
+        teaching: "Aspirin doesn't effectively prevent AF-related stroke and is not recommended for that purpose."
+        next: *outcome
+      - label: "No anticoagulation: the AF was triggered by the infection"
+        grade: suboptimal
+        consequence: "The team revisits it the next day."
+        teaching: "AF triggered by acute illness often recurs; stroke prevention should still be considered."
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three days later · Medical ward"
+        bubbles:
+          - { who: patient, text: "My heart feels calmer, and the cough is better." }
+    summary: "You treated the cause of his fast AF, didn't mistake a demand-related troponin rise for an ACS, and thought about stroke prevention."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Medical ward"
+    summary: "He recovered, but some decisions added risk (unneeded antithrombotics, or cardioversion before treating the trigger). The debrief shows where."
+
+debrief:
+  diagnosis: "AF with a fast ventricular rate triggered by right lower lobe pneumonia with sepsis; rising troponin from supply–demand mismatch: acute myocardial injury, likely a secondary MI. Not an acute coronary syndrome."
+  keyPoints:
+    - "Irregularly irregular with no P waves is AF; ST depression at a rate of 150 may be rate-related."
+    - "Stable fast AF: find and treat the trigger (sepsis, dehydration, thyroid, electrolytes) and control the rate."
+    - "A raised troponin means injury. MI needs evidence of ischaemia; a primary MI needs an acute coronary event."
+    - "Don't give ACS antithrombotics or rush to angiography when the troponin rise is explained by another cause."
+    - "Consider stroke prevention for AF, even when an acute illness triggered it."
+  pitfalls:
+    - "Calling every raised troponin an NSTEMI."
+    - "Cardioverting stable AF without treating the trigger or thinking about anticoagulation."
+    - "Ignoring a rising troponin because the patient is old."
+  unlocks: [myocardial-injury, mi-classification, diltiazem]
+  refs: [esc-af-2024, udmi5-2026, esc-acs-2023]
+  check:
+    source: [esc-af-2024, udmi5-2026]
+    verified: false
+    todo: "This case hinges on Fifth UDMI definitions; please review it first."

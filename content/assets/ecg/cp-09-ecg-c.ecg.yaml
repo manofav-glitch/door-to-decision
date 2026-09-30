@@ -1,0 +1,11 @@
+# cp-09 patient C: Wellens pattern (type B). Sinus ~72/min, pain-free; deep symmetrical T wave inversion
+# in V2–V4 with preserved R waves and no Q waves; little or no ST elevation.
+title: "12-lead ECG, patient C (pain-free)"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 72 }
+leads:
+  V2: { t: -0.55, st: 0.03 }
+  V3: { t: -0.6, st: 0.03 }
+  V4: { t: -0.4 }
+  V5: { t: -0.15 }
+check: { source: [esc-acs-2023, de-zwaan-1982], verified: false, todo: "Check it reads as Wellens type B (deep symmetrical TWI V2–V4). Type A (biphasic T) can't be drawn yet." }

@@ -1,0 +1,265 @@
+# cp-10: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: spontaneous coronary artery dissection (SCAD) of the mid LAD, six weeks postpartum,
+# presenting as anterior STEMI; a primary MI (per the owner's brief). Managed conservatively after angiography.
+# NOTE: Fifth UDMI terms are used as given in the brief; details flagged for the content owner.
+
+id: cvs-cp-10
+title: "38F, chest pain six weeks after her baby"
+difficulty: 2
+minutes: 10
+patient: { age: 38, sex: F, weightKg: 60 }
+initial:
+  clock: "07:50"
+  vitals: { hr: 98, sbp: 122, dbp: 78, rr: 18, spo2: 98, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg, dx-to-wire]
+check:
+  source: [hayes-2018, adlam-2018]
+  verified: false
+  todo: "Teaching composite; check the SCAD presentation and angiographic description."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I was lifting the baby and this tight pain came across my chest and down my arm." }
+          - { who: relative, text: "She's healthy. Doesn't smoke. She's just exhausted from the baby." }
+      - scene: triage-desk
+        actors: [nurse, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 98, BP 122 over 78, sats 98%." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: [esc-acs-2023, hayes-2018], verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG now"
+        grade: best
+        consequence: "The ECG is done 5 minutes after arrival."
+        teaching: "Chest pain in a young woman without risk factors still needs an ECG within 10 minutes."
+        effects: { minutes: 5, milestone: ecg }
+        next: ste-leads
+      - label: "Probably anxiety and exhaustion: reassure her"
+        grade: harmful
+        consequence: "Your senior insists on an ECG before she leaves triage."
+        teaching: "Young women with MI are more often dismissed. SCAD is a leading cause of MI around pregnancy."
+        effects: { minutes: 25, milestone: ecg, patient: -15 }
+        next: ste-leads
+
+  ste-leads:
+    type: ecg-leads
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse:worried]
+        caption: "{clock} · Resus bay"
+    image: ecg/cp-10-ecg-1.svg
+    alt: "12-lead ECG. Sinus rhythm about 98 per minute. ST elevation of about 2 mm in V2, V3 and V4."
+    prompt: "Tap every lead with ST elevation."
+    answer: [V2, V3, V4]
+    correct:
+      consequence: "Right: anterior ST elevation, V2–V4."
+      teaching: "ST elevation in V2–V4: an anterior STEMI, whatever the patient's age or risk profile."
+    partial:
+      consequence: "Close, but not the full set."
+      teaching: "The anterior chest leads V2–V4 all show ST elevation."
+    wrong:
+      consequence: "Those aren't the leads with ST elevation."
+      teaching: "Look at the chest leads V2–V4."
+    next: plan
+
+  plan:
+    type: choice
+    check: { source: [esc-acs-2023, hayes-2018], verified: false }
+    onEnter: { minutes: 1, milestone: stemi-dx }
+    prompt: "Anterior STEMI in a 38-year-old, six weeks postpartum. You're at a PCI-capable centre. Plan?"
+    options:
+      - label: "Activate the cath lab for primary PCI"
+        grade: best
+        consequence: "The cath team is on its way."
+        teaching: "Treat the ECG, not the risk profile: primary PCI, which also shows the cause (atherosclerosis or SCAD)."
+        effects: { minutes: 2 }
+        next: pre-cath
+      - label: "Give a fibrinolytic: it's quicker"
+        grade: suboptimal
+        consequence: "Your senior stops you: the cath lab is available."
+        teaching: "Primary PCI is preferred where available; in SCAD, fibrinolysis may even extend the dissection."
+        effects: { minutes: 8, patient: -5 }
+        next: pre-cath
+      - label: "Wait for troponin: she's young and has no risk factors"
+        grade: harmful
+        showIf: { notFlag: waited_trop }
+        consequence: "An hour later the troponin is high and the ECG unchanged."
+        teaching: "STEMI is an ECG diagnosis, at any age."
+        effects: { minutes: 60, patient: -20, addFlags: [waited_trop] }
+        next: plan
+
+  pre-cath:
+    type: multiselect
+    check:
+      source: [esc-acs-2023, hayes-2018]
+      verified: false
+      todo: "Check grades: P2Y12 loading before angiography when SCAD is possible."
+    onEnter: { minutes: 2 }
+    prompt: "Before the cath lab. Choose up to 3."
+    max: 3
+    options:
+      - label: "Aspirin, loading dose"
+        grade: best
+        consequence: "Aspirin given."
+        teaching: "Aspirin for every STEMI."
+        missedEffects: { patient: -5 }
+      - label: "Unfractionated heparin at angiography"
+        grade: best
+        consequence: "Heparin drawn up for the lab."
+        teaching: "Anticoagulation for primary PCI; the team can stop it if SCAD is found."
+      - label: "P2Y12 loading dose now"
+        grade: acceptable
+        consequence: "Ticagrelor given."
+        teaching: "Usual for STEMI; if SCAD is suspected, some teams defer it until they see the angiogram."
+      - label: "Oxygen by face mask"
+        grade: suboptimal
+        consequence: "Oxygen on; nothing changes."
+        teaching: "Oxygen is for SpO2 below 90%."
+    next: cath
+
+  cath:
+    type: story
+    onEnter: { minutes: 30, milestone: wire }
+    panels:
+      - scene: cath-lab-door
+        actors: [patient-supine, senior]
+        caption: "{clock} · Cath lab"
+        bubbles:
+          - { who: senior, text: "No atherosclerosis anywhere. The mid LAD has a long, smooth narrowing: an intramural haematoma. It's SCAD." }
+          - { who: senior, text: "Flow is good and her pain has gone." }
+    check: { source: [hayes-2018, adlam-2018], verified: false }
+    next: scad-plan
+
+  scad-plan:
+    type: choice
+    check: { source: [hayes-2018, adlam-2018, esc-acs-2023], verified: false }
+    prompt: "SCAD of the mid LAD, good flow, pain-free and stable. What now?"
+    options:
+      - label: "Conservative: no stent; CCU monitoring for a few days"
+        grade: best
+        consequence: "She's monitored in CCU; her pain doesn't return."
+        teaching: "Most SCAD heals on its own. In stable patients with preserved flow, conservative management is usually preferred."
+        next: classify
+      - label: "Stent the whole dissected segment now"
+        grade: suboptimal
+        consequence: "The stent pushes the haematoma further along; a second stent is needed."
+        teaching: "PCI in SCAD is technically hard and can propagate the dissection; keep it for ongoing ischaemia or instability."
+        effects: { minutes: 45, patient: -15 }
+        next: classify
+      - label: "Start a fibrinolytic to dissolve what looks like a clot"
+        grade: harmful
+        consequence: "The senior stops you: there's no clot."
+        teaching: "SCAD is a bleed within the artery wall; fibrinolysis can extend it."
+        effects: { patient: -10 }
+        next: classify
+
+  classify:
+    type: choice
+    check:
+      source: udmi5-2026
+      verified: false
+      todo: "Brief says SCAD = primary MI under the Fifth UDMI; confirm the wording."
+    prompt: "How do you classify her MI?"
+    options:
+      - label: "Primary MI: caused by an acute coronary event (SCAD)"
+        grade: best
+        consequence: "You document it that way."
+        teaching: "SCAD is an acute coronary event, so this is a primary MI, even without atherosclerosis."
+        next: discharge-plan
+      - label: "Secondary MI: supply–demand mismatch"
+        grade: suboptimal
+        consequence: "Your senior corrects the notes."
+        teaching: "Secondary MI has no acute coronary event; here the coronary artery itself dissected."
+        next: discharge-plan
+      - label: "MINOCA"
+        grade: suboptimal
+        consequence: "Your senior points out the angiogram showed a cause."
+        teaching: "MINOCA (myocardial injury with non-obstructive coronary arteries) is a working label when angiography shows no cause; here it showed SCAD."
+        next: discharge-plan
+
+  discharge-plan:
+    type: multiselect
+    check:
+      source: [hayes-2018, adlam-2018]
+      verified: false
+      todo: "Confirm: beta-blocker, FMD screening, statin only if otherwise indicated, antiplatelet duration."
+    prompt: "Before discharge. Choose up to 4."
+    max: 4
+    options:
+      - label: "Beta-blocker"
+        grade: best
+        consequence: "Started."
+        teaching: "Beta-blockers are commonly recommended after SCAD and may reduce recurrence."
+      - label: "Screen for fibromuscular dysplasia (head-to-pelvis CT or MR angiography)"
+        grade: best
+        consequence: "Booked."
+        teaching: "Fibromuscular dysplasia is common in SCAD and can affect other arteries."
+      - label: "Counselling about future pregnancy and contraception"
+        grade: best
+        consequence: "Discussed with her and her partner."
+        teaching: "Pregnancy after SCAD carries a risk of recurrence; plan it with cardiology and obstetrics."
+      - label: "Cardiac rehabilitation"
+        grade: best
+        consequence: "Referred."
+        teaching: "Rehab (with sensible limits on heavy isometric exercise) helps recovery and confidence."
+      - label: "High-intensity statin, as for any MI"
+        grade: suboptimal
+        consequence: "Started."
+        teaching: "SCAD isn't atherosclerotic; statins are for those with another indication."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Five days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "I thought I was just tired. Thank you for taking me seriously." }
+    summary: "You didn't let her age dismiss the ECG, got her to angiography fast, recognised SCAD and avoided harmful stenting or lysis."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Cardiology ward"
+    summary: "She recovered, but delays or unnecessary procedures added risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Spontaneous coronary artery dissection (SCAD) of the mid LAD, six weeks postpartum, presenting as anterior STEMI: a primary MI."
+  keyPoints:
+    - "Chest pain in a young woman, especially around pregnancy, can be MI: record the ECG within 10 minutes."
+    - "Treat the ECG, not the risk profile: primary PCI shows whether the cause is atherosclerosis or SCAD."
+    - "Stable SCAD with good flow is usually managed conservatively; PCI is harder and can spread the dissection."
+    - "No fibrinolysis for SCAD."
+    - "Afterwards: beta-blocker, screen for fibromuscular dysplasia, and plan future pregnancy."
+  pitfalls:
+    - "Calling chest pain in a young postpartum woman 'anxiety'."
+    - "Stenting a stable SCAD by reflex."
+    - "Routine statins as if the MI were atherosclerotic."
+  unlocks: [scad, mi-classification]
+  refs: [hayes-2018, adlam-2018, esc-acs-2023, udmi5-2026]
+  check:
+    source: [hayes-2018, adlam-2018, udmi5-2026]
+    verified: false
+    todo: "Confirm Fifth UDMI wording and SCAD management points."

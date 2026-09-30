@@ -1,0 +1,10 @@
+# cp-10: SCAD of the LAD. Sinus ~98/min; ST elevation ~2 mm V2–V4.
+title: "12-lead ECG"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 98 }
+leads:
+  V2: { st: 0.2, t: 0.6 }
+  V3: { st: 0.22, t: 0.6 }
+  V4: { st: 0.18, t: 0.5 }
+  III: { st: -0.05 }
+check: { source: esc-acs-2023, verified: false }

@@ -1,0 +1,10 @@
+id: de-winter
+title: "de Winter pattern"
+summary: "Up-sloping ST depression at the J point in the chest leads, running into tall, symmetrical T waves: a STEMI equivalent from an acute proximal LAD occlusion."
+sections:
+  - heading: What you see
+    body: "J-point depression of 1–3 mm in V1–V6 with up-sloping ST segments and tall, prominent, symmetrical T waves, often with slight ST elevation in aVR. No classic ST elevation in the chest leads."
+  - heading: What to do
+    body: "Treat as a STEMI equivalent: activate the reperfusion pathway for emergency angiography."
+refs: [de-winter-2008, esc-acs-2023]
+check: { source: [de-winter-2008, esc-acs-2023], verified: false }

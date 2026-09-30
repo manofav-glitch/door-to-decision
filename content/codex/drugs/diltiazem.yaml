@@ -1,0 +1,15 @@
+id: diltiazem
+title: "Diltiazem (rate control in AF)"
+summary: "Non-dihydropyridine calcium-channel blocker that slows AV conduction. An option for rate control in AF when the ejection fraction is preserved."
+doses:
+  - id: af-iv
+    label: "AF with rapid ventricular rate"
+    route: IV bolus
+    text: "0.25 mg/kg over 2 minutes (often 15–20 mg), repeat or infuse if needed"
+    check: { source: esc-af-2024, verified: false, todo: "Confirm dose and local availability of IV diltiazem." }
+sections:
+  - heading: Avoid in
+    body: "Heart failure with reduced ejection fraction, hypotension, pre-excitation (WPW), and with IV beta-blockers."
+india: "Oral diltiazem is widely available; confirm IV availability."
+refs: [esc-af-2024]
+check: { source: esc-af-2024, verified: false }
