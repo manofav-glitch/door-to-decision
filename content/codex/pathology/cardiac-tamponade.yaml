@@ -9,4 +9,4 @@ sections:
   - heading: Treatment
     body: "Urgent pericardiocentesis (or surgical drainage). A small fluid bolus may help briefly. Avoid diuretics and vasodilators, and be careful with intubation, which can precipitate collapse."
 refs: [esc-pericardial-2015]
-check: { source: esc-pericardial-2015, verified: false }
+check: { source: esc-pericardial-2015, verified: true, reviewedOn: 2026-09-30 }

@@ -15,4 +15,4 @@ leads:
   V4:  { st: 0.15, pr: -0.07 }
   V5:  { st: 0.15, pr: -0.07 }
   V6:  { st: 0.12, pr: -0.06 }
-check: { source: esc-pericardial-2015, verified: false, todo: "Check: widespread concave STE, PR depression, aVR PR elevation, no reciprocal change." }
+check: { source: esc-pericardial-2015, verified: true, reviewedOn: 2026-09-30, todo: "Check: widespread concave STE, PR depression, aVR PR elevation, no reciprocal change." }

@@ -1,4 +1,4 @@
-# cp-09: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-09: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: three patients, three high-risk ECG patterns that don't meet classic STEMI criteria:
 #   A: posterior STEMI (ST depression V1–V3, confirmed on V7–V9)
 #   B: de Winter pattern (proximal LAD occlusion; a STEMI equivalent)
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-acs-2023
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Three teaching composites; check each ECG and plan."
 
 start: shift
@@ -49,7 +50,7 @@ nodes:
 
   a-ecg:
     type: ecg
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-09-ecg-a1.svg
     alt: "12-lead ECG, patient A. Sinus rhythm about 84 per minute. Horizontal ST depression in V1 to V3 with tall R waves and upright T waves. No ST elevation."
     prompt: "Patient A. What does the ECG show, and what do you do next?"
@@ -75,7 +76,7 @@ nodes:
 
   a-posterior:
     type: ecg-leads
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-09-ecg-a2.svg
     alt: "ECG with posterior leads for patient A: V7, V8 and V9 replace V4 to V6. ST elevation of about 1.5 mm in V7 to V9. ST depression persists in V1 to V3."
     prompt: "Posterior leads (V7–V9 replace V4–V6). Tap the leads with ST elevation."
@@ -93,7 +94,7 @@ nodes:
 
   a-plan:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Posterior STEMI confirmed. Plan?"
     options:
       - label: "STEMI pathway: primary PCI (or fibrinolysis if PCI isn't timely)"
@@ -124,7 +125,7 @@ nodes:
 
   b-ecg:
     type: ecg
-    check: { source: [de-winter-2008, esc-acs-2023], verified: false }
+    check: { source: [de-winter-2008, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-09-ecg-b.svg
     alt: "12-lead ECG, patient B. Sinus rhythm about 90 per minute. J-point ST depression in V2 to V5, up-sloping into tall, symmetrical T waves. Slight ST elevation in aVR."
     prompt: "Patient B. What does the ECG show?"
@@ -163,7 +164,7 @@ nodes:
 
   c-ecg:
     type: ecg
-    check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }
+    check: { source: [de-zwaan-1982, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-09-ecg-c.svg
     alt: "12-lead ECG, patient C, pain-free. Sinus rhythm about 72 per minute. Deep symmetrical T wave inversion in V2 to V4, milder in V5. Preserved R waves, no Q waves, no significant ST elevation."
     prompt: "Patient C, 55, pain-free now. What does the ECG show?"
@@ -183,7 +184,7 @@ nodes:
 
   c-plan:
     type: choice
-    check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }
+    check: { source: [de-zwaan-1982, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Wellens pattern, pain-free, first troponin normal. Plan?"
     options:
       - label: "Admit, treat as NSTE-ACS, early coronary angiography; no stress test"
@@ -240,4 +241,4 @@ debrief:
     - "Being reassured by a normal troponin in Wellens, or sending the patient for a stress test."
   unlocks: [posterior-mi, de-winter, wellens, lad-territory]
   refs: [esc-acs-2023, de-winter-2008, de-zwaan-1982, zimetbaum-2003]
-  check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: false }
+  check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: true, reviewedOn: 2026-09-30 }

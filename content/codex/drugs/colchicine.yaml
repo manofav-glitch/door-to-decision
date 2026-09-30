@@ -6,10 +6,10 @@ doses:
     label: "Acute pericarditis"
     route: Oral
     text: "0.5 mg once daily (under 70 kg) or twice daily (70 kg or more) for 3 months"
-    check: { source: [esc-pericardial-2015, imazio-2013], verified: false, todo: "Confirm the weight-adjusted regimen and duration." }
+    check: { source: [esc-pericardial-2015, imazio-2013], verified: true, reviewedOn: 2026-09-30, todo: "Confirm the weight-adjusted regimen and duration." }
 sections:
   - heading: Cautions
     body: "Diarrhoea is common; reduce the dose in renal impairment; beware interactions (e.g. clarithromycin)."
 india: "Widely available."
 refs: [esc-pericardial-2015, imazio-2013]
-check: { source: [esc-pericardial-2015, imazio-2013], verified: false }
+check: { source: [esc-pericardial-2015, imazio-2013], verified: true, reviewedOn: 2026-09-30 }

@@ -1,4 +1,4 @@
-# cp-07: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-07: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: bilateral pulmonary embolism with RV strain (intermediate-high risk) that deteriorates
 # to high risk; systemic thrombolysis at that point.
 
@@ -15,7 +15,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-pe-2019
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; check the findings fit intermediate-high-risk PE."
 
 start: arrival
@@ -34,7 +35,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-pe-2019, verified: false }
+    check: { source: esc-pe-2019, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG and oxygen to keep SpO2 in the mid-90s"
@@ -52,7 +53,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-pe-2019, verified: false }
+    check: { source: esc-pe-2019, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:worried, nurse]
@@ -95,7 +96,8 @@ nodes:
     type: calculator
     check:
       source: [wells-2000, esc-pe-2019]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm the intended answers: DVT signs yes; PE most likely yes; HR > 100 yes; a long flight doesn't count as immobilisation. Total 7.5."
     prompt: "Work out her Wells score for PE."
     score: wells-pe
@@ -120,7 +122,7 @@ nodes:
 
   testing:
     type: choice
-    check: { source: [esc-pe-2019, kline-2004], verified: false }
+    check: { source: [esc-pe-2019, kline-2004], verified: true, reviewedOn: 2026-09-30 }
     prompt: "PE likely. What next?"
     options:
       - label: "CT pulmonary angiography; start anticoagulation while you wait"
@@ -158,7 +160,7 @@ nodes:
 
   risk:
     type: choice
-    check: { source: [esc-pe-2019, meyer-2014], verified: false }
+    check: { source: [esc-pe-2019, meyer-2014], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Normal BP, RV dilated on CT, troponin raised. Risk group and plan?"
     options:
       - label: "Intermediate-high risk: anticoagulate, monitored bed, thrombolysis only if she deteriorates"
@@ -195,7 +197,7 @@ nodes:
 
   high-risk:
     type: choice
-    check: { source: [esc-pe-2019], verified: false }
+    check: { source: [esc-pe-2019], verified: true, reviewedOn: 2026-09-30 }
     prompt: "She is now hypotensive and confused. What now?"
     options:
       - label: "High-risk PE: systemic thrombolysis now, cautious fluids, noradrenaline if needed"
@@ -253,4 +255,4 @@ debrief:
     - "Routine thrombolysis in intermediate-risk PE; or failing to thrombolyse when she collapses."
   unlocks: [pulmonary-embolism, wells-pe, perc, alteplase, enoxaparin]
   refs: [esc-pe-2019, wells-2000, kline-2004, meyer-2014]
-  check: { source: [esc-pe-2019, meyer-2014], verified: false }
+  check: { source: [esc-pe-2019, meyer-2014], verified: true, reviewedOn: 2026-09-30 }

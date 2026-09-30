@@ -1,4 +1,4 @@
-# cp-10: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-10: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: spontaneous coronary artery dissection (SCAD) of the mid LAD, six weeks postpartum,
 # presenting as anterior STEMI; a primary MI (per the owner's brief). Managed conservatively after angiography.
 # NOTE: Fifth UDMI terms are used as given in the brief; details flagged for the content owner.
@@ -16,7 +16,8 @@ timeTargets:
   default: [door-to-ecg, dx-to-wire]
 check:
   source: [hayes-2018, adlam-2018]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; check the SCAD presentation and angiographic description."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: [esc-acs-2023, hayes-2018], verified: false }
+    check: { source: [esc-acs-2023, hayes-2018], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -57,7 +58,7 @@ nodes:
 
   ste-leads:
     type: ecg-leads
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse:worried]
@@ -79,7 +80,7 @@ nodes:
 
   plan:
     type: choice
-    check: { source: [esc-acs-2023, hayes-2018], verified: false }
+    check: { source: [esc-acs-2023, hayes-2018], verified: true, reviewedOn: 2026-09-30 }
     onEnter: { minutes: 1, milestone: stemi-dx }
     prompt: "Anterior STEMI in a 38-year-old, six weeks postpartum. You're at a PCI-capable centre. Plan?"
     options:
@@ -107,7 +108,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-acs-2023, hayes-2018]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Check grades: P2Y12 loading before angiography when SCAD is possible."
     onEnter: { minutes: 2 }
     prompt: "Before the cath lab. Choose up to 3."
@@ -142,12 +144,12 @@ nodes:
         bubbles:
           - { who: senior, text: "No atherosclerosis anywhere. The mid LAD has a long, smooth narrowing: an intramural haematoma. It's SCAD." }
           - { who: senior, text: "Flow is good and her pain has gone." }
-    check: { source: [hayes-2018, adlam-2018], verified: false }
+    check: { source: [hayes-2018, adlam-2018], verified: true, reviewedOn: 2026-09-30 }
     next: scad-plan
 
   scad-plan:
     type: choice
-    check: { source: [hayes-2018, adlam-2018, esc-acs-2023], verified: false }
+    check: { source: [hayes-2018, adlam-2018, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     prompt: "SCAD of the mid LAD, good flow, pain-free and stable. What now?"
     options:
       - label: "Conservative: no stent; CCU monitoring for a few days"
@@ -172,7 +174,8 @@ nodes:
     type: choice
     check:
       source: udmi5-2026
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Brief says SCAD = primary MI under the Fifth UDMI; confirm the wording."
     prompt: "How do you classify her MI?"
     options:
@@ -196,7 +199,8 @@ nodes:
     type: multiselect
     check:
       source: [hayes-2018, adlam-2018]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm: beta-blocker, FMD screening, statin only if otherwise indicated, antiplatelet duration."
     prompt: "Before discharge. Choose up to 4."
     max: 4
@@ -261,5 +265,6 @@ debrief:
   refs: [hayes-2018, adlam-2018, esc-acs-2023, udmi5-2026]
   check:
     source: [hayes-2018, adlam-2018, udmi5-2026]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Confirm Fifth UDMI wording and SCAD management points."

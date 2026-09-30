@@ -114,6 +114,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
   items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
   `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
-- Phase 5 done: Revise mode; all 11 chest-pain cases (cp-01…05 owner-verified; cp-06…11 drafts, 84 unverified items).
+- Phase 5 done: Revise mode; all 11 chest-pain cases. 2026-09-30: owner instructed marking cp-06…11 verified too (all 202 items
+  verified; old TODO notes kept and listed by `npm run review`, incl. cp-10/cp-11 Fifth UDMI wording to confirm).
 - Phase 6 done 2026-09-30: accessibility audit + fixes, performance (PageSpeed mobile after changes: 98 perf / 100 a11y / 100 best
   practices / 100 SEO), woff2-only fonts, lazy screens, meta description, presenter mode. Pending: owner's low-end Android check.

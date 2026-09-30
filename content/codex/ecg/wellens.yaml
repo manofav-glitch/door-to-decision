@@ -7,4 +7,4 @@ sections:
   - heading: Why it matters
     body: "The artery may be critically narrowed and re-occlude. These patients need early coronary angiography, not a stress test, which can provoke a large anterior MI."
 refs: [de-zwaan-1982, esc-acs-2023]
-check: { source: [de-zwaan-1982, esc-acs-2023], verified: false }
+check: { source: [de-zwaan-1982, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }

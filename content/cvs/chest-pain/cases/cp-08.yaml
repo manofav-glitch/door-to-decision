@@ -1,4 +1,4 @@
-# cp-08: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-08: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: acute (viral) pericarditis mistaken for STEMI is the first trap; three days later a
 # large effusion causes cardiac tamponade.
 
@@ -15,7 +15,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-pericardial-2015
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; check the first visit is low risk and the second visit fits tamponade."
 
 start: arrival
@@ -34,7 +35,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -52,7 +53,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-pericardial-2015, esc-acs-2023], verified: false }
+    check: { source: [esc-pericardial-2015, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse]
@@ -100,7 +101,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-pericardial-2015, imazio-2013]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm first-line treatment and the grades for steroids and anticoagulation."
     prompt: "Acute pericarditis. Treatment? Choose up to 4."
     max: 4
@@ -146,7 +148,7 @@ nodes:
 
   disposition:
     type: choice
-    check: { source: esc-pericardial-2015, verified: false }
+    check: { source: esc-pericardial-2015, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Low-grade temperature, normal troponin, small effusion, pain easing. Where does he go?"
     options:
       - label: "Home with treatment, review in 1 week, and clear advice to return if breathless or faint"
@@ -185,7 +187,7 @@ nodes:
 
   ecg-2:
     type: ecg
-    check: { source: esc-pericardial-2015, verified: false }
+    check: { source: esc-pericardial-2015, verified: true, reviewedOn: 2026-09-30 }
     image: ecg/cp-08-ecg-2.svg
     alt: "12-lead ECG. Sinus tachycardia about 124 per minute. Low QRS voltages in all leads; the QRS height alternates from beat to beat."
     prompt: "His new ECG. What does it suggest?"
@@ -221,7 +223,7 @@ nodes:
 
   tamponade:
     type: choice
-    check: { source: esc-pericardial-2015, verified: false }
+    check: { source: esc-pericardial-2015, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Cardiac tamponade. What now?"
     options:
       - label: "Urgent echo-guided pericardiocentesis; a small fluid bolus while it's set up"
@@ -293,4 +295,4 @@ debrief:
     - "Treating tamponade with diuretics, or intubating before drainage."
   unlocks: [pericarditis, cardiac-tamponade, colchicine]
   refs: [esc-pericardial-2015, imazio-2013]
-  check: { source: [esc-pericardial-2015, imazio-2013], verified: false }
+  check: { source: [esc-pericardial-2015, imazio-2013], verified: true, reviewedOn: 2026-09-30 }

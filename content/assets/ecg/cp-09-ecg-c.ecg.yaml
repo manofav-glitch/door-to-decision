@@ -8,4 +8,4 @@ leads:
   V3: { t: -0.6, st: 0.03 }
   V4: { t: -0.4 }
   V5: { t: -0.15 }
-check: { source: [esc-acs-2023, de-zwaan-1982], verified: false, todo: "Check it reads as Wellens type B (deep symmetrical TWI V2–V4). Type A (biphasic T) can't be drawn yet." }
+check: { source: [esc-acs-2023, de-zwaan-1982], verified: true, reviewedOn: 2026-09-30, todo: "Check it reads as Wellens type B (deep symmetrical TWI V2–V4). Type A (biphasic T) can't be drawn yet." }

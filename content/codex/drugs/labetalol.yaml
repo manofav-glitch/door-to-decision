@@ -8,7 +8,8 @@ doses:
     text: "Labetalol 20 mg IV over 2 minutes, then repeated doses or an infusion titrated to heart rate and BP"
     check:
       source: [acc-aha-aortic-2022, esc-aortic-2024]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm dose and your local protocol; esmolol is the short-acting alternative."
 sections:
   - heading: Order matters
@@ -17,4 +18,4 @@ sections:
     body: "Bradycardia, heart block, decompensated heart failure, severe asthma; aortic regurgitation causing heart failure."
 india: "Labetalol and esmolol are available in India; confirm local stock."
 refs: [acc-aha-aortic-2022, esc-aortic-2024]
-check: { source: [acc-aha-aortic-2022, esc-aortic-2024], verified: false }
+check: { source: [acc-aha-aortic-2022, esc-aortic-2024], verified: true, reviewedOn: 2026-09-30 }

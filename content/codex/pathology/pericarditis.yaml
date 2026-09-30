@@ -11,4 +11,4 @@ sections:
   - heading: Admit if high risk
     body: "Fever over 38 °C, a large effusion or tamponade, no response to NSAIDs, myopericarditis, immunosuppression, trauma or anticoagulant use."
 refs: [esc-pericardial-2015, imazio-2013]
-check: { source: [esc-pericardial-2015, imazio-2013], verified: false }
+check: { source: [esc-pericardial-2015, imazio-2013], verified: true, reviewedOn: 2026-09-30 }

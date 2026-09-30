@@ -1,4 +1,4 @@
-# cp-06: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-06: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: Stanford type A aortic dissection with the flap involving the right coronary ostium,
 # giving inferior ST elevation. The trap: treating it as STEMI with antithrombotics or fibrinolysis.
 # Setting: a district hospital with CT but no cath lab or cardiac surgery.
@@ -16,7 +16,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-aortic-2024, acc-aha-aortic-2022]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; check the examination findings and the district-hospital setting."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG now"
@@ -57,7 +58,7 @@ nodes:
 
   ste-leads:
     type: ecg-leads
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:pain, nurse]
@@ -81,7 +82,8 @@ nodes:
     type: choice
     check:
       source: [esc-aortic-2024, acc-aha-aortic-2022]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Check the grades; the teaching is 'pause when the story doesn't fit', not 'delay every STEMI'."
     prompt: "Inferior ST elevation, but the pain was abrupt, maximal at onset and through to the back. What now?"
     options:
@@ -113,12 +115,12 @@ nodes:
         bubbles:
           - { who: doctor, text: "BP right arm 178 over 96, left arm 132 over 80. The left radial pulse is weak." }
           - { who: doctor, text: "There's an early diastolic murmur at the left sternal edge." }
-    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: true, reviewedOn: 2026-09-30 }
     next: suspicion
 
   suspicion:
     type: choice
-    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Abrupt tearing pain, a 46 mmHg arm BP difference, a pulse deficit and a new aortic regurgitation murmur. Leading diagnosis?"
     options:
       - label: "Acute aortic dissection involving the right coronary ostium"
@@ -136,7 +138,7 @@ nodes:
 
   imaging:
     type: choice
-    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: true, reviewedOn: 2026-09-30 }
     prompt: "How do you confirm it?"
     options:
       - label: "Urgent CT aortic angiography; bedside echo while it's arranged"
@@ -172,7 +174,8 @@ nodes:
     type: multiselect
     check:
       source: [esc-aortic-2024, acc-aha-aortic-2022]
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm targets (commonly HR < 60/min, SBP 100–120 mmHg) and drug choices."
     onEnter: { minutes: 2 }
     prompt: "Type A dissection. Management while you arrange transfer. Choose up to 4."
@@ -214,7 +217,7 @@ nodes:
 
   disposition:
     type: choice
-    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: true, reviewedOn: 2026-09-30 }
     prompt: "Type A dissection involving the right coronary. Who needs to see him, and where?"
     options:
       - label: "Emergency transfer to cardiothoracic surgery"
@@ -289,4 +292,5 @@ debrief:
   refs: [esc-aortic-2024, acc-aha-aortic-2022, esc-acs-2023]
   check:
     source: [esc-aortic-2024, acc-aha-aortic-2022]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30

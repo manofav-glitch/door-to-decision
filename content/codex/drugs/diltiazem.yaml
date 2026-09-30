@@ -6,10 +6,10 @@ doses:
     label: "AF with rapid ventricular rate"
     route: IV bolus
     text: "0.25 mg/kg over 2 minutes (often 15–20 mg), repeat or infuse if needed"
-    check: { source: esc-af-2024, verified: false, todo: "Confirm dose and local availability of IV diltiazem." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30, todo: "Confirm dose and local availability of IV diltiazem." }
 sections:
   - heading: Avoid in
     body: "Heart failure with reduced ejection fraction, hypotension, pre-excitation (WPW), and with IV beta-blockers."
 india: "Oral diltiazem is widely available; confirm IV availability."
 refs: [esc-af-2024]
-check: { source: esc-af-2024, verified: false }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30 }

@@ -10,4 +10,4 @@ leads:
   V3:  { st: -0.3, t: 1.1 }
   V4:  { st: -0.28, t: 1.0 }
   V5:  { st: -0.18, t: 0.75 }
-check: { source: [esc-acs-2023, de-winter-2008], verified: false, todo: "Stylised: the drawer makes a flat ST shift; check it still reads as J-point depression with tall T waves." }
+check: { source: [esc-acs-2023, de-winter-2008], verified: true, reviewedOn: 2026-09-30, todo: "Stylised: the drawer makes a flat ST shift; check it still reads as J-point depression with tall T waves." }

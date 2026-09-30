@@ -9,4 +9,4 @@ sections:
   - heading: Why it matters
     body: "It's a STEMI equivalent: reperfusion as for any STEMI. Often from a circumflex or right coronary occlusion, sometimes with inferior or lateral changes."
 refs: [esc-acs-2023, zimetbaum-2003]
-check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "Confirm the V7–V9 threshold (0.5 mm; some sources use 1 mm in men under 40)." }
+check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30, todo: "Confirm the V7–V9 threshold (0.5 mm; some sources use 1 mm in men under 40)." }

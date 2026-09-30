@@ -12,4 +12,4 @@ leads:
   V2:  { s: 2.0 }
   V5:  { r: 2.0 }
   V6:  { r: 1.6 }
-check: { source: [esc-aortic-2024, zimetbaum-2003], verified: false, todo: "Check it reads as inferior STE (a STEMI look-alike)." }
+check: { source: [esc-aortic-2024, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30, todo: "Check it reads as inferior STE (a STEMI look-alike)." }

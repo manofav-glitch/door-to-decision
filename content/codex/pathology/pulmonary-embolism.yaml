@@ -11,4 +11,4 @@ sections:
   - heading: Fluids
     body: "Be cautious: a large fluid load can worsen a failing right ventricle."
 refs: [esc-pe-2019, meyer-2014]
-check: { source: [esc-pe-2019, meyer-2014], verified: false }
+check: { source: [esc-pe-2019, meyer-2014], verified: true, reviewedOn: 2026-09-30 }

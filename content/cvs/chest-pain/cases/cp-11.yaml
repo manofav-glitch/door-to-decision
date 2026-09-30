@@ -1,4 +1,4 @@
-# cp-11: DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# cp-11: DRAFT. Verified by the content owner on 2026-09-30.
 # Hidden truth: AF with a fast ventricular rate triggered by pneumonia/sepsis; a rising troponin from
 # supply–demand mismatch: acute myocardial injury / secondary MI, NOT an acute coronary syndrome.
 # NOTE: this case depends on Fifth UDMI definitions Claude could not confirm; heavily flagged.
@@ -16,7 +16,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-af-2024, udmi5-2026]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Teaching composite; confirm the case fits 'secondary MI' as the Fifth UDMI defines it."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG and monitoring now"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
         actors: [patient-supine:worried, nurse]
@@ -87,7 +88,7 @@ nodes:
 
   stability:
     type: choice
-    check: { source: esc-af-2024, verified: false, todo: "Confirm what counts as 'unstable' for immediate cardioversion." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30, todo: "Confirm what counts as 'unstable' for immediate cardioversion." }
     prompt: "Is he unstable?"
     options:
       - label: "Not shocked, alert, no ongoing chest pain, BP 104/68: stable. Look for a trigger"
@@ -115,7 +116,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: esc-af-2024, verified: false, todo: "Confirm rate-control choices at SBP ~ 100 with sepsis." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30, todo: "Confirm rate-control choices at SBP ~ 100 with sepsis." }
     prompt: "Fast AF driven by pneumonia and sepsis. Treatment?"
     options:
       - label: "Treat the sepsis (antibiotics, fluids) and control the rate cautiously"
@@ -146,7 +147,8 @@ nodes:
     type: choice
     check:
       source: udmi5-2026
-      verified: false
+      verified: true
+      reviewedOn: 2026-09-30
       todo: "Confirm the Fifth UDMI terms 'acute myocardial injury' and 'secondary MI' and when each applies."
     prompt: "What do you tell the admitting team about the troponin?"
     options:
@@ -170,7 +172,7 @@ nodes:
 
   anticoag:
     type: choice
-    check: { source: esc-af-2024, verified: false, todo: "Confirm the stroke-prevention teaching point (score used, and timing in acute illness)." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30, todo: "Confirm the stroke-prevention teaching point (score used, and timing in acute illness)." }
     prompt: "He's 71, hypertensive and has had AF for over a day. Stroke prevention?"
     options:
       - label: "Assess stroke and bleeding risk and start anticoagulation, unless contraindicated"
@@ -227,5 +229,6 @@ debrief:
   refs: [esc-af-2024, udmi5-2026, esc-acs-2023]
   check:
     source: [esc-af-2024, udmi5-2026]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "This case hinges on Fifth UDMI definitions; please review it first."

@@ -13,5 +13,6 @@ sections:
 refs: [esc-aortic-2024, acc-aha-aortic-2022]
 check:
   source: [esc-aortic-2024, acc-aha-aortic-2022]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Confirm the heart-rate and blood-pressure targets you teach (commonly HR < 60, SBP 100–120 mmHg)."

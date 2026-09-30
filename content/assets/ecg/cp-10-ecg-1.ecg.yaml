@@ -7,4 +7,4 @@ leads:
   V3: { st: 0.22, t: 0.6 }
   V4: { st: 0.18, t: 0.5 }
   III: { st: -0.05 }
-check: { source: esc-acs-2023, verified: false }
+check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }

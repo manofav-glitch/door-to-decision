@@ -13,5 +13,6 @@ sections:
 refs: [hayes-2018, adlam-2018, esc-acs-2023]
 check:
   source: [hayes-2018, adlam-2018, esc-acs-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-09-30
   todo: "Confirm antithrombotic advice after SCAD (aspirin; role of DAPT and heparin) and the fibrinolysis statement."

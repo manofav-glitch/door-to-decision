@@ -7,4 +7,4 @@ sections:
   - heading: What to do
     body: "Treat as a STEMI equivalent: activate the reperfusion pathway for emergency angiography."
 refs: [de-winter-2008, esc-acs-2023]
-check: { source: [de-winter-2008, esc-acs-2023], verified: false }
+check: { source: [de-winter-2008, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }

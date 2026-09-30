@@ -37,7 +37,8 @@ score:
     - { from: 1, label: "PERC positive", risk: "Can't rule out PE with PERC: use D-dimer or imaging" }
   check:
     source: [kline-2004, esc-pe-2019]
-    verified: false
+    verified: true
+    reviewedOn: 2026-09-30
     todo: "Confirm the eight criteria and thresholds."
 refs: [kline-2004, esc-pe-2019]
-check: { source: [kline-2004, esc-pe-2019], verified: false }
+check: { source: [kline-2004, esc-pe-2019], verified: true, reviewedOn: 2026-09-30 }

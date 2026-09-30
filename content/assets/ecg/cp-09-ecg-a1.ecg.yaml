@@ -7,4 +7,4 @@ leads:
   V1: { r: 0.6, s: 0.3, st: -0.15, t: 0.4 }
   V2: { r: 0.9, s: 0.4, st: -0.2, t: 0.55 }
   V3: { r: 1.0, s: 0.4, st: -0.15, t: 0.5 }
-check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "Check: ST depression V1–V3 with tall R and upright T." }
+check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30, todo: "Check: ST depression V1–V3 with tall R and upright T." }

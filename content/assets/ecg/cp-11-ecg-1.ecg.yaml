@@ -7,4 +7,4 @@ leads:
   V4: { st: -0.1 }
   V5: { st: -0.1 }
   V6: { st: -0.08 }
-check: { source: esc-af-2024, verified: false, todo: "Check it reads as AF with a fast ventricular rate." }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30, todo: "Check it reads as AF with a fast ventricular rate." }
