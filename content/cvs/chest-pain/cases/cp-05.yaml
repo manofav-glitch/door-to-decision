@@ -330,6 +330,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-05/10-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Two days later · PCI centre"
         bubbles:
