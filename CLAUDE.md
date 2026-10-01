@@ -117,4 +117,4 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
   wording) plus `needs-source` items. New content is still drafted verified: false.
 - Illustrations 2026-10-01: pipeline + offline saving built. The owner only has ChatGPT sheets (no full-size files): Claude cuts
-  them (cp-01 17 square ~300 px, cp-02 8 wide ~610 px); `npm run art` enlarges ≤2× + sharpens. cp-03+ prompts ask for 2×2 sheets.
+  them (cp-01 17 square ~300 px; cp-02, cp-03 8 wide ~620 px each); `npm run art` enlarges ≤2× + sharpens. Next: cp-04…11.

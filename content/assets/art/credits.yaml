@@ -14,3 +14,9 @@
   madeBy: Content owner
   date: 2026-10-01
   note: Cut from a 1254 px contact sheet (wide panels, about 610 × 300 px).
+
+- folder: cp-03
+  madeWith: ChatGPT image generation (OpenAI), from the prompts in docs/art/cp-03-prompts.md
+  madeBy: Content owner
+  date: 2026-10-01
+  note: Cut from a 1285 × 1224 px contact sheet (wide panels, about 620 px across), enlarged and sharpened.

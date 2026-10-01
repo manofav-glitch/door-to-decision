@@ -26,12 +26,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-03/01-arrival-1
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "It's a pressure, here. It came three times since dawn, ten minutes each. It's gone now." }
           - { who: relative, text: "She's diabetic, on BP tablets and cholesterol tablets. She takes an aspirin every day." }
       - scene: triage-desk
+        art: cp-03/02-arrival-2
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 96, BP 148 over 86, sats 96%. Pain-free right now." }
@@ -60,6 +62,7 @@ nodes:
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-03/03-ecg
         actors: [patient, nurse]
         caption: "{clock} · Majors"
     image: ecg/cp-03-ecg-1.svg
@@ -108,6 +111,7 @@ nodes:
     onEnter: { minutes: 60 }
     panels:
       - scene: resus-bay
+        art: cp-03/04-trop
         actors: [nurse, doctor]
         caption: "{clock} · Results"
         bubbles:
@@ -176,6 +180,7 @@ nodes:
       todo: "Confirm creatinine 1.3 mg/dL and Killip I; total 149 (> 140 = high risk)."
     panels:
       - scene: resus-bay
+        art: cp-03/05-grace
         actors: [patient, doctor]
         caption: "{clock} · Assessment"
         bubbles:
@@ -278,6 +283,7 @@ nodes:
         caption: "{clock} · Observation bay"
         sfx: "BEEP · BEEP"
       - scene: resus-bay
+        art: cp-03/06-recurrence
         actors: [patient:pain, nurse:worried]
         bubbles:
           - { who: patient, text: "It's back, and it's worse this time." }
@@ -315,6 +321,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-03/07-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Two days later · Cardiology ward"
         bubbles:
@@ -326,6 +333,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-03/08-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Three days later · Cardiology ward"
     summary: "She was stented, but delays meant a larger infarct than necessary. The debrief shows where time was lost."
