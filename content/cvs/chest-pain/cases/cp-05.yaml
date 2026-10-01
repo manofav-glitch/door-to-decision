@@ -26,12 +26,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-05/01-arrival-1
         actors: [patient:pain, relative:worried]
         caption: "{clock} · District hospital casualty"
         bubbles:
           - { who: relative, text: "He's had chest pain for two hours. The nearest big hospital is three hours away." }
           - { who: patient, text: "It's heavy… going into my left arm." }
       - scene: triage-desk
+        art: cp-05/02-arrival-2
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 88, BP 138 over 84, sats 97%. You're the only doctor on tonight." }
@@ -60,6 +62,7 @@ nodes:
     check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-05/03-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Casualty"
     image: ecg/cp-05-ecg-1.svg
@@ -147,6 +150,7 @@ nodes:
       todo: "Guidelines differ here: ESC lists ischaemic stroke within 6 months as absolute; ACC/AHA lists older ischaemic stroke as relative. Confirm the teaching point."
     panels:
       - scene: resus-bay
+        art: cp-05/04-stroke-history
         actors: [relative:worried, doctor]
         caption: "{clock} · Casualty"
         bubbles:
@@ -171,6 +175,7 @@ nodes:
     check: { source: esc-stemi-2017, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
+        art: cp-05/05-dose-sk
         actors: [nurse, doctor]
         caption: "{clock} · Casualty"
         bubbles:
@@ -201,6 +206,7 @@ nodes:
         caption: "{clock} · Casualty"
         sfx: "BEEP · BEEP"
       - scene: resus-bay
+        art: cp-05/06-sk-drop
         actors: [patient-supine, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "BP has dropped to 94 over 58 during the streptokinase. He says he feels a bit light-headed." }
@@ -235,6 +241,7 @@ nodes:
     onEnter: { minutes: 50 }
     panels:
       - scene: resus-bay
+        art: cp-05/07-failure
         actors: [patient-supine:pain, doctor:worried]
         caption: "{clock} · 75 minutes after the fibrinolytic"
         bubbles:
@@ -297,6 +304,7 @@ nodes:
     onEnter: { minutes: 180 }
     panels:
       - scene: ambulance-bay
+        art: cp-05/08-transfer
         actors: [paramedic, patient-supine:worried]
         caption: "{clock} · Three hours on the road"
         bubbles:
@@ -308,6 +316,7 @@ nodes:
     onEnter: { minutes: 30, milestone: wire, setVitals: { hr: 78, sbp: 128, dbp: 78 } }
     panels:
       - scene: cath-lab-door
+        art: cp-05/09-rescue-pci
         actors: [patient-supine, senior:relieved]
         caption: "{clock} · Cath lab"
         bubbles:
@@ -332,6 +341,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-05/11-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Two days later · PCI centre"
     summary: "The artery was opened in the end, but delays cost heart muscle. The debrief shows where time was lost."

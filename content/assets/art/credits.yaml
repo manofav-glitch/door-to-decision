@@ -26,3 +26,9 @@
   madeBy: Content owner
   date: 2026-10-01
   note: Cut from a 1024 × 1536 px sheet (wide panels, about 490 px across), enlarged and sharpened.
+
+- folder: cp-05
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/cp-05-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-01
+  note: Cut from a 1024 × 1536 px sheet (wide panels, about 490 px across), enlarged and sharpened. Panel 10 (end-good) drew the doctor instead of the son, so it still uses the line drawing.
