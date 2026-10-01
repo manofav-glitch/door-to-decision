@@ -116,5 +116,5 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Verification: at the owner's explicit instruction (over a recommendation to keep open TODOs unverified) all 202 items in
   cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
   wording) plus `needs-source` items. New content is still drafted verified: false.
-- Illustrations 2026-10-01: pipeline + offline saving built. cp-01 (17 square, ~300 px, soft) and cp-02 (8 wide, ~610 px) are cut
-  from the owner's ChatGPT contact sheets. Pending: full-size cp-01 images (same file names), then cp-03…11.
+- Illustrations 2026-10-01: pipeline + offline saving built. The owner only has ChatGPT sheets (no full-size files): Claude cuts
+  them (cp-01 17 square ~300 px, cp-02 8 wide ~610 px); `npm run art` enlarges ≤2× + sharpens. cp-03+ prompts ask for 2×2 sheets.
