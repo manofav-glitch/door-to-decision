@@ -37,11 +37,13 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-01/01-arrival-1
         actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "It's like someone is sitting on my chest, doctor. Started about 45 minutes ago." }
       - scene: triage-desk
+        art: cp-01/02-arrival-2
         actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "He's drenched in sweat. Diabetic, smokes a pack a day." }
@@ -83,6 +85,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-01/03-nitrate-crash
         actors: [patient-supine:pain, nurse:alarmed]
         caption: "{clock} · Resus bay"
         sfx: "BEEP · BEEP · BEEP"
@@ -124,6 +127,7 @@ nodes:
     check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-01/04-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -198,7 +202,8 @@ nodes:
     onEnter: { minutes: 2, milestone: stemi-dx, addFlags: [stemi_dx] }
     panels:
       - scene: resus-bay
-        actors: [doctor:worried, senior]
+        art: cp-01/05-senior-review
+        actors: [senior, doctor:worried]
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: senior, text: "Look at aVL: that's reciprocal ST depression. With elevation in II, III and aVF, this is an inferior STEMI." }
@@ -289,6 +294,7 @@ nodes:
     onEnter: { minutes: 2 }
     panels:
       - scene: resus-bay
+        art: cp-01/06-treatment
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -419,7 +425,8 @@ nodes:
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
-        actors: [doctor, nurse]
+        art: cp-01/07-reperfusion-pci
+        actors: [nurse, doctor]
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: nurse, text: "Cath lab's free tonight." }
@@ -451,7 +458,8 @@ nodes:
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
-        actors: [doctor, nurse]
+        art: cp-01/08-reperfusion-nonpci
+        actors: [nurse, doctor]
         caption: "{clock} · Resus bay"
         bubbles:
           - { who: nurse, text: "Nearest cath lab is about two and a half hours away by road." }
@@ -528,6 +536,7 @@ nodes:
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: resus-bay
+        art: cp-01/09-dose-tnk
         actors: [nurse, doctor]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -559,7 +568,8 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "BEEP · BEEP · BEEP"
       - scene: resus-bay
-        actors: [patient-supine:pain, nurse:alarmed]
+        art: cp-01/11-chb-alarm
+        actors: [nurse:alarmed, patient-supine:pain]
         bubbles:
           - { who: nurse, text: "Rate's dropped into the thirties, and his BP is falling!" }
           - { who: patient, text: "I feel faint…" }
@@ -630,6 +640,7 @@ nodes:
     onEnter: { minutes: 150 }
     panels:
       - scene: ambulance-bay
+        art: cp-01/12-ambulance
         actors: [paramedic:worried, patient-supine:pain]
         caption: "{clock} · Two and a half hours on the road"
         bubbles:
@@ -641,7 +652,8 @@ nodes:
     onEnter: { minutes: 25, milestone: wire, setVitals: { hr: 64, sbp: 104, dbp: 66 } }
     panels:
       - scene: cath-lab-door
-        actors: [patient-supine, senior:relieved]
+        art: cp-01/13-cath
+        actors: [senior:relieved, patient-supine]
         caption: "{clock} · Cath lab"
         bubbles:
           - { who: senior, text: "Proximal right coronary artery, completely blocked. Wire's across… stent's in. Good flow." }
@@ -655,6 +667,7 @@ nodes:
     onEnter: { minutes: 70, setVitals: { hr: 66, sbp: 106, dbp: 68 } }
     panels:
       - scene: resus-bay
+        art: cp-01/14-after-lysis
         actors: [patient-supine:relieved, nurse, doctor:relieved]
         caption: "{clock} · Just over an hour after tenecteplase"
         bubbles:
@@ -700,7 +713,8 @@ nodes:
     outcome: good
     panels:
       - scene: ward
-        actors: [patient:relieved, doctor:relieved]
+        art: cp-01/15-end-good
+        actors: [doctor:relieved, patient:relieved]
         caption: "Next morning · CCU"
         bubbles:
           - { who: patient, text: "I feel like myself again. Thank you, doctor." }
@@ -711,6 +725,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-01/16-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Three days later · CCU"
         bubbles:
@@ -723,7 +738,8 @@ nodes:
     onEnter: { setVitals: { sbp: 50, dbp: 30, gcs: 8 }, patient: -60 }
     panels:
       - scene: resus-bay
-        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
+        art: cp-01/17-end-nitrate
+        actors: [nurse:alarmed, patient-supine:pain, senior:worried]
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
         bubbles:
@@ -740,7 +756,8 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
       - scene: resus-bay
-        actors: [patient-supine:pain, nurse:alarmed, senior:worried]
+        art: cp-01/19-end-beta-blocker
+        actors: [nurse:alarmed, patient-supine:pain, senior:worried]
         bubbles:
           - { who: nurse, text: "Complete heart block. Rate 28, BP 58 over 30!" }
           - { who: senior, text: "Pads on, pace him, and start an adrenaline infusion." }

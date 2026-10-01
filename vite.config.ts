@@ -37,8 +37,21 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2,webp,json}'],
+        // Illustrations (.webp, ~1 MB a case) are NOT in the install download: they are cached when a
+        // case is played or saved for offline (src/lib/offline.ts uses the same cache name).
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         navigateFallback: 'index.html',
+        runtimeCaching: [
+          {
+            urlPattern: /\.webp$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'd2d-art',
+              expiration: { maxEntries: 1000, purgeOnQuotaError: true },
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+        ],
       },
     }),
   ],

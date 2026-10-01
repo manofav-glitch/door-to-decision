@@ -1,5 +1,6 @@
 import { DISCLAIMER } from '../components/Disclaimer';
 import { index } from '../content/client';
+import { OfflineArt } from '../components/OfflineArt';
 import { useProgress } from '../store/progress';
 import { useSettings, type TextSize, type Theme } from '../store/settings';
 
@@ -25,6 +26,11 @@ function Row({
 }
 
 const selectClass = 'panel min-h-11 px-2';
+
+// every case with illustrations, for "Save all cases for offline"
+const illustrated = index.systems
+  .flatMap((sys) => sys.modules.flatMap((m) => m.cases))
+  .filter((c) => c.artBytes > 0);
 
 export function Settings() {
   const s = useSettings();
@@ -103,9 +109,29 @@ export function Settings() {
         </button>
       </Row>
 
+      {illustrated.length > 0 && (
+        <>
+          <h2 className="mt-8 mb-2 text-xl font-bold">Offline</h2>
+          <p className="mb-3">
+            Once installed, the app works without internet. Pictures download as you play each case;
+            save them all now if you'll be offline.
+          </p>
+          <OfflineArt
+            caseIds={illustrated.map((c) => c.id)}
+            bytes={illustrated.reduce((sum, c) => sum + c.artBytes, 0)}
+            label="Save all cases for offline"
+            allowRemove
+          />
+        </>
+      )}
+
       <h2 className="mt-8 mb-2 text-xl font-bold">About</h2>
       <p className="panel mb-3 p-4" role="note">
         {DISCLAIMER}
+      </p>
+      <p className="mb-2 text-sm text-grey-1">
+        Illustrations in some cases were made with AI (ChatGPT) by the content owner. ECGs, monitors
+        and the other drawings are drawn in code.
       </p>
       <p className="text-sm text-grey-1">Content version: {index.version}</p>
     </main>

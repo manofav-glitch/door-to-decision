@@ -32,6 +32,7 @@ import {
 } from '../engine/engine';
 import { DevPanel } from '../components/player/DevPanel';
 import { useDevMode } from '../lib/dev';
+import { prefetchCaseArt } from '../lib/offline';
 import { useProgress, type SavedRun } from '../store/progress';
 import { useSettings } from '../store/settings';
 
@@ -113,6 +114,12 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
       window.removeEventListener('keydown', onKey);
     };
   }, [present]);
+
+  // Save this case's pictures in the background, so the rest of it still works if the signal drops.
+  useEffect(() => {
+    const t = setTimeout(() => prefetchCaseArt(c.id), 3000);
+    return () => clearTimeout(t);
+  }, [c.id]);
 
   // New beat: scroll up and move focus to the sheet heading.
   useEffect(() => {

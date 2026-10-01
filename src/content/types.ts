@@ -67,6 +67,8 @@ export interface CaseSummary {
   minutes: number;
   draft: boolean;
   settings: HospitalSetting[];
+  /** total size of the case's illustrations (bytes), for "save for offline" */
+  artBytes: number;
 }
 
 export interface ModuleSummary {

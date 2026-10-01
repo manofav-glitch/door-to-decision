@@ -204,6 +204,19 @@
   .bubble[data-side='right']::after {
     right: 20px;
   }
+  /* Below an illustration the tail points up, at the picture. */
+  .bubble[data-tail='up']::before {
+    bottom: auto;
+    top: -12px;
+    border-top: 0;
+    border-bottom: 12px solid var(--ink);
+  }
+  .bubble[data-tail='up']::after {
+    bottom: auto;
+    top: -9px;
+    border-top: 0;
+    border-bottom: 10px solid var(--paper);
+  }
 
   /* Code-drawn line art: ONE stroke width everywhere, whatever the panel size. */
   .art {

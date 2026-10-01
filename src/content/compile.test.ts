@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -90,5 +90,65 @@ describe('compileContent', () => {
   it('catches misspelt fields', () => {
     const ps = problemsAfter(CASE, (s) => s.replace('prompt: "First?"', 'promt: "First?"'));
     expect(ps.map((p) => p.message)).toContain('unknown field(s): promt — check spelling');
+  });
+
+  describe('illustrations', () => {
+    /** Fixture copy whose first panel uses art: pics/p1; `files` are written relative to content/assets. */
+    function withArt(files: Record<string, string>) {
+      const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, dir, { recursive: true });
+      const p = join(dir, CASE);
+      writeFileSync(p, readFileSync(p, 'utf8').replace('{ scene: triage-desk,', '{ scene: triage-desk, art: pics/p1,'));
+      for (const [f, text] of Object.entries(files)) {
+        const out = join(dir, 'content/assets', f);
+        mkdirSync(join(out, '..'), { recursive: true });
+        writeFileSync(out, text);
+      }
+      return dir;
+    }
+    const credits = '- { folder: pics, madeWith: Test tool, madeBy: Tester, date: 2026-10-01 }\n';
+    const messages = (dir: string) => {
+      try {
+        compileContent(dir);
+        return [];
+      } catch (e) {
+        if (e instanceof ContentError) return e.problems.map((p) => p.message);
+        throw e;
+      }
+    };
+
+    it('adds a credited picture to the case assets and counts its size', () => {
+      const c = compileContent(withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': 'x'.repeat(1234) }));
+      expect(c.caseAssets['demo-c-01']).toContain('panels/pics/p1.webp');
+      expect(c.index.systems[0]!.modules[0]!.cases[0]!.artBytes).toBe(1234);
+    });
+
+    it('reports a missing picture', () => {
+      expect(messages(withArt({ 'art/credits.yaml': credits }))).toContain(
+        'picture content/assets/panels/pics/p1.webp is missing: put the original in content/assets/art/pics/p1.png and run npm run art',
+      );
+    });
+
+    it('requires a credits entry for the folder', () => {
+      expect(messages(withArt({ 'panels/pics/p1.webp': 'x' }))).toContain(
+        'add "pics" to content/assets/art/credits.yaml (who made these pictures, and with what)',
+      );
+    });
+
+    it('warns about pictures no panel uses', () => {
+      const c = compileContent(
+        withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': 'x', 'panels/pics/old.webp': 'x' }),
+      );
+      expect(c.warnings.map((w) => w.message)).toContain(
+        'no panel uses this picture (add art: pics/old to a panel, or delete the file)',
+      );
+    });
+
+    it('rejects an art name with an extension', () => {
+      const dir = withArt({});
+      const p = join(dir, CASE);
+      writeFileSync(p, readFileSync(p, 'utf8').replace('art: pics/p1,', 'art: pics/p1.png,'));
+      expect(messages(dir)).toContain('use folder/name, e.g. cp-01/01-arrival-1 (no extension)');
+    });
   });
 });

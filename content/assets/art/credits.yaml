@@ -1,0 +1,10 @@
+# Who made each folder of illustrations in content/assets/art, and how.
+# The originals (PNG/JPG) stay out of git; `npm run art` turns them into content/assets/panels/<folder>/*.webp.
+# The content owner decided on 2026-10-01 to use AI-generated illustrations (an exception to the original brief,
+# which asked for code-drawn art only). ECGs and the monitor close-ups stay code-drawn.
+
+- folder: cp-01
+  madeWith: ChatGPT image generation (OpenAI), from the prompts in docs/art/cp-01-prompts.md
+  madeBy: Content owner
+  date: 2026-10-01
+  note: Stand-ins cut from a 1254 px contact sheet; to be replaced by full-size images.

@@ -3,3 +3,8 @@ dist
 dev-dist
 .DS_Store
 *.local
+# illustration originals are large; only the web versions in content/assets/panels are committed
+content/assets/art/**/*.png
+content/assets/art/**/*.jpg
+content/assets/art/**/*.jpeg
+content/assets/art/**/*.webp

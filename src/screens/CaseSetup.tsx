@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { findCase, index, isPlayable, useCase } from '../content/client';
 import { BackLink, Difficulty, Loading, NotFound, UnverifiedBadge } from '../components/ui';
 import { replay } from '../engine/engine';
+import { OfflineArt } from '../components/OfflineArt';
 import { useProgress, type Mode } from '../store/progress';
 import { useSettings } from '../store/settings';
 
@@ -149,6 +150,15 @@ export function CaseSetup() {
       <p className="mt-3 text-sm text-grey-1">
         Decisions are final within a run. You can replay after the debrief.
       </p>
+      {summary.artBytes > 0 && (
+        <div className="mt-6">
+          <OfflineArt
+            caseIds={[caseId]}
+            bytes={summary.artBytes}
+            label="Save pictures for offline"
+          />
+        </div>
+      )}
     </main>
   );
 }

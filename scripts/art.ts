@@ -1,0 +1,61 @@
+// Turns the owner's illustrations into small web pictures for the app:
+//   content/assets/art/<folder>/<name>.png|jpg|jpeg|webp   originals (kept out of git: too big)
+//   → content/assets/panels/<folder>/<name>.webp            800 px square, committed
+// A panel shows one with `art: <folder>/<name>`. Pictures already up to date are skipped.
+// Run: npm run art (also runs before `npm run dev` and `npm run build`).
+import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
+import { extname, join, relative } from 'node:path';
+
+const SIZE = 800; // px; sharp on phones (≈ 330 css px × 2.5) and on laptops (3 panels a row)
+const QUALITY = 72;
+const ORIGINAL = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+
+const root = join(import.meta.dirname, '..');
+const srcDir = join(root, 'content', 'assets', 'art');
+const outDir = join(root, 'content', 'assets', 'panels');
+
+interface Job {
+  src: string;
+  out: string;
+}
+const jobs: Job[] = [];
+const folders = existsSync(srcDir)
+  ? readdirSync(srcDir).filter((d) => statSync(join(srcDir, d)).isDirectory())
+  : [];
+for (const folder of folders) {
+  // name → newest original (a re-made picture may come back as .png when the old one was .webp)
+  const newest = new Map<string, string>();
+  for (const f of readdirSync(join(srcDir, folder))) {
+    const ext = extname(f).toLowerCase();
+    if (!ORIGINAL.has(ext)) continue;
+    const name = f.slice(0, -ext.length);
+    const file = join(srcDir, folder, f);
+    const prev = newest.get(name);
+    if (prev) {
+      console.log(`Two originals for ${folder}/${name}; using the newer one.`);
+      if (statSync(prev).mtimeMs >= statSync(file).mtimeMs) continue;
+    }
+    newest.set(name, file);
+  }
+  for (const [name, src] of newest) {
+    const out = join(outDir, folder, `${name}.webp`);
+    if (existsSync(out) && statSync(out).mtimeMs >= statSync(src).mtimeMs) continue;
+    jobs.push({ src, out });
+  }
+}
+
+if (jobs.length === 0) {
+  console.log('Pictures are up to date.');
+} else {
+  const { default: sharp } = await import('sharp');
+  for (const { src, out } of jobs) {
+    mkdirSync(join(out, '..'), { recursive: true });
+    const info = await sharp(src)
+      .rotate()
+      .resize(SIZE, SIZE, { fit: 'cover', withoutEnlargement: true })
+      .webp({ quality: QUALITY, effort: 6 })
+      .toFile(out);
+    const small = info.width < SIZE ? `  (only ${info.width} px wide: will look soft)` : '';
+    console.log(`${relative(root, out)}  ${Math.round(info.size / 1024)} KB${small}`);
+  }
+}

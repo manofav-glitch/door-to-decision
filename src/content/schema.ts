@@ -105,6 +105,12 @@ export const Panel = z.strictObject({
   bubbles: z.array(Bubble).optional(),
   sfx: Text.optional(),
   image: z.string().optional(), // file in content/assets, e.g. ecg/cp-01-ecg-1.svg
+  // illustration in content/assets/panels (made by `npm run art`), e.g. cp-01/01-arrival-1;
+  // replaces the line drawing, and the bubbles move below it
+  art: z
+    .string()
+    .regex(/^[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/, 'use folder/name, e.g. cp-01/01-arrival-1 (no extension)')
+    .optional(),
   alt: Text.optional(), // description of the picture for screen readers
 });
 export type Panel = z.infer<typeof Panel>;
@@ -476,6 +482,17 @@ const LeadShape = z.strictObject({
   st: z.number().optional(),
   pr: z.number().optional(), // PR-segment shift (negative = PR depression, e.g. pericarditis)
 });
+/** content/assets/art/credits.yaml: who made each folder of illustrations, and how. */
+export const ArtCredits = z.array(
+  z.strictObject({
+    folder: z.string().regex(/^[a-z0-9][a-z0-9-]*$/, 'a folder name in content/assets/art, e.g. cp-01'),
+    madeWith: Text, // e.g. "ChatGPT image generation (OpenAI)"
+    madeBy: Text,
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date as YYYY-MM-DD'),
+    note: Text.optional(),
+  }),
+);
+
 export const EcgSpec = z.strictObject({
   title: Text,
   layout: z.enum(['12-lead', 'strip']),

@@ -7,6 +7,7 @@ import { basename, join, relative } from 'node:path';
 import { LineCounter, parseDocument, type Document } from 'yaml';
 import type { z } from 'zod';
 import {
+  ArtCredits,
   BenchmarksFile,
   Case,
   CodexCard,
@@ -128,6 +129,11 @@ export function compileContent(root: string): Compiled {
     refs.set(r.id, r);
   }
   const targets = new Map((bench?.data.timeTargets ?? []).map((t) => [t.id, t]));
+  // illustrations: credits are only required once a panel uses art
+  const creditsFile = join(contentDir, 'assets', 'art', 'credits.yaml');
+  const credits = existsSync(creditsFile) ? load(creditsFile, ArtCredits) : undefined;
+  const creditedArt = new Set((credits?.data ?? []).map((c) => c.folder));
+  const usedArt = new Set<string>();
 
   // every check's source must be a known reference
   const checks: CheckEntry[] = [];
@@ -253,6 +259,8 @@ export function compileContent(root: string): Compiled {
           codexById,
           contentDir,
           ecgSpecs,
+          creditedArt,
+          usedArt,
           problems,
           warnings,
         });
@@ -274,6 +282,9 @@ export function compileContent(root: string): Compiled {
           problems.push({ file: loaded.file, message: `case id "${compiled.id}" is used twice` });
         cases[compiled.id] = compiled;
         caseAssets[compiled.id] = collectAssets(compiled);
+        const artBytes = caseAssets[compiled.id]!
+          .filter((a) => a.startsWith('panels/'))
+          .reduce((sum, a) => sum + statSync(join(contentDir, 'assets', a)).size, 0);
         summaries.push({
           id: compiled.id,
           file: name,
@@ -282,11 +293,22 @@ export function compileContent(root: string): Compiled {
           minutes: compiled.minutes,
           draft: compiled.draft,
           settings: compiled.settings,
+          artBytes,
         });
       });
       modules.push({ id: mod.data.id, title: mod.data.title, blurb: mod.data.blurb, cases: summaries });
     }
     systemSummaries.push({ id: sys.id, name: sys.name, status: sys.status, blurb: sys.blurb, modules });
+  }
+
+  // pictures nobody uses (e.g. renamed, or an old version) would still ship with the app
+  const panelsDir = join(contentDir, 'assets', 'panels');
+  for (const folder of existsSync(panelsDir) ? readdirSync(panelsDir) : []) {
+    for (const f of listFiles(join(panelsDir, folder), '.webp')) {
+      const art = `${folder}/${basename(f, '.webp')}`;
+      if (usedArt.has(art)) files.push(f);
+      else warnings.push({ file: rel(f), message: `no panel uses this picture (add art: ${art} to a panel, or delete the file)` });
+    }
   }
 
   if (problems.length) throw new ContentError(problems);
@@ -324,6 +346,10 @@ interface CaseContext {
   codexById: Map<string, CodexEntry>;
   contentDir: string;
   ecgSpecs: Compiled['ecgSpecs'];
+  /** folders listed in content/assets/art/credits.yaml */
+  creditedArt: Set<string>;
+  /** filled in: every art name the case uses */
+  usedArt: Set<string>;
   problems: ContentProblem[];
   warnings: ContentProblem[];
 }
@@ -380,11 +406,22 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     const spec = ctx.ecgSpecs[img];
     if (spec) imageChecks[img] = spec.spec.check;
   };
+  const checkArt = (art: string, path: Path) => {
+    if (!existsSync(join(ctx.contentDir, 'assets', 'panels', `${art}.webp`)))
+      err(path, `picture content/assets/panels/${art}.webp is missing: put the original in content/assets/art/${art}.png and run npm run art`);
+    const folder = art.split('/')[0]!;
+    if (!ctx.creditedArt.has(folder))
+      err(path, `add "${folder}" to content/assets/art/credits.yaml (who made these pictures, and with what)`);
+    ctx.usedArt.add(art);
+  };
 
   for (const [id, node] of Object.entries(c.nodes)) {
     const p: Path = ['nodes', id];
     noteEffects(node.onEnter);
-    node.panels?.forEach((panel, i) => panel.image && checkImage(panel.image, [...p, 'panels', i, 'image']));
+    node.panels?.forEach((panel, i) => {
+      if (panel.image) checkImage(panel.image, [...p, 'panels', i, 'image']);
+      if (panel.art) checkArt(panel.art, [...p, 'panels', i, 'art']);
+    });
     if (node.type === 'ecg' || node.type === 'ecg-leads') checkImage(node.image, [...p, 'image']);
     if (node.type === 'ecg-leads') {
       for (const k of ['correct', 'partial', 'wrong'] as const) {
@@ -622,7 +659,10 @@ function styleWarnings(c: Case, warn: (path: Path, message: string) => void) {
 function collectAssets(c: CompiledCase): string[] {
   const out = new Set<string>();
   for (const node of Object.values(c.nodes)) {
-    node.panels?.forEach((p) => p.image && out.add(p.image));
+    node.panels?.forEach((p) => {
+      if (p.image) out.add(p.image);
+      if (p.art) out.add(`panels/${p.art}.webp`);
+    });
     if (node.type === 'ecg' || node.type === 'ecg-leads') out.add(node.image);
   }
   return [...out];

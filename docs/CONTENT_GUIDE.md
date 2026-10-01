@@ -20,7 +20,12 @@ content/
     anatomy/ pathology/ drugs/ scores/ ecg/    one file per Codex card
   assets/ecg/
     cp-01-ecg-1.ecg.yaml       settings for a drawn ECG  →  cp-01-ecg-1.svg (made by npm run ecg)
+  assets/art/
+    credits.yaml               who made each folder of pictures, and with what
+    cp-01/01-arrival-1.png …   your original illustrations (not uploaded to GitHub: too big)
+  assets/panels/cp-01/*.webp   small web copies the app uses (made by npm run art)
 docs/
+  art/cp-01-prompts.md         the ChatGPT prompts used for case 1's pictures
   CLINICAL_REVIEW.md           your checklist of unverified items (npm run review)
   graphs/                      a branching map of each case (npm run graph)
   templates/case.yaml          the starting point for a new case
@@ -341,6 +346,30 @@ with `settings: [pci-capable, non-pci]`.
 - **Bubbles:** `who` is one of the characters or `narrator` (a caption box). Tails point at the speaker.
 
 To see every character and scene: run `npm run dev` and open `…/#/dev/art`.
+
+### Illustrations (pictures instead of line drawings)
+
+A panel can show one of your pictures instead of the line drawing. The caption goes above it and the
+bubbles below it, so no face is covered.
+
+1. Save the picture (square works best, about 1024 px) as
+   `content/assets/art/<case>/<name>.png`, e.g. `content/assets/art/cp-01/01-arrival-1.png`.
+   `.jpg` and `.webp` work too. To replace a picture, save the new one under the same name.
+2. Add `art:` to the panel, folder and name without the extension, and list the characters
+   **left to right as they appear in the picture** (bubble tails follow that order):
+   ```yaml
+   - scene: triage-desk
+     art: cp-01/01-arrival-1
+     actors: [patient:pain, nurse]
+   ```
+3. The first time you use a new folder, add it to `content/assets/art/credits.yaml` (who made the
+   pictures and with which tool).
+4. Run `npm run art` (it also runs on its own before `npm run dev`). It makes the small web copy in
+   `content/assets/panels/`; that copy is what goes to GitHub, so keep your originals backed up.
+
+Keep `scene:` and `actors:` accurate: they are the fallback drawing (if a picture can't load) and the
+description screen readers hear. Pictures must have no text in them; the app adds the words. The monitor
+close-ups and ECGs stay drawn, because they show live numbers.
 
 ---
 

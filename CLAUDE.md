@@ -8,7 +8,7 @@ Cases teach decisions, pathophysiology, anatomy, pharmacology and risk scores. F
 ## Who's who
 - Owner: EM resident (DNB, India). Owns ALL clinical content. Clinician, not a developer.
 - Claude: lead engineer. Keep architecture simple, explain commands briefly, ask before adding dependencies.
-- Separate from the Expo app in `~/Desktop/EM app` — do not touch that repo.
+  Separate from the Expo app in `~/Desktop/EM app` — do not touch that repo.
 
 ## Stack
 Vite + React + TS (strict) · Tailwind (tokens as CSS vars) · hash routing · Zod · Vitest · vite-plugin-pwa · Zustand +
@@ -23,6 +23,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `npm run validate` — content checks with file:line: schema, broken `next`, unreachable nodes, dead ends, unset flags, missing refs/unlocks/doses/assets
 - `npm run review` — checklist of every unverified clinical item → `docs/CLINICAL_REVIEW.md` (regenerate after content edits)
 - `npm run ecg` — redraw ECG SVGs from `content/assets/ecg/*.ecg.yaml`
+- `npm run art` — owner's illustrations `content/assets/art/<folder>/*.png` (git-ignored) → 800 px WebP in `content/assets/panels/` (committed); runs before dev/build, skips up-to-date ones
 - `npm run graph` — Mermaid flowchart per case → `docs/graphs/<id>.md` (bold = ideal path, red dashed = harmful)
 - `npm run new-case -- <system> <module> <name> "<title>"` — scaffold from `docs/templates/case.yaml`, list in module.yaml, validate + graph (Claude skill: `/new-case`)
 - Dev mode: `?dev=1` (before or after the `#`; `?dev=0` off; kept per tab in sessionStorage): step ids, jump-to-step (run then stops saving), state inspector. Works on the live site.
@@ -31,7 +32,8 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `docs/` — SPEC.md, CONTENT_GUIDE.md (owner's plain-language authoring guide — keep in sync with the schema), CLINICAL_REVIEW.md + graphs/ (generated), templates/case.yaml
 - `content/` — ALL clinical content as YAML: `systems.yaml`, `references.yaml` (incl. `needs-source` placeholder),
   `benchmarks.yaml` (time targets, HUD vital limits), `cvs/chest-pain/{module.yaml,cases/cp-NN.yaml}`,
-  `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`
+  `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`,
+  `assets/art/credits.yaml` (required for every art folder) + originals, `assets/panels/<folder>/*.webp`
 - `src/content/` — `schema.ts` (Zod: the authoring format), `compile.ts` (YAML → validated JSON, cross-checks),
   `vite-plugin.ts` (virtual modules; each case and the codex are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
 - `src/engine/` — pure TS: `engine.ts` (state, effects, conditions, branching, grading, stars, ideal path, replay), `dose.ts`. No React, no clinical facts.
@@ -40,7 +42,8 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `src/store/` — `settings.ts`, `progress.ts` (v2; runs saved as inputs and replayed; stars, unlocks, mistakes deck + Revise streaks: a card leaves after 2 correct in a row)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
 - `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (10 scenes + actor placement; monitor shows live vitals), `PanelArt.tsx`, `ecgLayout.ts` (12-lead geometry shared by draw script, compiler and lead hotspots). Dev-only art sheet at `#/dev/art`
-- `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
+- `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts, art.ts (sharp) (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
+- `src/lib/offline.ts` — illustration caching (cache `d2d-art`, shared with the SW runtime route in vite.config.ts): case prefetch while playing, "Save pictures" on CaseSetup, "Save all cases" in Settings
 - `.claude/skills/new-case/` — the /new-case project skill
 - `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`, `authoring.test.ts` (graph, scaffold, warnings); `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
 - `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
@@ -63,7 +66,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Lead-tap grading: exact set = best; ≥ half found and ≤ 1 extra = acceptable; else suboptimal.
 - Accessibility: axe (WCAG 2.1 A/AA) clean on every screen in both themes (checked 2026-09-30); `test/a11y.test.ts` guards token
   contrast and text alternatives. Tap targets ≥ 44 px (checkbox rows are whole-row labels). Heavy screens are React.lazy chunks;
-  fonts are woff2-only @font-face in index.css. Full offline download ≈ 435 KB compressed.
+  fonts are woff2-only @font-face in index.css. Install (precache) ≈ 435 KB compressed; .webp illustrations are NOT precached.
 - Art: ONE stroke width via `.art` (non-scaling); props grey, people ink, red only for alarms. Panels are ≥ square and grow downwards (grid + aspect spacer); grids use `minmax(0,1fr)` so long bubble text can't widen them.
 
 ## CLINICAL CONTENT RULES — NON-NEGOTIABLE
@@ -80,7 +83,8 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 
 ## Design rules
 - Ink on paper: off-white paper, near-black ink, ONE accent (clinical red) reserved for danger/alarms, greys otherwise. Full dark mode. Respect `prefers-reduced-motion`.
-- Art is code-drawn SVG line art only (no AI, stock or copyrighted images); one consistent stroke width.
+- Art: code-drawn SVG, one stroke width. Owner's decision 2026-10-01 (overrides SPEC): panels may use the owner's AI illustrations
+  (`art:`; bubbles below; tails follow `actors` left→right; line art = fallback). No text in pictures; ECGs/monitors stay code.
 - Phone: vertical panel flow, choices in a thumb-reach bottom sheet. Laptop: 2–3 panels per row; keys 1–6 choose, Space/Enter continue.
 - Type: one UI font + one hand-lettered bubble font, self-hosted; ≥16px body on phones.
 - Accessibility: WCAG AA, ≥44px tap targets, full keyboard play, alt text on every panel.
@@ -100,21 +104,17 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Vite `base` comes from env `BASE_PATH` (set by the deploy workflow). Hash routing means no server rewrites needed.
 - Fonts: Inter (UI) + Patrick Hand (bubbles), Latin subset only, via `@fontsource`, bundled and precached.
 - Claude's preview tool can't launch this project from the Expo session; run Vite directly and open http://localhost:5180 (or the owner's `npm run dev` on 5173).
-- The in-app browser's screenshots are often stale under viewport emulation; confirm with DOM checks. Clicks miss when a large viewport is scaled down; use the keyboard or 360 px.
+- In-app browser: screenshots can be stale under viewport emulation (confirm with DOM checks); clicks miss when a large viewport
+  is scaled down (use the keyboard or 360 px); it can't register service workers, so check offline on a real phone.
 - `src/content/*` and `src/engine/*` import siblings with `.ts` extensions so Node can run them directly (scripts, tests).
 - YAML anchors (`&name` / `*name`) are used in cp-01 to reuse conditional `next:` lists.
 
 ## Status
-- Phase 0 done (2026-09-29): live at https://manofav-glitch.github.io/door-to-decision/ (public repo
-  github.com/manofav-glitch/door-to-decision; Pages source = GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
-- Phase 1 done: engine, compiler, player, debrief, progress, cp-01.
-- Phase 2 done: HEART / TIMI (UA/NSTEMI) / GRACE in-hospital scores, calculator node, Codex, draft cp-02.
-- Phase 3 done 2026-09-30: cast + moods, 8 scenes, panel layout/transitions, ECG zoom (pinch untested on a real phone), tap-the-lead questions in cp-01.
-- Phase 4 built 2026-09-30: graph, dev mode, new-case script + skill, CONTENT_GUIDE.md, style warnings. 69 clinical items unverified.
-- 2026-09-30: at the owner's explicit instruction (chosen over a recommendation to keep open TODOs unverified), all 118
-  items in cp-01…cp-05 and their cards/benchmarks were marked verified (reviewedOn 2026-09-30). Old TODO notes were kept;
-  `npm run review` lists them plus `needs-source` items. New content is still drafted verified: false.
-- Phase 5 done: Revise mode; all 11 chest-pain cases. 2026-09-30: owner instructed marking cp-06…11 verified too (all 202 items
-  verified; old TODO notes kept and listed by `npm run review`, incl. cp-10/cp-11 Fifth UDMI wording to confirm).
-- Phase 6 done 2026-09-30: accessibility audit + fixes, performance (PageSpeed mobile after changes: 98 perf / 100 a11y / 100 best
-  practices / 100 SEO), woff2-only fonts, lazy screens, meta description, presenter mode. Pending: owner's low-end Android check.
+- Live at https://manofav-glitch.github.io/door-to-decision/ (public repo github.com/manofav-glitch/door-to-decision; Pages via
+  GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
+- Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Pending: owner's low-end Android check (incl. ECG pinch-zoom).
+- Verification: at the owner's explicit instruction (over a recommendation to keep open TODOs unverified) all 202 items in
+  cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
+  wording) plus `needs-source` items. New content is still drafted verified: false.
+- Illustrations 2026-10-01: pipeline + offline saving built; cp-01 uses 17 stand-ins cut from the owner's 1254 px contact sheet
+  (~300 px, soft). Pending: owner's full-size images (same file names), then other cases.

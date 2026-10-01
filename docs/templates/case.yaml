@@ -40,6 +40,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk                  # see CONTENT_GUIDE for all scenes
+        # art: cp-NN/01-arrival-1          # optional picture instead of the drawing (CONTENT_GUIDE §10)
         actors: [patient:pain, nurse]       # left to right; moods: pain, worried, relieved, alarmed
         caption: "{clock} · Triage"         # {clock} shows the case clock
         bubbles:
