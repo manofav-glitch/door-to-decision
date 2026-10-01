@@ -27,11 +27,13 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: cp-04/01-arrival-1
         actors: [paramedic:worried, patient-supine:pain]
         caption: "{clock} · Ambulance bay"
         bubbles:
           - { who: paramedic, text: "52-year-old, crushing central chest pain for an hour. Smoker. Getting more breathless on the way in." }
       - scene: resus-bay
+        art: cp-04/02-arrival-2
         actors: [patient-supine:pain, nurse:worried]
         bubbles:
           - { who: nurse, text: "Pulse 112, BP 96 over 64, sats 92% on air. He's grey." }
@@ -66,6 +68,7 @@ nodes:
     check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-04/03-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/cp-04-ecg-1.svg
@@ -113,6 +116,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "BEEP · BEEP"
       - scene: resus-bay
+        art: cp-04/04-exam
         actors: [patient-supine:pain, doctor:worried]
         bubbles:
           - { who: doctor, text: "Crackles to the mid-zones. Cold, mottled knees. He's confused." }
@@ -152,6 +156,7 @@ nodes:
       todo: "Check grades: crushed ticagrelor, dobutamine, furosemide in shock."
     panels:
       - scene: resus-bay
+        art: cp-04/05-resus
         actors: [patient-supine:pain, nurse:alarmed, senior:worried]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -225,6 +230,7 @@ nodes:
     onEnter: { minutes: 8 }
     panels:
       - scene: resus-bay
+        art: cp-04/06-flash-oedema
         actors: [patient-supine:alarmed, senior:worried, nurse]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -290,6 +296,7 @@ nodes:
     onEnter: { minutes: 30, milestone: wire, setVitals: { hr: 104, sbp: 100, dbp: 66 } }
     panels:
       - scene: cath-lab-door
+        art: cp-04/07-cath
         actors: [patient-supine, senior]
         caption: "{clock} · Cath lab"
         bubbles:
@@ -321,6 +328,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-04/08-end-good
         actors: [patient:relieved, doctor]
         caption: "Five days later · CCU"
         bubbles:
@@ -332,6 +340,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-04/09-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · CCU"
     summary: "He survived a stormy course with a large anterior infarct and poor heart function. The debrief shows where time and safety slipped."
@@ -345,6 +354,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
       - scene: resus-bay
+        art: cp-04/10-end-critical
         actors: [patient-supine:pain, nurse:alarmed, senior:worried]
         bubbles:
           - { who: senior, text: "He's peri-arrest. Adrenaline, pads on, get the cath lab." }
