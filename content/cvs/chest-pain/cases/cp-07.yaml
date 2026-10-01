@@ -26,6 +26,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-07/01-arrival-1
         actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -85,6 +86,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-07/03-history
         actors: [patient-supine, doctor]
         caption: "{clock} · Majors"
         bubbles:
@@ -148,11 +150,13 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: cp-07/04-ct
         actors: [patient-supine:worried, doctor]
         caption: "{clock} · CT"
         bubbles:
           - { who: doctor, text: "Bilateral pulmonary emboli. The right ventricle is bigger than the left." }
       - scene: resus-bay
+        art: cp-07/05-results
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "Troponin is mildly raised. BP still 116 over 74." }
@@ -226,6 +230,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-07/07-end-good
         actors: [patient:relieved, doctor]
         caption: "Four days later · Ward"
         bubbles:
@@ -237,6 +242,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-07/08-end-fair
         actors: [patient:worried]
         caption: "A week later · ICU step-down"
     summary: "She recovered, but delays or the wrong treatment at key moments made her illness more dangerous. The debrief shows where."
