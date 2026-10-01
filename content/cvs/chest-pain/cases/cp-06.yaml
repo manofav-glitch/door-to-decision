@@ -27,12 +27,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-06/01-arrival-1
         actors: [patient:pain, relative:worried]
         caption: "{clock} · District hospital casualty"
         bubbles:
           - { who: patient, text: "It hit me all at once while I was lifting a gas cylinder. Worst pain of my life, going through to my back." }
           - { who: relative, text: "He has high BP. He stopped his tablets last month." }
       - scene: triage-desk
+        art: cp-06/02-arrival-2
         actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 104, BP 178 over 96 in the right arm, sats 97%." }
@@ -61,6 +63,7 @@ nodes:
     check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-06/03-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Casualty"
     image: ecg/cp-06-ecg-1.svg
@@ -110,6 +113,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-06/04-exam
         actors: [patient-supine:pain, doctor:worried]
         caption: "{clock} · Casualty"
         bubbles:
@@ -164,6 +168,7 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: cp-06/05-ct
         actors: [patient-supine:worried, doctor]
         caption: "{clock} · CT"
         bubbles:
@@ -246,6 +251,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-06/06-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "A week later · Cardiac surgical centre"
         bubbles:
@@ -257,6 +263,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-06/07-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Two weeks later · Cardiac surgical centre"
     summary: "He survived surgery after a difficult course. Delays or antithrombotics made things harder. The debrief shows where."
@@ -270,6 +277,7 @@ nodes:
         caption: "{clock} · Casualty"
         sfx: "ALARM"
       - scene: resus-bay
+        art: cp-06/08-end-critical
         actors: [patient-supine:pain, nurse:alarmed, doctor:alarmed]
         bubbles:
           - { who: nurse, text: "No radial pulse! Neck veins are up." }
