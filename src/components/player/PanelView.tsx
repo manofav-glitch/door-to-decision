@@ -28,6 +28,8 @@ export function PanelView(props: {
   panel: Panel;
   clock: string;
   assets: Record<string, string>;
+  /** illustration sizes from the compiled case, so the picture's space is kept while it loads */
+  artSizes?: Record<string, [number, number]>;
   ctx?: SceneContext;
   index?: number;
 }) {
@@ -35,7 +37,14 @@ export function PanelView(props: {
   const src = panel.art ? assets[artAsset(panel.art)] : undefined;
   const [failed, setFailed] = useState<string>();
   if (src && failed !== src)
-    return <IllustratedPanel {...props} src={src} onError={() => setFailed(src)} />;
+    return (
+      <IllustratedPanel
+        {...props}
+        src={src}
+        size={props.artSizes?.[panel.art!] ?? [800, 800]}
+        onError={() => setFailed(src)}
+      />
+    );
   return <DrawnPanel {...props} />;
 }
 
@@ -124,6 +133,7 @@ function IllustratedPanel({
   assets,
   index = 0,
   src,
+  size: [width, height],
   onError,
 }: {
   panel: Panel;
@@ -131,6 +141,7 @@ function IllustratedPanel({
   assets: Record<string, string>;
   index?: number;
   src: string;
+  size: [number, number];
   onError: () => void;
 }) {
   return (
@@ -142,11 +153,12 @@ function IllustratedPanel({
       <img
         src={src}
         alt={panel.alt ?? describePanel(panel)}
-        width={800}
-        height={800}
+        width={width}
+        height={height}
         decoding="async"
         onError={onError}
-        className="block aspect-square w-full border-2 border-ink bg-paper-2 object-cover"
+        style={{ aspectRatio: `${width} / ${height}` }}
+        className="block h-auto w-full border-2 border-ink bg-paper-2"
       />
       <PanelImage panel={panel} assets={assets} />
       <Bubbles panel={panel} side={listedSide(panel)} tail="up" />

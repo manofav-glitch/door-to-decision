@@ -1,6 +1,6 @@
 // Turns the owner's illustrations into small web pictures for the app:
 //   content/assets/art/<folder>/<name>.png|jpg|jpeg|webp   originals (kept out of git: too big)
-//   → content/assets/panels/<folder>/<name>.webp            800 px square, committed
+//   → content/assets/panels/<folder>/<name>.webp            at most 800 px, same shape, committed
 // A panel shows one with `art: <folder>/<name>`. Pictures already up to date are skipped.
 // Run: npm run art (also runs before `npm run dev` and `npm run build`).
 import { existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
@@ -52,10 +52,10 @@ if (jobs.length === 0) {
     mkdirSync(join(out, '..'), { recursive: true });
     const info = await sharp(src)
       .rotate()
-      .resize(SIZE, SIZE, { fit: 'cover', withoutEnlargement: true })
+      .resize(SIZE, SIZE, { fit: 'inside', withoutEnlargement: true }) // keeps the shape: square or wide
       .webp({ quality: QUALITY, effort: 6 })
       .toFile(out);
-    const small = info.width < SIZE ? `  (only ${info.width} px wide: will look soft)` : '';
+    const small = info.width < 600 ? `  (only ${info.width} px wide: will look soft)` : '';
     console.log(`${relative(root, out)}  ${Math.round(info.size / 1024)} KB${small}`);
   }
 }

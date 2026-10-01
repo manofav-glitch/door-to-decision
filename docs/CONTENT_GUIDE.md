@@ -352,7 +352,7 @@ To see every character and scene: run `npm run dev` and open `…/#/dev/art`.
 A panel can show one of your pictures instead of the line drawing. The caption goes above it and the
 bubbles below it, so no face is covered.
 
-1. Save the picture (square works best, about 1024 px) as
+1. Save the picture (one panel per file; square or wide, ideally about 1024 px across) as
    `content/assets/art/<case>/<name>.png`, e.g. `content/assets/art/cp-01/01-arrival-1.png`.
    `.jpg` and `.webp` work too. To replace a picture, save the new one under the same name.
 2. Add `art:` to the panel, folder and name without the extension, and list the characters

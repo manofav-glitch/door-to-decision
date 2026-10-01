@@ -8,3 +8,9 @@
   madeBy: Content owner
   date: 2026-10-01
   note: Stand-ins cut from a 1254 px contact sheet; to be replaced by full-size images.
+
+- folder: cp-02
+  madeWith: ChatGPT image generation (OpenAI), from the prompts in docs/art/cp-02-prompts.md
+  madeBy: Content owner
+  date: 2026-10-01
+  note: Cut from a 1254 px contact sheet (wide panels, about 610 × 300 px).

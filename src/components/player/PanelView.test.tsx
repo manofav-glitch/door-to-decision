@@ -29,6 +29,20 @@ describe('PanelView', () => {
     expect(html).toContain('02:10 · Triage');
   });
 
+  it('keeps a wide picture wide', () => {
+    const html = renderToStaticMarkup(
+      <PanelView
+        panel={panel}
+        clock="02:10"
+        assets={{ [artAsset(panel.art!)]: '/a.webp' }}
+        artSizes={{ [panel.art!]: [609, 297] }}
+      />,
+    );
+    expect(html).toContain('width="609"');
+    expect(html).toContain('height="297"');
+    expect(html).toContain('aspect-ratio:609 / 297');
+  });
+
   it('points each tail at the speaker, using the actors listed left to right', () => {
     const p: Panel = {
       ...panel,

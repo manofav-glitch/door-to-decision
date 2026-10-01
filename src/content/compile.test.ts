@@ -2,7 +2,7 @@ import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { compileContent, ContentError } from './compile.ts';
+import { compileContent, ContentError, webpSize } from './compile.ts';
 
 const FIXTURE = join(import.meta.dirname, '../../test/fixtures/mini');
 const CASE = 'content/demo/basics/cases/c-01.yaml';
@@ -94,7 +94,7 @@ describe('compileContent', () => {
 
   describe('illustrations', () => {
     /** Fixture copy whose first panel uses art: pics/p1; `files` are written relative to content/assets. */
-    function withArt(files: Record<string, string>) {
+    function withArt(files: Record<string, string | Buffer>) {
       const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
       cpSync(FIXTURE, dir, { recursive: true });
       const p = join(dir, CASE);
@@ -106,6 +106,15 @@ describe('compileContent', () => {
       }
       return dir;
     }
+    /** Just enough of a lossless WebP header for the size check, padded to `bytes`. */
+    const fakeWebp = (w: number, h: number, bytes = 30) => {
+      const b = Buffer.alloc(Math.max(bytes, 30));
+      b.write('RIFF', 0, 'ascii');
+      b.write('WEBPVP8L', 8, 'ascii');
+      b[20] = 0x2f;
+      b.writeUInt32LE(((h - 1) << 14) | (w - 1), 21);
+      return b;
+    };
     const credits = '- { folder: pics, madeWith: Test tool, madeBy: Tester, date: 2026-10-01 }\n';
     const messages = (dir: string) => {
       try {
@@ -118,9 +127,18 @@ describe('compileContent', () => {
     };
 
     it('adds a credited picture to the case assets and counts its size', () => {
-      const c = compileContent(withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': 'x'.repeat(1234) }));
+      const c = compileContent(withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': fakeWebp(800, 400, 1234) }));
       expect(c.caseAssets['demo-c-01']).toContain('panels/pics/p1.webp');
       expect(c.index.systems[0]!.modules[0]!.cases[0]!.artBytes).toBe(1234);
+      expect(c.cases['demo-c-01']!.artSizes).toEqual({ 'pics/p1': [800, 400] });
+    });
+
+    it('reads picture sizes from WebP headers, and rejects other files', () => {
+      expect(webpSize(fakeWebp(609, 297))).toEqual([609, 297]);
+      expect(webpSize(Buffer.from('not a picture at all, just some text'))).toBeUndefined();
+      expect(messages(withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': 'x'.repeat(40) }))).toContain(
+        'content/assets/panels/pics/p1.webp is not a WebP picture: run npm run art',
+      );
     });
 
     it('reports a missing picture', () => {
@@ -130,14 +148,14 @@ describe('compileContent', () => {
     });
 
     it('requires a credits entry for the folder', () => {
-      expect(messages(withArt({ 'panels/pics/p1.webp': 'x' }))).toContain(
+      expect(messages(withArt({ 'panels/pics/p1.webp': fakeWebp(8, 8) }))).toContain(
         'add "pics" to content/assets/art/credits.yaml (who made these pictures, and with what)',
       );
     });
 
     it('warns about pictures no panel uses', () => {
       const c = compileContent(
-        withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': 'x', 'panels/pics/old.webp': 'x' }),
+        withArt({ 'art/credits.yaml': credits, 'panels/pics/p1.webp': fakeWebp(8, 8), 'panels/pics/old.webp': fakeWebp(8, 8) }),
       );
       expect(c.warnings.map((w) => w.message)).toContain(
         'no panel uses this picture (add art: pics/old to a panel, or delete the file)',

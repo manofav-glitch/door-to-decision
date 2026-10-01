@@ -57,6 +57,8 @@ export interface CompiledCase extends Omit<Case, 'settings' | 'timeTargets' | 'd
   leadLayouts: Record<string, EcgLayout>;
   /** checks of the ECG drawings used, keyed by image path */
   imageChecks: Record<string, Check>;
+  /** illustration width and height in px, keyed by art name (e.g. cp-01/01-arrival-1) */
+  artSizes: Record<string, [number, number]>;
 }
 
 export interface CaseSummary {

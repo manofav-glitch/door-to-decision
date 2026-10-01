@@ -370,6 +370,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
               panel={p}
               clock={clock}
               assets={assets}
+              artSizes={c.artSizes}
               index={i}
               ctx={{ vitals: view.vitals, limits: c.vitalLimits }}
             />

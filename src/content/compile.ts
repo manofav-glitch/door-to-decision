@@ -382,6 +382,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
   const scores: Record<string, ResolvedScore> = {};
   const leadLayouts: Record<string, EcgLayout> = {};
   const imageChecks: Record<string, Check> = {};
+  const artSizes: Record<string, [number, number]> = {};
 
   const noteEffects = (e: Effects | undefined) => {
     if (!e) return;
@@ -407,7 +408,12 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     if (spec) imageChecks[img] = spec.spec.check;
   };
   const checkArt = (art: string, path: Path) => {
-    if (!existsSync(join(ctx.contentDir, 'assets', 'panels', `${art}.webp`)))
+    const file = join(ctx.contentDir, 'assets', 'panels', `${art}.webp`);
+    if (existsSync(file)) {
+      const size = webpSize(readFileSync(file));
+      if (size) artSizes[art] = size;
+      else err(path, `content/assets/panels/${art}.webp is not a WebP picture: run npm run art`);
+    } else
       err(path, `picture content/assets/panels/${art}.webp is missing: put the original in content/assets/art/${art}.png and run npm run art`);
     const folder = art.split('/')[0]!;
     if (!ctx.creditedArt.has(folder))
@@ -618,6 +624,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     draft: true,
     unverifiedCount: 0,
     imageChecks,
+    artSizes,
   };
 }
 
@@ -666,6 +673,20 @@ function collectAssets(c: CompiledCase): string[] {
     if (node.type === 'ecg' || node.type === 'ecg-leads') out.add(node.image);
   }
   return [...out];
+}
+
+/** Width and height from a WebP file's header (lossy VP8, lossless VP8L or extended VP8X). */
+export function webpSize(b: Buffer): [number, number] | undefined {
+  if (b.length < 30 || b.toString('ascii', 0, 4) !== 'RIFF' || b.toString('ascii', 8, 12) !== 'WEBP')
+    return undefined;
+  const chunk = b.toString('ascii', 12, 16);
+  if (chunk === 'VP8 ') return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff];
+  if (chunk === 'VP8L') {
+    const bits = b.readUInt32LE(21);
+    return [(bits & 0x3fff) + 1, ((bits >>> 14) & 0x3fff) + 1];
+  }
+  if (chunk === 'VP8X') return [b.readUIntLE(24, 3) + 1, b.readUIntLE(27, 3) + 1];
+  return undefined;
 }
 
 function walkCondition(cond: Condition, visit: (leaf: Condition) => void) {

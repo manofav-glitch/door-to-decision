@@ -27,12 +27,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-02/01-arrival-1
         actors: [relative:worried, patient, nurse]
         caption: "{clock} · Triage"
         bubbles:
           - { who: relative, text: "He's had chest pain since this morning. Please check his heart." }
           - { who: patient, text: "It's probably nothing. It comes and goes." }
       - scene: triage-desk
+        art: cp-02/02-arrival-2
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "44, software engineer. Pulse 78, BP 132 over 84, sats 98%." }
@@ -93,6 +95,7 @@ nodes:
     onEnter: { minutes: 5 }
     panels:
       - scene: resus-bay
+        art: cp-02/03-history-1
         actors: [patient, doctor]
         caption: "{clock} · Assessment"
         bubbles:
@@ -100,6 +103,7 @@ nodes:
           - { who: patient, text: "Sharp, here on the left. A few seconds, sometimes a minute. It's worse when I twist or take a deep breath." }
           - { who: patient, text: "Not when I climb stairs. I've been moving house all weekend." }
       - scene: resus-bay
+        art: cp-02/04-history-2
         actors: [patient, doctor]
         bubbles:
           - { who: doctor, text: "Any medical problems? Smoking? Family history?" }
@@ -140,6 +144,7 @@ nodes:
     onEnter: { minutes: 45 }
     panels:
       - scene: resus-bay
+        art: cp-02/05-first-trop
         actors: [doctor, nurse]
         caption: "{clock} · Results"
         bubbles:
@@ -208,6 +213,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-02/06-second-trop
         actors: [patient:relieved, nurse]
         caption: "{clock} · Repeat troponin"
         bubbles:
@@ -252,6 +258,7 @@ nodes:
     outcome: good
     panels:
       - scene: triage-desk
+        art: cp-02/07-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "{clock} · Going home"
         bubbles:
@@ -263,6 +270,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-02/08-end-fair
         actors: [patient]
         caption: "Next day"
         bubbles:

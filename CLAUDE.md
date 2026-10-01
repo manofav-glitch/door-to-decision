@@ -23,7 +23,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `npm run validate` — content checks with file:line: schema, broken `next`, unreachable nodes, dead ends, unset flags, missing refs/unlocks/doses/assets
 - `npm run review` — checklist of every unverified clinical item → `docs/CLINICAL_REVIEW.md` (regenerate after content edits)
 - `npm run ecg` — redraw ECG SVGs from `content/assets/ecg/*.ecg.yaml`
-- `npm run art` — owner's illustrations `content/assets/art/<folder>/*.png` (git-ignored) → 800 px WebP in `content/assets/panels/` (committed); runs before dev/build, skips up-to-date ones
+- `npm run art` — owner's illustrations `content/assets/art/<folder>/*.png` (git-ignored) → WebP ≤ 800 px, shape kept, in `content/assets/panels/` (committed); runs before dev/build, skips up-to-date ones
 - `npm run graph` — Mermaid flowchart per case → `docs/graphs/<id>.md` (bold = ideal path, red dashed = harmful)
 - `npm run new-case -- <system> <module> <name> "<title>"` — scaffold from `docs/templates/case.yaml`, list in module.yaml, validate + graph (Claude skill: `/new-case`)
 - Dev mode: `?dev=1` (before or after the `#`; `?dev=0` off; kept per tab in sessionStorage): step ids, jump-to-step (run then stops saving), state inspector. Works on the live site.
@@ -116,5 +116,5 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Verification: at the owner's explicit instruction (over a recommendation to keep open TODOs unverified) all 202 items in
   cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
   wording) plus `needs-source` items. New content is still drafted verified: false.
-- Illustrations 2026-10-01: pipeline + offline saving built; cp-01 uses 17 stand-ins cut from the owner's 1254 px contact sheet
-  (~300 px, soft). Pending: owner's full-size images (same file names), then other cases.
+- Illustrations 2026-10-01: pipeline + offline saving built. cp-01 (17 square, ~300 px, soft) and cp-02 (8 wide, ~610 px) are cut
+  from the owner's ChatGPT contact sheets. Pending: full-size cp-01 images (same file names), then cp-03…11.
