@@ -27,12 +27,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-11/01-arrival-1
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "My heart is racing since yesterday, and I'm short of breath. Some tightness, but it's not bad now." }
           - { who: relative, text: "He's had a cough and fever for three days." }
       - scene: triage-desk
+        art: cp-11/02-arrival-2
         actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "Pulse about 150 and irregular, BP 104 over 68, temperature 38.4, sats 94%." }
@@ -61,6 +63,7 @@ nodes:
     check: { source: esc-af-2024, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-11/03-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/cp-11-ecg-1.svg
@@ -108,6 +111,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-11/04-trigger
         actors: [patient-supine:worried, doctor]
         caption: "{clock} · Majors"
         bubbles:
@@ -136,6 +140,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-11/05-trop
         actors: [nurse, doctor]
         caption: "{clock} · Results"
         bubbles:
@@ -198,6 +203,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-11/06-end-good
         actors: [patient:relieved, doctor]
         caption: "Three days later · Medical ward"
         bubbles:
@@ -209,6 +215,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-11/07-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Medical ward"
     summary: "He recovered, but some decisions added risk (unneeded antithrombotics, or cardioversion before treating the trigger). The debrief shows where."
