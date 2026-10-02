@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-09/01-shift
         actors: [senior, doctor]
         caption: "{clock} · Night shift"
         bubbles:
@@ -41,6 +42,7 @@ nodes:
     onEnter: { minutes: 5, milestone: ecg }
     panels:
       - scene: resus-bay
+        art: cp-09/02-patient-a
         actors: [patient:pain, nurse]
         caption: "Patient A · {clock}"
         bubbles:
@@ -116,6 +118,7 @@ nodes:
     onEnter: { minutes: 5, setVitals: { hr: 90, sbp: 142, dbp: 88, rr: 20, spo2: 97 } }
     panels:
       - scene: resus-bay
+        art: cp-09/03-patient-b
         actors: [patient:pain, nurse:worried]
         caption: "Patient B · {clock}"
         bubbles:
@@ -155,6 +158,7 @@ nodes:
     onEnter: { minutes: 5, setVitals: { hr: 72, sbp: 128, dbp: 78, rr: 16, spo2: 98 } }
     panels:
       - scene: resus-bay
+        art: cp-09/04-patient-c
         actors: [patient, relative:worried]
         caption: "Patient C · {clock}"
         bubbles:
@@ -213,6 +217,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-09/05-end-good
         actors: [patient:relieved, senior:relieved]
         caption: "Morning handover"
         bubbles:
@@ -224,6 +229,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-09/06-end-fair
         actors: [senior:worried, doctor:worried]
         caption: "Morning handover"
     summary: "All three got the right treatment in the end, but not all on time. The debrief shows where each pattern was missed or delayed."

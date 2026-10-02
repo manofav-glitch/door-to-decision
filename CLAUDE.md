@@ -117,4 +117,4 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
   wording) plus `needs-source` items. New content is still drafted verified: false.
 - Illustrations 2026-10-01: pipeline + offline saving built. The owner only has ChatGPT sheets (no full-size files): Claude cuts
-  them (cp-01 square ~300 px; cp-02…08 wide); `npm run art` enlarges ≤2× + sharpens. Women patients: gown covers chest (prompt it).
+  them (cp-01 square ~300 px; cp-02…09 wide); `npm run art` enlarges ≤2× + sharpens. Women patients: gown covers chest (prompt it).
