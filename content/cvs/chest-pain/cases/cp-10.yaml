@@ -27,12 +27,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-10/01-arrival-1
         actors: [patient:pain, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "I was lifting the baby and this tight pain came across my chest and down my arm." }
           - { who: relative, text: "She's healthy. Doesn't smoke. She's just exhausted from the baby." }
       - scene: triage-desk
+        art: cp-10/02-arrival-2
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 98, BP 122 over 78, sats 98%." }
@@ -61,6 +63,7 @@ nodes:
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-10/03-ecg
         actors: [patient-supine:pain, nurse:worried]
         caption: "{clock} · Resus bay"
     image: ecg/cp-10-ecg-1.svg
@@ -139,6 +142,7 @@ nodes:
     onEnter: { minutes: 30, milestone: wire }
     panels:
       - scene: cath-lab-door
+        art: cp-10/04-cath
         actors: [patient-supine, senior]
         caption: "{clock} · Cath lab"
         bubbles:
@@ -234,6 +238,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-10/05-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Five days later · Cardiology ward"
         bubbles:
@@ -245,6 +250,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-10/06-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Cardiology ward"
     summary: "She recovered, but delays or unnecessary procedures added risk. The debrief shows where."
