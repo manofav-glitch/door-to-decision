@@ -44,3 +44,9 @@
   madeBy: Content owner
   date: 2026-10-01
   note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened. Panels 2 and 6 (ECG, deterioration) were redrawn as a separate two-panel image with her gown covering her chest.
+
+- folder: cp-08
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/cp-08-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-02
+  note: Cut from a 1024 × 1536 px sheet (wide panels, about 490 px across), enlarged and sharpened.

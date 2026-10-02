@@ -26,6 +26,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: cp-08/01-arrival-1
         actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -56,6 +57,7 @@ nodes:
     check: { source: [esc-pericardial-2015, esc-acs-2023], verified: true, reviewedOn: 2026-09-30 }
     panels:
       - scene: ecg-machine
+        art: cp-08/02-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Majors"
     image: ecg/cp-08-ecg-1.svg
@@ -85,11 +87,13 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: cp-08/03-features-1
         actors: [patient:pain, doctor]
         caption: "{clock} · Majors"
         bubbles:
           - { who: doctor, text: "There's a scratchy rub at the left sternal edge, loudest when he leans forward." }
       - scene: resus-bay
+        art: cp-08/04-features-2
         actors: [nurse, doctor]
         bubbles:
           - { who: nurse, text: "Troponin is normal. CRP is raised." }
@@ -140,6 +144,7 @@ nodes:
     type: story
     panels:
       - scene: ultrasound
+        art: cp-08/05-echo-1
         actors: [patient-supine, doctor]
         caption: "{clock} · Bedside echo"
         bubbles:
@@ -175,11 +180,13 @@ nodes:
     onEnter: { minutes: 4320, setVitals: { hr: 124, sbp: 88, dbp: 72, rr: 26, spo2: 95, temp: 37.6 } }
     panels:
       - scene: triage-desk
+        art: cp-08/06-return-1
         actors: [patient:alarmed, relative:worried]
         caption: "Three days later · {clock} · Triage"
         bubbles:
           - { who: relative, text: "He's so breathless he can't finish a sentence. He nearly fainted at home." }
       - scene: resus-bay
+        art: cp-08/07-return-2
         actors: [patient-supine:alarmed, doctor:worried]
         bubbles:
           - { who: doctor, text: "Neck veins are right up, heart sounds are quiet, and his BP falls by 18 when he breathes in." }
@@ -215,6 +222,7 @@ nodes:
     type: story
     panels:
       - scene: ultrasound
+        art: cp-08/08-pocus
         actors: [patient-supine:alarmed, doctor:worried]
         caption: "{clock} · Bedside echo"
         bubbles:
@@ -252,6 +260,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: cp-08/09-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Two days later · Cardiology ward"
         bubbles:
@@ -263,6 +272,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: cp-08/10-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Cardiology ward"
     summary: "He recovered, but some decisions along the way made him sicker than he needed to be. The debrief shows where."
@@ -276,6 +286,7 @@ nodes:
         caption: "{clock} · Majors"
         sfx: "ALARM"
       - scene: ultrasound
+        art: cp-08/11-end-critical
         actors: [patient-supine:alarmed, doctor:alarmed]
         bubbles:
           - { who: doctor, text: "Blood around the heart. Call cardiothoracics now." }
