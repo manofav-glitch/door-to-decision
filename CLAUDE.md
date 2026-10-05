@@ -110,8 +110,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - YAML anchors (`&name` / `*name`) are used in cp-01 to reuse conditional `next:` lists.
 
 ## Status
-- Live at https://manofav-glitch.github.io/door-to-decision/ (public repo github.com/manofav-glitch/door-to-decision; Pages via
-  GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
+- Live: https://manofav-glitch.github.io/door-to-decision/ (public repo manofav-glitch/door-to-decision; `git push` deploys).
 - Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Owner chose to skip the low-end Android check (2026-10-05).
 - Verification: owner instructed marking all 202 items in cp-01…11 verified (2026-09-30, over a recommendation to keep
   open TODOs unverified); old TODOs kept, listed by `npm run review`. New content is still drafted verified: false.
