@@ -1,0 +1,12 @@
+# arr-05: atrial flutter with 2:1 block. Atrial rate 300, ventricular 150, negative sawtooth waves
+# in II, III and aVF; discrete positive flutter waves in V1.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: flutter, conduction: 2 }
+rhythmLead: II
+leads:
+  II: { p: 0.2 }
+  III: { p: 0.2 }
+  aVF: { p: 0.2 }
+  V1: { p: -0.15 }
+check: { source: esc-svt-2019, verified: false, todo: "Check the sawtooth waves are visible in II, III and aVF." }

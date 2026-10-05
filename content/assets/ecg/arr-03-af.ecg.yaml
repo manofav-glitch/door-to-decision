@@ -1,0 +1,10 @@
+# arr-03: AF with a fast ventricular rate (~140), narrow QRS, no ST elevation; rate-related
+# ST depression laterally is common and should be reassessed after rate control.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: af, rate: 142 }
+rhythmLead: II
+leads:
+  V5: { st: -0.08 }
+  V6: { st: -0.08 }
+check: { source: esc-af-2024, verified: false, todo: "Check it reads as AF with a fast rate." }

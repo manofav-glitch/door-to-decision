@@ -1,0 +1,26 @@
+id: amiodarone
+title: Amiodarone
+summary: "Broad-spectrum antiarrhythmic. Used for VT, in cardiac arrest after the third shock, and for rate or rhythm control in critically ill or structurally abnormal hearts. It also cardioverts AF."
+doses:
+  - id: peri-arrest
+    label: "Tachyarrhythmia, after failed synchronised shocks or stable VT"
+    route: IV over 10–20 minutes (up to 60 minutes if stable), then infusion
+    text: "300 mg, then 900 mg over 24 hours"
+    rule: { unit: mg, fixed: 300 }
+    check: { source: [erc-als-2025, rcuk-2025], verified: false }
+  - id: cardiac-arrest
+    label: "VF / pulseless VT after the third shock"
+    route: IV or IO bolus
+    text: "300 mg after the 3rd shock; a further 150 mg after the 5th"
+    rule: { unit: mg, fixed: 300 }
+    check: { source: erc-als-2025, verified: false }
+sections:
+  - heading: It cardioverts
+    body: "Given for 'rate control' in AF of unknown duration without anticoagulation, it is an unplanned cardioversion with the same stroke risk."
+  - heading: Not in
+    body: "Pre-excited AF (WPW); torsades or long QT; Brugada electrical storm."
+  - heading: Side effects
+    body: "Hypotension and phlebitis with IV loading; thyroid, lung, liver, skin and eye toxicity with long-term use."
+india: "Cheap and widely stocked, which is why it is overused."
+refs: [erc-als-2025, rcuk-2025, esc-af-2024, esc-va-2022]
+check: { source: [erc-als-2025, esc-af-2024], verified: false }

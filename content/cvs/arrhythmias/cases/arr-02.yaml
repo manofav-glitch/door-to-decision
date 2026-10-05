@@ -1,0 +1,263 @@
+# arr-02 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: pre-excited AF in a young man with an undiagnosed accessory pathway (WPW). Any AV-nodal
+# blocker accelerates conduction down the pathway → VF. Procainamide is not stocked (Indian reality),
+# so synchronised cardioversion is the answer. Afterwards: WPW pattern → EP study and ablation.
+# Sources: owner's SVT and AF notes, ESC 2019 SVT, ESC 2024 AF, RCUK/ERC 2025.
+
+id: cvs-arr-02
+title: "22M, fast irregular heartbeat after the gym"
+difficulty: 2
+minutes: 10
+patient: { age: 22, sex: M, weightKg: 70 }
+initial:
+  clock: "19:15"
+  rhythm: ecg/arr-02-pre-af.svg
+  vitals: { hr: 230, sbp: 104, dbp: 66, rr: 22, spo2: 97, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-svt-2019, esc-af-2024]
+  verified: false
+  todo: "Teaching composite; check the presentation and that procainamide being unavailable is realistic locally."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It started in the middle of my workout. Fast and all over the place. I feel a bit light-headed." }
+          - { who: nurse, text: "Pulse about 230 and irregular. BP 104 over 66. Straight to resus." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-svt-2019, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Resus bay, defibrillator pads on, monitor, IV access, and a 12-lead ECG"
+        grade: best
+        consequence: "Pads on and the 12-lead printed within 3 minutes."
+        teaching: "A very fast irregular rhythm can deteriorate fast: pads on early, then the ECG."
+        effects: { minutes: 3, milestone: ecg }
+        next: ecg-1
+      - label: "Oral beta-blocker and observe"
+        grade: harmful
+        consequence: "Your senior stops it before he swallows it and asks for an ECG."
+        teaching: "Never slow the AV node before you've seen the ECG of a fast, irregular rhythm."
+        effects: { minutes: 8, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-svt-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/arr-02-pre-af.svg
+    alt: "12-lead ECG. Irregular broad-complex tachycardia at about 230 per minute; QRS shape and width change from beat to beat."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Fast, broad, irregular, QRS changing beat to beat: AF conducting down an accessory pathway"
+        grade: best
+        consequence: "You say it out loud so the team hears: pre-excited AF."
+        teaching: "Fast + broad + irregular with varying morphology = pre-excited AF until proven otherwise."
+        effects: { minutes: 1 }
+        next: treat
+      - label: "AF with bundle branch block"
+        grade: suboptimal
+        consequence: "Your senior points out the QRS shape changes from beat to beat and the rate approaches 300 at times."
+        teaching: "Bundle branch block keeps one shape. Varying shape and extreme rates point to an accessory pathway."
+        effects: { minutes: 2 }
+        next: treat
+      - label: "SVT"
+        grade: suboptimal
+        consequence: "Your senior asks you to look at the irregular spacing and broad complexes again."
+        teaching: "SVT is regular and usually narrow."
+        effects: { minutes: 2 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: [esc-svt-2019, esc-af-2024, rcuk-2025], verified: false, todo: "Check the procainamide-unavailable branch and grades." }
+    prompt: "He's still talking, BP 104/66. What now?"
+    options:
+      - label: "Synchronised cardioversion under procedural sedation"
+        grade: best
+        consequence: "The anaesthetist arrives; you set the defibrillator."
+        teaching: "Stable pre-excited AF: procainamide if available, otherwise cardioversion. Unstable: cardioversion straight away."
+        effects: { minutes: 8 }
+        next: shock
+      - label: "IV procainamide"
+        grade: acceptable
+        consequence: "Pharmacy has none tonight. You move to cardioversion."
+        teaching: "Procainamide slows the accessory pathway and is the right drug, but it is often not stocked outside big centres."
+        effects: { minutes: 12 }
+        next: shock
+      - label: "IV adenosine to slow it down"
+        grade: harmful
+        consequence: "The rate jumps to 300, the complexes merge, and he goes limp."
+        teaching: "Blocking the AV node sends every impulse down the accessory pathway."
+        effects: { minutes: 2, patient: -30, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 80, gcs: 3 }, rhythm: ecg/arr-vf.svg }
+        next: vf
+      - label: "IV diltiazem or metoprolol for rate control"
+        grade: harmful
+        consequence: "Within a minute the rate climbs past 280, then the monitor shows VF."
+        teaching: "AV-nodal blockers are prohibited in pre-excited AF."
+        effects: { minutes: 3, patient: -30, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 80, gcs: 3 }, rhythm: ecg/arr-vf.svg }
+        next: vf
+      - label: "IV amiodarone"
+        grade: harmful
+        consequence: "Ten minutes into the infusion the rate rises and he collapses in VF."
+        teaching: "IV amiodarone can speed conduction down the pathway; it is not recommended in pre-excited AF."
+        effects: { minutes: 10, patient: -30, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 80, gcs: 3 }, rhythm: ecg/arr-vf.svg }
+        next: vf
+
+  vf:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed, senior:worried]
+        bubbles:
+          - { who: nurse, text: "No pulse! He's in VF!" }
+    prompt: "Cardiac arrest in VF. Now?"
+    options:
+      - label: "Start compressions and give an unsynchronised shock straight away"
+        grade: best
+        consequence: "One shock: back to an organised rhythm with a pulse. He wakes, confused, in sinus rhythm."
+        teaching: "VF: defibrillate immediately, unsynchronised, at least 150 J biphasic, then resume CPR."
+        effects: { minutes: 3, setVitals: { hr: 96, sbp: 108, dbp: 68, spo2: 96, gcs: 14 }, rhythm: ecg/arr-sinus.svg }
+        next: after-shock
+      - label: "Synchronised shock"
+        grade: harmful
+        consequence: "The defibrillator waits for an R wave that never comes. Your senior switches sync off and shocks."
+        teaching: "There are no R waves in VF to synchronise to. Sync is never for VF or pulseless VT."
+        effects: { minutes: 3, patient: -10, setVitals: { hr: 96, sbp: 104, dbp: 64, spo2: 95, gcs: 13 }, rhythm: ecg/arr-sinus.svg }
+        next: after-shock
+
+  shock:
+    type: choice
+    check: { source: [erc-als-2025, rcuk-2025], verified: false, todo: "ERC 2025: AF at maximum output; confirm against local defibrillators." }
+    prompt: "He's sedated. How do you set the defibrillator?"
+    options:
+      - label: "Sync on, check the markers sit on the R waves, maximum output"
+        grade: best
+        consequence: "One shock. Sinus rhythm at 82."
+        teaching: "European guidance (2025): AF, including pre-excited AF, starts at maximum synchronised output."
+        effects: { minutes: 5, setVitals: { hr: 82, sbp: 118, dbp: 72 }, rhythm: ecg/arr-02-wpw.svg }
+        next: after-ecg
+      - label: "Sync on, 50 J to be gentle"
+        grade: suboptimal
+        consequence: "No change. A second shock at maximum works, with a second dose of sedation."
+        teaching: "Under-dosing the first shock is the commonest reason cardioversion fails."
+        effects: { minutes: 10, setVitals: { hr: 82, sbp: 116, dbp: 70 }, rhythm: ecg/arr-02-wpw.svg }
+        next: after-ecg
+      - label: "Sync off, 200 J"
+        grade: harmful
+        consequence: "The shock lands on a T wave and triggers VF; your senior defibrillates and he comes back in sinus rhythm."
+        teaching: "An organised rhythm with a pulse needs a synchronised shock. Unsynchronised shocks can fall on the T wave."
+        effects: { minutes: 8, patient: -20, setVitals: { hr: 90, sbp: 106, dbp: 66 }, rhythm: ecg/arr-02-wpw.svg }
+        next: after-ecg
+
+  after-shock:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, senior]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: senior, text: "He's back. Let's get a 12-lead in sinus rhythm and see what we're dealing with." }
+    next: after-ecg
+
+  after-ecg:
+    type: ecg
+    check: { source: esc-svt-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:relieved, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/arr-02-wpw.svg
+    alt: "12-lead ECG. Sinus rhythm at 82. Short PR interval, slurred upstroke at the start of the QRS (delta wave) in most leads, QRS slightly wide."
+    prompt: "His ECG in sinus rhythm. What do you see?"
+    options:
+      - label: "Short PR and delta waves: WPW pattern, the pathway that caused tonight's rhythm"
+        grade: best
+        consequence: "You print an extra copy for the cardiologist."
+        teaching: "WPW pattern + a documented arrhythmia = WPW syndrome."
+        next: disposition
+      - label: "Normal sinus rhythm"
+        grade: suboptimal
+        consequence: "Your senior points to the slurred upstroke at the start of each QRS."
+        teaching: "Look for the delta wave and the short PR on every post-conversion ECG."
+        next: disposition
+
+  disposition:
+    type: choice
+    check: { source: esc-svt-2019, verified: false, todo: "Check the disposition and sport advice." }
+    prompt: "He's stable in sinus rhythm. Plan?"
+    options:
+      - label: "Admit to a monitored bed, cardiology referral for EP study and pathway ablation; no AV-nodal blockers; no competitive sport until cleared"
+        grade: best
+        consequence: "He's booked for an EP study this week."
+        teaching: "Ablation of the accessory pathway is usually curative and is the definitive treatment."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Discharge on oral verapamil to prevent recurrences"
+        grade: harmful
+        consequence: "Your senior cancels the prescription."
+        teaching: "AV-nodal blockers can be lethal if AF recurs over an accessory pathway."
+        effects: { patient: -10 }
+        next: *outcome
+      - label: "Discharge with a cardiology appointment in three months"
+        grade: suboptimal
+        consequence: "Your senior arranges an earlier review instead."
+        teaching: "After pre-excited AF the pathway is proven dangerous: refer urgently for ablation."
+        effects: { patient: -5 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "A week later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "They ablated the extra wire. Can I go back to the gym?" }
+    summary: "You recognised pre-excited AF, kept AV-nodal blockers away, cardioverted him safely and got the pathway ablated."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · Cardiology ward"
+    summary: "He survived and had his pathway ablated, but a drug that blocked the AV node or a poorly set shock put him at serious risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Pre-excited atrial fibrillation in Wolff–Parkinson–White syndrome (accessory pathway), treated with synchronised cardioversion; WPW pattern in sinus rhythm."
+  keyPoints:
+    - "Fast, broad, irregular, with changing QRS shapes: pre-excited AF."
+    - "No AV-nodal blockers: adenosine, beta-blockers, verapamil, diltiazem, digoxin and IV amiodarone can all trigger VF."
+    - "Unstable, or no procainamide on the shelf: synchronised cardioversion (European 2025: AF at maximum output)."
+    - "VF has no R waves: defibrillate unsynchronised."
+    - "Afterwards: short PR and delta wave on the sinus ECG; refer for ablation."
+  pitfalls:
+    - "Treating it as 'fast AF' and reaching for diltiazem."
+    - "Leaving sync on for VF, or off for a rhythm with a pulse."
+    - "Discharging on an AV-nodal blocker."
+  unlocks: [wpw, procainamide, synchronised-cardioversion, amiodarone]
+  refs: [esc-svt-2019, esc-af-2024, erc-als-2025, rcuk-2025]
+  check: { source: [esc-svt-2019, erc-als-2025], verified: false }

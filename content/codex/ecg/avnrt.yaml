@@ -1,0 +1,14 @@
+id: avnrt
+title: "AVNRT and other regular narrow-complex tachycardias"
+summary: "Regular, narrow, abrupt onset, usually 150–250/min, with no visible P waves: AV nodal re-entry is the commonest cause."
+sections:
+  - heading: What you see
+    body: "Regular narrow QRS, P waves hidden in the QRS, sometimes a small extra wave at its end (pseudo-r′ in V1, pseudo-S in II, III, aVF)."
+  - heading: Sort by the P wave
+    body: "P hidden or at the very end of the QRS: typical AVNRT. P clearly after the QRS, in the ST segment: AVRT using an accessory pathway. P well before the next QRS: atrial tachycardia, atypical AVNRT, or sinus tachycardia."
+  - heading: Exactly 150?
+    body: "Think atrial flutter with 2:1 block and hunt for flutter waves."
+  - heading: Afterwards
+    body: "Always look at the sinus-rhythm ECG for a short PR and delta wave (WPW)."
+refs: [esc-svt-2019]
+check: { source: esc-svt-2019, verified: false }

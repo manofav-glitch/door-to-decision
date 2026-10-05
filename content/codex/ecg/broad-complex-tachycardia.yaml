@@ -1,0 +1,12 @@
+id: broad-complex-tachycardia
+title: "Broad-complex tachycardia: VT or not?"
+summary: "A regular broad-complex tachycardia is VT until proven otherwise, especially after a heart attack or with known heart disease."
+sections:
+  - heading: Clues to VT
+    body: "AV dissociation (P waves marching through, capture or fusion beats); concordance (all chest leads positive or all negative); an initial R wave in aVR; no RS complex in any chest lead; very wide QRS; previous MI or heart failure."
+  - heading: Algorithms
+    body: "Brugada: no RS in V1–V6, or R-to-S nadir over 100 ms, or AV dissociation, or VT morphology = VT. Vereckei uses lead aVR alone. Neither is perfect; the clinical rule is safer."
+  - heading: Safe default
+    body: "If you are unsure, treat it as VT. Verapamil or diltiazem given to VT can drop the blood pressure abruptly."
+refs: [brugada-1991, vereckei-2008, esc-va-2022]
+check: { source: [brugada-1991, vereckei-2008, esc-va-2022], verified: false }

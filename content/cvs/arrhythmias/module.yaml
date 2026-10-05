@@ -1,0 +1,5 @@
+id: arrhythmias
+title: Arrhythmias
+blurb: "Too fast, too slow, too broad: decide who needs a shock, a drug, a pacemaker or a second look."
+# Case files in play order (content/cvs/arrhythmias/cases/<name>.yaml)
+cases: [arr-01, arr-02, arr-03, arr-04, arr-05, arr-06]

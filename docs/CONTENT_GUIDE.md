@@ -195,7 +195,7 @@ dose-tnk:
   tolerancePct: 0 # how far outside the correct range still counts as correct
   correct: { consequence: '…', teaching: '…', effects: { milestone: lysis } }
   under: { consequence: '…', teaching: '…' } # graded suboptimal
-  over: { consequence: '…', teaching: '…' } # graded harmful
+  over: { consequence: '…', teaching: '…' } # graded harmful (add grade: acceptable if too much isn't dangerous, e.g. joules)
   next: chb-alarm
 ```
 

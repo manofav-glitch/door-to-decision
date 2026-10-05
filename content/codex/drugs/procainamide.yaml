@@ -1,0 +1,16 @@
+id: procainamide
+title: Procainamide
+summary: "Sodium-channel blocker that slows conduction in the accessory pathway: the drug of choice for stable pre-excited AF, and an option for stable VT."
+doses:
+  - id: iv-load
+    label: "Stable pre-excited AF or VT"
+    route: IV infusion over 20 minutes
+    text: "10–15 mg/kg (maximum 1 g); stop for hypotension, QRS widening over 50% or conversion"
+    rule: { unit: mg, perKg: { min: 10, max: 15 }, maxDose: 1000 }
+    check: { source: [rcuk-2025, esc-svt-2019], verified: false }
+sections:
+  - heading: Avoid in
+    body: "Severe heart failure, acute MI, end-stage renal disease (use amiodarone instead for VT), long QT and Brugada."
+india: "Often not stocked outside large tertiary centres. Where it isn't on the shelf, synchronised cardioversion is the practical default for pre-excited AF."
+refs: [rcuk-2025, esc-svt-2019]
+check: { source: [rcuk-2025, esc-svt-2019], verified: false, todo: "Confirm local availability." }

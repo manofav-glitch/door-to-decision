@@ -1,0 +1,14 @@
+# arr-04: rheumatic mitral stenosis. AF at ~148 with coarse fibrillatory waves and right axis
+# deviation (dominant S in lead I, tall R in III).
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: af, rate: 148 }
+rhythmLead: II
+leads:
+  I: { p: 0.15, r: 0.25, s: 0.6 }
+  II: { p: 0.25 }
+  III: { p: 0.2, r: 1.0, s: 0.1 }
+  aVL: { r: 0.15, s: 0.5 }
+  aVF: { p: 0.2, r: 0.9 }
+  V1: { p: 0.3, r: 0.5, s: 0.6 }
+check: { source: esc-af-2024, verified: false, todo: "Check coarse AF and right axis deviation are visible." }

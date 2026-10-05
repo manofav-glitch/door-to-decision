@@ -1,0 +1,16 @@
+id: af-acute-management
+title: "Acute AF in the emergency department"
+summary: "Five questions in order: unstable? pre-excited? a reversible driver? onset clearly within 24 hours? and, for everyone, stroke risk."
+sections:
+  - heading: Unstable
+    body: "Shock, syncope, ischaemia or severe heart failure from the rate: synchronised cardioversion now."
+  - heading: Driver
+    body: "Sepsis, PE, thyrotoxicosis, dehydration, alcohol, low potassium or magnesium, pain. Treat the cause; cardioverting a septic patient rarely lasts."
+  - heading: Cardioversion window
+    body: "European guidance (2024): beyond 24 hours, give 3 weeks of anticoagulation or exclude clot with TOE before cardioversion. If the onset time is uncertain, treat it as outside the window."
+  - heading: Rate control
+    body: "Aim for a resting rate under 110 (lenient control). Beta-blocker, diltiazem or verapamil if LVEF over 40%; beta-blocker or digoxin if LVEF under 40%."
+  - heading: Anticoagulation
+    body: "Four weeks after any cardioversion, whatever the score. Long term by CHA₂DS₂-VA, regardless of whether the rhythm is now sinus."
+refs: [esc-af-2024, race2-2010, rcuk-2025]
+check: { source: esc-af-2024, verified: false }

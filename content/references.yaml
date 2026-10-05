@@ -142,3 +142,66 @@
   citation: "Van Gelder IC, Rienstra M, Bunting KV, et al. 2024 ESC Guidelines for the management of atrial fibrillation. Eur Heart J. 2024;45(36):3314–3414."
   year: 2024
   todo: "Confirm authors and pages."
+
+# ---------- Arrhythmias module (drafted 2026-10-05; citations from Claude's memory unless noted) ----------
+
+- id: esc-svt-2019
+  citation: "Brugada J, Katritsis DG, Arbelo E, et al. 2019 ESC Guidelines for the management of patients with supraventricular tachycardia. Eur Heart J. 2020;41(5):655–720."
+  year: 2020
+  url: https://doi.org/10.1093/eurheartj/ehz467
+
+- id: revert-2015
+  citation: "Appelboam A, Reuben A, Mann C, et al. Postural modification to the standard Valsalva manoeuvre for emergency treatment of supraventricular tachycardias (REVERT): a randomised controlled trial. Lancet. 2015;386(10005):1747–1753."
+  year: 2015
+  url: https://doi.org/10.1016/S0140-6736(15)61485-4
+
+- id: erc-als-2025
+  citation: "European Resuscitation Council Guidelines 2025: Adult Advanced Life Support. Resuscitation. 2025;215:110769."
+  year: 2025
+  url: https://www.resuscitationjournal.com/article/S0300-9572(25)00281-3/fulltext
+  todo: "Add the author list."
+
+- id: rcuk-2025
+  citation: "Resuscitation Council UK. 2025 Resuscitation Guidelines: adult tachyarrhythmia and bradyarrhythmia algorithms. London: Resuscitation Council UK; 2025."
+  year: 2025
+  url: https://www.resus.org.uk/professional-library/2025-resuscitation-guidelines/adult-advanced-life-support-guidelines
+
+- id: esc-va-2022
+  citation: "Zeppenfeld K, Tfelt-Hansen J, de Riva M, et al. 2022 ESC Guidelines for the management of patients with ventricular arrhythmias and the prevention of sudden cardiac death. Eur Heart J. 2022;43(40):3997–4126."
+  year: 2022
+  url: https://doi.org/10.1093/eurheartj/ehac262
+
+- id: esc-valve-2021
+  citation: "Vahanian A, Beyersdorf F, Praz F, et al. 2021 ESC/EACTS Guidelines for the management of valvular heart disease. Eur Heart J. 2022;43(7):561–632."
+  year: 2022
+  url: https://doi.org/10.1093/eurheartj/ehab395
+
+- id: invictus-2022
+  citation: "Connolly SJ, Karthikeyan G, Ntsekhe M, et al. Rivaroxaban in rheumatic heart disease–associated atrial fibrillation. N Engl J Med. 2022;387(11):978–988."
+  year: 2022
+  url: https://doi.org/10.1056/NEJMoa2209051
+
+- id: race2-2010
+  citation: "Van Gelder IC, Groenveld HF, Crijns HJ, et al. Lenient versus strict rate control in patients with atrial fibrillation. N Engl J Med. 2010;362(15):1363–1373."
+  year: 2010
+  url: https://doi.org/10.1056/NEJMoa1001337
+
+- id: pisters-2010
+  citation: "Pisters R, Lane DA, Nieuwlaat R, et al. A novel user-friendly score (HAS-BLED) to assess 1-year risk of major bleeding in patients with atrial fibrillation: the Euro Heart Survey. Chest. 2010;138(5):1093–1100."
+  year: 2010
+  url: https://doi.org/10.1378/chest.10-0134
+
+- id: brugada-1991
+  citation: "Brugada P, Brugada J, Mont L, et al. A new approach to the differential diagnosis of a regular tachycardia with a wide QRS complex. Circulation. 1991;83(5):1649–1659."
+  year: 1991
+  url: https://doi.org/10.1161/01.cir.83.5.1649
+
+- id: vereckei-2008
+  citation: "Vereckei A, Duray G, Szénási G, et al. New algorithm using only lead aVR for differential diagnosis of wide QRS complex tachycardia. Heart Rhythm. 2008;5(1):89–98."
+  year: 2008
+  url: https://doi.org/10.1016/j.hrthm.2007.09.020
+
+- id: who-rhd-2024
+  citation: "World Health Organization. WHO guideline on the prevention and diagnosis of rheumatic fever and rheumatic heart disease. Geneva: WHO; 2024."
+  year: 2024
+  todo: "Confirm title, year and URL."

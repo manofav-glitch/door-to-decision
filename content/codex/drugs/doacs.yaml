@@ -1,0 +1,17 @@
+id: doacs
+title: "DOACs (apixaban, rivaroxaban, dabigatran, edoxaban)"
+summary: "Preferred over warfarin for stroke prevention in AF, except with moderate-to-severe rheumatic mitral stenosis or a mechanical valve."
+doses:
+  - id: apixaban
+    label: "Apixaban, AF"
+    route: Oral
+    text: "5 mg twice daily; 2.5 mg twice daily only if two of: age ≥ 80, weight ≤ 60 kg, creatinine ≥ 133 µmol/L (1.5 mg/dL)"
+    check: { source: esc-af-2024, verified: false }
+sections:
+  - heading: Dose by the drug's own criteria
+    body: "Each DOAC has its own dose-reduction rules, judged by creatinine clearance (Cockcroft–Gault). Reducing the dose without meeting them is a common error that causes strokes."
+  - heading: Not in
+    body: "Moderate-to-severe rheumatic mitral stenosis and mechanical valves (use warfarin); pregnancy."
+india: "Available; cost is a barrier for some families. Factor Xa reversal agents are rarely available, so prothrombin complex concentrate is the practical reversal."
+refs: [esc-af-2024, invictus-2022]
+check: { source: esc-af-2024, verified: false }

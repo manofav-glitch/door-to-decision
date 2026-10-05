@@ -1,0 +1,19 @@
+# arr-02: pre-excited AF. Irregular, broad, beat-to-beat varying QRS at ~230/min (shortest RR well
+# under 250 ms), conducted down an accessory pathway.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: pre-excited-af, rate: 230 }
+qrs: 140
+rhythmLead: II
+leads:
+  I: { r: 1.0, s: 0.1, t: -0.2 }
+  II: { r: 1.3, s: 0.2, t: -0.25 }
+  aVL: { r: 0.8, t: -0.15 }
+  aVF: { r: 1.1, t: -0.2 }
+  V1: { r: 0.9, s: 0.3, t: -0.2 }
+  V2: { r: 1.4, s: 0.4, t: -0.3 }
+  V3: { r: 1.6, s: 0.3, t: -0.3 }
+  V4: { r: 1.7, s: 0.2, t: -0.3 }
+  V5: { r: 1.6, s: 0.1, t: -0.3 }
+  V6: { r: 1.3, s: 0.05, t: -0.25 }
+check: { source: esc-svt-2019, verified: false, todo: "Check it reads as pre-excited AF (fast, broad, irregular, varying)." }

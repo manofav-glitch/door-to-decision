@@ -1,0 +1,15 @@
+id: benzathine-penicillin
+title: "Benzathine penicillin G (secondary prophylaxis)"
+summary: "Monthly injection that prevents further attacks of rheumatic fever, and so slows rheumatic valve damage."
+doses:
+  - id: rhd-prophylaxis
+    label: "Secondary prophylaxis, adult"
+    route: Deep IM injection
+    text: "1.2 million units every 3–4 weeks"
+    check: { source: who-rhd-2024, verified: false, todo: "Confirm interval and duration with the WHO 2024 guideline and Indian programme." }
+sections:
+  - heading: How long
+    body: "For years, often into adulthood or for life with established valve disease, depending on age and severity."
+india: "Supplied through national and state RHD control programmes; periodic shortages occur."
+refs: [who-rhd-2024]
+check: { source: who-rhd-2024, verified: false }

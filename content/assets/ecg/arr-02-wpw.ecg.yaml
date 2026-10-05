@@ -1,0 +1,17 @@
+# arr-02: after cardioversion. Sinus rhythm with a short PR and delta waves: WPW pattern.
+title: "12-lead ECG after cardioversion"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 82, pr: 100 }
+qrs: 130
+rhythmLead: II
+leads:
+  I: { delta: 0.4 }
+  II: { delta: 0.45 }
+  aVL: { delta: 0.3 }
+  aVF: { delta: 0.4 }
+  V2: { delta: 0.35 }
+  V3: { delta: 0.45 }
+  V4: { delta: 0.5 }
+  V5: { delta: 0.5 }
+  V6: { delta: 0.45 }
+check: { source: esc-svt-2019, verified: false, todo: "Check the short PR and delta waves are clear." }

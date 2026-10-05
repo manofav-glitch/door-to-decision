@@ -1,0 +1,238 @@
+# arr-04 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: AF with a fast rate precipitating pulmonary congestion in a young woman with
+# undiagnosed severe rheumatic mitral stenosis. Rate control with a beta-blocker; no cardioversion
+# (duration unknown, huge atrium); warfarin not a DOAC (INVICTUS); penicillin prophylaxis; valvotomy referral.
+# Sources: owner's AF notes (rheumatic layer), ESC 2024 AF, ESC/EACTS 2021 valvular, INVICTUS, WHO 2024 RHD.
+
+id: cvs-arr-04
+title: "32F, breathless and palpitations for three days"
+difficulty: 2
+minutes: 12
+patient: { age: 32, sex: F, weightKg: 48 }
+initial:
+  clock: "10:20"
+  rhythm: ecg/arr-04-af.svg
+  vitals: { hr: 148, sbp: 112, dbp: 72, rr: 26, spo2: 93, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-af-2024, esc-valve-2021]
+  verified: false
+  todo: "Teaching composite; check the severity is moderate (not peri-arrest) and the examination fits severe MS."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "For three days my heart has been racing and I can't lie flat at night. Even walking here made me gasp." }
+          - { who: nurse, text: "Pulse about 150, irregular. BP 112 over 72, breathing 26, sats 93% on air. Pregnancy test negative." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Sit her up, oxygen to keep sats 94–98%, monitor, IV access and a 12-lead ECG"
+        grade: best
+        consequence: "Sitting up with oxygen her sats rise to 96%. ECG at 5 minutes."
+        teaching: "Treat the breathlessness and get the ECG in the same few minutes."
+        effects: { minutes: 5, milestone: ecg, spo2: 3 }
+        next: ecg-1
+      - label: "Chest X-ray first to look for pneumonia"
+        grade: suboptimal
+        consequence: "The X-ray shows congested lungs; the ECG is done at 25 minutes."
+        teaching: "A fast irregular pulse with breathlessness: ECG first."
+        effects: { minutes: 25, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-af-2024, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-04-af.svg
+    alt: "12-lead ECG. Irregularly irregular rhythm at about 148 per minute, coarse fibrillatory waves, no P waves, right axis deviation."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "AF with a fast rate, coarse fibrillatory waves and right axis deviation"
+        grade: best
+        consequence: "Coarse waves and a right axis in a 32-year-old make you listen carefully to her heart."
+        teaching: "Coarse f waves suggest a big, high-pressure left atrium; right axis deviation suggests raised right-sided pressures. Think mitral stenosis."
+        effects: { minutes: 1 }
+        next: exam
+      - label: "Atrial flutter with variable block"
+        grade: suboptimal
+        consequence: "Your senior points out there's no regular sawtooth; the waves are chaotic."
+        teaching: "Coarse AF is the commonest thing misread as flutter."
+        effects: { minutes: 2 }
+        next: exam
+      - label: "Sinus tachycardia with ectopics"
+        grade: suboptimal
+        consequence: "Your senior asks you to find a P wave before each QRS: there isn't one."
+        teaching: "Irregularly irregular with no P waves is AF."
+        effects: { minutes: 2 }
+        next: exam
+
+  exam:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, doctor:worried]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: doctor, text: "Loud first heart sound, an opening snap, and a low rumbling murmur in diastole at the apex. Crackles at both bases." }
+          - { who: patient, text: "I had painful swollen knees as a child. Nobody ever said anything about my heart." }
+    next: rate
+
+  rate:
+    type: choice
+    check: { source: [esc-valve-2021, esc-af-2024], verified: false, todo: "Check grades, especially digoxin and diltiazem in this setting." }
+    prompt: "Likely mitral stenosis, AF at 148, congested lungs, BP 112/72. Treatment?"
+    options:
+      - label: "Rate control with cautious IV metoprolol, plus IV furosemide"
+        grade: best
+        consequence: "As the rate falls to 100 her breathing eases."
+        teaching: "In mitral stenosis the ventricle fills only in diastole across a narrow valve: slowing the rate is what clears the lungs."
+        effects: { minutes: 30, setVitals: { hr: 100, rr: 20, spo2: 96 } }
+        next: echo
+      - label: "IV digoxin alone"
+        grade: acceptable
+        consequence: "Slow to work; after an hour the rate is still 125. Your senior adds a beta-blocker."
+        teaching: "Digoxin is a reasonable add-on, but on its own it controls the rate slowly."
+        effects: { minutes: 60, setVitals: { hr: 104, rr: 22, spo2: 95 }, patient: -5 }
+        next: echo
+      - label: "Immediate cardioversion to restore sinus rhythm"
+        grade: harmful
+        consequence: "Your senior stops you: three days of AF, an unknown start, and possibly a very large atrium."
+        teaching: "Outside the 24-hour window, cardioversion without anticoagulation or TOE risks dislodging clot; rheumatic atria clot readily."
+        effects: { minutes: 10, patient: -10 }
+        next: rate-again
+      - label: "A fluid bolus for the borderline BP"
+        grade: harmful
+        consequence: "Her breathing worsens; sats drop to 89%."
+        teaching: "Fluid floods lungs that are already congested behind a narrow mitral valve."
+        effects: { minutes: 15, spo2: -5, rr: 4, patient: -15 }
+        next: rate-again
+
+  rate-again:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, senior:worried]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: senior, text: "Slow the rate: metoprolol, carefully, and furosemide." }
+    onEnter: { minutes: 30, setVitals: { hr: 104, rr: 22, spo2: 95 } }
+    next: echo
+
+  echo:
+    type: story
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Bedside echo"
+        bubbles:
+          - { who: doctor, text: "Thickened mitral leaflets that dome in diastole, a tight opening, and a huge left atrium. Severe mitral stenosis. The ventricle squeezes well." }
+    next: anticoag
+
+  anticoag:
+    type: choice
+    check: { source: [esc-af-2024, esc-valve-2021, invictus-2022], verified: false }
+    prompt: "AF with severe rheumatic mitral stenosis. Stroke prevention?"
+    options:
+      - label: "Heparin now, then warfarin long term, target INR 2–3"
+        grade: best
+        consequence: "Heparin started; warfarin begins tonight."
+        teaching: "AF with moderate-to-severe mitral stenosis needs a vitamin K antagonist, whatever the score."
+        effects: { minutes: 5 }
+        next: prevention
+      - label: "A DOAC such as apixaban or rivaroxaban: no INR checks"
+        grade: harmful
+        consequence: "Your senior changes it to warfarin."
+        teaching: "In rheumatic heart disease with AF, rivaroxaban led to more strokes and deaths than a vitamin K antagonist (INVICTUS)."
+        effects: { minutes: 5, patient: -15 }
+        next: prevention
+      - label: "No anticoagulation: her CHA₂DS₂-VA score is 0"
+        grade: harmful
+        consequence: "Your senior explains the score doesn't apply here and starts heparin."
+        teaching: "The score was built for AF without significant mitral stenosis; MS with AF is high risk regardless."
+        effects: { minutes: 5, patient: -15 }
+        next: prevention
+
+  prevention:
+    type: multiselect
+    check: { source: [who-rhd-2024, esc-valve-2021], verified: false, todo: "Check prophylaxis regimen and counselling points." }
+    prompt: "Before she goes to the cardiology ward. Choose up to 3."
+    max: 3
+    options:
+      - id: penicillin
+        label: "Benzathine penicillin G 1.2 million units IM every 3–4 weeks"
+        grade: best
+        consequence: "Started, with a card for the dates."
+        teaching: "Secondary prophylaxis stops further rheumatic attacks from damaging the valves."
+        missedEffects: { patient: -5 }
+      - id: valvotomy
+        label: "Refer for balloon mitral valvotomy assessment"
+        grade: best
+        consequence: "Referred."
+        teaching: "Severe symptomatic MS with suitable valve anatomy is treated with balloon valvotomy."
+        missedEffects: { patient: -5 }
+      - id: pregnancy
+        label: "Discuss contraception and planning any future pregnancy with cardiology"
+        grade: best
+        consequence: "Discussed with her."
+        teaching: "Pregnancy's extra blood volume can decompensate severe MS, and warfarin needs special planning in pregnancy."
+      - id: laao
+        label: "Left atrial appendage occlusion so she can avoid warfarin"
+        grade: suboptimal
+        consequence: "Your senior explains why not."
+        teaching: "In rheumatic MS, clot often forms in the body of the atrium, not only the appendage."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Two months later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "After the balloon procedure I can climb stairs again. I never miss my INR checks." }
+    summary: "You recognised rheumatic mitral stenosis behind the AF, slowed the rate to clear her lungs, chose warfarin over a DOAC, and started prophylaxis and a valve referral."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · Cardiology ward"
+    summary: "She improved, but a fluid bolus, an early cardioversion attempt or the wrong anticoagulant added risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Atrial fibrillation with a fast ventricular rate and pulmonary congestion due to previously undiagnosed severe rheumatic mitral stenosis."
+  keyPoints:
+    - "Young adult in India with AF: think rheumatic mitral stenosis and listen for the murmur."
+    - "Rate control (beta-blocker first) clears the lungs by lengthening diastolic filling."
+    - "AF with moderate-to-severe MS: warfarin (INR 2–3), never a DOAC, whatever the CHA₂DS₂-VA score."
+    - "Don't cardiovert AF of uncertain duration without anticoagulation or TOE."
+    - "Penicillin prophylaxis and referral for balloon valvotomy treat the cause."
+  pitfalls:
+    - "Fluids for a 'soft' BP in a patient with congested lungs."
+    - "A DOAC in rheumatic mitral stenosis."
+    - "Using a score of 0 to withhold anticoagulation in mitral stenosis."
+  unlocks: [rheumatic-mitral-stenosis, warfarin, benzathine-penicillin, atrial-fibrillation]
+  refs: [esc-af-2024, esc-valve-2021, invictus-2022, who-rhd-2024]
+  check: { source: [esc-valve-2021, invictus-2022], verified: false }

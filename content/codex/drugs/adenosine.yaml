@@ -1,0 +1,22 @@
+id: adenosine
+title: Adenosine
+summary: "Blocks the AV node for a few seconds. Ends tachycardias that use the AV node (AVNRT, AVRT) and briefly unmasks those that don't (flutter, atrial tachycardia)."
+doses:
+  - id: svt-adult
+    label: "Regular narrow-complex tachycardia, adult"
+    route: Rapid IV bolus into a large, proximal vein, immediately followed by a 20 ml saline flush
+    text: "6 mg; if no effect after 1–2 minutes, 12 mg; if still no effect, 18 mg"
+    rule: { unit: mg, fixed: 6 }
+    check: { source: [rcuk-2025, esc-svt-2019], verified: false, todo: "Confirm the 6 → 12 → 18 mg sequence (owner chose European guidance)." }
+sections:
+  - heading: Technique
+    body: "Large cannula in the antecubital fossa, three-way tap, fast push then fast flush, with the monitor printing. A slow push through a hand vein is the commonest reason it 'fails'."
+  - heading: Warn the patient
+    body: "A few seconds of flushing, chest tightness and a sense of doom are expected and pass quickly."
+  - heading: Read the strip
+    body: "Abrupt termination: the circuit used the AV node (AVNRT or AVRT). Slowing that uncovers flutter or atrial activity without stopping it: an atrial arrhythmia. No effect at all: check the dose and the delivery, then rethink the diagnosis."
+  - heading: Avoid or adjust
+    body: "Not in pre-excited AF (fast, broad and irregular). Caution in severe asthma. Lower doses after heart transplant or with dipyridamole; higher doses may be needed with theophylline or heavy caffeine."
+india: "Inexpensive and stocked almost everywhere."
+refs: [esc-svt-2019, rcuk-2025, erc-als-2025]
+check: { source: [esc-svt-2019, rcuk-2025], verified: false }

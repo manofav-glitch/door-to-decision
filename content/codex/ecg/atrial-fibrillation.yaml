@@ -1,0 +1,14 @@
+id: atrial-fibrillation
+title: "Atrial fibrillation on the ECG"
+summary: "Irregularly irregular QRS complexes with no repeating P waves. At least 30 seconds on a strip, or a 12-lead, makes the diagnosis."
+sections:
+  - heading: Fibrillatory waves
+    body: "Coarse waves suggest a large, high-pressure left atrium (classically rheumatic mitral stenosis); a flat baseline suggests long-standing AF."
+  - heading: Broad complexes in AF
+    body: "Bundle branch block, Ashman aberrancy after a long–short cycle, or pre-excitation. Pre-excited AF is treated completely differently."
+  - heading: Don't diagnose ischaemia during fast AF
+    body: "Rate-related ST depression is common. Repeat the ECG once the rate is controlled."
+  - heading: Slow and regular?
+    body: "AF that becomes slow and regular means AV block with an escape rhythm: think digoxin toxicity."
+refs: [esc-af-2024]
+check: { source: esc-af-2024, verified: false }

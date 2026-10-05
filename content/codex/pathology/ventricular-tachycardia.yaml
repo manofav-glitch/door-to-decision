@@ -1,0 +1,12 @@
+id: ventricular-tachycardia
+title: "Ventricular tachycardia with a pulse"
+summary: "Usually comes from scar after a heart attack. Treat the rhythm, then look for the trigger and the substrate."
+sections:
+  - heading: Unstable
+    body: "Synchronised shock straight away (120–150 J, then more), up to three times, then amiodarone 300 mg and shock again."
+  - heading: Stable
+    body: "European guidance: synchronised cardioversion under sedation is first choice when the sedation risk is low. Otherwise procainamide, or amiodarone where procainamide is unavailable or unsuitable."
+  - heading: Afterwards
+    body: "Check potassium and magnesium, look for ischaemia, echo the heart, and refer for assessment of an ICD and ablation."
+refs: [esc-va-2022, erc-als-2025, rcuk-2025]
+check: { source: [esc-va-2022, erc-als-2025], verified: false }

@@ -1,0 +1,17 @@
+id: digoxin
+title: Digoxin
+summary: "Slows the AV node through vagal tone. Useful for rate control in AF with heart failure or low blood pressure; slow to act and poor at controlling the rate on exertion."
+doses:
+  - id: af-load
+    label: "AF rate control, IV load"
+    route: IV
+    text: "0.25–0.5 mg, then 0.25 mg every 6 hours to a maximum of 1.5 mg in 24 hours"
+    check: { source: esc-af-2024, verified: false, todo: "Confirm loading regimen; reduce in renal impairment." }
+sections:
+  - heading: Toxicity
+    body: "Any new bradyarrhythmia; AF that becomes slow and regular (AV block with a junctional escape); nausea, vomiting and visual change. Hypokalaemia, renal failure and drugs such as verapamil and amiodarone raise levels."
+  - heading: Not in
+    body: "Pre-excited AF (WPW)."
+india: "Cheap and widely available."
+refs: [esc-af-2024]
+check: { source: esc-af-2024, verified: false }

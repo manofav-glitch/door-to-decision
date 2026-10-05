@@ -1,0 +1,239 @@
+# arr-06 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: haemodynamically tolerated monomorphic VT from old anterior infarct scar. ESC 2022:
+# synchronised cardioversion first when sedation risk is low; ERC/RCUK 2025: procainamide, or
+# amiodarone if procainamide unavailable/contraindicated. Verapamil trap → collapse. After conversion:
+# electrolytes, ischaemia, echo, admission, ICD evaluation.
+# Sources: owner's SVT notes (VT vs SVT discrimination), ESC 2022 VA, ERC 2025, RCUK 2025.
+
+id: cvs-arr-06
+title: "64M, palpitations and dizziness, old heart attack"
+difficulty: 3
+minutes: 12
+patient: { age: 64, sex: M, weightKg: 74 }
+initial:
+  clock: "06:50"
+  rhythm: ecg/arr-06-vt.svg
+  vitals: { hr: 172, sbp: 112, dbp: 70, rr: 20, spo2: 96, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-va-2022, erc-als-2025]
+  verified: false
+  todo: "Teaching composite; check he is genuinely stable (no life-threatening features)."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic:worried, patient-supine]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: paramedic, text: "64-year-old, fast palpitations and dizziness for an hour. Heart attack three years ago. Regular at 172, BP 112 over 70. No chest pain." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Resus bay, pads on, monitor, IV access, 12-lead ECG, and check for life-threatening features"
+        grade: best
+        consequence: "Pads on, ECG at 3 minutes. He's alert, no chest pain, chest clear."
+        teaching: "Shock, syncope, ischaemia, severe heart failure: any one means a synchronised shock now. He has none."
+        effects: { minutes: 3, milestone: ecg }
+        next: ecg-1
+      - label: "Majors cubicle and wait for the ECG technician"
+        grade: harmful
+        consequence: "Your senior moves him to resus: a broad-complex tachycardia can deteriorate without warning."
+        teaching: "Broad-complex tachycardia belongs in resus with pads on."
+        effects: { minutes: 12, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-va-2022, brugada-1991, vereckei-2008], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/arr-06-vt.svg
+    alt: "12-lead ECG. Regular broad-complex tachycardia at about 172 per minute, QRS about 170 ms. All chest leads positive. Initial R wave in aVR. P waves visible marching through at a slower rate."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Ventricular tachycardia: broad, regular, positive concordance, AV dissociation, and a previous MI"
+        grade: best
+        consequence: "You call it VT out loud."
+        teaching: "AV dissociation and concordance point to VT; with a previous MI, treat it as VT."
+        effects: { minutes: 1 }
+        next: treat
+      - label: "SVT with bundle branch block"
+        grade: suboptimal
+        consequence: "Your senior points to the P waves marching through independently."
+        teaching: "When in doubt, it's VT, especially with structural heart disease."
+        effects: { minutes: 2 }
+        next: treat
+      - label: "Sinus tachycardia with left bundle branch block"
+        grade: suboptimal
+        consequence: "Your senior notes the P waves don't relate to the QRS complexes."
+        teaching: "In sinus rhythm every QRS follows its own P wave."
+        effects: { minutes: 2 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: [esc-va-2022, erc-als-2025, rcuk-2025], verified: false, todo: "Check grades: ESC 2022 favours cardioversion first if sedation risk is low." }
+    prompt: "Stable VT: alert, BP 112/70, no chest pain, chest clear. Treatment?"
+    options:
+      - label: "Synchronised cardioversion under sedation"
+        grade: best
+        consequence: "The anaesthetist sedates him; you charge the defibrillator."
+        teaching: "European guidance (ESC 2022): electrical cardioversion is first choice for tolerated VT when sedation risk is low."
+        effects: { minutes: 10 }
+        next: shock
+      - label: "IV amiodarone 300 mg over 20–60 minutes"
+        grade: acceptable
+        consequence: "After 40 minutes he's still in VT; your senior arranges cardioversion."
+        teaching: "Amiodarone is the option when procainamide is unavailable or unsuitable, but it is slow and often fails."
+        effects: { minutes: 40 }
+        next: shock
+      - label: "IV verapamil: it's probably SVT with aberrancy"
+        grade: harmful
+        consequence: "His BP falls to 70/40 and he becomes confused."
+        teaching: "Verapamil given to VT can cause collapse. Treat broad-complex tachycardia as VT."
+        effects: { minutes: 3, setVitals: { sbp: 70, dbp: 40, gcs: 13 }, patient: -25 }
+        next: unstable
+      - label: "Adenosine 6 mg to see what happens"
+        grade: suboptimal
+        consequence: "Nothing changes; the VT carries on."
+        teaching: "Adenosine rarely helps in VT with a previous MI. It doesn't change the decision you need to make."
+        effects: { minutes: 4 }
+        next: shock
+
+  unstable:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "BP 70 over 40, he's grey and confused!" }
+    prompt: "VT with shock and confusion. Now?"
+    options:
+      - label: "Immediate synchronised shock (with sedation only if it doesn't delay you)"
+        grade: best
+        consequence: "One synchronised shock at 150 J: sinus rhythm, BP climbing."
+        teaching: "Life-threatening features: synchronised shock without delay, up to three times."
+        effects: { minutes: 4, setVitals: { hr: 84, sbp: 104, dbp: 64, gcs: 15 }, rhythm: ecg/arr-sinus.svg }
+        next: after
+      - label: "Amiodarone 300 mg first"
+        grade: harmful
+        consequence: "He loses consciousness; your senior shocks him immediately."
+        teaching: "Drugs first only when the patient is stable. Unstable VT gets a shock."
+        effects: { minutes: 6, patient: -15, setVitals: { hr: 84, sbp: 98, dbp: 60, gcs: 14 }, rhythm: ecg/arr-sinus.svg }
+        next: after
+
+  shock:
+    type: dose
+    check: { source: erc-als-2025, verified: false }
+    prompt: "Synchronised cardioversion for VT with a pulse. First shock, in joules?"
+    drug: synchronised-cardioversion
+    dose: vt
+    tolerancePct: 0
+    correct:
+      consequence: "One shock: sinus rhythm at 84."
+      teaching: "VT with a pulse: synchronised 120–150 J first (ERC 2025), increasing if needed."
+      effects: { minutes: 8, setVitals: { hr: 84, sbp: 124, dbp: 76 }, rhythm: ecg/arr-sinus.svg }
+    under:
+      consequence: "No change. The second shock at 150 J works."
+      teaching: "Too low a first shock means another shock and more sedation."
+      effects: { minutes: 12, setVitals: { hr: 84, sbp: 120, dbp: 74 }, rhythm: ecg/arr-sinus.svg }
+    over:
+      grade: acceptable
+      consequence: "It works."
+      teaching: "120–150 J is the European starting energy; higher energies are for when the first shock fails."
+      effects: { minutes: 8, setVitals: { hr: 84, sbp: 124, dbp: 76 }, rhythm: ecg/arr-sinus.svg }
+    next: after
+
+  after:
+    type: multiselect
+    check: { source: esc-va-2022, verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Resus bay"
+    prompt: "He's in sinus rhythm. Next steps? Choose up to 3."
+    max: 3
+    options:
+      - id: lytes
+        label: "Check potassium and magnesium; correct if low"
+        grade: best
+        consequence: "Potassium 3.4: replaced."
+        teaching: "Low potassium and magnesium lower the threshold for VT."
+        missedEffects: { patient: -5 }
+      - id: ischaemia
+        label: "12-lead in sinus rhythm and troponin: look for acute ischaemia"
+        grade: best
+        consequence: "Old anterior Q waves, no new ischaemia."
+        teaching: "Scar VT is commonest, but rule out an acute coronary trigger."
+        missedEffects: { patient: -5 }
+      - id: admit
+        label: "Admit to a monitored bed; cardiology review for echo, ischaemia testing and an ICD"
+        grade: best
+        consequence: "Admitted to CCU."
+        teaching: "VT with a scarred heart carries a high risk of recurrence and sudden death; ICD and ablation are considered."
+        missedEffects: { patient: -10 }
+      - id: discharge
+        label: "Discharge home now that he's in sinus rhythm"
+        grade: harmful
+        consequence: "Your senior cancels it."
+        teaching: "VT in structural heart disease needs admission and specialist assessment."
+      - id: flecainide
+        label: "Start flecainide to prevent recurrence"
+        grade: harmful
+        consequence: "Your senior cancels it."
+        teaching: "Class IC drugs increase mortality after MI."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "A week later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "They've fitted a defibrillator under my skin. I feel safer." }
+    summary: "You called it VT, cardioverted him safely, then looked for triggers and got him assessed for an ICD."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · Cardiology ward"
+    summary: "He survived, but treating VT as SVT or delaying the shock when he became unstable put him in danger. The debrief shows where."
+
+debrief:
+  diagnosis: "Haemodynamically tolerated monomorphic ventricular tachycardia from old anterior infarct scar."
+  keyPoints:
+    - "Regular broad-complex tachycardia, especially after an MI: VT until proven otherwise."
+    - "VT clues: AV dissociation, concordance, initial R in aVR, very wide QRS."
+    - "Unstable: synchronised shock now (120–150 J first, up to three times, then amiodarone 300 mg)."
+    - "Stable: European guidance favours synchronised cardioversion under sedation; procainamide, or amiodarone, as alternatives."
+    - "Afterwards: potassium and magnesium, ischaemia, echo, admission and ICD assessment."
+  pitfalls:
+    - "Verapamil for presumed 'SVT with aberrancy'."
+    - "Giving drugs to an unstable patient instead of shocking."
+    - "Discharging after conversion."
+  unlocks: [broad-complex-tachycardia, ventricular-tachycardia, amiodarone, synchronised-cardioversion]
+  refs: [esc-va-2022, erc-als-2025, rcuk-2025, brugada-1991, vereckei-2008]
+  check: { source: [esc-va-2022, erc-als-2025], verified: false }

@@ -1,0 +1,8 @@
+# arr-05: during adenosine. AV block increases for a few seconds, uncovering the flutter waves.
+title: "Rhythm strip, lead II, during adenosine"
+layout: strip
+rhythm: { kind: flutter, conduction: 4 }
+rhythmLead: II
+leads:
+  II: { p: 0.2 }
+check: { source: esc-svt-2019, verified: false, todo: "Check the flutter waves are obvious at 4:1." }

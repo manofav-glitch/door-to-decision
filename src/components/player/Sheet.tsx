@@ -138,8 +138,17 @@ export function MultiSelect({
   );
 }
 
+// Shock energy (J) and pacing current (mA) questions use the same form with their own words.
+const doseWords = (unit: string) =>
+  /^J\b/.test(unit)
+    ? { field: 'Energy', action: 'Shock' }
+    : unit === 'mA'
+      ? { field: 'Current', action: 'Pace' }
+      : { field: 'Dose', action: 'Give' };
+
 export function DoseForm({ unit, onSubmit }: { unit: string; onSubmit: (value: number) => void }) {
   const [text, setText] = useState('');
+  const words = doseWords(unit);
   const value = Number(text.replace(/,/g, ''));
   const ok = text.trim() !== '' && Number.isFinite(value) && value >= 0;
   return (
@@ -151,7 +160,7 @@ export function DoseForm({ unit, onSubmit }: { unit: string; onSubmit: (value: n
       }}
     >
       <label className="flex items-center gap-2">
-        <span className="sr-only">Dose</span>
+        <span className="sr-only">{words.field}</span>
         <input
           className="panel min-h-11 w-full min-w-0 px-3 text-lg tabular-nums"
           inputMode="decimal"
@@ -163,7 +172,7 @@ export function DoseForm({ unit, onSubmit }: { unit: string; onSubmit: (value: n
         <span className="shrink-0 font-semibold">{unit}</span>
       </label>
       <button className="btn btn-primary w-full" disabled={!ok}>
-        Give
+        {words.action}
       </button>
     </form>
   );

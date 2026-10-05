@@ -1,0 +1,20 @@
+id: has-bled
+title: "HAS-BLED score (bleeding risk on anticoagulation)"
+summary: "Flags bleeding risk factors to fix. 3 or more is high risk: review more often and correct what you can. It is never a reason on its own to withhold anticoagulation."
+score:
+  items:
+    - { type: yesno, id: htn, label: "Uncontrolled hypertension (systolic over 160)", points: 1 }
+    - { type: yesno, id: renal, label: "Abnormal renal function (dialysis, transplant, creatinine ≥ 200 µmol/L)", points: 1 }
+    - { type: yesno, id: liver, label: "Abnormal liver function (cirrhosis, or bilirubin > 2× and enzymes > 3× normal)", points: 1 }
+    - { type: yesno, id: stroke, label: "Previous stroke", points: 1 }
+    - { type: yesno, id: bleeding, label: "Previous major bleeding or bleeding tendency", points: 1 }
+    - { type: yesno, id: labile, label: "Labile INR (on warfarin)", points: 1 }
+    - { type: yesno, id: elderly, label: "Age over 65", points: 1 }
+    - { type: yesno, id: drugs, label: "Antiplatelets or NSAIDs", points: 1 }
+    - { type: yesno, id: alcohol, label: "Alcohol, 8 or more drinks a week", points: 1 }
+  bands:
+    - { from: 0, label: "Lower bleeding risk", risk: "0–2" }
+    - { from: 3, label: "High bleeding risk: fix modifiable factors, review often", risk: "3 or more" }
+  check: { source: [pisters-2010, esc-af-2024], verified: false, todo: "Confirm item wording and thresholds." }
+refs: [pisters-2010, esc-af-2024]
+check: { source: [pisters-2010, esc-af-2024], verified: false }

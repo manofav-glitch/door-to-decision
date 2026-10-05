@@ -1,0 +1,19 @@
+id: warfarin
+title: "Warfarin (vitamin K antagonist)"
+summary: "The anticoagulant you must use for AF with moderate-to-severe rheumatic mitral stenosis or a mechanical heart valve. Target INR 2.0–3.0 for AF."
+doses:
+  - id: af-target
+    label: "AF anticoagulation"
+    route: Oral, once daily, dose adjusted to the INR
+    text: "Target INR 2.0–3.0 (mechanical mitral valve: 2.5–3.5)"
+    check: { source: [esc-af-2024, esc-valve-2021], verified: false }
+sections:
+  - heading: Why not a DOAC in rheumatic mitral stenosis
+    body: "In a large trial of rheumatic heart disease with AF, rivaroxaban led to more strokes and more deaths than a vitamin K antagonist."
+  - heading: Making it work
+    body: "Consistent once-daily timing; steady (not zero) dietary vitamin K; regular INR checks; an anticoagulation clinic if time in range is poor."
+  - heading: Bridging
+    body: "Start with heparin and continue it until the INR is in range."
+india: "Warfarin and acenocoumarol are both widely used and inexpensive; INR monitoring access is the limiting factor."
+refs: [esc-af-2024, esc-valve-2021, invictus-2022]
+check: { source: [esc-af-2024, invictus-2022], verified: false }

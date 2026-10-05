@@ -1,0 +1,17 @@
+id: verapamil
+title: "Verapamil (IV)"
+summary: "Calcium-channel blocker that slows the AV node. An option for narrow-complex SVT when adenosine fails or can't be used, if the heart is structurally normal."
+doses:
+  - id: svt-iv
+    label: "Narrow-complex SVT"
+    route: Slow IV injection over 2 minutes
+    text: "0.075–0.15 mg/kg (typically 5–10 mg)"
+    check: { source: esc-svt-2019, verified: false, todo: "Confirm the dose." }
+sections:
+  - heading: Never in
+    body: "Broad-complex tachycardia that might be VT; pre-excited AF; heart failure with reduced ejection fraction; hypotension; infants. Not together with an IV beta-blocker."
+  - heading: Why it's dangerous in the wrong rhythm
+    body: "In VT it can drop the blood pressure abruptly; in pre-excited AF, blocking the AV node pushes more impulses down the accessory pathway and can trigger VF."
+india: "Available; confirm IV stock locally."
+refs: [esc-svt-2019]
+check: { source: esc-svt-2019, verified: false }

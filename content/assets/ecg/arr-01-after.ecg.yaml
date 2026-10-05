@@ -1,0 +1,6 @@
+# arr-01: after conversion. Normal sinus rhythm, normal PR, no delta wave, no pseudo-r′.
+title: "12-lead ECG after conversion"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 88 }
+rhythmLead: II
+check: { source: esc-svt-2019, verified: false, todo: "Check it shows normal PR and no pre-excitation." }

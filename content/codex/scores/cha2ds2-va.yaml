@@ -1,0 +1,30 @@
+id: cha2ds2-va
+title: "CHA₂DS₂-VA score (stroke risk in AF)"
+summary: "European 2024 stroke-risk score for AF. Sex is no longer counted. 2 or more: anticoagulate. 1: consider it. 0: no anticoagulation."
+sections:
+  - heading: Not for
+    body: "Moderate-to-severe rheumatic mitral stenosis or a mechanical valve: these always need warfarin, whatever the score."
+  - heading: Doesn't follow the rhythm
+    body: "Paroxysmal, persistent, permanent, or back in sinus after cardioversion or ablation: the score decides, not the rhythm."
+score:
+  items:
+    - { type: yesno, id: chf, label: "Heart failure or LV dysfunction (any ejection fraction)", points: 1 }
+    - { type: yesno, id: htn, label: "Hypertension (treated or not)", points: 1 }
+    - type: number
+      id: age
+      label: Age
+      unit: years
+      bins:
+        - { below: 65, points: 0, label: "Under 65" }
+        - { below: 75, points: 1, label: "65–74" }
+        - { points: 2, label: "75 or over" }
+    - { type: yesno, id: diabetes, label: "Diabetes", points: 1 }
+    - { type: yesno, id: stroke, label: "Previous stroke, TIA or thromboembolism", points: 2 }
+    - { type: yesno, id: vascular, label: "Vascular disease (previous MI, peripheral arterial disease, aortic plaque)", points: 1 }
+  bands:
+    - { from: 0, label: "No anticoagulation", risk: "Score 0" }
+    - { from: 1, label: "Consider anticoagulation", risk: "Score 1" }
+    - { from: 2, label: "Anticoagulate", risk: "Score 2 or more" }
+  check: { source: esc-af-2024, verified: false, todo: "Confirm items, points and thresholds." }
+refs: [esc-af-2024]
+check: { source: esc-af-2024, verified: false }

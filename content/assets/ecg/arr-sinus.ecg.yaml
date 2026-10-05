@@ -1,0 +1,6 @@
+# Shared monitor rhythm for the arrhythmia cases: plain sinus rhythm after a successful treatment.
+title: "Rhythm strip, lead II: sinus rhythm"
+layout: strip
+rhythm: { kind: sinus, rate: 84 }
+rhythmLead: II
+check: { source: esc-svt-2019, verified: false, todo: "Check it reads as normal sinus rhythm." }

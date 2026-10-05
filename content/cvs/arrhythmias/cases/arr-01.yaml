@@ -1,0 +1,263 @@
+# arr-01 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: typical AVNRT in a young woman with a structurally normal heart. Modified Valsalva
+# fails this time; adenosine 6 mg flickers, 12 mg converts. No pre-excitation afterwards → ablation referral.
+# Sources: owner's SVT notes (notes/arrhythmias), ESC 2019 SVT, REVERT 2015, RCUK 2025 (adenosine 6/12/18).
+
+id: cvs-arr-01
+title: "26F, heart racing, switched on like a light"
+difficulty: 1
+minutes: 8
+patient: { age: 26, sex: F, weightKg: 55 }
+initial:
+  clock: "21:40"
+  rhythm: ecg/arr-01-svt.svg
+  vitals: { hr: 186, sbp: 112, dbp: 70, rr: 20, spo2: 99, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-svt-2019
+  verified: false
+  todo: "Teaching composite; check the story and vitals fit stable AVNRT."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "It switched on all at once while I was studying, like a light switch. My heart is hammering in my neck." }
+          - { who: nurse, text: "Pulse 186 and regular. BP 112 over 70, sats 99%. She's had two shorter episodes this year that stopped on their own." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-svt-2019, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Monitor, large cannula in the antecubital fossa, and a 12-lead ECG while she's still in the tachycardia"
+        grade: best
+        consequence: "The 12-lead is recorded 4 minutes after arrival, still at 186."
+        teaching: "The ECG during the tachycardia carries almost all the diagnostic information. Capture it before anything stops the rhythm."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Synchronised cardioversion straight away"
+        grade: suboptimal
+        consequence: "Your senior stops you: she's talking, warm and her BP is normal."
+        teaching: "Shock is for life-threatening features (shock, syncope, ischaemia, severe heart failure). A stable patient starts with vagal manoeuvres."
+        effects: { minutes: 6, milestone: ecg }
+        next: ecg-1
+      - label: "Probably anxiety: reassure her and send her back to the waiting area"
+        grade: harmful
+        consequence: "Twenty minutes later she's pale and nauseated; the nurse brings her straight back."
+        teaching: "A regular pulse of 186 that started abruptly is a tachyarrhythmia until proven otherwise."
+        effects: { minutes: 25, milestone: ecg, patient: -20, sbp: -12 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-svt-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-01-svt.svg
+    alt: "12-lead ECG. Regular narrow-complex tachycardia at about 186 per minute. No P waves visible; a small extra wave at the end of the QRS in V1 and the inferior leads."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Regular narrow-complex tachycardia with no visible P waves: probably AVNRT"
+        grade: best
+        consequence: "You note the small pseudo-r′ at the end of the QRS in V1."
+        teaching: "Regular, narrow, abrupt onset, P hidden at the end of the QRS: typical AVNRT."
+        effects: { minutes: 1 }
+        next: vagal
+      - label: "Sinus tachycardia"
+        grade: suboptimal
+        consequence: "Your senior points out there are no P waves before the QRS and the rate never varies."
+        teaching: "Sinus tachycardia speeds up and slows down gradually and has a P wave before every QRS."
+        effects: { minutes: 2 }
+        next: vagal
+      - label: "Atrial fibrillation with a fast rate"
+        grade: suboptimal
+        consequence: "Your senior asks you to measure the RR intervals: they're identical."
+        teaching: "AF is irregularly irregular. A metronomic rhythm is not AF."
+        effects: { minutes: 2 }
+        next: vagal
+
+  vagal:
+    type: choice
+    check: { source: [revert-2015, esc-svt-2019], verified: false }
+    prompt: "She's stable. First treatment?"
+    options:
+      - label: "Modified Valsalva: strain into a syringe for 15 s half-sitting, then lie flat with legs raised"
+        grade: best
+        consequence: "She strains well and you raise her legs. The rate wavers for a second, then carries on at 186."
+        teaching: "The modified Valsalva converts about 4 in 10, more than twice the standard strain. Worth doing first even when it fails."
+        effects: { minutes: 3 }
+        next: adenosine
+      - label: "Standard Valsalva, sitting up"
+        grade: acceptable
+        consequence: "Nothing changes."
+        teaching: "Adding the immediate lie-flat and leg raise (REVERT) more than doubles the success rate."
+        effects: { minutes: 3 }
+        next: adenosine
+      - label: "Firm pressure on both eyeballs"
+        grade: harmful
+        consequence: "She cries out in pain; the rate doesn't change."
+        teaching: "Eyeball pressure is abandoned: painful, rarely effective, and it risks retinal injury."
+        effects: { minutes: 3, patient: -10 }
+        next: adenosine
+      - label: "IV verapamil first"
+        grade: suboptimal
+        consequence: "Your senior suggests vagal manoeuvres and adenosine first."
+        teaching: "Verapamil is an option after vagal manoeuvres and adenosine fail, and only with a structurally normal heart and a narrow QRS."
+        effects: { minutes: 2 }
+        next: adenosine
+
+  adenosine:
+    type: choice
+    check: { source: [esc-svt-2019, rcuk-2025], verified: false, todo: "Owner chose European guidance: 6 → 12 → 18 mg." }
+    prompt: "Adenosine. How do you give the first dose?"
+    options:
+      - label: "6 mg as a rapid push through the antecubital cannula, then a fast 20 ml saline flush, with the rhythm printing; warn her first"
+        grade: best
+        consequence: "She flushes and grimaces. Two seconds of slowing on the strip, then back to 186."
+        teaching: "Fast push, fast flush, proximal vein, recording running. The strip during adenosine is diagnostic too."
+        effects: { minutes: 3 }
+        next: second-dose
+      - label: "6 mg slowly through the cannula in the back of her hand"
+        grade: suboptimal
+        consequence: "Nothing at all happens on the monitor."
+        teaching: "Adenosine lasts seconds in the blood. A slow push through a distal vein is the commonest cause of 'adenosine failure'."
+        effects: { minutes: 3 }
+        next: second-dose
+      - label: "12 mg straight away to save time"
+        grade: suboptimal
+        consequence: "Your senior asks you to follow the sequence: 6 mg first."
+        teaching: "European sequence: 6 mg, then 12 mg, then 18 mg. Starting at 6 mg keeps side effects down."
+        effects: { minutes: 2 }
+        next: second-dose
+
+  second-dose:
+    type: choice
+    check: { source: [esc-svt-2019, rcuk-2025], verified: false }
+    prompt: "The first dose didn't convert her. Next?"
+    options:
+      - label: "12 mg rapid push with flush, recording running"
+        grade: best
+        consequence: "A few seconds of flat line on the monitor, then sinus rhythm at 88. She bursts into tears of relief."
+        teaching: "Abrupt termination with adenosine confirms an AV-node-dependent circuit: AVNRT or AVRT."
+        effects: { minutes: 3, setVitals: { hr: 88, sbp: 118, dbp: 74 }, rhythm: ecg/arr-sinus.svg }
+        next: converted
+      - label: "18 mg now"
+        grade: suboptimal
+        consequence: "Your senior asks for 12 mg first; it works."
+        teaching: "Escalate in steps: 6, 12, then 18 mg."
+        effects: { minutes: 4, setVitals: { hr: 88, sbp: 118, dbp: 74 }, rhythm: ecg/arr-sinus.svg }
+        next: converted
+      - label: "Synchronised cardioversion now"
+        grade: suboptimal
+        consequence: "Your senior points out she's stable and adenosine hasn't been given properly yet. 12 mg works."
+        teaching: "In a stable patient, finish the adenosine sequence before sedation and a shock."
+        effects: { minutes: 6, setVitals: { hr: 88, sbp: 118, dbp: 74 }, rhythm: ecg/arr-sinus.svg }
+        next: converted
+
+  converted:
+    type: story
+    panels:
+      - scene: monitor
+        caption: "{clock} · Majors"
+      - scene: resus-bay
+        actors: [patient-supine:relieved, nurse]
+        bubbles:
+          - { who: patient, text: "That was horrible for a second. It's stopped!" }
+          - { who: nurse, text: "Sinus rhythm, 88. Repeat 12-lead coming." }
+    next: post-ecg
+
+  post-ecg:
+    type: ecg
+    check: { source: esc-svt-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:relieved, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-01-after.svg
+    alt: "12-lead ECG. Sinus rhythm at 88 per minute. Normal PR interval, narrow QRS, no delta wave."
+    prompt: "Her ECG after conversion. What are you checking for?"
+    options:
+      - label: "Pre-excitation: short PR and a delta wave. There's none here"
+        grade: best
+        consequence: "Normal PR, no delta wave. You file both ECGs together."
+        teaching: "A WPW pattern changes the risk and the drugs you can use. Always check the sinus-rhythm ECG."
+        effects: { minutes: 1 }
+        next: disposition
+      - label: "Nothing more to look for now that it's over"
+        grade: suboptimal
+        consequence: "Your senior reads it with you: no pre-excitation, luckily."
+        teaching: "The post-conversion ECG is where WPW, long QT and Brugada show themselves."
+        effects: { minutes: 1 }
+        next: disposition
+
+  disposition:
+    type: choice
+    check: { source: esc-svt-2019, verified: false, todo: "Check discharge advice and referral wording." }
+    prompt: "She feels well an hour later. Plan?"
+    options:
+      - label: "Discharge with copies of both ECGs, teach her the modified Valsalva, and refer to cardiology for an EP study and ablation"
+        grade: best
+        consequence: "She leaves with her ECGs and a clinic appointment."
+        teaching: "Ablation cures AVNRT in over 95%; for recurrent symptomatic episodes it is the first-line long-term option."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Start a daily beta-blocker and discharge without a referral"
+        grade: acceptable
+        consequence: "She goes home on bisoprolol."
+        teaching: "Drugs reduce episodes but don't cure them. Offer referral so she can choose ablation."
+        next: *outcome
+      - label: "Admit for serial troponins and an echo"
+        grade: suboptimal
+        consequence: "She spends a night in hospital; everything is normal."
+        teaching: "Young, structurally normal heart, no chest pain: SVT doesn't need admission once converted."
+        effects: { patient: -5 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three months later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "They burned the extra pathway. No episodes since." }
+    summary: "You captured the ECG during the tachycardia, used the modified Valsalva and gave adenosine properly, checked for pre-excitation, and sent her for a cure."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Next day · Ward"
+    summary: "She converted in the end, but delays and detours made her night harder than it needed to be. The debrief shows where."
+
+debrief:
+  diagnosis: "Typical AV nodal re-entrant tachycardia (AVNRT) in a structurally normal heart; no pre-excitation."
+  keyPoints:
+    - "Record the 12-lead during the tachycardia: the diagnosis lives in that tracing."
+    - "Stable regular narrow-complex tachycardia: modified Valsalva first, then adenosine 6 → 12 → 18 mg."
+    - "Adenosine: rapid push into a large proximal vein with a fast flush, recording running."
+    - "After conversion, look for a short PR and delta wave (WPW)."
+    - "Recurrent symptomatic AVNRT: refer for ablation, which is usually curative."
+  pitfalls:
+    - "Calling an abrupt-onset regular tachycardia 'anxiety'."
+    - "A slow adenosine push through a hand vein."
+    - "Shocking a stable patient before vagal manoeuvres and adenosine."
+  unlocks: [avnrt, adenosine, modified-valsalva, verapamil]
+  refs: [esc-svt-2019, revert-2015, rcuk-2025]
+  check: { source: [esc-svt-2019, revert-2015], verified: false }

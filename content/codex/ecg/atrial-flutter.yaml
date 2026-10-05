@@ -1,0 +1,14 @@
+id: atrial-flutter
+title: "Atrial flutter"
+summary: "A single re-entry circuit around the right atrium at about 300/min, usually conducted 2:1, so the ventricles beat at a suspiciously steady 150."
+sections:
+  - heading: What you see
+    body: "Sawtooth flutter waves, negative in II, III and aVF; often discrete positive waves in V1. At 2:1 every other flutter wave hides in the QRS or T wave."
+  - heading: Adenosine
+    body: "Slows the ventricular rate for a few seconds and uncovers the flutter waves. It does not stop flutter."
+  - heading: Treat like AF
+    body: "Same rules for anticoagulation and for cardioversion timing. Flutter converts with lower energy (70–120 J synchronised) and is usually cured by ablation of the cavotricuspid isthmus."
+  - heading: Flecainide trap
+    body: "Without an AV-nodal blocker, flecainide can slow flutter enough for 1:1 conduction at about 200/min."
+refs: [esc-svt-2019, erc-als-2025]
+check: { source: [esc-svt-2019, erc-als-2025], verified: false }

@@ -1,0 +1,21 @@
+# arr-06: monomorphic VT after an old anterior MI. Regular broad complexes (~170 ms) at ~172/min,
+# positive concordance across V1–V6, initial R in aVR, and P waves marching through (AV dissociation).
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: vt, rate: 172, atrialRate: 76 }
+qrs: 170
+rhythmLead: II
+leads:
+  I: { q: 0, r: 0.2, s: 0.7, t: 0.3 }
+  II: { q: 0, r: 1.1, s: 0.2, t: -0.4 }
+  III: { q: 0, r: 1.2, s: 0.1, t: -0.4 }
+  aVR: { q: 0, r: 0.8, s: 0.2, t: -0.2 }
+  aVL: { q: 0, r: 0.15, s: 0.8, t: 0.3 }
+  aVF: { q: 0, r: 1.1, s: 0.1, t: -0.4 }
+  V1: { q: 0, r: 1.2, s: 0.1, t: -0.4 }
+  V2: { q: 0, r: 1.5, s: 0.1, t: -0.4 }
+  V3: { q: 0, r: 1.6, s: 0.1, t: -0.4 }
+  V4: { q: 0, r: 1.5, s: 0.1, t: -0.4 }
+  V5: { q: 0, r: 1.3, s: 0.1, t: -0.35 }
+  V6: { q: 0, r: 1.1, s: 0.1, t: -0.3 }
+check: { source: esc-va-2022, verified: false, todo: "Check it reads as VT: broad, regular, concordant, AV dissociation." }

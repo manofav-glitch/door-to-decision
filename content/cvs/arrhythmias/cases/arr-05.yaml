@@ -1,0 +1,269 @@
+# arr-05 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: typical atrial flutter with 2:1 block (ventricular rate exactly 150), labelled "SVT" at
+# triage. Onset two days ago, so outside the 24-hour window. Adenosine unmasks flutter waves but doesn't
+# end it. Rate control, anticoagulation by AF rules (CHA₂DS₂-VA 1 → consider; needed anyway around
+# cardioversion), delayed or TOE-guided cardioversion at 70–120 J, flutter ablation referral.
+# Sources: owner's SVT and AF notes, ESC 2019 SVT, ESC 2024 AF, ERC 2025.
+
+id: cvs-arr-05
+title: "59M, a steady 150 that won't settle"
+difficulty: 2
+minutes: 12
+patient: { age: 59, sex: M, weightKg: 82 }
+initial:
+  clock: "11:30"
+  rhythm: ecg/arr-05-flutter.svg
+  vitals: { hr: 150, sbp: 128, dbp: 80, rr: 18, spo2: 96, gcs: 15, temp: 36.7 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-svt-2019, esc-af-2024]
+  verified: false
+  todo: "Teaching composite; check the timeline and anticoagulation reasoning."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "My heart's been going fast since Monday. Two days now. A bit short of breath on the stairs." }
+          - { who: nurse, text: "Regular at exactly 150. BP 128 over 80. Triage has written 'SVT'. Hypertensive, on telmisartan." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-svt-2019, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG and monitor"
+        grade: best
+        consequence: "ECG at 4 minutes."
+        teaching: "A label from triage is not a diagnosis. Read the ECG yourself."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Adenosine 6 mg for the SVT, then an ECG"
+        grade: suboptimal
+        consequence: "Your senior asks for the 12-lead first."
+        teaching: "Record the 12-lead before you give anything that changes the rhythm."
+        effects: { minutes: 8, milestone: ecg }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-svt-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-05-flutter.svg
+    alt: "12-lead ECG. Regular narrow-complex tachycardia at 150 per minute. Sawtooth waves at about 300 per minute in II, III and aVF; discrete atrial waves in V1."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Atrial flutter with 2:1 block: sawtooth waves in II, III and aVF"
+        grade: best
+        consequence: "You count two flutter waves for every QRS."
+        teaching: "A regular rate of exactly 150 should make you hunt for flutter waves."
+        effects: { minutes: 1 }
+        next: adenosine
+      - label: "AVNRT"
+        grade: suboptimal
+        consequence: "Your senior points to the sawtooth baseline in the inferior leads."
+        teaching: "AVNRT has no atrial waves between the QRS complexes."
+        effects: { minutes: 2 }
+        next: adenosine
+      - label: "Sinus tachycardia"
+        grade: suboptimal
+        consequence: "Your senior asks why the rate never changes, even when he talks."
+        teaching: "Sinus tachycardia varies; a fixed 150 rarely is sinus."
+        effects: { minutes: 2 }
+        next: adenosine
+
+  adenosine:
+    type: choice
+    check: { source: esc-svt-2019, verified: false }
+    prompt: "A colleague still thinks it's SVT and suggests adenosine. Your view?"
+    options:
+      - label: "Give it as a diagnostic test with the rhythm printing: expect it to uncover the flutter waves, not stop the rhythm"
+        grade: best
+        consequence: "For a few seconds the QRS complexes space out and the sawtooth waves are obvious."
+        teaching: "Adenosine blocks the AV node briefly; flutter carries on underneath and becomes visible."
+        effects: { minutes: 3, rhythm: ecg/arr-05-unmasked.svg }
+        next: unmasked
+      - label: "Not needed: the ECG already shows flutter"
+        grade: acceptable
+        consequence: "Your colleague agrees once you show him the inferior leads."
+        teaching: "Fine if the waves are clear; adenosine helps when you're unsure."
+        effects: { minutes: 1 }
+        next: plan
+      - label: "Repeat adenosine until it converts"
+        grade: suboptimal
+        consequence: "Three doses later he's still in flutter and feels awful."
+        teaching: "Adenosine doesn't end flutter: the circuit is in the atrium, not the AV node."
+        effects: { minutes: 10, patient: -5 }
+        next: unmasked
+
+  unmasked:
+    type: story
+    panels:
+      - scene: monitor
+        caption: "{clock} · During adenosine"
+      - scene: resus-bay
+        actors: [doctor, nurse]
+        bubbles:
+          - { who: nurse, text: "There they are: flutter waves at 300. Now he's back to 150." }
+    next: plan
+
+  plan:
+    type: choice
+    onEnter: { rhythm: ecg/arr-05-flutter.svg } # the adenosine effect has worn off
+    check: { source: [esc-af-2024, esc-svt-2019], verified: false, todo: "Check grades: onset 2 days ago, so outside the 24-hour window." }
+    prompt: "Flutter for two days, stable. Plan?"
+    options:
+      - label: "Rate control and anticoagulation now; cardioversion after 3 weeks of anticoagulation or after a TOE; refer for flutter ablation"
+        grade: best
+        consequence: "You start the rate control and anticoagulation and book a TOE."
+        teaching: "Flutter follows AF rules: beyond 24 hours, anticoagulate for 3 weeks or exclude clot with TOE before cardioversion."
+        effects: { minutes: 10 }
+        next: rate
+      - label: "Cardiovert today without anticoagulation: flutter is less risky than AF"
+        grade: harmful
+        consequence: "Your senior stops you: two days of flutter carries a real clot risk."
+        teaching: "The stroke risk of flutter is treated as for AF."
+        effects: { minutes: 5, patient: -15 }
+        next: rate
+      - label: "Oral flecainide to convert him"
+        grade: harmful
+        consequence: "Your senior stops it: without an AV-nodal blocker flecainide can cause 1:1 flutter at 200 or more."
+        teaching: "Class IC drugs slow the flutter circuit enough for the AV node to conduct every wave."
+        effects: { minutes: 5, patient: -15 }
+        next: rate
+
+  rate:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "Rate control. No heart failure, BP 128/80."
+    options:
+      - label: "IV metoprolol 2.5–5 mg slowly, repeated to effect, then oral"
+        grade: best
+        consequence: "The block increases to 3:1 and 4:1; the rate settles around 90."
+        teaching: "Flutter can be harder to rate-control than AF; beta-blockers or diltiazem are first choice when LVEF is preserved."
+        effects: { minutes: 20, setVitals: { hr: 90 } }
+        next: cha2ds2
+      - label: "IV diltiazem"
+        grade: acceptable
+        consequence: "The rate settles around 95."
+        teaching: "A good alternative when there's no heart failure."
+        effects: { minutes: 20, setVitals: { hr: 95 } }
+        next: cha2ds2
+
+  cha2ds2:
+    type: calculator
+    check: { source: esc-af-2024, verified: false, todo: "Confirm answers: hypertension only, age 59. Total 1." }
+    prompt: "Work out his CHA₂DS₂-VA score."
+    score: cha2ds2-va
+    answers:
+      chf: false
+      htn: true
+      age: 59
+      diabetes: false
+      stroke: false
+      vascular: false
+    correct:
+      consequence: "CHA₂DS₂-VA 1: long-term anticoagulation should be considered."
+      teaching: "Hypertension scores 1; under 65 scores 0. He needs anticoagulation around the cardioversion regardless."
+    close:
+      consequence: "Right group, but some items were scored differently."
+      teaching: "Compare your breakdown with the history."
+    wrong:
+      consequence: "Your score puts him in the wrong group."
+      teaching: "Only his hypertension scores; he is 59."
+    next: shock
+
+  shock:
+    type: dose
+    check: { source: erc-als-2025, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, doctor]
+        caption: "Three weeks later · Day-case cardioversion"
+        bubbles:
+          - { who: doctor, text: "Three weeks of anticoagulation, INR fine, still in flutter. Sedation's in." }
+    prompt: "Synchronised cardioversion for atrial flutter. First shock, in joules?"
+    drug: synchronised-cardioversion
+    dose: narrow
+    tolerancePct: 0
+    correct:
+      consequence: "One shock: sinus rhythm."
+      teaching: "Flutter converts with lower energy: 70–120 J synchronised, then step up if needed."
+      effects: { minutes: 10, setVitals: { hr: 70 }, rhythm: ecg/arr-sinus.svg }
+    under:
+      consequence: "No change. A second shock at 100 J works."
+      teaching: "Start at 70–120 J; too low a first shock means a second shock and more sedation."
+      effects: { minutes: 15, setVitals: { hr: 70 }, rhythm: ecg/arr-sinus.svg }
+    over:
+      grade: acceptable
+      consequence: "It works, with more energy than flutter usually needs."
+      teaching: "Flutter usually converts at 70–120 J; higher energies are for failed first shocks."
+      effects: { minutes: 10, setVitals: { hr: 70 }, rhythm: ecg/arr-sinus.svg }
+    next: long-term
+
+  long-term:
+    type: choice
+    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    prompt: "He's in sinus rhythm. Long-term plan?"
+    options:
+      - label: "Refer for cavotricuspid isthmus ablation; continue anticoagulation at least 4 weeks, then decide by the score with him"
+        grade: best
+        consequence: "Ablation booked; he chooses to continue his DOAC for now."
+        teaching: "Typical flutter is cured by ablation in about 95%. Anticoagulation after cardioversion is for at least 4 weeks, then by score."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Stop the anticoagulant today now that he's in sinus rhythm"
+        grade: harmful
+        consequence: "Your senior corrects the plan."
+        teaching: "Atrial stunning makes the 4 weeks after cardioversion the riskiest time."
+        effects: { patient: -15 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Two months later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "Since the ablation, my pulse has been normal." }
+    summary: "You saw past the triage label, used adenosine as a diagnostic test, respected the cardioversion window and anticoagulated by AF rules."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Two months later · Cardiology clinic"
+    summary: "He ended in sinus rhythm, but a premature cardioversion, flecainide alone or stopping anticoagulation early put him at avoidable risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Typical atrial flutter with 2:1 AV block (ventricular rate 150), present for two days; delayed cardioversion after anticoagulation; ablation referral."
+  keyPoints:
+    - "A regular rate of exactly 150: hunt for flutter waves in II, III, aVF and V1."
+    - "Adenosine uncovers flutter waves but doesn't stop flutter."
+    - "Flutter follows AF rules for anticoagulation and the 24-hour cardioversion window."
+    - "Synchronised cardioversion for flutter: 70–120 J first (ERC 2025)."
+    - "Never give flecainide for flutter without an AV-nodal blocker: risk of 1:1 conduction."
+  pitfalls:
+    - "Accepting a triage label of 'SVT' without reading the ECG."
+    - "Repeating adenosine expecting it to convert flutter."
+    - "Cardioverting after two days of flutter without anticoagulation or TOE."
+  unlocks: [atrial-flutter, synchronised-cardioversion, flecainide, cha2ds2-va]
+  refs: [esc-svt-2019, esc-af-2024, erc-als-2025]
+  check: { source: [esc-svt-2019, esc-af-2024], verified: false }

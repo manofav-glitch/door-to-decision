@@ -1,0 +1,19 @@
+id: flecainide
+title: Flecainide
+summary: "Class IC antiarrhythmic for converting recent-onset AF in a structurally normal heart. Dangerous in the wrong patient."
+doses:
+  - id: af-oral
+    label: "Pill in the pocket (recent-onset AF, normal heart)"
+    route: Oral, single dose, after a first supervised dose in hospital
+    text: "200–300 mg, with an AV-nodal blocker"
+    check: { source: esc-af-2024, verified: false }
+sections:
+  - heading: Never in
+    body: "Coronary disease, previous MI, reduced ejection fraction or significant LV hypertrophy; Brugada pattern; sinus node or conduction disease."
+  - heading: Give with an AV-nodal blocker
+    body: "Flecainide slows flutter to around 200/min, which the AV node can then conduct 1:1: a broad-complex tachycardia at 200. A beta-blocker or calcium-channel blocker prevents this."
+  - heading: In a young person with 'lone' AF
+    body: "Record an ECG with high chest leads first: flecainide can unmask Brugada."
+india: "Available in some centres; confirm supply."
+refs: [esc-af-2024]
+check: { source: esc-af-2024, verified: false }

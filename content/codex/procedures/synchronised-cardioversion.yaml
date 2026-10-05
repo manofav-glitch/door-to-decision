@@ -1,0 +1,32 @@
+id: synchronised-cardioversion
+title: "Synchronised cardioversion"
+summary: "A shock timed to the R wave, for tachycardias with a pulse. Unstable patients get it straight away; stable patients get it under sedation when drugs fail or are unsuitable."
+doses:
+  - id: narrow
+    label: "Atrial flutter or regular narrow-complex tachycardia, first shock"
+    route: Synchronised, biphasic
+    text: "70–120 J, then increase stepwise"
+    rule: { unit: J, fixed: { min: 70, max: 120 } }
+    check: { source: erc-als-2025, verified: false }
+  - id: vt
+    label: "Broad-complex tachycardia (VT) with a pulse, first shock"
+    route: Synchronised, biphasic
+    text: "120–150 J, then increase stepwise"
+    rule: { unit: J, fixed: { min: 120, max: 150 } }
+    check: { source: erc-als-2025, verified: false }
+  - id: af
+    label: "Atrial fibrillation, first shock"
+    route: Synchronised, biphasic
+    text: "Maximum defibrillator output"
+    check: { source: erc-als-2025, verified: false, todo: "ERC 2025 changed AF to maximum output; confirm against your defibrillators." }
+sections:
+  - heading: Who needs it now
+    body: "Life-threatening features: shock, syncope with severe or ongoing hypotension, myocardial ischaemia, severe heart failure with pulmonary oedema, or immediately after return of circulation."
+  - heading: Sync mode
+    body: "Press sync and check the markers sit on the R waves. Many defibrillators drop out of sync after each shock: press it again. Never sync for VF or pulseless VT."
+  - heading: If it fails
+    body: "Up to 3 attempts, then amiodarone 300 mg IV over 10–20 minutes (or procainamide 10–15 mg/kg over 20 minutes) and shock again."
+  - heading: Sedation
+    body: "Conscious patients need sedation or anaesthesia; expect the blood pressure to fall with it."
+refs: [erc-als-2025, rcuk-2025]
+check: { source: [erc-als-2025, rcuk-2025], verified: false }

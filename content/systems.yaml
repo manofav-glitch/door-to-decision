@@ -1,5 +1,5 @@
 # Organ systems shown on the Home screen. status: active | soon
-- { id: cvs, name: Cardiovascular, status: active, blurb: "Chest pain: ACS, STEMI and its mimics" }
+- { id: cvs, name: Cardiovascular, status: active, blurb: "Chest pain and arrhythmias: ACS, STEMI and its mimics, too fast and too slow" }
 - { id: resp, name: Respiratory, status: soon }
 - { id: neuro, name: Neurology, status: soon }
 - { id: trauma, name: Trauma, status: soon }

@@ -1,0 +1,263 @@
+# arr-03 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: first-detected AF with a fast ventricular rate, onset clearly 6 hours ago, no reversible
+# driver, haemodynamically stable. Rate control, then electrical cardioversion within the 24-hour window
+# (ESC 2024), anticoagulation started and continued 4 weeks, then long-term by CHA₂DS₂-VA = 3.
+# Sources: owner's AF notes, ESC 2024 AF, RACE II, ERC 2025 (AF shock at maximum output).
+
+id: cvs-arr-03
+title: "68M, palpitations since breakfast"
+difficulty: 2
+minutes: 12
+patient: { age: 68, sex: M, weightKg: 78 }
+initial:
+  clock: "14:05"
+  rhythm: ecg/arr-03-af.svg
+  vitals: { hr: 142, sbp: 146, dbp: 88, rr: 18, spo2: 97, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-af-2024
+  verified: false
+  todo: "Teaching composite; check the timeline supports cardioversion within 24 hours."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I was fine at breakfast. At 8 o'clock, washing the cups, my heart started fluttering and hasn't stopped." }
+          - { who: nurse, text: "Pulse about 140, irregular. BP 146 over 88, sats 97%. Hypertensive and diabetic, on amlodipine and metformin." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG and monitor; bloods including potassium, magnesium, thyroid, renal function and blood count"
+        grade: best
+        consequence: "ECG at 5 minutes; bloods sent."
+        teaching: "Every new AF gets an ECG and a search for drivers: electrolytes, thyroid, anaemia, renal function for drug dosing."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "IV amiodarone to slow the rate while you wait for the ECG"
+        grade: harmful
+        consequence: "Your senior stops it: no ECG yet, and amiodarone would cardiovert him without a plan."
+        teaching: "See the rhythm before you treat it. Amiodarone is a chemical cardioverter, not just a rate-control drug."
+        effects: { minutes: 8, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-af-2024, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-03-af.svg
+    alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 140 per minute, no P waves, slight ST depression in V5–V6."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Atrial fibrillation with a fast ventricular rate; the lateral ST depression may be rate-related"
+        grade: best
+        consequence: "You plan to repeat the ECG once the rate is controlled."
+        teaching: "Irregularly irregular, no P waves: AF. Don't diagnose ischaemia from ST depression during fast AF."
+        effects: { minutes: 1 }
+        next: driver
+      - label: "Atrial flutter"
+        grade: suboptimal
+        consequence: "Your senior asks you to find a regular sawtooth: there isn't one, and the rhythm is irregular."
+        teaching: "Flutter has organised sawtooth waves and usually a regular ventricular rate."
+        effects: { minutes: 2 }
+        next: driver
+      - label: "NSTEMI: lateral ST depression"
+        grade: suboptimal
+        consequence: "Your senior points out the rhythm and rate first."
+        teaching: "Read the rhythm before the ST segments; rate-related ST depression is common in fast AF."
+        effects: { minutes: 2 }
+        next: driver
+
+  driver:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Majors"
+        bubbles:
+          - { who: doctor, text: "No fever, no chest pain, chest clear, no swelling of the legs. No alcohol for years. Potassium 4.4, magnesium normal, thyroid pending." }
+          - { who: patient, text: "Just this fluttering, and I feel a bit tired." }
+    next: strategy
+
+  strategy:
+    type: choice
+    check: { source: esc-af-2024, verified: false, todo: "Check grades against ESC 2024 (cardioversion within 24 h; wait-and-see as an alternative)." }
+    prompt: "Stable, no driver found, onset clearly 6 hours ago. Strategy?"
+    options:
+      - label: "Control the rate, start anticoagulation now, and cardiovert today while he's within 24 hours"
+        grade: best
+        consequence: "He agrees to electrical cardioversion this afternoon."
+        teaching: "Clearly within 24 hours and stable: early cardioversion is reasonable, with anticoagulation started and continued for at least 4 weeks."
+        effects: { minutes: 10 }
+        next: rate
+      - label: "Control the rate, anticoagulate, and wait up to 48 hours to see if it converts on its own"
+        grade: acceptable
+        consequence: "You admit him for observation; you still plan to cardiovert if it doesn't convert."
+        teaching: "A 'wait-and-see' approach is a recognised alternative: many recent-onset AF episodes convert spontaneously."
+        effects: { minutes: 10 }
+        next: rate
+      - label: "Cardiovert now and discharge without any anticoagulation"
+        grade: harmful
+        consequence: "Your senior insists on anticoagulation before and after the shock."
+        teaching: "Atrial stunning makes the weeks after cardioversion the riskiest for stroke. Four weeks of anticoagulation after every cardioversion."
+        effects: { minutes: 10, patient: -15 }
+        next: rate
+
+  rate:
+    type: choice
+    check: { source: [esc-af-2024, race2-2010], verified: false }
+    prompt: "Rate control while you arrange the cardioversion. No signs of heart failure; BP 146/88."
+    options:
+      - label: "IV metoprolol 2.5–5 mg slowly, repeated to effect"
+        grade: best
+        consequence: "After two doses the rate is 96."
+        teaching: "Beta-blocker, diltiazem or verapamil when there's no heart failure; aim for a resting rate under 110."
+        effects: { minutes: 15, setVitals: { hr: 96 } }
+        next: anticoag
+      - label: "IV diltiazem"
+        grade: acceptable
+        consequence: "The rate settles to 100."
+        teaching: "Reasonable when LVEF is not reduced; avoid if there's heart failure or pre-excitation."
+        effects: { minutes: 15, setVitals: { hr: 100 } }
+        next: anticoag
+      - label: "IV digoxin alone"
+        grade: suboptimal
+        consequence: "An hour later the rate is still 130."
+        teaching: "Digoxin is slow and weak in an alert, mobile patient; keep it for heart failure or low BP, or as an add-on."
+        effects: { minutes: 60, setVitals: { hr: 128 }, patient: -5 }
+        next: anticoag
+
+  anticoag:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "Anticoagulation before the cardioversion?"
+    options:
+      - label: "Start a DOAC (or heparin) now, before the shock"
+        grade: best
+        consequence: "Apixaban 5 mg given."
+        teaching: "Start anticoagulation as early as possible before cardioversion and continue it for at least 4 weeks after."
+        effects: { minutes: 5 }
+        next: shock
+      - label: "No need: he's been in AF less than 24 hours"
+        grade: suboptimal
+        consequence: "Your senior starts apixaban anyway."
+        teaching: "The short duration allows cardioversion without 3 weeks of prior anticoagulation, not cardioversion without anticoagulation."
+        effects: { minutes: 5, patient: -5 }
+        next: shock
+
+  shock:
+    type: choice
+    check: { source: [erc-als-2025, esc-af-2024], verified: false, todo: "ERC 2025: AF at maximum output; confirm locally." }
+    prompt: "He's sedated for electrical cardioversion. Settings?"
+    options:
+      - label: "Synchronised, maximum output; pads anterolateral or anteroposterior"
+        grade: best
+        consequence: "One shock: sinus rhythm at 72."
+        teaching: "European guidance (2025): start AF at maximum synchronised output. Pad position makes no difference to success."
+        effects: { minutes: 15, setVitals: { hr: 72, sbp: 138, dbp: 82 }, rhythm: ecg/arr-sinus.svg }
+        next: cha2ds2
+      - label: "Synchronised, 50 J"
+        grade: suboptimal
+        consequence: "No change; a second shock at maximum works."
+        teaching: "Under-dosing the first shock is the commonest reason cardioversion fails, and costs a second sedation."
+        effects: { minutes: 20, setVitals: { hr: 72, sbp: 136, dbp: 80 }, rhythm: ecg/arr-sinus.svg }
+        next: cha2ds2
+
+  cha2ds2:
+    type: calculator
+    check: { source: esc-af-2024, verified: false, todo: "Confirm answers: hypertension yes, age 68 → 1, diabetes yes. Total 3." }
+    prompt: "He's in sinus rhythm. Work out his CHA₂DS₂-VA score for long-term stroke prevention."
+    score: cha2ds2-va
+    answers:
+      chf: false
+      htn: true
+      age: 68
+      diabetes: true
+      stroke: false
+      vascular: false
+    correct:
+      consequence: "CHA₂DS₂-VA 3: anticoagulate long term."
+      teaching: "Hypertension 1, age 65–74 1, diabetes 1. Sex is no longer scored in the 2024 European version."
+    close:
+      consequence: "Right group (anticoagulate), but some items were scored differently."
+      teaching: "Compare your breakdown with the case facts."
+    wrong:
+      consequence: "Your score puts him in the wrong group."
+      teaching: "Score every item from the history: he has hypertension and diabetes and is 68."
+    next: long-term
+
+  long-term:
+    type: choice
+    check: { source: esc-af-2024, verified: false }
+    prompt: "He's back in sinus rhythm with CHA₂DS₂-VA 3. Long-term stroke prevention?"
+    options:
+      - label: "Continue the DOAC long term, whatever the rhythm"
+        grade: best
+        consequence: "He goes home on apixaban with a cardiology review."
+        teaching: "Stroke risk comes from the atrium, not the rhythm on today's ECG."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Stop it after 4 weeks since he's in sinus rhythm"
+        grade: harmful
+        consequence: "Your senior corrects the discharge plan."
+        teaching: "Successful cardioversion doesn't remove the stroke risk; the score decides."
+        effects: { patient: -15 }
+        next: *outcome
+      - label: "Aspirin instead"
+        grade: suboptimal
+        consequence: "Your senior switches it to a DOAC."
+        teaching: "Aspirin barely prevents AF-related stroke and still causes bleeding."
+        effects: { patient: -5 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Six weeks later · AF clinic"
+        bubbles:
+          - { who: patient, text: "Still in a normal rhythm, and I take the tablet every day." }
+    summary: "You found no driver, controlled the rate, cardioverted within the window with anticoagulation, and kept him on long-term stroke prevention."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Six weeks later · AF clinic"
+    summary: "He's in sinus rhythm, but gaps in rate control or stroke prevention put him at avoidable risk. The debrief shows where."
+
+debrief:
+  diagnosis: "First-detected atrial fibrillation with a fast ventricular rate, onset clearly 6 hours before arrival, no reversible driver; cardioverted within 24 hours; CHA₂DS₂-VA 3."
+  keyPoints:
+    - "Every new AF: ECG, electrolytes, thyroid, renal function, and a search for a driver."
+    - "European 2024: cardiovert without prior anticoagulation only if onset is clearly within 24 hours; if uncertain, it's outside the window."
+    - "Rate control: aim for under 110 at rest; beta-blocker or diltiazem without heart failure."
+    - "Synchronised shock for AF at maximum output (ERC 2025)."
+    - "Anticoagulate 4 weeks after every cardioversion, then long term by CHA₂DS₂-VA, whatever the rhythm."
+  pitfalls:
+    - "Using amiodarone as 'rate control' in AF of unknown duration."
+    - "Cardioverting and discharging without anticoagulation."
+    - "Stopping anticoagulation because the ECG is now sinus."
+  unlocks: [atrial-fibrillation, af-acute-management, cha2ds2-va, has-bled, doacs, digoxin]
+  refs: [esc-af-2024, race2-2010, erc-als-2025]
+  check: { source: esc-af-2024, verified: false }

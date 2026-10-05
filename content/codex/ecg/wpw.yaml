@@ -1,0 +1,14 @@
+id: wpw
+title: "WPW and pre-excited AF"
+summary: "An accessory pathway bypasses the AV node. In sinus rhythm: short PR and delta wave. In AF: a fast, broad, irregular rhythm that can turn into VF."
+sections:
+  - heading: In sinus rhythm
+    body: "PR under 120 ms, slurred start to the QRS (delta wave), QRS often a little wide."
+  - heading: Pre-excited AF
+    body: "Fast (often over 200/min), broad and irregular, with QRS shapes changing from beat to beat."
+  - heading: Never block the AV node
+    body: "Adenosine, beta-blockers, verapamil, diltiazem, digoxin and IV amiodarone push more impulses down the pathway and can cause VF. Cardiovert (unstable, or no procainamide), or give procainamide if stable and available."
+  - heading: Then
+    body: "Refer for electrophysiology study and pathway ablation, which is usually curative."
+refs: [esc-svt-2019]
+check: { source: esc-svt-2019, verified: false }

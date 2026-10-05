@@ -1,0 +1,12 @@
+# arr-01: AVNRT. Regular narrow tachycardia ~186, no visible P waves; small pseudo-r′ in V1 and
+# pseudo-S in the inferior leads (retrograde P at the end of the QRS).
+title: "12-lead ECG during the tachycardia"
+layout: 12-lead
+rhythm: { kind: svt, rate: 186 }
+rhythmLead: II
+leads:
+  II: { s: 0.3, t: 0.25 }
+  III: { s: 0.35, t: 0.1 }
+  aVF: { s: 0.3, t: 0.2 }
+  V1: { rp: 0.18, t: 0.05 }
+check: { source: esc-svt-2019, verified: false, todo: "Check it reads as AVNRT (regular, narrow, no P waves, pseudo-r′ in V1)." }

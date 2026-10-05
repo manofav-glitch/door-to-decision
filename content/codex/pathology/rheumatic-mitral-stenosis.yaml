@@ -1,0 +1,14 @@
+id: rheumatic-mitral-stenosis
+title: "Rheumatic mitral stenosis with AF"
+summary: "The commonest cause of AF in young adults in India. Very high stroke risk, and it needs warfarin, not a DOAC."
+sections:
+  - heading: Clues
+    body: "Young, often female; breathlessness that worsens with a fast rate or pregnancy; loud S1, opening snap and a low rumbling mid-diastolic murmur at the apex; coarse AF on the ECG."
+  - heading: Rate control matters most
+    body: "The left ventricle fills only in diastole across a narrow valve; a fast rate shortens filling and floods the lungs. Beta-blockers are first choice."
+  - heading: Anticoagulation
+    body: "Warfarin with a target INR of 2–3 for everyone with AF and moderate-to-severe mitral stenosis, whatever the CHA₂DS₂-VA score. Clot often forms in the atrial body, so appendage occlusion is not an alternative."
+  - heading: Upstream
+    body: "Benzathine penicillin prophylaxis, and assessment for balloon mitral valvotomy or surgery. Plan pregnancies with the cardiology team."
+refs: [esc-valve-2021, esc-af-2024, invictus-2022, who-rhd-2024]
+check: { source: [esc-valve-2021, invictus-2022], verified: false }

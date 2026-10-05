@@ -1,0 +1,6 @@
+# Shared monitor rhythm: ventricular fibrillation.
+title: "Rhythm strip, lead II: ventricular fibrillation"
+layout: strip
+rhythm: { kind: vf }
+rhythmLead: II
+check: { source: erc-als-2025, verified: false, todo: "Check it reads as coarse VF." }

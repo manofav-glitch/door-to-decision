@@ -1,0 +1,12 @@
+id: modified-valsalva
+title: "Modified Valsalva manoeuvre"
+summary: "First treatment for stable regular narrow-complex tachycardia. The leg-raise modification converts far more patients than the standard strain."
+sections:
+  - heading: How
+    body: "Patient half-sitting at 45°. Strain into a 10 ml syringe (enough to move the plunger) for 15 seconds. Then lie them flat immediately and raise the legs to 45° for 15 seconds. Watch the monitor."
+  - heading: How well it works
+    body: "In the REVERT trial, 43% converted with the modified technique against 17% with standard Valsalva, and fewer needed adenosine."
+  - heading: Not if
+    body: "Unstable patient, AF or flutter, recent MI, severe aortic stenosis, glaucoma or retinopathy, late pregnancy."
+refs: [revert-2015, esc-svt-2019]
+check: { source: revert-2015, verified: false }

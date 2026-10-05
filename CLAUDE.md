@@ -115,6 +115,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Verification: owner instructed marking all 202 items in cp-01…11 verified (2026-09-30, over a recommendation to keep
   open TODOs unverified); old TODOs kept, listed by `npm run review`. New content is still drafted verified: false.
 - Arrhythmias module (Phase 7, from 2026-10-05): plan in docs/modules/arrhythmias-outline.md (15 cases, owner's decisions in §0;
-  owner's source notes in git-ignored notes/). App features done (rhythms, monitor rhythm, procedure cards); next: cases.
+  owner's source notes in git-ignored notes/). Features done; batch A (arr-01…06) drafted unverified; next: owner review, batch B.
 - Illustrations 2026-10-02: all 11 cases use the owner's ChatGPT pictures (cut from sheets; `npm run art` enlarges ≤2× + sharpens;
   monitor close-ups stay code). Prompts + cast-reference.png in docs/art/. Women patients: gown covers chest (prompt it).
