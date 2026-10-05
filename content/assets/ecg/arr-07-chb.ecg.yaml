@@ -1,0 +1,17 @@
+# arr-07: complete heart block with a broad ventricular escape (~32/min). P waves at 80 march through
+# independently; QRS ~160 ms with LBBB-like shape (infranodal block).
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: av-dissociation, atrialRate: 80, ventricularRate: 32 }
+qrs: 160
+rhythmLead: II
+leads:
+  I: { q: 0, r: 0.9, s: 0.05, t: -0.3 }
+  II: { q: 0, r: 0.7, s: 0.3, t: -0.2 }
+  aVL: { q: 0, r: 0.7, s: 0.05, t: -0.25 }
+  V1: { q: 0, r: 0.1, s: 1.3, t: 0.35 }
+  V2: { q: 0, r: 0.15, s: 1.6, t: 0.4 }
+  V3: { q: 0, r: 0.3, s: 1.2, t: 0.3 }
+  V5: { q: 0, r: 1.2, s: 0.1, t: -0.35 }
+  V6: { q: 0, r: 1.1, s: 0.05, t: -0.3 }
+check: { source: esc-pacing-2021, verified: false, todo: "Check it reads as complete heart block with a broad escape." }

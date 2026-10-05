@@ -1,0 +1,16 @@
+# arr-12: congenital LQT2. Sinus 70, QT ~540 ms (QTc ~ 580 by Bazett; about 520 by hand averaging),
+# low-amplitude notched (bifid) T waves.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 70 }
+qt: 520
+rhythmLead: II
+leads:
+  II: { t: 0.3, notch: 0.9 }
+  III: { t: 0.15, notch: 0.9 }
+  aVF: { t: 0.22, notch: 0.9 }
+  V2: { t: 0.35, notch: 0.9 }
+  V3: { t: 0.35, notch: 0.9 }
+  V4: { t: 0.32, notch: 0.9 }
+  V5: { t: 0.28, notch: 0.9 }
+check: { source: [esc-va-2022, schwartz-2011], verified: false, todo: "Check the notched T waves are clear in at least 3 leads and the QT looks long." }

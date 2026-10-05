@@ -1,0 +1,6 @@
+# Shared monitor rhythm: AF with a controlled ventricular rate (~76).
+title: "Rhythm strip, lead II: AF, controlled rate"
+layout: strip
+rhythm: { kind: af, rate: 76 }
+rhythmLead: II
+check: { source: esc-af-2024, verified: false, todo: "Check it reads as AF at a controlled rate." }

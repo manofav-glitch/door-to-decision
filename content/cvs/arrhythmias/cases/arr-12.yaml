@@ -1,0 +1,210 @@
+# arr-12 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: congenital long QT type 2 unmasked in the postpartum period: syncope (brief convulsive
+# jerks) when the alarm rang at dawn; sister died suddenly at 19. QTc ~ 520 by hand, notched T waves.
+# No acquired cause. Schwartz 7 (high probability). Non-selective beta-blocker (nadolol/propranolol),
+# not metoprolol; isoprenaline is wrong in congenital LQT; avoid QT drugs; family and baby screening.
+# Sources: owner's channelopathy notes, ESC 2022 VA, Schwartz 2011.
+
+id: cvs-arr-12
+title: "27F, three weeks after delivery, fainted when the alarm rang"
+difficulty: 3
+minutes: 12
+patient: { age: 27, sex: F, weightKg: 58 }
+initial:
+  clock: "06:20"
+  vitals: { hr: 70, sbp: 112, dbp: 70, rr: 16, spo2: 99, gcs: 15, temp: 36.7 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-va-2022, schwartz-2011]
+  verified: false
+  todo: "Teaching composite; check the trigger history and family history fit LQT2."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "The alarm went off for the baby's feed. She sat up and just dropped. Her arms jerked for a few seconds, then she was back." }
+          - { who: patient, text: "It happened once as a teenager too, when the doorbell rang. They said it was a fit. My sister died in her sleep at 19." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-va-2022, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "12-lead ECG and monitor; potassium, magnesium, calcium; review every drug she's taking"
+        grade: best
+        consequence: "ECG at 5 minutes. Her only medicines are iron and folic acid."
+        teaching: "Syncope triggered by a sudden noise, plus a sudden death in the family: think congenital long QT."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Neurology referral: sounds like a seizure"
+        grade: harmful
+        consequence: "Your senior asks for an ECG before anything else."
+        teaching: "Brief jerks during syncope are common. Convulsive syncope with a startle trigger is cardiac until proven otherwise."
+        effects: { minutes: 15, milestone: ecg, patient: -15 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-va-2022, schwartz-2011], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-12-lqt2.svg
+    alt: "12-lead ECG. Sinus rhythm at 70. Long QT interval; low-amplitude T waves with a notch (two humps) in II, aVF and V2–V5."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Long QT with notched T waves in several leads"
+        grade: best
+        consequence: "By hand in lead II, averaged over three beats, the QTc is about 520 ms."
+        teaching: "Low, notched (bifid) T waves suggest LQT2. The machine's QTc is unreliable with notched T waves: measure it yourself."
+        effects: { minutes: 3 }
+        next: causes
+      - label: "Normal ECG: the machine says QTc 455"
+        grade: harmful
+        consequence: "Your senior measures it by hand: about 520 ms."
+        teaching: "Automated QTc misreads notched T waves and U waves. Measure by hand with the tangent method."
+        effects: { minutes: 4, patient: -10 }
+        next: causes
+
+  causes:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: doctor, text: "Potassium 4.2, magnesium and calcium normal, thyroid normal. No QT-prolonging drugs. This looks congenital." }
+    next: schwartz
+
+  schwartz:
+    type: calculator
+    check: { source: [schwartz-2011, esc-va-2022], verified: false, todo: "Answers: QTc ≥ 480 (3.5), syncope with stress (2), notched T (1), unexplained death of sister under 30 (0.5). Total 7." }
+    prompt: "Work out her Schwartz score."
+    score: schwartz
+    answers:
+      qtc: 480-plus
+      recovery: false
+      events: syncope-stress
+      alternans: false
+      notched: true
+      bradycardia: false
+      deafness: false
+      family: scd-under-30
+      variant: false
+    correct:
+      consequence: "Schwartz 7: high probability of congenital long QT."
+      teaching: "QTc ≥ 480 (3.5), syncope with stress (2), notched T in 3 leads (1), unexplained sudden death in a sister under 30 (0.5)."
+    close:
+      consequence: "Right group (high probability), but some items were scored differently."
+      teaching: "Compare your breakdown with the history: the alarm clock counts as stress."
+    wrong:
+      consequence: "Your score puts her in the wrong group."
+      teaching: "Score the QTc, the triggered syncope, the T-wave shape and the family history."
+    next: treat
+
+  treat:
+    type: choice
+    check: { source: esc-va-2022, verified: false }
+    prompt: "Probable congenital LQT2, three weeks postpartum, breastfeeding. Treatment?"
+    options:
+      - label: "Start a non-selective beta-blocker (propranolol, or nadolol if available) and continue it through the postpartum months"
+        grade: best
+        consequence: "Propranolol started; the paediatrician confirms it's compatible with breastfeeding."
+        teaching: "Non-selective beta-blockers are the cornerstone. The first months after delivery are the highest-risk period for LQT2."
+        next: family
+      - label: "Metoprolol: it's the beta-blocker we stock"
+        grade: suboptimal
+        consequence: "Your senior asks pharmacy for propranolol instead."
+        teaching: "Cardioselective metoprolol protects less in long QT; switching patients onto it has been followed by events."
+        effects: { patient: -5 }
+        next: family
+      - label: "Isoprenaline infusion to shorten the QT"
+        grade: harmful
+        consequence: "Your senior stops it before it runs."
+        teaching: "Catecholamines can trigger torsades in congenital LQT1 and LQT2. Isoprenaline is only for acquired long QT."
+        effects: { patient: -20 }
+        next: family
+
+  family:
+    type: multiselect
+    check: { source: esc-va-2022, verified: false }
+    prompt: "Before she goes to the cardiology ward. Choose up to 4."
+    max: 4
+    options:
+      - id: drug-list
+        label: "A list of QT-prolonging drugs to avoid, and a letter for every doctor she sees"
+        grade: best
+        consequence: "Given."
+        teaching: "Many common drugs (macrolides, ondansetron, antipsychotics) can trigger torsades."
+        missedEffects: { patient: -5 }
+      - id: baby
+        label: "An ECG for her baby, and for her parents and other siblings"
+        grade: best
+        consequence: "The baby's ECG is booked with paediatric cardiology."
+        teaching: "Congenital long QT is usually autosomal dominant: half her children may carry it."
+        missedEffects: { patient: -5 }
+      - id: genetics
+        label: "Genetic testing with a focused long QT panel"
+        grade: best
+        consequence: "Sent."
+        teaching: "A pathogenic variant confirms the diagnosis and allows exact family testing."
+      - id: triggers
+        label: "Avoid sudden loud alarms (soft, gradual alarm or a vibrating watch) and plan sleep support at home"
+        grade: best
+        consequence: "Her husband will take the night feeds for now."
+        teaching: "LQT2 events are triggered by sudden noise and emotion, especially in the sleep-deprived postpartum period."
+      - id: icd
+        label: "ICD before discharge, for everyone with long QT"
+        grade: suboptimal
+        consequence: "Your senior explains that beta-blockade comes first; an ICD is for arrest or events despite treatment."
+        teaching: "Risk often falls substantially on effective beta-blockade."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Two weeks later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "No more faints. The baby's ECG is normal, and Mum is being tested next week." }
+    summary: "You recognised triggered syncope and a long QT behind a 'fit', scored it, started the right beta-blocker, and protected her family."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Cardiology ward"
+    summary: "She's on treatment, but a missed QT, the wrong drug or a gap in family screening left her and her baby at risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Congenital long QT syndrome (probable LQT2) presenting with startle-triggered convulsive syncope in the postpartum period; family history of sudden death."
+  keyPoints:
+    - "Syncope with a startle trigger (alarm, doorbell) or brief jerks: get an ECG before calling it a seizure."
+    - "Measure the QT by hand; machines misread notched T waves."
+    - "Exclude acquired causes, then use the Schwartz score."
+    - "Non-selective beta-blockers (nadolol, propranolol), continued through the postpartum months; not metoprolol; never isoprenaline."
+    - "Drug list, trigger advice, genetics, and ECGs for children and relatives."
+  pitfalls:
+    - "Labelling convulsive syncope as epilepsy."
+    - "Trusting the machine's QTc."
+    - "Isoprenaline in congenital long QT."
+  unlocks: [long-qt, long-qt-syndrome, schwartz, lqts-beta-blockers]
+  refs: [esc-va-2022, schwartz-2011]
+  check: { source: [esc-va-2022, schwartz-2011], verified: false }

@@ -1,0 +1,8 @@
+# Shared monitor rhythm: external pacing at 70 with capture after every spike.
+title: "Rhythm strip, lead II: pacing with capture"
+layout: strip
+rhythm: { kind: paced, rate: 70, capture: full, atrialRate: 80 }
+rhythmLead: II
+leads:
+  II: { q: 0, r: 0.9, s: 0.4, t: -0.3 }
+check: { source: esc-pacing-2021, verified: false, todo: "Check every spike is followed by a broad complex." }

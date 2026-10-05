@@ -1,0 +1,12 @@
+id: organophosphate-poisoning
+title: "Organophosphate poisoning"
+summary: "Cholinergic excess: wet lungs, slow heart, pinpoint pupils. Atropine in doubling doses until the chest is dry is life-saving."
+sections:
+  - heading: Toxidrome
+    body: "Muscarinic: salivation, sweating, vomiting, diarrhoea, bronchorrhoea, bronchospasm, bradycardia, miosis. Nicotinic: fasciculations, weakness, sometimes tachycardia."
+  - heading: Atropine
+    body: "Start 1.8–3 mg IV and double every 5 minutes until atropinised: clear chest, heart rate over 80, systolic over 80, dry axillae, pupils no longer pinpoint. Then an infusion. Tachycardia is not a reason to stop."
+  - heading: Also
+    body: "Decontaminate (staff in gloves and gowns); oxygen and airway; pralidoxime as an add-on. Avoid suxamethonium for intubation (prolonged paralysis). Watch for intermediate syndrome (neck flexion and respiratory weakness) over days 1–4."
+refs: [eddleston-2008]
+check: { source: eddleston-2008, verified: false }

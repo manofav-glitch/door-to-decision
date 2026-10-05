@@ -1,0 +1,10 @@
+id: brugada-syndrome
+title: "Brugada syndrome"
+summary: "An inherited sodium-channel disease of the right ventricular outflow tract. Fever, sleep, alcohol and some drugs unmask it; VF at night is the danger."
+sections:
+  - heading: Electrical storm
+    body: "Defibrillate each VF episode. Isoprenaline infusion is the first drug; quinidine where available; treat fever. Avoid amiodarone, class I drugs and beta-blockers."
+  - heading: Long term
+    body: "ICD after arrest or arrhythmic syncope. For everyone: treat every fever early, avoid drugs on the Brugada list, little alcohol, and ECGs for first-degree relatives."
+refs: [esc-va-2022, antzelevitch-2016]
+check: { source: [esc-va-2022, antzelevitch-2016], verified: false }

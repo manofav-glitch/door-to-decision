@@ -1,0 +1,14 @@
+id: long-qt
+title: "Long QT and torsades"
+summary: "Measure the QT by hand. QTc 500 ms or more, or a rise of 60 ms on a drug, means real torsades risk."
+sections:
+  - heading: Measuring
+    body: "Lead II or V5. End of T: where a tangent to the steepest part of its downslope meets the baseline; leave out the U wave. Average several beats. Bazett over-corrects at fast rates."
+  - heading: Thresholds
+    body: "Prolonged: 450 ms or more in men, 460 ms or more in women. 500 ms or more: high risk."
+  - heading: T-wave shape
+    body: "Broad-based T: LQT1. Low, notched T: LQT2. Long flat ST with a late T: LQT3."
+  - heading: Torsades
+    body: "Polymorphic VT twisting around the baseline, often after a short–long–short sequence. Pulseless: defibrillate. Then magnesium 2 g, potassium to 4.5–5, and a faster heart rate."
+refs: [drew-2010, esc-va-2022]
+check: { source: [drew-2010, esc-va-2022], verified: false }

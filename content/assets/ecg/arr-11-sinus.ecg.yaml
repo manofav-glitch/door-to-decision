@@ -1,0 +1,9 @@
+# arr-11: after resuscitation, still long QT (monitor rhythm).
+title: "Rhythm strip, lead II: sinus rhythm with long QT"
+layout: strip
+rhythm: { kind: sinus, rate: 62 }
+qt: 560
+rhythmLead: II
+leads:
+  II: { t: 0.2, u: 0.15 }
+check: { source: drew-2010, verified: false, todo: "Check the long QT shows on the strip." }

@@ -1,0 +1,8 @@
+# Shared monitor rhythm: pacing spikes with no capture; the slow broad escape carries on.
+title: "Rhythm strip, lead II: pacing without capture"
+layout: strip
+rhythm: { kind: paced, rate: 70, capture: none, escapeRate: 32, atrialRate: 80 }
+rhythmLead: II
+leads:
+  II: { q: 0, r: 0.9, s: 0.4, t: -0.3 }
+check: { source: esc-pacing-2021, verified: false, todo: "Check the spikes have no complex after them." }

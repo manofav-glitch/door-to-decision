@@ -1,0 +1,17 @@
+id: isoprenaline
+title: "Isoprenaline (isoproterenol)"
+summary: "Beta-agonist infusion that speeds the heart. A bridge to pacing in symptomatic bradycardia, the first drug for Brugada electrical storm, and a 'chemical pacemaker' in acquired torsades."
+doses:
+  - id: bradycardia
+    label: "Bradycardia, bridge to pacing"
+    route: IV infusion
+    text: "Start at 5 micrograms/min and titrate to heart rate"
+    check: { source: erc-als-2025, verified: false }
+sections:
+  - heading: Not in
+    body: "Congenital long QT (LQT1 and LQT2): it can trigger torsades. Use pacing and beta-blockade instead."
+  - heading: Brugada storm
+    body: "Raises the heart rate and restores the epicardial action potential; the ST elevation often settles within minutes."
+india: "Not always on the crash trolley: check where your department keeps it."
+refs: [erc-als-2025, esc-va-2022]
+check: { source: [erc-als-2025, esc-va-2022], verified: false }

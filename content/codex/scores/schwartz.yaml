@@ -1,0 +1,44 @@
+id: schwartz
+title: "Schwartz score (congenital long QT)"
+summary: "Probability of congenital long QT syndrome from the ECG, history and family. 3.5 or more: high probability; 1.5–3: intermediate; 1 or less: low."
+sections:
+  - heading: How to use it
+    body: "Score after excluding acquired causes (drugs, low potassium or magnesium). Syncope and torsades count once (take the highest); family items aren't double-counted."
+score:
+  items:
+    - type: choice
+      id: qtc
+      label: "QTc (measured by hand)"
+      options:
+        - { id: under-450, label: "Under 450 ms", points: 0 }
+        - { id: 450-459-male, label: "450–459 ms in a man", points: 1 }
+        - { id: 460-479, label: "460–479 ms", points: 2 }
+        - { id: 480-plus, label: "480 ms or more", points: 3.5 }
+    - { type: yesno, id: recovery, label: "QTc ≥ 480 ms at the 4th minute of exercise recovery", points: 1 }
+    - type: choice
+      id: events
+      label: "Torsades or syncope (count the highest)"
+      options:
+        - { id: none, label: "None", points: 0 }
+        - { id: syncope-rest, label: "Syncope without stress", points: 1 }
+        - { id: syncope-stress, label: "Syncope with stress (exercise, emotion, sudden noise)", points: 2 }
+        - { id: torsades, label: "Documented torsades de pointes", points: 2 }
+    - { type: yesno, id: alternans, label: "T-wave alternans", points: 1 }
+    - { type: yesno, id: notched, label: "Notched T waves in 3 leads", points: 1 }
+    - { type: yesno, id: bradycardia, label: "Low heart rate for age", points: 0.5 }
+    - { type: yesno, id: deafness, label: "Congenital deafness", points: 0.5 }
+    - type: choice
+      id: family
+      label: "Family history (count the highest)"
+      options:
+        - { id: none, label: "None", points: 0 }
+        - { id: scd-under-30, label: "Unexplained sudden death under 30 in an immediate family member", points: 0.5 }
+        - { id: definite-lqts, label: "Family member with definite long QT syndrome", points: 1 }
+    - { type: yesno, id: variant, label: "Pathogenic variant in a long QT gene", points: 3.5 }
+  bands:
+    - { from: 0, label: "Low probability", risk: "1 or less" }
+    - { from: 1.5, label: "Intermediate probability", risk: "1.5–3" }
+    - { from: 3.5, label: "High probability", risk: "3.5 or more" }
+  check: { source: [schwartz-2011, esc-va-2022], verified: false, todo: "Points follow the owner's notes (QTc ≥ 480 = 3.5; pathogenic variant 3.5). Confirm which version you teach." }
+refs: [schwartz-2011, esc-va-2022]
+check: { source: [schwartz-2011, esc-va-2022], verified: false }

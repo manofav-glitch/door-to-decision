@@ -1,0 +1,17 @@
+id: adrenaline
+title: "Adrenaline (epinephrine)"
+summary: "In cardiac arrest, 1 mg IV; as an infusion, a bridge to pacing in bradycardia that doesn't respond to atropine."
+doses:
+  - id: bradycardia-infusion
+    label: "Bradycardia infusion"
+    route: IV infusion
+    text: "2–10 micrograms/min, titrated to response"
+    check: { source: erc-als-2025, verified: false }
+  - id: cardiac-arrest
+    label: "Cardiac arrest"
+    route: IV or IO bolus
+    text: "1 mg: as soon as possible in non-shockable rhythms; after the 3rd shock in VF/pulseless VT; then every 3–5 minutes"
+    rule: { unit: mg, fixed: 1 }
+    check: { source: erc-als-2025, verified: false }
+refs: [erc-als-2025]
+check: { source: erc-als-2025, verified: false }

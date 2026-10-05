@@ -1,0 +1,13 @@
+# arr-11: acquired long QT. Sinus 58, QT ~560 ms, flattened T waves with prominent U waves (low K and Mg).
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 58 }
+qt: 560
+rhythmLead: II
+leads:
+  II: { t: 0.2, u: 0.15 }
+  V2: { t: 0.25, u: 0.2 }
+  V3: { t: 0.25, u: 0.2 }
+  V4: { t: 0.2, u: 0.18 }
+  V5: { t: 0.15, u: 0.12 }
+check: { source: drew-2010, verified: false, todo: "Check the long QT and U waves are visible." }

@@ -1,0 +1,9 @@
+# Shared monitor rhythm: torsades de pointes.
+title: "Rhythm strip, lead II: torsades de pointes"
+layout: strip
+rhythm: { kind: torsades, rate: 230 }
+qrs: 150
+rhythmLead: II
+leads:
+  II: { q: 0, r: 1.4, s: 0.4, t: -0.4 }
+check: { source: drew-2010, verified: false, todo: "Check it reads as twisting polymorphic VT." }

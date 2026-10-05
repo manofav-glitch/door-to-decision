@@ -1,0 +1,12 @@
+id: long-qt-syndrome
+title: "Long QT syndrome: acquired or congenital?"
+summary: "Most long QT in the emergency department is acquired: drugs plus low potassium or magnesium. The congenital form hides behind 'faints' and 'epilepsy'."
+sections:
+  - heading: Acquired
+    body: "QT-prolonging drugs (macrolides, fluoroquinolones, ondansetron, antipsychotics, methadone, many antiarrhythmics) plus hypokalaemia, hypomagnesaemia or bradycardia. Remove the drugs, correct electrolytes, keep the rate up."
+  - heading: Congenital
+    body: "LQT1: exercise, swimming. LQT2: sudden noise (alarm clock), emotion, the postpartum months. LQT3: sleep and rest. Non-selective beta-blockers; avoid QT drugs; screen the family."
+  - heading: Catecholamines
+    body: "Isoprenaline can help acquired torsades but harms congenital LQT1 and LQT2."
+refs: [drew-2010, esc-va-2022]
+check: { source: [drew-2010, esc-va-2022], verified: false }

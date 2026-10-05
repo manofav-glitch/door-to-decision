@@ -1,0 +1,218 @@
+# arr-09 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: deliberate ingestion of an organophosphate pesticide (chlorpyrifos) one hour before
+# arrival. Cholinergic crisis with bradycardia, bronchorrhoea and hypoxia. Toxicological atropine:
+# doubling doses every 5 minutes to atropinisation, then infusion; tachycardia is not a reason to stop.
+# Pralidoxime as an add-on; avoid suxamethonium; watch for intermediate syndrome; psychiatry review.
+# Sources: owner's bradycardia notes (toxicological layer), Eddleston 2008.
+
+id: cvs-arr-09
+title: "35M, sweating and drooling, slow pulse"
+difficulty: 2
+minutes: 12
+patient: { age: 35, sex: M, weightKg: 62 }
+initial:
+  clock: "13:25"
+  rhythm: ecg/arr-09-brady.svg
+  vitals: { hr: 42, sbp: 88, dbp: 56, rr: 28, spo2: 88, gcs: 13, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: eddleston-2008
+  verified: false
+  todo: "Teaching composite; check the toxidrome and vitals."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:alarmed, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "After a fight at home he drank something from the shed. The bottle had a picture of a crop on it." }
+          - { who: patient, text: "Can't… breathe…" }
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "Pulse 42, BP 88 over 56, sats 88%. Drooling, sweating, tiny pupils, and his chest is bubbling. He smells of chemicals." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: eddleston-2008, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Staff in gloves and gowns; remove his clothes and wash his skin; suction, oxygen, IV access, monitor"
+        grade: best
+        consequence: "Decontaminated, suctioned and on high-flow oxygen within minutes; ECG on the monitor."
+        teaching: "Protect staff, remove the source, then airway and breathing."
+        effects: { minutes: 4, milestone: ecg }
+        next: toxidrome
+      - label: "Gastric lavage first to get the poison out"
+        grade: harmful
+        consequence: "He vomits and aspirates during the lavage; sats fall to 82%."
+        teaching: "Lavage has little benefit and real harm; the killer here is the airway and the muscarinic crisis."
+        effects: { minutes: 15, milestone: ecg, spo2: -6, patient: -20 }
+        next: toxidrome
+
+  toxidrome:
+    type: choice
+    check: { source: eddleston-2008, verified: false }
+    prompt: "Bradycardia, pinpoint pupils, sweating, drooling, wet chest. What is this?"
+    options:
+      - label: "Cholinergic crisis from organophosphate poisoning"
+        grade: best
+        consequence: "You call for atropine, lots of it."
+        teaching: "Muscarinic excess: secretions, bronchospasm, bradycardia, miosis. Nicotinic: twitching and weakness."
+        effects: { minutes: 1 }
+        next: atropine
+      - label: "Opioid overdose (small pupils)"
+        grade: suboptimal
+        consequence: "Your senior points to the sweating, drooling and wet chest: opioids make you dry."
+        teaching: "Pinpoint pupils plus secretions and bradycardia point to cholinergic poisoning."
+        effects: { minutes: 2 }
+        next: atropine
+      - label: "Primary heart block"
+        grade: suboptimal
+        consequence: "Your senior points to the secretions and pupils."
+        teaching: "Look at the whole patient: the bradycardia is part of a toxidrome."
+        effects: { minutes: 2 }
+        next: atropine
+
+  atropine:
+    type: choice
+    check: { source: eddleston-2008, verified: false, todo: "Starting dose: Eddleston 1.8–3 mg; owner's notes 1–2 mg. Confirm." }
+    prompt: "How do you give the atropine?"
+    options:
+      - label: "1.8–3 mg IV, then double the dose every 5 minutes until atropinised: clear chest, heart rate over 80, systolic over 80, dry armpits, pupils no longer pinpoint"
+        grade: best
+        consequence: "2 mg, 4 mg, 8 mg, 16 mg: twenty minutes later his chest is clear."
+        teaching: "Organophosphate atropine is a different paradigm from cardiac bradycardia: doubling doses, and the endpoint is a dry chest."
+        effects: { minutes: 20, setVitals: { hr: 112, sbp: 106, dbp: 66, spo2: 95, rr: 20, gcs: 14 }, rhythm: ecg/arr-sinus-fast.svg }
+        next: atropinised
+      - label: "Atropine 1 mg every 5 minutes up to 3 mg, as for bradycardia"
+        grade: harmful
+        consequence: "After 3 mg his chest is still bubbling and his sats are 84%. Your senior starts doubling doses."
+        teaching: "Cardiac dosing is far too little: patients may need tens of milligrams. Under-dosing kills."
+        effects: { minutes: 15, spo2: -4, patient: -25 }
+        next: rescue
+      - label: "Transcutaneous pacing for the bradycardia"
+        grade: harmful
+        consequence: "The rate rises but his lungs keep filling with secretions."
+        teaching: "Pacing treats the number, not the poisoning. Atropine dries the airway."
+        effects: { minutes: 10, spo2: -4, patient: -20 }
+        next: rescue
+
+  rescue:
+    type: story
+    onEnter: { minutes: 20, setVitals: { hr: 108, sbp: 100, dbp: 62, spo2: 93, rr: 22, gcs: 14 }, rhythm: ecg/arr-sinus-fast.svg }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, senior:worried]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: senior, text: "Doubling every five minutes: 2, 4, 8, 16. There, his chest is drying." }
+    next: atropinised
+
+  atropinised:
+    type: choice
+    check: { source: eddleston-2008, verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Atropinised"
+    prompt: "Chest clear, BP 106/66, heart rate 112, pupils mid-sized. The nurse is worried about the tachycardia. Next?"
+    options:
+      - label: "Continue atropine as an infusion (10–20% of the loading dose per hour), titrated to keep the chest dry"
+        grade: best
+        consequence: "Infusion running; you reassess every 15 minutes."
+        teaching: "Tachycardia alone is not a reason to stop: it may come from hypoxia, nicotinic effects or the atropine. Titrate to the chest, not the pulse."
+        effects: { minutes: 10 }
+        next: extras
+      - label: "Stop atropine: the heart rate is too fast"
+        grade: harmful
+        consequence: "Forty minutes later the secretions are back and his sats drop."
+        teaching: "Stopping atropine for tachycardia lets the cholinergic crisis return."
+        effects: { minutes: 40, spo2: -6, patient: -20 }
+        next: extras
+      - label: "IV metoprolol to slow the heart"
+        grade: harmful
+        consequence: "His BP falls and his chest wheezes. Your senior stops it."
+        teaching: "Beta-blockers worsen bronchospasm and bradycardia in organophosphate poisoning."
+        effects: { minutes: 10, sbp: -15, patient: -20 }
+        next: extras
+
+  extras:
+    type: multiselect
+    check: { source: eddleston-2008, verified: false, todo: "Pralidoxime graded acceptable (benefit debated); confirm." }
+    prompt: "What else? Choose up to 4."
+    max: 4
+    options:
+      - id: pralidoxime
+        label: "Pralidoxime 1–2 g IV over 15–30 minutes, then an infusion"
+        grade: acceptable
+        consequence: "Started."
+        teaching: "A reasonable add-on to atropine; its benefit varies by compound and is debated."
+      - id: icu
+        label: "Admit to ICU/HDU: watch for intermediate syndrome (neck flexion and breathing weakness) over days 1–4"
+        grade: best
+        consequence: "ICU accepts him."
+        teaching: "Respiratory failure can come a day or more after the crisis seems controlled."
+        missedEffects: { patient: -10 }
+      - id: psychiatry
+        label: "Psychiatry review and a safe discharge plan once he's medically stable"
+        grade: best
+        consequence: "Referred."
+        teaching: "Deliberate self-poisoning needs a mental-health assessment."
+        missedEffects: { patient: -5 }
+      - id: suxamethonium
+        label: "If he needs intubation, use suxamethonium"
+        grade: harmful
+        consequence: "Your senior chooses rocuronium instead."
+        teaching: "Suxamethonium is broken down by cholinesterase: paralysis can last hours."
+      - id: discharge
+        label: "Discharge after 6 hours if he stays well"
+        grade: harmful
+        consequence: "Your senior admits him."
+        teaching: "Delayed respiratory failure (intermediate syndrome) is a real risk."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Six days later · Medical ward"
+        bubbles:
+          - { who: relative, text: "The counsellor has been talking with us both. Thank you for not giving up on him." }
+    summary: "You protected the team, recognised the cholinergic crisis, gave atropine in doubling doses to a dry chest, and planned for the days after."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Ten days later · ICU step-down"
+    summary: "He survived, after a stormy course. Under-dosed atropine, a premature stop or a missed complication added danger. The debrief shows where."
+
+debrief:
+  diagnosis: "Organophosphate (chlorpyrifos) self-poisoning with cholinergic crisis: bradycardia, bronchorrhoea and hypoxia."
+  keyPoints:
+    - "Pinpoint pupils + secretions + bradycardia = cholinergic toxidrome."
+    - "Atropine: start 1.8–3 mg and double every 5 minutes until the chest is clear, HR over 80, SBP over 80; then infuse."
+    - "Tachycardia isn't a reason to stop atropine; titrate to the chest."
+    - "Decontaminate and protect staff; avoid suxamethonium; pralidoxime is an add-on."
+    - "Watch for intermediate syndrome over days 1–4; psychiatry review."
+  pitfalls:
+    - "Using the cardiac atropine dose."
+    - "Pacing or beta-blocking the heart rate instead of treating the poisoning."
+    - "Gastric lavage in a patient who can't protect his airway."
+  unlocks: [organophosphate-poisoning, atropine, pralidoxime, bradycardia]
+  refs: [eddleston-2008]
+  check: { source: eddleston-2008, verified: false }

@@ -1,0 +1,218 @@
+# arr-11 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: acquired long QT (azithromycin + repeated ondansetron + hydrochlorothiazide) with
+# hypokalaemia (2.9) and hypomagnesaemia from gastroenteritis. Torsades with syncope, then pulseless
+# torsades → defibrillation. Magnesium 2 g, potassium to 4.5–5, stop the drugs, raise the rate
+# (isoprenaline acceptable in acquired LQT, or overdrive pacing); avoid amiodarone.
+# Sources: owner's channelopathy notes (acquired QT layer), Drew 2010, RCUK 2025, ESC 2022 VA.
+
+id: cvs-arr-11
+title: "58F, vomiting for days, two faints in the bathroom"
+difficulty: 3
+minutes: 12
+patient: { age: 58, sex: F, weightKg: 60 }
+initial:
+  clock: "18:05"
+  rhythm: ecg/arr-11-sinus.svg
+  vitals: { hr: 58, sbp: 112, dbp: 70, rr: 16, spo2: 98, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [drew-2010, esc-va-2022]
+  verified: false
+  todo: "Teaching composite; check drugs, electrolytes and the sequence of events."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Three days of vomiting and loose motions. Today I fainted twice in the bathroom, just for a few seconds." }
+          - { who: nurse, text: "Pulse 58, BP 112 over 70. Her GP gave her azithromycin for a cough, and she's had ondansetron four or five times. She takes a water tablet for BP." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: drew-2010, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Monitor, 12-lead ECG, IV access; potassium, magnesium and calcium"
+        grade: best
+        consequence: "ECG at 5 minutes; bloods sent."
+        teaching: "Syncope plus QT-prolonging drugs plus vomiting: get the ECG and electrolytes together."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "IV ondansetron for the nausea, then reassess"
+        grade: harmful
+        consequence: "Your senior cancels it and asks for an ECG first."
+        teaching: "Another QT-prolonging drug before you've seen the QT is a risk you don't need to take."
+        effects: { minutes: 10, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: drew-2010, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-11-longqt.svg
+    alt: "12-lead ECG. Sinus rhythm at 58. Very long QT interval (about 560 ms), flattened T waves and prominent U waves in V2–V4."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Long QT (about 560 ms) with prominent U waves: high torsades risk"
+        grade: best
+        consequence: "You measure it by hand in lead II: well over 500 ms."
+        teaching: "QTc 500 ms or more means real torsades risk. U waves suggest low potassium."
+        effects: { minutes: 2 }
+        next: results
+      - label: "Normal sinus rhythm"
+        grade: harmful
+        consequence: "Your senior measures the QT with you."
+        teaching: "Always measure the QT in a patient with syncope on QT-prolonging drugs."
+        effects: { minutes: 3, patient: -10 }
+        next: results
+
+  results:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [nurse:worried, doctor]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: nurse, text: "Potassium 2.9, magnesium low at 0.5. Calcium normal." }
+    next: torsades
+
+  torsades:
+    type: choice
+    check: { source: [erc-als-2025, drew-2010], verified: false }
+    onEnter: { minutes: 10, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 88, gcs: 3 }, rhythm: ecg/arr-torsades.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Majors"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "She's gone off: twisting broad complexes and no pulse!" }
+    prompt: "Pulseless torsades. Now?"
+    options:
+      - label: "CPR and an immediate unsynchronised shock"
+        grade: best
+        consequence: "One shock: sinus rhythm with a pulse. She wakes, frightened."
+        teaching: "Pulseless polymorphic VT is a shockable arrest: defibrillate, unsynchronised."
+        effects: { minutes: 3, setVitals: { hr: 62, sbp: 104, dbp: 64, spo2: 96, gcs: 14 }, rhythm: ecg/arr-11-sinus.svg }
+        next: magnesium
+      - label: "Synchronised cardioversion"
+        grade: harmful
+        consequence: "The defibrillator can't find consistent R waves. Your senior switches sync off and shocks."
+        teaching: "Polymorphic VT can't be reliably synchronised; without a pulse, it's defibrillation."
+        effects: { minutes: 3, patient: -15, setVitals: { hr: 62, sbp: 100, dbp: 62, spo2: 95, gcs: 13 }, rhythm: ecg/arr-11-sinus.svg }
+        next: magnesium
+      - label: "IV amiodarone 300 mg"
+        grade: harmful
+        consequence: "Your senior shocks her first; afterwards she explains why amiodarone was the wrong drug."
+        teaching: "Amiodarone prolongs the QT further. In arrest, shock first."
+        effects: { minutes: 4, patient: -20, setVitals: { hr: 62, sbp: 100, dbp: 62, spo2: 95, gcs: 13 }, rhythm: ecg/arr-11-sinus.svg }
+        next: magnesium
+
+  magnesium:
+    type: dose
+    check: { source: [rcuk-2025, drew-2010], verified: false }
+    prompt: "Magnesium sulphate IV for torsades. Dose, in grams?"
+    drug: magnesium-sulphate
+    dose: torsades
+    tolerancePct: 0
+    correct:
+      consequence: "2 g over 10 minutes. No more runs of torsades."
+      teaching: "Magnesium 2 g (8 mmol) IV is first-line for torsades, even when the level is normal."
+      effects: { minutes: 10 }
+    under:
+      consequence: "Another short run of torsades; your senior gives a further dose to make 2 g."
+      teaching: "The dose for torsades is 2 g (8 mmol), repeated if needed."
+      effects: { minutes: 10, patient: -10 }
+    over:
+      grade: suboptimal
+      consequence: "Her face flushes and her BP dips to 92; the runs stop."
+      teaching: "Give 2 g and repeat if needed rather than a large single bolus."
+      effects: { minutes: 10, sbp: -10 }
+    next: prevent
+
+  prevent:
+    type: multiselect
+    check: { source: [drew-2010, esc-va-2022], verified: false, todo: "Isoprenaline graded acceptable for acquired LQT; confirm." }
+    prompt: "Preventing the next episode. Choose up to 4."
+    max: 4
+    options:
+      - id: drugs
+        label: "Stop azithromycin, ondansetron and the thiazide"
+        grade: best
+        consequence: "Stopped, with an allergy-style alert added to her record."
+        teaching: "Remove every QT-prolonging drug you can."
+        missedEffects: { patient: -10 }
+      - id: potassium
+        label: "Replace potassium to 4.5–5 mmol/L"
+        grade: best
+        consequence: "IV potassium through a central line, checked every 2 hours."
+        teaching: "High-normal potassium shortens the QT."
+        missedEffects: { patient: -10 }
+      - id: rate
+        label: "Keep the heart rate up: isoprenaline or temporary overdrive pacing if pauses trigger runs"
+        grade: acceptable
+        consequence: "Isoprenaline at a low rate keeps her around 90; no more pauses."
+        teaching: "Acquired torsades is pause-dependent. Isoprenaline is acceptable here, unlike in congenital LQT1/2."
+      - id: monitor
+        label: "Continuous monitoring in CCU until the QT is back to normal"
+        grade: best
+        consequence: "CCU bed arranged."
+        teaching: "Risk persists until the QT shortens."
+        missedEffects: { patient: -5 }
+      - id: amiodarone
+        label: "Amiodarone infusion to prevent recurrence"
+        grade: harmful
+        consequence: "Your senior cancels it."
+        teaching: "Amiodarone prolongs the QT."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three days later · CCU"
+        bubbles:
+          - { who: patient, text: "So the medicines and the vomiting together nearly stopped my heart?" }
+    summary: "You measured the QT, defibrillated without delay, gave magnesium, corrected potassium and removed every drug that lengthened her QT."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · CCU"
+    summary: "She survived, but a missed QT, the wrong drug or an incomplete fix led to more torsades than necessary. The debrief shows where."
+
+debrief:
+  diagnosis: "Acquired long QT with torsades de pointes (azithromycin, ondansetron, thiazide) and hypokalaemia and hypomagnesaemia from gastroenteritis."
+  keyPoints:
+    - "Syncope + QT-prolonging drugs + vomiting: measure the QT by hand and check potassium and magnesium."
+    - "Pulseless torsades: defibrillate, unsynchronised."
+    - "Magnesium 2 g IV, even with a normal level; potassium to 4.5–5."
+    - "Stop every QT-prolonging drug; keep the rate up (isoprenaline acceptable in acquired LQT, or pacing)."
+    - "No amiodarone or class IA/III drugs in torsades."
+  pitfalls:
+    - "Another dose of ondansetron before the ECG."
+    - "Synchronising, or reaching for amiodarone, in pulseless torsades."
+    - "Correcting the potassium but leaving the drugs."
+  unlocks: [long-qt, long-qt-syndrome, magnesium-sulphate, isoprenaline]
+  refs: [drew-2010, rcuk-2025, erc-als-2025, esc-va-2022]
+  check: { source: [drew-2010, esc-va-2022], verified: false }

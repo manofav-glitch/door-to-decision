@@ -1,0 +1,16 @@
+id: magnesium-sulphate
+title: "Magnesium sulphate"
+summary: "First drug for torsades de pointes, even when the magnesium level is normal. Also a cheap, safe adjunct for rate control in AF."
+doses:
+  - id: torsades
+    label: "Torsades de pointes"
+    route: IV over 10 minutes (faster if pulseless)
+    text: "2 g (8 mmol), may be repeated"
+    rule: { unit: g, fixed: 2 }
+    check: { source: [rcuk-2025, drew-2010], verified: false }
+sections:
+  - heading: With it
+    body: "Raise potassium to 4.5–5 mmol/L; stop QT-prolonging drugs; increase the heart rate (pacing, or isoprenaline in acquired long QT)."
+india: "Cheap and stocked everywhere."
+refs: [rcuk-2025, drew-2010]
+check: { source: [rcuk-2025, drew-2010], verified: false }

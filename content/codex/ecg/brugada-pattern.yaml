@@ -1,0 +1,12 @@
+id: brugada-pattern
+title: "Brugada pattern"
+summary: "Coved ST elevation of at least 2 mm in V1–V2 sloping down into a negative T wave (type 1) is diagnostic; a saddleback shape (type 2) is only suspicious."
+sections:
+  - heading: High leads
+    body: "Record V1 and V2 also in the 3rd and 2nd intercostal spaces, over the right ventricular outflow tract. Missing this is the commonest reason the pattern is missed."
+  - heading: Fever unmasks it
+    body: "Record an ECG while the patient is febrile; the pattern may vanish once the temperature settles."
+  - heading: Mimics
+    body: "Sodium-channel blocker overdose (including tricyclics), hyperkalaemia, cocaine, RV outflow compression, pericarditis, PE."
+refs: [antzelevitch-2016, esc-va-2022]
+check: { source: [antzelevitch-2016, esc-va-2022], verified: false }

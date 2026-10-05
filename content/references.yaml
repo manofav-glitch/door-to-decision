@@ -205,3 +205,33 @@
   citation: "World Health Organization. WHO guideline on the prevention and diagnosis of rheumatic fever and rheumatic heart disease. Geneva: WHO; 2024."
   year: 2024
   todo: "Confirm title, year and URL."
+
+- id: esc-pacing-2021
+  citation: "Glikson M, Nielsen JC, Kronborg MB, et al. 2021 ESC Guidelines on cardiac pacing and cardiac resynchronization therapy. Eur Heart J. 2021;42(35):3427–3520."
+  year: 2021
+  url: https://doi.org/10.1093/eurheartj/ehab364
+
+- id: eddleston-2008
+  citation: "Eddleston M, Buckley NA, Eyer P, Dawson AH. Management of acute organophosphorus pesticide poisoning. Lancet. 2008;371(9612):597–607."
+  year: 2008
+  url: https://doi.org/10.1016/S0140-6736(07)61202-1
+
+- id: antzelevitch-2016
+  citation: "Antzelevitch C, Yan GX, Ackerman MJ, et al. J-Wave syndromes expert consensus conference report: emerging concepts and gaps in knowledge. Heart Rhythm. 2016;13(10):e295–e324."
+  year: 2016
+  url: https://doi.org/10.1016/j.hrthm.2016.05.024
+
+- id: schwartz-2011
+  citation: "Schwartz PJ, Crotti L. QTc behavior during exercise and genetic testing for the long-QT syndrome. Circulation. 2011;124(20):2181–2184."
+  year: 2011
+  url: https://doi.org/10.1161/CIRCULATIONAHA.111.062182
+
+- id: pincus-2016
+  citation: "Pincus M. Management of digoxin toxicity. Aust Prescr. 2016;39(1):18–20."
+  year: 2016
+  url: https://doi.org/10.18773/austprescr.2016.006
+
+- id: drew-2010
+  citation: "Drew BJ, Ackerman MJ, Funk M, et al. Prevention of torsade de pointes in hospital settings: a scientific statement from the American Heart Association and the American College of Cardiology Foundation. Circulation. 2010;121(8):1047–1060."
+  year: 2010
+  url: https://doi.org/10.1161/CIRCULATIONAHA.109.192704

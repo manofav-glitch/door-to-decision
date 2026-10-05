@@ -1,0 +1,229 @@
+# arr-08 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: digoxin toxicity in an elderly woman with permanent AF: three days of vomiting →
+# dehydration → acute kidney injury, plus verapamil added by her GP last week. Regularised AF at 42,
+# potassium 6.1. Treat: stop digoxin and verapamil, antibody fragments (procurement delay — Indian
+# reality), bridge with atropine/pacing, fluids, potassium management.
+# Calcium for the hyperkalaemia is deliberately NOT graded: owner to give her teaching (see pathology card).
+# Sources: owner's AF and bradycardia notes, Pincus 2016, ESC 2024 AF.
+
+id: cvs-arr-08
+title: "70F, vomiting for three days, everything looks yellow"
+difficulty: 2
+minutes: 12
+patient: { age: 70, sex: F, weightKg: 52 }
+initial:
+  clock: "09:10"
+  rhythm: ecg/arr-08-dig.svg
+  vitals: { hr: 42, sbp: 96, dbp: 58, rr: 18, spo2: 96, gcs: 15, temp: 36.6 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: pincus-2016
+  verified: false
+  todo: "Teaching composite; check the presentation and potassium fit digoxin toxicity."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I've been vomiting for three days. I feel so weak, and everything has a yellow tinge." }
+          - { who: relative, text: "She has an irregular heart. Last week her doctor added another tablet for it." }
+      - scene: triage-desk
+        actors: [nurse:worried, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 42 and regular. BP 96 over 58. Her heart rate was usually around 80, irregular." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: pincus-2016, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Monitor, 12-lead ECG, IV access; potassium, renal function and a digoxin level; bring all her tablets"
+        grade: best
+        consequence: "ECG at 5 minutes; her son phones home for photos of the medicine strips."
+        teaching: "A slow pulse in a patient on rate-control drugs: check the ECG, potassium, kidneys and the drug list together."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Anti-emetic and IV fluids for gastroenteritis, review later"
+        grade: suboptimal
+        consequence: "An hour later the nurse flags the heart rate of 40."
+        teaching: "Bradycardia with vomiting in an elderly patient on cardiac drugs needs an ECG first."
+        effects: { minutes: 30, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [pincus-2016, esc-af-2024], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-08-dig.svg
+    alt: "12-lead ECG. Fibrillating baseline with no P waves, but slow and perfectly regular narrow QRS complexes at 42 per minute. Sagging ST depression in the lateral leads."
+    prompt: "She's known to be in AF. What does this ECG show?"
+    options:
+      - label: "AF with a slow, regular escape: AV block from digoxin toxicity until proven otherwise"
+        grade: best
+        consequence: "You ask the nurse to stop any digoxin on her chart."
+        teaching: "AF that turns slow and regular means AV block with an escape rhythm: classic digoxin toxicity."
+        effects: { minutes: 1 }
+        next: history
+      - label: "Well-controlled AF"
+        grade: harmful
+        consequence: "Your senior points out the rhythm is regular: AF can't be."
+        teaching: "Regular QRS complexes over a fibrillating baseline are not 'good rate control'."
+        effects: { minutes: 2, patient: -10 }
+        next: history
+      - label: "Sinus bradycardia"
+        grade: suboptimal
+        consequence: "Your senior shows you there are no P waves, only fibrillation."
+        teaching: "Look at the baseline before naming the rhythm."
+        effects: { minutes: 2 }
+        next: history
+
+  history:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [doctor, nurse]
+        caption: "{clock} · Results"
+        bubbles:
+          - { who: doctor, text: "Digoxin 250 micrograms daily for years. Her GP started verapamil last week." }
+          - { who: nurse, text: "Creatinine double her baseline. Potassium 6.1. Digoxin level is high." }
+    next: treat
+
+  treat:
+    type: choice
+    check: { source: pincus-2016, verified: false, todo: "Check grades; calcium deliberately not offered pending owner's teaching." }
+    prompt: "Digoxin toxicity: bradycardia, potassium 6.1, kidney injury. Key treatment?"
+    options:
+      - label: "Stop digoxin and verapamil, and get digoxin-specific antibody fragments now; atropine and pacing pads as a bridge"
+        grade: best
+        consequence: "Pharmacy says the antibody fragments must come from the regional centre: about four hours."
+        teaching: "Life-threatening bradycardia and potassium over 5 from digoxin toxicity are indications for antibody fragments."
+        effects: { minutes: 10 }
+        next: wait
+      - label: "Insulin–dextrose for the potassium, then observe"
+        grade: suboptimal
+        consequence: "The potassium falls a little; the heart rate doesn't change. Your senior calls pharmacy for antibody fragments."
+        teaching: "Treat the cause: the antidote reverses both the bradycardia and the potassium shift."
+        effects: { minutes: 30, patient: -10 }
+        next: wait
+      - label: "Continue her digoxin: she needs rate control for her AF"
+        grade: harmful
+        consequence: "Your senior stops it immediately."
+        teaching: "Every further dose deepens the toxicity."
+        effects: { minutes: 5, patient: -20, hr: -4 }
+        next: wait
+
+  wait:
+    type: multiselect
+    check: { source: [pincus-2016, erc-als-2025], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, senior]
+        caption: "{clock} · Waiting for the antidote"
+        bubbles:
+          - { who: senior, text: "Four hours. What do we do in the meantime?" }
+    prompt: "While the antibody fragments are on their way. Choose up to 3."
+    max: 3
+    options:
+      - id: fluids
+        label: "IV fluids for the dehydration and kidney injury"
+        grade: best
+        consequence: "Urine output picks up."
+        teaching: "Digoxin is cleared by the kidneys; restoring perfusion helps."
+        missedEffects: { patient: -5 }
+      - id: atropine
+        label: "Atropine 1 mg for the bradycardia, pacing pads on standby"
+        grade: best
+        consequence: "The rate rises to 50; the pads stay on."
+        teaching: "Digoxin bradycardia is largely vagal and AV-nodal, so atropine often helps as a bridge."
+        effects: { setVitals: { hr: 50, sbp: 104 } }
+        missedEffects: { patient: -5 }
+      - id: monitor
+        label: "Continuous monitoring and repeat potassium in an hour"
+        grade: best
+        consequence: "Potassium 5.6 an hour later."
+        teaching: "Ventricular arrhythmias can appear suddenly in digoxin toxicity."
+        missedEffects: { patient: -5 }
+      - id: haemodialysis
+        label: "Emergency dialysis to remove the digoxin"
+        grade: suboptimal
+        consequence: "The nephrologist explains why it won't work."
+        teaching: "Digoxin is spread through the tissues; dialysis removes very little of it."
+    next: antidote
+
+  antidote:
+    type: story
+    onEnter: { minutes: 240, setVitals: { hr: 76, sbp: 118, dbp: 70 }, rhythm: ecg/arr-af-controlled.svg }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:relieved, nurse]
+        caption: "{clock} · Antibody fragments given"
+        bubbles:
+          - { who: nurse, text: "Within the hour: heart rate 76 and irregular again, potassium 4.8." }
+    next: discharge
+
+  discharge:
+    type: choice
+    check: { source: [esc-af-2024, pincus-2016], verified: false }
+    prompt: "She's recovering. Her AF rate control for the future?"
+    options:
+      - label: "Stop verapamil; restart rate control later with a beta-blocker (or a much lower digoxin dose if needed), and tell her GP about the interaction"
+        grade: best
+        consequence: "The cardiology team agrees a plan with her GP."
+        teaching: "Verapamil raises digoxin levels; with low weight and weaker kidneys, keep doses low and check levels."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Restart both drugs at the old doses once she's eating"
+        grade: harmful
+        consequence: "Your senior rewrites the discharge prescription."
+        teaching: "The same combination at the same doses will cause the same toxicity."
+        effects: { patient: -15 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Three days later · Medical ward"
+        bubbles:
+          - { who: patient, text: "The colours look normal again, and I can keep food down." }
+    summary: "You recognised regularised AF as digoxin toxicity, got the antidote moving and bridged her safely, and fixed the drug interaction that caused it."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Medical ward"
+    summary: "She recovered, but misreading the slow regular rhythm or delaying the antidote prolonged a dangerous toxicity. The debrief shows where."
+
+debrief:
+  diagnosis: "Digoxin toxicity (regularised AF with AV block, hyperkalaemia) precipitated by acute kidney injury from vomiting and a new interacting drug (verapamil)."
+  keyPoints:
+    - "AF that becomes slow and regular means AV block with an escape: think digoxin toxicity."
+    - "Triggers: kidney injury, dehydration, low weight, interacting drugs (verapamil, amiodarone)."
+    - "Life-threatening bradycardia or potassium over 5: digoxin-specific antibody fragments."
+    - "Bridge with fluids, atropine and pacing pads; monitor for ventricular arrhythmias."
+    - "Know how to obtain the antidote before you need it."
+  pitfalls:
+    - "Calling a slow regular rhythm in AF 'good rate control'."
+    - "Treating the potassium and forgetting the cause."
+    - "Restarting the same drug combination at discharge."
+  unlocks: [digoxin-toxicity, digoxin-fab, digoxin, atrial-fibrillation]
+  refs: [pincus-2016, esc-af-2024, erc-als-2025]
+  check: { source: pincus-2016, verified: false }

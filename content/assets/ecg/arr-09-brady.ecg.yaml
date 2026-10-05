@@ -1,0 +1,7 @@
+# arr-09: organophosphate poisoning. Sinus bradycardia ~42, mild QT prolongation.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 42 }
+qt: 470
+rhythmLead: II
+check: { source: eddleston-2008, verified: false, todo: "Check it reads as sinus bradycardia." }

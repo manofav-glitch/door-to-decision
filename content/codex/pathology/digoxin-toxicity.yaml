@@ -1,0 +1,12 @@
+id: digoxin-toxicity
+title: "Digoxin toxicity"
+summary: "Any new arrhythmia in a patient on digoxin, especially AF that has become slow and regular. Often triggered by kidney injury, dehydration or a new interacting drug."
+sections:
+  - heading: Clues
+    body: "Nausea and vomiting, confusion, yellow-green vision; bradycardia, AV block, regularised AF, ventricular ectopy, bidirectional VT."
+  - heading: Triggers
+    body: "Acute kidney injury, hypokalaemia, old age, low weight; verapamil, diltiazem, amiodarone, macrolides."
+  - heading: Treatment
+    body: "Stop digoxin and interacting drugs; check potassium, renal function and a digoxin level; antibody fragments for life-threatening toxicity; atropine and pacing as a bridge."
+refs: [pincus-2016, esc-af-2024]
+check: { source: pincus-2016, verified: false, todo: "Add guidance on calcium for hyperkalaemia in digoxin toxicity (owner's teaching)." }

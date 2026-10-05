@@ -1,0 +1,13 @@
+# arr-10: same patient, V1–V2 also recorded one and two spaces higher (3rd and 2nd intercostal spaces)
+# in place of V3–V4. Coved type 1 Brugada pattern appears in the high leads.
+title: "12-lead ECG with high right chest leads"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 102 }
+labels: [I, II, III, aVR, aVL, aVF, V1 4th, V2 4th, V1 2nd, V2 2nd, V5, V6]
+rhythmLead: II
+leads:
+  V1 4th: { r: 0.25, s: 0.6, rp: 0.35, st: 0.2, t: 0.25 }
+  V2 4th: { r: 0.35, s: 0.8, rp: 0.4, st: 0.22, t: 0.35 }
+  V1 2nd: { r: 0.3, s: 0.4, rp: 0.5, st: 0.35, t: -0.5 }
+  V2 2nd: { r: 0.4, s: 0.6, rp: 0.6, st: 0.4, t: -0.55 }
+check: { source: antzelevitch-2016, verified: false, todo: "Check the 2nd-space leads show a coved type 1 pattern and the labels are clear." }

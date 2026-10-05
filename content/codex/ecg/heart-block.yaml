@@ -1,0 +1,14 @@
+id: heart-block
+title: "AV block: where is the block?"
+summary: "The grade matters less than the site. Block in the AV node (narrow escape) is usually benign and responds to atropine; block below it (broad escape) is unpredictable and needs pacing."
+sections:
+  - heading: The grades
+    body: "First degree: PR over 200 ms, every P conducted. Mobitz I: PR lengthens until a beat drops (usually nodal). Mobitz II: fixed PR with sudden dropped beats (usually below the node). 2:1: can't tell from the strip. Complete: P waves and QRS complexes fully independent."
+  - heading: Escape rhythm
+    body: "Junctional escape: 40–60/min, narrow, fairly reliable. Ventricular escape: 20–40/min, broad, prone to sudden failure."
+  - heading: Atropine
+    body: "Works on the AV node. It's unlikely to help, and may worsen the ratio, when the block is below the node: high-grade block with a broad QRS."
+  - heading: Pacing
+    body: "Mobitz II, high-grade and complete block need a permanent pacemaker even without symptoms."
+refs: [esc-pacing-2021, erc-als-2025]
+check: { source: [esc-pacing-2021, erc-als-2025], verified: false }

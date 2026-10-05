@@ -8,8 +8,13 @@ doses:
     text: "1 mg, repeat every 3–5 minutes to a maximum of 3 mg"
     rule: { unit: mg, fixed: 1 }
     check: { source: aha-ecc-2025, verified: true, reviewedOn: 2026-09-30, todo: "Confirm the 2025 AHA dose (it was 1 mg, max 3 mg, in 2020)." }
+  - id: organophosphate
+    label: "Organophosphate or carbamate poisoning (not the cardiac dose)"
+    route: IV bolus, doubling every 5 minutes
+    text: "Start 1.8–3 mg; double the dose every 5 minutes until atropinised (clear chest on auscultation, heart rate over 80, systolic BP over 80, dry axillae, pupils no longer pinpoint), then infuse 10–20% of the total loading dose per hour"
+    check: { source: eddleston-2008, verified: false, todo: "Confirm starting dose (owner's notes: 1–2 mg) and endpoints." }
 sections:
   - heading: If it doesn't work
     body: "Transcutaneous pacing, or an adrenaline or dopamine infusion, then transvenous pacing. Reperfusion is the definitive treatment in inferior MI."
-refs: [aha-ecc-2025]
+refs: [aha-ecc-2025, eddleston-2008]
 check: { source: aha-ecc-2025, verified: true, reviewedOn: 2026-09-30 }

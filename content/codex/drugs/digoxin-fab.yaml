@@ -1,0 +1,13 @@
+id: digoxin-fab
+title: "Digoxin-specific antibody fragments (DigiFab)"
+summary: "Binds digoxin and reverses toxicity within an hour. The antidote for life-threatening digoxin toxicity."
+sections:
+  - heading: When
+    body: "Life-threatening arrhythmia (severe bradycardia, high-grade block, ventricular arrhythmia), potassium over 5 mmol/L from acute toxicity, or haemodynamic instability."
+  - heading: Dose
+    body: "Calculated from the digoxin level and weight, or a fixed number of vials when the level isn't known; follow the product sheet or your poison centre."
+  - heading: While you wait
+    body: "Stop digoxin and interacting drugs (verapamil, amiodarone), correct potassium and fluids, atropine for bradycardia, pacing as a bridge."
+india: "Expensive and often unavailable outside large centres: know the procurement route before you need it."
+refs: [pincus-2016]
+check: { source: pincus-2016, verified: false, todo: "Confirm indications and the local availability note." }

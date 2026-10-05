@@ -1,0 +1,247 @@
+# arr-07 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: degenerative (Lev disease) complete heart block with a broad ventricular escape at 32,
+# Stokes-Adams attacks, hypotension. Infranodal: atropine unlikely to help (ERC 2025: don't give it in
+# high-degree block with a broad QRS). Transcutaneous pacing as a bridge with mechanical capture checked
+# by femoral pulse, analgesia, reversible causes, transvenous wire, permanent pacemaker.
+# Sources: owner's bradycardia notes, ERC 2025 ALS, ESC 2021 pacing; atropine dose per owner (1 mg).
+
+id: cvs-arr-07
+title: "74M, keeps blacking out without warning"
+difficulty: 2
+minutes: 12
+patient: { age: 74, sex: M, weightKg: 66 }
+initial:
+  clock: "16:40"
+  rhythm: ecg/arr-07-chb.svg
+  vitals: { hr: 32, sbp: 86, dbp: 48, rr: 18, spo2: 95, gcs: 14, temp: 36.6 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-pacing-2021, erc-als-2025]
+  verified: false
+  todo: "Teaching composite; check the presentation fits unstable complete heart block."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Twice this week I just dropped. No warning. Today again in the kitchen." }
+          - { who: relative, text: "He went white and then woke up a minute later. He's a bit muddled now." }
+      - scene: triage-desk
+        actors: [nurse:alarmed, doctor]
+        bubbles:
+          - { who: nurse, text: "Pulse 32 and regular. BP 86 over 48. Not on any heart tablets, only something for his prostate." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Resus bay, pads on, monitor, IV access and a 12-lead ECG"
+        grade: best
+        consequence: "Pads on and the 12-lead printed 4 minutes after arrival."
+        teaching: "Bradycardia with syncope and hypotension is unstable: pads on early so you can pace immediately."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Majors cubicle: he's talking now"
+        grade: harmful
+        consequence: "Ten minutes later he blacks out again on the trolley; the nurse rushes him to resus."
+        teaching: "Recurrent syncope with a rate of 32 can become asystole at any moment."
+        effects: { minutes: 12, milestone: ecg, patient: -15 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-pacing-2021, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/arr-07-chb.svg
+    alt: "12-lead ECG. P waves at about 80 per minute with no fixed relationship to slow, broad QRS complexes at about 32 per minute."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Complete heart block with a slow, broad ventricular escape"
+        grade: best
+        consequence: "P waves march through at 80; the broad escape plods at 32."
+        teaching: "No fixed PR, more P waves than QRS complexes, broad escape: block below the AV node."
+        effects: { minutes: 1 }
+        next: treat
+      - label: "Mobitz I (Wenckebach)"
+        grade: suboptimal
+        consequence: "Your senior shows you the PR is different every beat, with no pattern of lengthening."
+        teaching: "Wenckebach has a progressively lengthening PR then a dropped beat; here P and QRS are independent."
+        effects: { minutes: 2 }
+        next: treat
+      - label: "Sinus bradycardia"
+        grade: suboptimal
+        consequence: "Your senior points to the extra P waves that aren't followed by a QRS."
+        teaching: "In sinus bradycardia every P wave conducts with the same PR."
+        effects: { minutes: 2 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: [erc-als-2025, esc-pacing-2021], verified: false, todo: "Atropine is graded suboptimal here because the escape is broad (ERC 2025); confirm." }
+    prompt: "BP 86/48, confused, recurrent syncope. Treatment?"
+    options:
+      - label: "Start transcutaneous pacing now and call for a transvenous wire"
+        grade: best
+        consequence: "Pads anterior–posterior, pacing at 70 in demand mode."
+        teaching: "Unstable with a broad escape: pace. Atropine acts on the AV node and is unlikely to help when the block is below it."
+        effects: { minutes: 3, rhythm: ecg/arr-paced-nocapture.svg }
+        next: current
+      - label: "Isoprenaline infusion while pacing is set up"
+        grade: acceptable
+        consequence: "The rate creeps to 40; your senior asks for pacing as well."
+        teaching: "A reasonable bridge (5 micrograms/min), but pacing is the definitive bridge."
+        effects: { minutes: 5, setVitals: { hr: 40, sbp: 92 }, rhythm: ecg/arr-paced-nocapture.svg }
+        next: current
+      - label: "Atropine 1 mg, repeat to 3 mg, and see"
+        grade: suboptimal
+        consequence: "Three doses later the rate is still 32. Your senior starts pacing."
+        teaching: "With a broad escape (infranodal block), atropine rarely works and must never delay pacing."
+        effects: { minutes: 12, patient: -10, rhythm: ecg/arr-paced-nocapture.svg }
+        next: current
+
+  current:
+    type: choice
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Pacing at 70"
+    prompt: "Pacing spikes at 70, but nothing follows them on the monitor. Next?"
+    options:
+      - label: "Turn the current up until every spike is followed by a broad complex, then set it a little above that"
+        grade: best
+        consequence: "At 80 mA every spike captures on the monitor."
+        teaching: "Increase current to electrical capture (often 50–100 mA), then a margin above the threshold."
+        effects: { minutes: 2, rhythm: ecg/arr-paced-capture.svg }
+        next: capture
+      - label: "Leave it: the spikes show it's working"
+        grade: harmful
+        consequence: "His BP drifts to 78. Your senior points out the spikes aren't capturing and turns the current up."
+        teaching: "Spikes with nothing after them are failure to capture. The patient is still at 32."
+        effects: { minutes: 4, sbp: -8, patient: -15, rhythm: ecg/arr-paced-capture.svg }
+        next: capture
+
+  capture:
+    type: choice
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Pacing at 70, 80 mA"
+    prompt: "Every spike now has a broad complex after it. How do you know he's really paced?"
+    options:
+      - label: "Feel the femoral pulse: it should match the paced rate of 70; watch the BP rise"
+        grade: best
+        consequence: "Femoral pulse 70, BP 108/62, and he's more alert."
+        teaching: "Electrical capture on the screen isn't mechanical capture. Femoral pulse, not carotid: the pacing makes muscles twitch."
+        effects: { minutes: 2, setVitals: { hr: 70, sbp: 108, dbp: 62, gcs: 15 } }
+        next: bridge
+      - label: "The monitor shows capture: that's enough"
+        grade: suboptimal
+        consequence: "Your senior checks the femoral pulse anyway: 70, good."
+        teaching: "Always confirm a palpable pulse at the paced rate."
+        effects: { minutes: 2, setVitals: { hr: 70, sbp: 106, dbp: 60, gcs: 15 } }
+        next: bridge
+
+  bridge:
+    type: multiselect
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Resus bay"
+        bubbles:
+          - { who: patient, text: "Every thump in my chest hurts!" }
+    prompt: "While cardiology comes for the transvenous wire. Choose up to 3."
+    max: 3
+    options:
+      - id: analgesia
+        label: "Analgesia and light sedation for the pacing"
+        grade: best
+        consequence: "Small doses of fentanyl; he settles."
+        teaching: "Transcutaneous pacing is painful; treat it."
+        missedEffects: { patient: -5 }
+      - id: causes
+        label: "Check potassium, troponin and his drug list (rate-slowing drugs, digoxin)"
+        grade: best
+        consequence: "Potassium 4.3, troponin normal, no rate-slowing drugs."
+        teaching: "Look for reversible causes before committing to a permanent device."
+        missedEffects: { patient: -5 }
+      - id: wire
+        label: "Transvenous pacing wire as soon as possible"
+        grade: best
+        consequence: "The wire goes in under fluoroscopy an hour later."
+        teaching: "Transcutaneous pacing is only a bridge."
+        missedEffects: { patient: -10 }
+      - id: stop
+        label: "Switch the pacing off for a minute to see if the rhythm has recovered"
+        grade: harmful
+        consequence: "He drops to 30 and greys out; the nurse switches it back on."
+        teaching: "Don't test a pacing-dependent patient by switching pacing off."
+    next: plan
+
+  plan:
+    type: choice
+    check: { source: esc-pacing-2021, verified: false }
+    prompt: "No reversible cause, no ischaemia. Long-term plan?"
+    options:
+      - label: "Permanent pacemaker before discharge"
+        grade: best
+        consequence: "A dual-chamber pacemaker is implanted two days later."
+        teaching: "Complete heart block is an indication for permanent pacing regardless of symptoms; he has symptoms too."
+        next: &outcome
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Remove the wire after a few days if he stays well, and arrange a Holter"
+        grade: harmful
+        consequence: "Your senior cancels the plan."
+        teaching: "Degenerative complete heart block doesn't recover; without a pacemaker the next attack may be fatal."
+        effects: { patient: -15 }
+        next: *outcome
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Three days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "No more blackouts. I didn't know a pacemaker was so small." }
+    summary: "You recognised infranodal complete heart block, paced without waiting on atropine, confirmed mechanical capture, and got him a permanent pacemaker."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Cardiology ward"
+    summary: "He got his pacemaker, but delays and capture problems left him hypotensive for longer than necessary. The debrief shows where."
+
+debrief:
+  diagnosis: "Complete heart block with a broad ventricular escape (infranodal, degenerative conduction disease) causing Stokes–Adams attacks."
+  keyPoints:
+    - "Bradycardia with syncope, hypotension or confusion is unstable: pads on, pace."
+    - "Broad escape = block below the AV node: atropine is unlikely to work (ERC 2025: don't give it in high-degree block with a broad QRS)."
+    - "Transcutaneous pacing: increase current to capture, then confirm a femoral pulse at the paced rate."
+    - "Analgesia for pacing; look for reversible causes; transvenous wire early."
+    - "Complete heart block: permanent pacemaker regardless of symptoms."
+  pitfalls:
+    - "Repeating atropine while a broad-escape patient stays hypotensive."
+    - "Trusting spikes on the monitor without a pulse."
+    - "Switching pacing off to 'test' the rhythm."
+  unlocks: [heart-block, bradycardia, transcutaneous-pacing, isoprenaline, atropine, adrenaline]
+  refs: [esc-pacing-2021, erc-als-2025, aha-ecc-2025]
+  check: { source: [esc-pacing-2021, erc-als-2025], verified: false }

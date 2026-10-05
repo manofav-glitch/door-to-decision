@@ -1,0 +1,17 @@
+id: lqts-beta-blockers
+title: "Beta-blockers in congenital long QT (nadolol, propranolol)"
+summary: "Non-selective beta-blockers are the cornerstone of congenital long QT treatment. Metoprolol is not equivalent."
+doses:
+  - id: nadolol
+    label: "Nadolol"
+    route: Oral, once daily
+    text: "About 0.5–1 mg/kg/day, titrated to tolerance"
+    check: { source: esc-va-2022, verified: false, todo: "Confirm dosing; nadolol availability varies." }
+sections:
+  - heading: Why non-selective
+    body: "They blunt the adrenergic surge that triggers events. Switching a well-controlled patient to metoprolol has been followed by breakthrough events."
+  - heading: Pregnancy and postpartum
+    body: "Continue through pregnancy and especially the first months after delivery, when LQT2 events cluster."
+india: "Propranolol is widely available; nadolol may need to be sourced."
+refs: [esc-va-2022]
+check: { source: esc-va-2022, verified: false }

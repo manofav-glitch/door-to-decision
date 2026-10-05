@@ -1,0 +1,12 @@
+id: bradycardia
+title: "Unstable bradycardia"
+summary: "Shock, syncope, heart failure or ischaemia with a slow rate: treat now, and hunt for a reversible cause at the same time."
+sections:
+  - heading: Drugs
+    body: "Atropine 1 mg IV, repeated every 3–5 minutes to 3 mg (the owner's chosen dose; ERC 2025 starts at 500 micrograms). Not likely to help with a broad escape. Then isoprenaline 5 micrograms/min or adrenaline 2–10 micrograms/min as a bridge."
+  - heading: Pacing
+    body: "Transcutaneous pacing as a bridge; transvenous pacing early in unstable patients."
+  - heading: Reversible causes
+    body: "Hyperkalaemia, beta-blocker, calcium-channel blocker or digoxin toxicity, organophosphates, ischaemia (especially inferior MI), hypothermia, hypothyroidism, raised intracranial pressure."
+refs: [erc-als-2025, esc-pacing-2021, aha-ecc-2025]
+check: { source: [erc-als-2025, esc-pacing-2021], verified: false, todo: "Atropine dose reflects the owner's choice of 1 mg." }

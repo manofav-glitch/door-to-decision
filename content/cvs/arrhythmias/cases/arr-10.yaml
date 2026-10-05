@@ -1,0 +1,238 @@
+# arr-10 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: Brugada syndrome unmasked by fever (viral illness), presenting with nocturnal agonal
+# breathing (self-terminating VF). Standard-position ECG shows only a saddleback (type 2); V1–V2 in the
+# 2nd intercostal space show coved type 1. That night: VF storm → defibrillation, isoprenaline, fever
+# control; never amiodarone, class I drugs or beta-blockers. ICD, fever plan, drug list, family ECGs.
+# Sources: owner's channelopathy notes, ESC 2022 VA, J-wave consensus 2016.
+
+id: cvs-arr-10
+title: "30M, fever, gasping in his sleep"
+difficulty: 3
+minutes: 12
+patient: { age: 30, sex: M, weightKg: 68 }
+initial:
+  clock: "02:30"
+  rhythm: ecg/arr-sinus-fast.svg
+  vitals: { hr: 104, sbp: 118, dbp: 72, rr: 18, spo2: 98, gcs: 15, temp: 39.2 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-va-2022, antzelevitch-2016]
+  verified: false
+  todo: "Teaching composite; check the story supports arrhythmic syncope and a fever-unmasked pattern."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:alarmed]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He has had fever for two days. Tonight he was gasping in his sleep, like snoring but wrong, and I couldn't wake him for a minute." }
+          - { who: patient, text: "I just have a fever. My brother died in his sleep at 34, though. They never found out why." }
+      - scene: triage-desk
+        actors: [nurse:worried, doctor]
+        bubbles:
+          - { who: nurse, text: "Temperature 39.2, pulse 104, BP 118 over 72. He looks fine now." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-va-2022, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Monitor and a 12-lead ECG now, while he's still febrile"
+        grade: best
+        consequence: "ECG at 5 minutes."
+        teaching: "Nocturnal agonal breathing plus a family history of sudden death: get the ECG while the fever is still present."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Paracetamol and a viral-fever discharge"
+        grade: harmful
+        consequence: "Your senior stops the discharge: unexplained nocturnal collapse and a brother who died in his sleep."
+        teaching: "Gasping at night can be a self-terminating arrhythmia. This is an arrhythmic syncope until proven otherwise."
+        effects: { minutes: 20, milestone: ecg, patient: -15 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: antzelevitch-2016, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/arr-10-type2.svg
+    alt: "12-lead ECG. Sinus tachycardia at 104. In V1 and V2, a saddleback ST elevation with a positive T wave."
+    prompt: "What do V1 and V2 show?"
+    options:
+      - label: "Saddleback ST elevation: suspicious for Brugada, not diagnostic. Repeat with V1–V2 placed higher"
+        grade: best
+        consequence: "You move V1 and V2 up to the 2nd intercostal space."
+        teaching: "Only the coved type 1 pattern is diagnostic. High chest leads over the RV outflow tract unmask it."
+        effects: { minutes: 3 }
+        next: ecg-high
+      - label: "Normal for a febrile young man"
+        grade: harmful
+        consequence: "Your senior asks for high leads anyway."
+        teaching: "With his story, a saddleback in V1–V2 must be chased."
+        effects: { minutes: 5, patient: -10 }
+        next: ecg-high
+      - label: "Anterior STEMI: activate the cath lab"
+        grade: suboptimal
+        consequence: "Your senior points out there's no chest pain and the shape is confined to V1–V2."
+        teaching: "Brugada morphology is limited to the right chest leads and isn't ischaemic."
+        effects: { minutes: 5 }
+        next: ecg-high
+
+  ecg-high:
+    type: ecg
+    check: { source: antzelevitch-2016, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, doctor]
+        caption: "{clock} · High chest leads"
+    image: ecg/arr-10-high.svg
+    alt: "12-lead ECG with V1 and V2 recorded in both the 4th and the 2nd intercostal spaces. In the 2nd-space leads, coved ST elevation of more than 2 mm descends into a negative T wave."
+    prompt: "With V1 and V2 in the 2nd intercostal space, what do you see?"
+    options:
+      - label: "Coved ST elevation into a negative T: type 1 Brugada pattern, unmasked by fever"
+        grade: best
+        consequence: "With his story, this is Brugada syndrome."
+        teaching: "Type 1 pattern + arrhythmic syncope + family sudden death: high risk."
+        effects: { minutes: 1 }
+        next: fever
+      - label: "Right bundle branch block"
+        grade: suboptimal
+        consequence: "Your senior points to the coved ST segment and the absence of a wide S wave in lead I and V6."
+        teaching: "RBBB doesn't give a coved ST descending into a negative T."
+        effects: { minutes: 2 }
+        next: fever
+
+  fever:
+    type: choice
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+    prompt: "Type 1 Brugada pattern with fever. Immediate management?"
+    options:
+      - label: "Paracetamol and cooling now; admit to a monitored bed with pads on; avoid sodium-channel-blocking drugs"
+        grade: best
+        consequence: "Paracetamol given, pads on, CCU bed requested."
+        teaching: "Fever unmasks Brugada and triggers VF. Treat it early and monitor."
+        effects: { minutes: 10 }
+        next: storm
+      - label: "Flecainide to suppress arrhythmias"
+        grade: harmful
+        consequence: "Your senior stops it: class I drugs worsen Brugada."
+        teaching: "Flecainide is a sodium-channel blocker and can provoke VF in Brugada."
+        effects: { minutes: 5, patient: -20 }
+        next: storm
+
+  storm:
+    type: choice
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: false, todo: "Check storm management, including quinidine availability." }
+    onEnter: { minutes: 120, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 85, gcs: 3 }, rhythm: ecg/arr-vf.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · CCU"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "VF again! That's the third time in an hour, all at night." }
+    prompt: "Recurrent VF: electrical storm. What now?"
+    options:
+      - label: "Defibrillate each episode; start an isoprenaline infusion; keep the fever down; quinidine if you can get it"
+        grade: best
+        consequence: "Shock: sinus rhythm. On isoprenaline the coved ST settles and the VF stops."
+        teaching: "Brugada storm is bradycardia- and vagal-dependent: isoprenaline raises the rate and restores the epicardial action potential."
+        effects: { minutes: 30, setVitals: { hr: 108, sbp: 116, dbp: 70, spo2: 97, gcs: 15 }, rhythm: ecg/arr-sinus-fast.svg }
+        next: long-term
+      - label: "Amiodarone loading to stop the storm"
+        grade: harmful
+        consequence: "Two more episodes of VF; your senior switches to isoprenaline and the storm settles."
+        teaching: "Amiodarone (and class I drugs) worsen the Brugada substrate. Isoprenaline is the drug."
+        effects: { minutes: 45, patient: -25, setVitals: { hr: 106, sbp: 112, dbp: 68, spo2: 96, gcs: 15 }, rhythm: ecg/arr-sinus-fast.svg }
+        next: long-term
+      - label: "Esmolol infusion: storm usually means too much adrenaline"
+        grade: harmful
+        consequence: "The rate slows and VF returns within minutes; your senior starts isoprenaline."
+        teaching: "In Brugada, slowing the heart makes things worse; beta-blockers are harmful in this storm."
+        effects: { minutes: 30, patient: -25, setVitals: { hr: 106, sbp: 112, dbp: 68, spo2: 96, gcs: 15 }, rhythm: ecg/arr-sinus-fast.svg }
+        next: long-term
+
+  long-term:
+    type: multiselect
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+    prompt: "He's stable. Before discharge. Choose up to 4."
+    max: 4
+    options:
+      - id: icd
+        label: "ICD: he has survived VF"
+        grade: best
+        consequence: "Implanted before discharge."
+        teaching: "An ICD is the only therapy shown to prevent sudden death after aborted arrest in Brugada."
+        missedEffects: { patient: -15 }
+      - id: fever-plan
+        label: "Written fever plan: paracetamol early for every fever, and an ECG if febrile and unwell"
+        grade: best
+        consequence: "He and his wife get the plan in writing."
+        teaching: "Fever is the commonest trigger you can prevent."
+        missedEffects: { patient: -5 }
+      - id: drugs
+        label: "A list of drugs to avoid (brugadadrugs.org), on a card he carries"
+        grade: best
+        consequence: "Card given."
+        teaching: "Many sodium-channel-blocking drugs, some antidepressants and anaesthetics can trigger events."
+        missedEffects: { patient: -5 }
+      - id: family
+        label: "ECGs with high chest leads for his parents, siblings and children"
+        grade: best
+        consequence: "His sister and two children are booked."
+        teaching: "Cheap and high-yield; it finds most at-risk relatives."
+        missedEffects: { patient: -5 }
+      - id: panel
+        label: "A large genetic panel of every cardiac gene"
+        grade: suboptimal
+        consequence: "Your senior suggests SCN5A testing only."
+        teaching: "In Brugada only SCN5A is routinely tested; broad panels generate uncertain results."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "A week later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "So this is what happened to my brother. At least my children will be checked." }
+    summary: "You chased a suspicious ECG with high leads while he was febrile, treated the storm with isoprenaline, and protected him and his family."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Ten days later · Cardiology ward"
+    summary: "He survived the storm, but missed leads, the wrong drugs or a gap in the plan put him and his family at risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Brugada syndrome unmasked by fever, with nocturnal agonal breathing (self-terminating VF) and then a VF storm; family history of unexplained sudden death."
+  keyPoints:
+    - "Saddleback (type 2) is suspicious; only coved type 1 is diagnostic. Record V1–V2 in the 2nd and 3rd intercostal spaces."
+    - "Fever unmasks Brugada: ECG while febrile, then treat the fever early."
+    - "Storm: defibrillate, isoprenaline, fever control, quinidine if available. Not amiodarone, class I drugs or beta-blockers."
+    - "After VF: ICD. For everyone: fever plan, drug list, ECGs for first-degree relatives."
+  pitfalls:
+    - "Calling nocturnal gasping a nightmare or sleep apnoea."
+    - "Missing the pattern by not moving the chest leads up."
+    - "Giving flecainide or amiodarone."
+  unlocks: [brugada-pattern, brugada-syndrome, isoprenaline]
+  refs: [esc-va-2022, antzelevitch-2016]
+  check: { source: [esc-va-2022, antzelevitch-2016], verified: false }

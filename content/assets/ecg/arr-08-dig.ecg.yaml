@@ -1,0 +1,13 @@
+# arr-08: digoxin toxicity. AF baseline with a slow, regular junctional escape (~42): "regularised AF";
+# sagging (scooped) ST depression laterally; peaked T a little from the raised potassium.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: av-dissociation, atrialRate: 0, ventricularRate: 42, atrial: af }
+rhythmLead: II
+leads:
+  II: { st: -0.1, t: 0.3 }
+  aVF: { st: -0.08, t: 0.25 }
+  V4: { st: -0.12, t: 0.35 }
+  V5: { st: -0.15, t: 0.3 }
+  V6: { st: -0.12, t: 0.25 }
+check: { source: pincus-2016, verified: false, todo: "Check it reads as slow, regular AF with sagging ST segments." }

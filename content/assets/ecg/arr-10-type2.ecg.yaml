@@ -1,0 +1,10 @@
+# arr-10: febrile, standard lead positions. Saddleback (type 2) ST elevation in V1–V2: suspicious,
+# not diagnostic.
+title: "12-lead ECG, standard lead positions"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 104 }
+rhythmLead: II
+leads:
+  V1: { r: 0.25, s: 0.6, rp: 0.35, st: 0.2, t: 0.25 }
+  V2: { r: 0.35, s: 0.8, rp: 0.4, st: 0.22, t: 0.35 }
+check: { source: antzelevitch-2016, verified: false, todo: "Check V1–V2 look saddleback (type 2), not coved." }

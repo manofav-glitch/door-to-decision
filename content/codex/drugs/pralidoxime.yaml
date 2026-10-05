@@ -1,0 +1,15 @@
+id: pralidoxime
+title: "Pralidoxime (oxime)"
+summary: "Reactivates acetylcholinesterase after organophosphate poisoning. Given alongside atropine; its benefit varies by compound and is debated."
+doses:
+  - id: organophosphate
+    label: "Organophosphate poisoning"
+    route: IV over 15–30 minutes, then infusion
+    text: "1–2 g loading dose, then a continuous infusion"
+    check: { source: eddleston-2008, verified: false, todo: "Confirm the regimen used in your poison centre." }
+sections:
+  - heading: Never instead of atropine
+    body: "Atropine reverses the life-threatening muscarinic effects; pralidoxime is an add-on."
+india: "Widely stocked in districts where pesticide poisoning is common."
+refs: [eddleston-2008]
+check: { source: eddleston-2008, verified: false }
