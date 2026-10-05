@@ -260,7 +260,12 @@ effects:
   removeFlags: [in_pain]
   patient: -15 # Patient meter
   milestone: ecg # stamp the clock (for time targets); only the first stamp counts
+  rhythm: ecg/arr-01-sinus.svg # the monitor now shows this drawn ECG (e.g. after adenosine works)
 ```
+
+The monitor close-up (`scene: monitor`) draws the patient's current rhythm. Set the starting rhythm with
+`initial: { rhythm: ecg/arr-01-svt.svg, … }` and change it with `rhythm:` in any effects. Each must be a
+drawn ECG (§13); keep the heart rate in `vitals` consistent with it.
 
 ---
 

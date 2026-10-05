@@ -1,12 +1,16 @@
 // Scenes: background (and optional foreground) props drawn in grey behind the cast, plus where
 // actors stand. Art space is a 400 × 240 box; busts are anchored on the bottom edge.
+import type { EcgSpec } from '../content/schema';
 import type { VitalLimits } from '../content/types';
 import type { Vitals } from '../engine/engine';
+import { monitorTrace } from './ecgDraw';
 import type { Scene } from './registry';
 
 export interface SceneContext {
   vitals?: Vitals;
   limits?: VitalLimits;
+  /** the patient's current rhythm, drawn on the monitor (otherwise a generic trace at the heart rate) */
+  rhythm?: EcgSpec;
 }
 
 export interface Slot {
@@ -98,7 +102,7 @@ function AmbulanceBack() {
 }
 
 /** Close-up of the bedside monitor, showing the patient's current numbers. */
-function MonitorBack({ vitals, limits }: SceneContext) {
+function MonitorBack({ vitals, limits, rhythm }: SceneContext) {
   const off = (k: keyof Vitals) =>
     !!(vitals && limits && (vitals[k] < limits[k].low || vitals[k] > limits[k].high));
   const hr = vitals?.hr;
@@ -111,6 +115,7 @@ function MonitorBack({ vitals, limits }: SceneContext) {
     trace += ` L${x + w * 0.35} 78 l4 -4 l4 4 l6 0 l3 -34 l4 44 l3 -10 l${w * 0.35 - 24} 0`;
   }
   trace += ' L252 78';
+  if (rhythm) trace = monitorTrace(rhythm, { x0: 52, x1: 252, y0: 80, pxPerMv: 24, seconds: 4 });
   const num = (alarm: boolean) => (alarm ? 'art-num art-alarm' : 'art-num');
   const anyAlarm = off('hr') || off('sbp') || off('dbp') || off('spo2');
   return (
@@ -142,8 +147,9 @@ function MonitorBack({ vitals, limits }: SceneContext) {
       </text>
       {anyAlarm && (
         <g className="stroke-alarm">
-          <path d="M62 36 L76 60 L48 60 Z" className="fill-paper" />
-          <path d="M62 44 L62 52 M62 56 L62 56.5" />
+          {/* beside the HR label, clear of the trace */}
+          <path d="M302 30 L314 50 L290 50 Z" className="fill-paper" />
+          <path d="M302 37 L302 43 M302 46.5 L302 47" />
         </g>
       )}
     </g>

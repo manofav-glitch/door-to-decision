@@ -372,7 +372,11 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
               assets={assets}
               artSizes={c.artSizes}
               index={i}
-              ctx={{ vitals: view.vitals, limits: c.vitalLimits }}
+              ctx={{
+                vitals: view.vitals,
+                limits: c.vitalLimits,
+                rhythm: view.rhythm ? c.rhythms[view.rhythm] : undefined,
+              }}
             />
           ))}
         </section>

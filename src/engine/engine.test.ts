@@ -26,6 +26,19 @@ const go: Input = { kind: 'continue' };
 const pick = (optionId: string): Input => ({ kind: 'pick', optionId });
 
 describe('engine', () => {
+  it('starts with no monitor rhythm unless the case sets one, and effects change it', () => {
+    const s = startRun(kase, 'big');
+    expect(s.rhythm).toBeNull();
+    const c = structuredClone(kase);
+    c.initial.rhythm = 'ecg/a.svg';
+    const first = c.nodes.first!;
+    if (first.type !== 'choice') throw new Error('fixture changed');
+    first.options[0]!.effects = { ...first.options[0]!.effects, rhythm: 'ecg/b.svg' };
+    expect(startRun(c, 'big').rhythm).toBe('ecg/a.svg');
+    const after = play(c, 'big', [go, pick('o1')]);
+    expect(after.rhythm).toBe('ecg/b.svg');
+  });
+
   it('starts at the start node with initial state', () => {
     const s = startRun(kase, 'big');
     expect(s.nodeId).toBe('intro');

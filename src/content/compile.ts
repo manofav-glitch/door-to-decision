@@ -383,6 +383,24 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
   const leadLayouts: Record<string, EcgLayout> = {};
   const imageChecks: Record<string, Check> = {};
   const artSizes: Record<string, [number, number]> = {};
+  const rhythms: Record<string, EcgSpec> = {};
+  // every `rhythm:` (initial state and effects) must name a drawn ECG; its check joins the case's checks
+  const noteRhythms = (value: unknown, path: Path): void => {
+    if (Array.isArray(value)) value.forEach((v, i) => noteRhythms(v, [...path, i]));
+    else if (value && typeof value === 'object')
+      for (const [k, v] of Object.entries(value)) {
+        if (k === 'rhythm' && typeof v === 'string') {
+          const spec = ctx.ecgSpecs[v];
+          if (!spec) err([...path, k], `rhythm ${v} is not a drawn ECG (needs content/assets/${v.replace(/\.svg$/, '.ecg.yaml')})`);
+          else {
+            rhythms[v] = spec.spec;
+            imageChecks[v] = spec.spec.check;
+          }
+        } else noteRhythms(v, [...path, k]);
+      }
+  };
+  noteRhythms(c.initial, ['initial']);
+  noteRhythms(c.nodes, ['nodes']);
 
   const noteEffects = (e: Effects | undefined) => {
     if (!e) return;
@@ -625,6 +643,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     unverifiedCount: 0,
     imageChecks,
     artSizes,
+    rhythms,
   };
 }
 

@@ -385,3 +385,30 @@ ${text.join('\n')}
 </svg>
 `;
 }
+
+/**
+ * A few seconds of one lead as an SVG path, for the bedside monitor: x from x0 to x1, baseline y0,
+ * pxPerMv up (negative y). Uses the spec's rhythm lead, so it matches the printed strip.
+ */
+export function monitorTrace(
+  spec: EcgSpec,
+  box: { x0: number; x1: number; y0: number; pxPerMv: number; seconds: number; from?: number },
+): string {
+  const std = STANDARD.includes(spec.rhythmLead) ? spec.rhythmLead : 'II';
+  const sh: Shape = {
+    ...(NORMAL[std] ?? NORMAL.II!),
+    ...(spec.leads[spec.rhythmLead] as Partial<Shape> | undefined),
+  };
+  const rh = rhythmOf(spec);
+  const m = morphologyOf(spec);
+  const from = box.from ?? 1;
+  const pts: [number, number][] = [];
+  const step = 0.008;
+  for (let t = 0; t <= box.seconds + 1e-9; t += step) {
+    const x = box.x0 + (t / box.seconds) * (box.x1 - box.x0);
+    const v = Math.max(-2.2, Math.min(2.2, voltage(sh, from + t, rh, m) * spec.voltage));
+    pts.push([x, box.y0 - v * box.pxPerMv]);
+  }
+  const s = simplify(pts, 0.25);
+  return `M${s.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(' L')}`;
+}

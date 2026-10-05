@@ -1,5 +1,5 @@
 // Shapes of the compiled content the app and engine consume (produced by compile.ts).
-import type { Case, CodexCard, DoseRule, Node, ScoreDef } from './schema.ts';
+import type { Case, CodexCard, DoseRule, EcgSpec, Node, ScoreDef } from './schema.ts';
 import type { z } from 'zod';
 import type { EcgLayout } from '../art/ecgLayout.ts';
 import type { Check as CheckSchema, BenchmarksFile, ReferencesFile } from './schema.ts';
@@ -59,6 +59,8 @@ export interface CompiledCase extends Omit<Case, 'settings' | 'timeTargets' | 'd
   imageChecks: Record<string, Check>;
   /** illustration width and height in px, keyed by art name (e.g. cp-01/01-arrival-1) */
   artSizes: Record<string, [number, number]>;
+  /** ECG specs the monitor can show (initial.rhythm and every `rhythm:` effect), keyed by image path */
+  rhythms: Record<string, EcgSpec>;
 }
 
 export interface CaseSummary {

@@ -78,6 +78,7 @@ export const Effects = z.strictObject({
   minutes: z.number().min(0).optional(),
   ...VitalNumbers.shape, // deltas, e.g. sbp: -25
   setVitals: VitalNumbers.optional(), // absolute values, e.g. { hr: 36 }
+  rhythm: z.string().optional(), // the monitor now shows this ECG drawing, e.g. ecg/arr-01-sinus.svg
   addFlags: z.array(Id).optional(),
   removeFlags: z.array(Id).optional(),
   patient: z.number().optional(), // Patient meter delta (meter runs 0–100)
@@ -337,6 +338,7 @@ export const Case = z.strictObject({
   }),
   initial: z.strictObject({
     clock: z.string().regex(/^\d{2}:\d{2}$/, 'clock as HH:MM'),
+    rhythm: z.string().optional(), // ECG drawing the monitor shows at the start, e.g. ecg/arr-01-svt.svg
     vitals: z.strictObject({
       hr: z.number(),
       sbp: z.number(),

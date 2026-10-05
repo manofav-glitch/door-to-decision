@@ -169,4 +169,42 @@ describe('compileContent', () => {
       expect(messages(dir)).toContain('use folder/name, e.g. cp-01/01-arrival-1 (no extension)');
     });
   });
+
+  describe('monitor rhythm', () => {
+    const ecg = (title: string, verified: boolean) =>
+      `title: ${title}\nlayout: strip\nrhythm: { kind: svt, rate: 180 }\ncheck: { source: ref-a, verified: ${verified}${verified ? ', reviewedOn: 2026-10-05' : ''} }\n`;
+    function withRhythm(files: Record<string, string>, edit: (s: string) => string) {
+      const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, dir, { recursive: true });
+      for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, 'content/assets', f), text);
+      const p = join(dir, CASE);
+      writeFileSync(p, edit(readFileSync(p, 'utf8')));
+      return dir;
+    }
+    const startOnSvt = (s: string) => s.replace('  clock: "23:50"', '  clock: "23:50"\n  rhythm: ecg/svt.svg');
+
+    it('keeps the ECG spec of every rhythm the case can show, and counts its check', () => {
+      const c = compileContent(withRhythm({ 'ecg/svt.ecg.yaml': ecg('SVT', true) }, startOnSvt));
+      const kase = c.cases['demo-c-01']!;
+      expect(kase.rhythms['ecg/svt.svg']!.rhythm).toEqual({ kind: 'svt', rate: 180 });
+      expect(kase.imageChecks['ecg/svt.svg']).toBeDefined();
+    });
+
+    it('an unverified rhythm drawing makes the case a draft', () => {
+      const c = compileContent(withRhythm({ 'ecg/svt.ecg.yaml': ecg('SVT', false) }, startOnSvt));
+      expect(c.cases['demo-c-01']!.unverifiedCount).toBe(2);
+    });
+
+    it('reports a rhythm with no ECG drawing', () => {
+      try {
+        compileContent(withRhythm({}, startOnSvt));
+        throw new Error('expected a content error');
+      } catch (e) {
+        if (!(e instanceof ContentError)) throw e;
+        expect(e.problems.map((p) => p.message)).toContain(
+          'rhythm ecg/svt.svg is not a drawn ECG (needs content/assets/ecg/svt.ecg.yaml)',
+        );
+      }
+    });
+  });
 });

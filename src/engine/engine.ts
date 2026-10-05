@@ -75,6 +75,8 @@ export interface RunState {
   setting: string | null;
   nodeId: string;
   vitals: Vitals;
+  /** ECG drawing the monitor shows (image path), if the case sets one */
+  rhythm: string | null;
   minutes: number;
   flags: string[];
   patient: number;
@@ -101,6 +103,7 @@ export function startRun(c: CompiledCase, setting: string | null): RunState {
     setting: c.settings.length ? setting : null,
     nodeId: c.start,
     vitals: { ...c.initial.vitals },
+    rhythm: c.initial.rhythm ?? null,
     minutes: 0,
     flags: [...c.initial.flags],
     patient: 100,
@@ -479,6 +482,7 @@ export function applyEffects(s: RunState, e: Effects | undefined): void {
     s.vitals[k] = Math.min(hi, Math.max(lo, s.vitals[k]));
   }
   if (s.vitals.dbp >= s.vitals.sbp) s.vitals.dbp = Math.max(0, s.vitals.sbp - 10);
+  if (e.rhythm) s.rhythm = e.rhythm;
   for (const f of e.addFlags ?? []) if (!s.flags.includes(f)) s.flags.push(f);
   if (e.removeFlags) s.flags = s.flags.filter((f) => !e.removeFlags!.includes(f));
   s.patient = Math.min(100, Math.max(0, s.patient + (e.patient ?? 0)));
