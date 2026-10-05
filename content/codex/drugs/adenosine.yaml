@@ -8,6 +8,12 @@ doses:
     text: "6 mg; if no effect after 1–2 minutes, 12 mg; if still no effect, 18 mg"
     rule: { unit: mg, fixed: 6 }
     check: { source: [rcuk-2025, esc-svt-2019], verified: false, todo: "Confirm the 6 → 12 → 18 mg sequence (owner chose European guidance)." }
+  - id: infant
+    label: "SVT in infants over 1 month and children"
+    route: Rapid IV or IO bolus as close to the heart as possible, with a large saline flush
+    text: "0.1–0.2 mg/kg (first dose, max 6 mg); if SVT persists after at least 1 minute, 0.3 mg/kg (max 12–18 mg). Neonates: start 150 micrograms/kg"
+    rule: { unit: mg, perKg: { min: 0.1, max: 0.2 }, maxDose: 6 }
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false, todo: "Owner's notes: 0.1 mg/kg (max 6), then 0.2 mg/kg (max 12). RCUK 2025: 0.1–0.2, then 0.3 mg/kg. Choose one." }
 sections:
   - heading: Technique
     body: "Large cannula in the antecubital fossa, three-way tap, fast push then fast flush, with the monitor printing. A slow push through a hand vein is the commonest reason it 'fails'."

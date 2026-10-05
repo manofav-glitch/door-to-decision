@@ -1,6 +1,6 @@
 # Arrhythmias module — outline for the owner's approval
 
-Status: APPROVED by the owner 2026-10-05 (decisions in §0). Build in progress. Every clinical item will be drafted
+Status: APPROVED by the owner 2026-10-05 (decisions in §0). All 15 cases drafted (unverified) by 2026-10-05. Every clinical item will be drafted
 `verified: false` until the owner checks it.
 
 Sources read: the owner's notes in `notes/arrhythmias/` (SVT; Atrial Fibrillation; Bradyarrhythmias &

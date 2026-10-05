@@ -1,0 +1,300 @@
+# arr-13 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: witnessed (not monitored) VF cardiac arrest in the ED waiting area from an anterior STEMI
+# (LAD occlusion). ERC 2025 ALS: CPR, unsynchronised shock ≥150 J, immediate compressions for 2 min,
+# adrenaline 1 mg + amiodarone 300 mg after the 3rd shock, amiodarone 150 mg after the 5th; ROSC;
+# post-ROSC 12-lead → emergency angiography; SpO₂ 94–98%, normocapnia, MAP > 65, prevent fever.
+# Sources: ERC 2025 ALS (drafted from the guideline; not in the owner's notes).
+
+id: cvs-arr-13
+title: "55M collapses in the waiting area"
+difficulty: 3
+minutes: 12
+patient: { age: 55, sex: M, weightKg: 75 }
+initial:
+  clock: "11:12"
+  vitals: { hr: 0, sbp: 0, dbp: 0, rr: 0, spo2: 70, gcs: 3, temp: 36.6 }
+  flags: []
+check:
+  source: erc-als-2025
+  verified: false
+  todo: "Drafted from ERC 2025 ALS; check the sequence and timings."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [nurse:alarmed, relative:alarmed]
+        caption: "{clock} · Waiting area"
+        bubbles:
+          - { who: relative, text: "He was waiting to be seen for chest pain. He just slumped off the chair!" }
+          - { who: nurse, text: "Not responding. Gasping, not breathing normally!" }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    prompt: "Unresponsive, not breathing normally. Your first move?"
+    options:
+      - label: "Call the arrest team, start chest compressions, and get the defibrillator"
+        grade: best
+        consequence: "Compressions start within seconds; the defibrillator arrives in under a minute."
+        teaching: "Unresponsive with absent or abnormal breathing (gasping) is cardiac arrest: start CPR and get the defibrillator."
+        effects: { minutes: 1 }
+        next: pads
+      - label: "Feel carefully for a carotid pulse for 30 seconds first"
+        grade: harmful
+        consequence: "Thirty seconds pass with no circulation before compressions start."
+        teaching: "Pulse checks are unreliable; take no more than 10 seconds and start CPR if in doubt. Gasping is a sign of arrest."
+        effects: { minutes: 1, patient: -15 }
+        next: pads
+      - label: "Lift him onto a trolley and wheel him to resus before starting anything"
+        grade: harmful
+        consequence: "Two minutes without compressions before the first one."
+        teaching: "Start CPR where the patient is; move later."
+        effects: { minutes: 2, patient: -20 }
+        next: pads
+
+  pads:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    onEnter: { rhythm: ecg/arr-vf.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · Pads on, compressions paused"
+        sfx: "ALARM"
+    prompt: "Pads on. Rhythm?"
+    options:
+      - label: "VF: shockable"
+        grade: best
+        consequence: "You call 'VF, shockable' and compressions restart while the defibrillator charges."
+        teaching: "Coarse, chaotic, no QRS complexes: VF. Restart compressions during charging to keep the pause short."
+        next: shock-1
+      - label: "Asystole: give adrenaline"
+        grade: harmful
+        consequence: "Your senior points to the chaotic waves and calls VF."
+        teaching: "VF and pulseless VT are shockable; the shock comes first."
+        effects: { minutes: 1, patient: -10 }
+        next: shock-1
+
+  shock-1:
+    type: dose
+    check: { source: erc-als-2025, verified: false }
+    prompt: "Unsynchronised shock for VF. Energy, in joules?"
+    drug: defibrillation
+    dose: vf
+    tolerancePct: 0
+    correct:
+      consequence: "Shock delivered. Still VF on the next rhythm check."
+      teaching: "First shock at least 150 J biphasic; increase for later shocks if the device allows."
+      effects: { minutes: 1 }
+    under:
+      consequence: "Shock delivered at a low energy; still VF. Your senior turns it up for the next one."
+      teaching: "Adult VF: at least 150 J biphasic for the first shock."
+      effects: { minutes: 1, patient: -5 }
+    over:
+      grade: acceptable
+      consequence: "Shock delivered; still VF."
+      teaching: "No device delivers more than 360 J."
+      effects: { minutes: 1 }
+    next: after-shock
+
+  after-shock:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    prompt: "The shock has just been delivered. What now?"
+    options:
+      - label: "Restart compressions immediately for 2 minutes, then a rhythm check"
+        grade: best
+        consequence: "Compressions restart within seconds; airway and IV access are sorted during the cycle."
+        teaching: "Straight back to compressions: a pulse check right after a shock wastes time and the heart is rarely pumping yet."
+        effects: { minutes: 2 }
+        next: third-shock
+      - label: "Check for a pulse and look at the monitor before restarting compressions"
+        grade: suboptimal
+        consequence: "Twenty seconds of no compressions pass before CPR restarts."
+        teaching: "Minimise pauses: compressions first, rhythm check at 2 minutes."
+        effects: { minutes: 2, patient: -10 }
+        next: third-shock
+      - label: "Give two more shocks straight away (stacked)"
+        grade: suboptimal
+        consequence: "Your senior stops you after the second: he wasn't on a monitor when he arrested."
+        teaching: "Stacked shocks are only for a witnessed, monitored VF arrest (e.g. cath lab, CCU)."
+        effects: { minutes: 2, patient: -5 }
+        next: third-shock
+
+  third-shock:
+    type: choice
+    check: { source: erc-als-2025, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed, senior:worried]
+        caption: "{clock} · Third shock given"
+        bubbles:
+          - { who: nurse, text: "Third shock delivered, still VF. IV access is in." }
+    prompt: "Still VF after the third shock. Drugs?"
+    options:
+      - label: "Adrenaline 1 mg IV and amiodarone 300 mg IV now"
+        grade: best
+        consequence: "Both given; compressions continue."
+        teaching: "In shockable rhythms, adrenaline 1 mg and amiodarone 300 mg after the third shock; adrenaline every 3–5 minutes after that."
+        effects: { minutes: 2 }
+        next: fifth-shock
+      - label: "Adrenaline only; amiodarone if it doesn't work"
+        grade: suboptimal
+        consequence: "Your senior asks for amiodarone 300 mg too."
+        teaching: "Amiodarone 300 mg belongs with the first adrenaline in refractory VF."
+        effects: { minutes: 3, patient: -5 }
+        next: fifth-shock
+      - label: "Atropine 3 mg and calcium"
+        grade: harmful
+        consequence: "Your senior corrects the plan to adrenaline and amiodarone."
+        teaching: "Atropine has no place in VF; calcium only for hyperkalaemia, low calcium or calcium-channel-blocker poisoning."
+        effects: { minutes: 3, patient: -10 }
+        next: fifth-shock
+
+  fifth-shock:
+    type: multiselect
+    check: { source: erc-als-2025, verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse, senior:worried]
+        caption: "{clock} · Fifth shock given"
+        bubbles:
+          - { who: senior, text: "Fifth shock, still fibrillating. What else are we doing?" }
+    prompt: "Refractory VF. Choose up to 3."
+    max: 3
+    options:
+      - id: amio-150
+        label: "Amiodarone 150 mg IV"
+        grade: best
+        consequence: "Given."
+        teaching: "A second dose of amiodarone 150 mg after the fifth shock."
+        missedEffects: { patient: -5 }
+      - id: causes
+        label: "Run through the 4 Hs and 4 Ts: likely coronary thrombosis (chest pain before the arrest); check potassium on a blood gas"
+        grade: best
+        consequence: "Potassium 4.1. The story points to a coronary occlusion."
+        teaching: "Look for the cause during CPR; here, an acute MI is the likely trigger."
+        missedEffects: { patient: -5 }
+      - id: capnography
+        label: "Waveform capnography to confirm the airway and watch CPR quality"
+        grade: best
+        consequence: "End-tidal CO₂ 2.3 kPa with good compressions."
+        teaching: "Capnography confirms tube position and a sudden rise can signal return of circulation."
+      - id: echo-pause
+        label: "Pause compressions for a 30-second cardiac ultrasound"
+        grade: harmful
+        consequence: "Your senior restarts compressions at 10 seconds."
+        teaching: "Ultrasound only within a planned pause of under 10 seconds."
+    next: rosc
+
+  rosc:
+    type: story
+    onEnter: { minutes: 6, setVitals: { hr: 110, sbp: 92, dbp: 58, rr: 14, spo2: 93, gcs: 3 }, rhythm: ecg/arr-sinus-post.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · After the sixth shock"
+      - scene: resus-bay
+        actors: [patient-supine, nurse:relieved, senior:relieved]
+        bubbles:
+          - { who: nurse, text: "Organised rhythm. I can feel a carotid pulse!" }
+          - { who: senior, text: "Return of circulation. 12-lead, please." }
+    next: rosc-ecg
+
+  rosc-ecg:
+    type: ecg
+    check: { source: [erc-als-2025, esc-acs-2023], verified: false }
+    image: ecg/arr-13-rosc.svg
+    alt: "12-lead ECG after return of circulation. Sinus tachycardia at 110. ST elevation in V1–V4, I and aVL, with ST depression in II, III and aVF."
+    prompt: "His ECG after return of circulation. What does it mean?"
+    options:
+      - label: "Anterior STEMI: call the cath lab for emergency coronary angiography"
+        grade: best
+        consequence: "The cath lab is activated."
+        teaching: "ST elevation after return of circulation: emergency angiography and PCI."
+        effects: { minutes: 3 }
+        next: post-rosc
+      - label: "Post-arrest changes: repeat it in an hour"
+        grade: harmful
+        consequence: "Your senior calls the cath lab now."
+        teaching: "Don't dismiss ST elevation after cardiac arrest; it is usually the cause."
+        effects: { minutes: 10, patient: -15 }
+        next: post-rosc
+
+  post-rosc:
+    type: multiselect
+    check: { source: erc-als-2025, verified: false, todo: "Check targets against the ERC 2025 post-resuscitation guideline." }
+    prompt: "Before he goes to the cath lab. Choose up to 4."
+    max: 4
+    options:
+      - id: oxygen
+        label: "Titrate oxygen to SpO₂ 94–98% and ventilate to a normal CO₂"
+        grade: best
+        consequence: "Ventilator set; SpO₂ 96%."
+        teaching: "Avoid both hypoxia and hyperoxia; avoid low CO₂."
+        missedEffects: { patient: -5 }
+      - id: bp
+        label: "Keep the mean arterial pressure over 65 (fluids, noradrenaline if needed)"
+        grade: best
+        consequence: "Small fluid bolus and noradrenaline; MAP 72."
+        teaching: "Hypotension after arrest worsens brain injury."
+        missedEffects: { patient: -5 }
+      - id: fever
+        label: "Prevent fever: keep temperature 37.5 °C or less for 72 hours"
+        grade: best
+        consequence: "Temperature-control plan started."
+        teaching: "Prevent fever in comatose survivors."
+        missedEffects: { patient: -5 }
+      - id: cath
+        label: "Go straight to the cath lab"
+        grade: best
+        consequence: "Transferred within 20 minutes."
+        teaching: "Treat the cause."
+        missedEffects: { patient: -10 }
+      - id: hyperoxia
+        label: "100% oxygen for the next 24 hours to protect the brain"
+        grade: suboptimal
+        consequence: "Your senior turns the oxygen down."
+        teaching: "Hyperoxia after cardiac arrest may be harmful; titrate."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Ten days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "They tell me I died in the waiting room. I don't remember a thing." }
+    summary: "Fast CPR, early shocks, drugs on time and a quick look for the cause: he had his LAD stented and woke up neurologically intact."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Three weeks later · Rehabilitation ward"
+    summary: "He survived, but delays to CPR, long pauses or a late cath lab left him with a slower recovery. The debrief shows where."
+
+debrief:
+  diagnosis: "In-hospital VF cardiac arrest in the ED waiting area from an acute anterior STEMI (LAD occlusion); return of circulation after the sixth shock."
+  keyPoints:
+    - "Unresponsive and gasping = cardiac arrest: CPR and the defibrillator, no long pulse checks."
+    - "VF: unsynchronised shock ≥150 J, then 2 minutes of compressions immediately."
+    - "Adrenaline 1 mg and amiodarone 300 mg after the 3rd shock; adrenaline every 3–5 minutes; amiodarone 150 mg after the 5th."
+    - "Look for the cause during CPR (4 Hs and 4 Ts); minimise every pause."
+    - "After return of circulation: 12-lead, cath lab for STEMI, SpO₂ 94–98%, normal CO₂, MAP over 65, prevent fever."
+  pitfalls:
+    - "Pausing compressions to check a pulse straight after a shock."
+    - "Stacked shocks in an unmonitored arrest."
+    - "Dismissing ST elevation after ROSC as 'post-arrest changes'."
+  unlocks: [cardiac-arrest-als, defibrillation, adrenaline, amiodarone]
+  refs: [erc-als-2025, esc-acs-2023]
+  check: { source: erc-als-2025, verified: false }

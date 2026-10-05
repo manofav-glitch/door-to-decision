@@ -1,0 +1,14 @@
+id: insulin-glucose
+title: "Insulin–glucose for hyperkalaemia"
+summary: "Shifts potassium into cells within 15–30 minutes, lowering it by about 0.6–1 mmol/L. Hypoglycaemia is the commonest harm."
+doses:
+  - id: hyperkalaemia
+    label: "Moderate or severe hyperkalaemia"
+    route: IV over 15 minutes
+    text: "10 units soluble insulin with 25 g glucose; if the starting glucose is under 7 mmol/L, follow with 10% glucose at 50 ml/h for 5 hours; check glucose hourly"
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+sections:
+  - heading: With it
+    body: "Nebulised salbutamol 10–20 mg adds a further fall. Neither removes potassium from the body: dialysis or a potassium binder does."
+refs: [erc-special-2025, ukka-hyperk-2023]
+check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }

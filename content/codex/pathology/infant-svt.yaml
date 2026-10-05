@@ -1,0 +1,16 @@
+id: infant-svt
+title: "SVT in infants"
+summary: "The commonest significant arrhythmia of infancy. It shows as poor feeding, fast breathing, sweating and pallor, not palpitations."
+sections:
+  - heading: SVT or sinus tachycardia?
+    body: "SVT: infants usually over 220/min (children over 180), fixed rate, abrupt onset, P waves hidden. Sinus tachycardia: usually under 220, varies, with a cause (fever, crying, dehydration)."
+  - heading: Compensated
+    body: "Vagal manoeuvre: a bag of ice water wrapped in cloth over the face for up to 15 seconds. Then adenosine 0.1–0.2 mg/kg rapid IV/IO with a large flush; if no effect, 0.3 mg/kg."
+  - heading: Decompensated
+    body: "Synchronised cardioversion 1 J/kg, then 2 J/kg (up to 4 J/kg), with sedation and analgesia; don't delay for IV access."
+  - heading: Never
+    body: "Verapamil in infants: profound, sometimes fatal, collapse. No eyeball pressure or carotid massage."
+  - heading: Afterwards
+    body: "ECG in sinus rhythm for pre-excitation, echo for structural disease and cardiomyopathy, paediatric cardiology for prevention."
+refs: [rcuk-paeds-2025, esc-svt-2019]
+check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }

@@ -1,0 +1,16 @@
+id: hyperkalaemia-treatment
+title: "Treating severe hyperkalaemia"
+summary: "Protect the heart, shift the potassium, remove the potassium, and stop it coming back."
+sections:
+  - heading: 1. Protect
+    body: "ECG changes: IV calcium (10 ml 10% calcium chloride or 30 ml 10% calcium gluconate); repeat if changes persist."
+  - heading: 2. Shift
+    body: "Insulin 10 units with 25 g glucose IV, then glucose infusion if starting glucose is low; salbutamol 10–20 mg nebulised. Sodium bicarbonate only in severe acidosis or cardiac arrest."
+  - heading: 3. Remove
+    body: "Dialysis for a patient on dialysis or with severe kidney injury; potassium binders are slower."
+  - heading: 4. Monitor
+    body: "Potassium and glucose every 1–2 hours; continuous ECG. Stop potassium-raising drugs."
+  - heading: Don't
+    body: "Pace or give atropine and forget the potassium; give insulin without glucose."
+refs: [ukka-hyperk-2023, erc-special-2025]
+check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }

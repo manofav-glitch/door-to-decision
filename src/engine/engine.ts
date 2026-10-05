@@ -20,7 +20,7 @@ const VITAL_KEYS: VitalKey[] = ['hr', 'sbp', 'dbp', 'rr', 'spo2', 'gcs', 'temp']
 
 /** Physical bounds only, so effects can't produce impossible numbers. Not clinical thresholds. */
 const BOUNDS: Record<VitalKey, [number, number]> = {
-  hr: [0, 250],
+  hr: [0, 320], // infants in SVT can exceed 250
   sbp: [0, 300],
   dbp: [0, 200],
   rr: [0, 70],

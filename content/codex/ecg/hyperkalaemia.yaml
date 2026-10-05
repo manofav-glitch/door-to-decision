@@ -1,0 +1,10 @@
+id: hyperkalaemia
+title: "Hyperkalaemia on the ECG"
+summary: "Tall, narrow, peaked T waves, then flattened P waves and a long PR, then a broad QRS, a sine wave, and arrest. The ECG can be near normal even at dangerous levels."
+sections:
+  - heading: Mimics
+    body: "Broad slow complexes can look like complete heart block or a ventricular rhythm; tall T waves like hyperacute STEMI. Check a blood-gas potassium."
+  - heading: Pacing
+    body: "Often fails to capture in severe hyperkalaemia: treat the potassium."
+refs: [ukka-hyperk-2023, erc-special-2025]
+check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }

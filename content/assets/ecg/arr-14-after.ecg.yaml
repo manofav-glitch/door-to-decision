@@ -1,0 +1,9 @@
+# arr-14: after calcium and insulin–glucose. P waves return, QRS narrower, T still tall.
+title: "Rhythm strip, lead II, after treatment"
+layout: strip
+rhythm: { kind: sinus, rate: 62, pr: 220 }
+qrs: 110
+rhythmLead: II
+leads:
+  II: { p: 0.08, t: 0.6, tw: 0.8 }
+check: { source: ukka-hyperk-2023, verified: false, todo: "Check it shows improvement (P waves back, narrower QRS)." }

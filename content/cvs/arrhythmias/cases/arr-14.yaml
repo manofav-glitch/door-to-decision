@@ -1,0 +1,201 @@
+# arr-14 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: severe hyperkalaemia (K 7.8, pH 7.18) in a haemodialysis patient who missed two
+# sessions: bradycardia with broad QRS, no P waves, peaked T. Calcium first (protects the heart), then
+# insulin–glucose and salbutamol to shift, urgent dialysis to remove. Atropine/pacing without calcium
+# is the trap; insulin without glucose is the other.
+# Sources: ERC 2025 Special Circumstances, UK Kidney Association 2023 (drafted from guidelines).
+
+id: cvs-arr-14
+title: "62M on dialysis, weak legs, slow pulse"
+difficulty: 2
+minutes: 10
+patient: { age: 62, sex: M, weightKg: 70 }
+initial:
+  clock: "08:15"
+  rhythm: ecg/arr-14-hyperk.svg
+  vitals: { hr: 38, sbp: 92, dbp: 56, rr: 22, spo2: 95, gcs: 15, temp: 36.5 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [erc-special-2025, ukka-hyperk-2023]
+  verified: false
+  todo: "Drafted from guidelines; check the potassium, pH and ECG severity fit."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I missed my last two dialysis sessions; there was a wedding in the village. Now my legs feel like jelly." }
+          - { who: nurse, text: "Pulse 38, BP 92 over 56. Fistula in the left arm." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: ukka-hyperk-2023, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Monitor, 12-lead ECG, and a blood gas for potassium now; IV access in the right arm"
+        grade: best
+        consequence: "ECG at 4 minutes; the blood gas is running."
+        teaching: "A blood gas gives a potassium in minutes. Protect the fistula arm."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Send renal function to the lab and wait for the result"
+        grade: suboptimal
+        consequence: "Your senior asks for a blood gas instead of waiting an hour."
+        teaching: "Hyperkalaemia can kill in the time it takes for a lab result."
+        effects: { minutes: 15, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus bay"
+    image: ecg/arr-14-hyperk.svg
+    alt: "12-lead ECG. Slow broad-complex rhythm at about 38 per minute, no visible P waves, tall narrow peaked T waves in the chest and inferior leads."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Severe hyperkalaemia: slow, broad QRS, no P waves, tall peaked T waves"
+        grade: best
+        consequence: "The blood gas confirms it: potassium 7.8, pH 7.18."
+        teaching: "Broad QRS and lost P waves mean the heart is close to a sine wave and arrest."
+        effects: { minutes: 1 }
+        next: calcium
+      - label: "Complete heart block: start pacing"
+        grade: suboptimal
+        consequence: "Your senior points to the peaked T waves and asks for the blood gas result: potassium 7.8."
+        teaching: "In a dialysis patient, a slow broad rhythm is hyperkalaemia until the potassium says otherwise."
+        effects: { minutes: 2 }
+        next: calcium
+      - label: "Hyperacute T waves of an anterior STEMI"
+        grade: suboptimal
+        consequence: "Your senior shows you the narrow-based, symmetrical T waves in many territories and the broad QRS."
+        teaching: "Hyperkalaemic T waves are tall, narrow and symmetrical; hyperacute T waves are broad-based and regional."
+        effects: { minutes: 2 }
+        next: calcium
+
+  calcium:
+    type: choice
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+    prompt: "Potassium 7.8 with a broad, slow rhythm. First treatment?"
+    options:
+      - label: "IV calcium now (10 ml 10% calcium chloride or 30 ml 10% calcium gluconate), ECG running; repeat if the changes persist"
+        grade: best
+        consequence: "Within minutes the QRS narrows a little and the rate rises to 52."
+        teaching: "Calcium stabilises the heart in minutes but doesn't lower the potassium: it buys time."
+        effects: { minutes: 5, setVitals: { hr: 52, sbp: 104, dbp: 62 } }
+        next: shift
+      - label: "Atropine 1 mg for the bradycardia"
+        grade: harmful
+        consequence: "No change. Your senior gives calcium."
+        teaching: "The bradycardia is the potassium. Atropine won't fix it."
+        effects: { minutes: 5, patient: -15, setVitals: { hr: 50, sbp: 100, dbp: 60 } }
+        next: shift
+      - label: "Transcutaneous pacing"
+        grade: harmful
+        consequence: "The pacing doesn't capture. Your senior gives calcium."
+        teaching: "Pacing often fails in severe hyperkalaemia; treat the potassium first."
+        effects: { minutes: 8, patient: -15, setVitals: { hr: 50, sbp: 100, dbp: 60 } }
+        next: shift
+      - label: "Insulin and glucose first"
+        grade: suboptimal
+        consequence: "It will take 15–30 minutes to work; your senior gives calcium in the meantime."
+        teaching: "Protect the heart first with calcium, then shift the potassium."
+        effects: { minutes: 5, patient: -5, setVitals: { hr: 50, sbp: 100, dbp: 60 } }
+        next: shift
+
+  shift:
+    type: multiselect
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+    prompt: "Now lower the potassium. Choose up to 3."
+    max: 3
+    options:
+      - id: insulin
+        label: "Insulin 10 units with 25 g glucose IV, then a glucose infusion and hourly glucose checks"
+        grade: best
+        consequence: "Given; glucose checked hourly."
+        teaching: "Shifts potassium into cells within 15–30 minutes; the glucose infusion prevents late hypoglycaemia."
+        missedEffects: { patient: -10 }
+      - id: salbutamol
+        label: "Salbutamol 10–20 mg nebulised"
+        grade: best
+        consequence: "Nebuliser running."
+        teaching: "Adds to the insulin effect."
+        missedEffects: { patient: -5 }
+      - id: dialysis
+        label: "Urgent dialysis"
+        grade: best
+        consequence: "The nephrology team takes him for dialysis within the hour."
+        teaching: "Shifting is temporary; dialysis removes the potassium."
+        missedEffects: { patient: -10 }
+      - id: insulin-alone
+        label: "Insulin 10 units on its own: his glucose is normal"
+        grade: harmful
+        consequence: "Your senior adds glucose before his sugar falls."
+        teaching: "Insulin without glucose causes dangerous hypoglycaemia, especially in kidney failure."
+      - id: binder
+        label: "Oral potassium binder and recheck tomorrow"
+        grade: suboptimal
+        consequence: "Your senior arranges dialysis as well."
+        teaching: "Binders act over hours; with ECG changes he needs faster treatment."
+    next: better
+
+  better:
+    type: story
+    onEnter: { minutes: 90, setVitals: { hr: 62, sbp: 118, dbp: 72, rr: 18 }, rhythm: ecg/arr-14-after.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · On dialysis"
+      - scene: resus-bay
+        actors: [patient-supine:relieved, nurse]
+        bubbles:
+          - { who: nurse, text: "Potassium 5.4, P waves are back, glucose 6.8." }
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Next day · Renal ward"
+        bubbles:
+          - { who: patient, text: "No more skipping sessions. My legs work again." }
+    summary: "You recognised hyperkalaemia on the ECG, protected the heart with calcium first, shifted the potassium safely and got him dialysed."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Two days later · Renal ward"
+    summary: "He recovered, but treating the heart rate instead of the potassium, or leaving a step out, kept him in danger longer. The debrief shows where."
+
+debrief:
+  diagnosis: "Severe hyperkalaemia (potassium 7.8, acidosis) after missed haemodialysis, with bradycardia, broad QRS and peaked T waves."
+  keyPoints:
+    - "A dialysis patient with a slow, broad rhythm has hyperkalaemia until proven otherwise; get a blood-gas potassium."
+    - "Protect: IV calcium first when the ECG is changed; repeat if needed."
+    - "Shift: insulin 10 units + glucose 25 g (then glucose infusion and hourly checks), salbutamol 10–20 mg nebulised."
+    - "Remove: dialysis."
+    - "Atropine and pacing don't fix hyperkalaemic bradycardia."
+  pitfalls:
+    - "Pacing or atropine before calcium."
+    - "Insulin without glucose."
+    - "Waiting for a lab potassium with a broad-complex ECG."
+  unlocks: [hyperkalaemia, hyperkalaemia-treatment, calcium, insulin-glucose]
+  refs: [erc-special-2025, ukka-hyperk-2023]
+  check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }

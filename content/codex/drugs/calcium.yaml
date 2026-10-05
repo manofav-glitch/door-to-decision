@@ -1,0 +1,17 @@
+id: calcium
+title: "Calcium (chloride or gluconate) for hyperkalaemia"
+summary: "Protects the heart within minutes when hyperkalaemia changes the ECG. It doesn't lower the potassium."
+doses:
+  - id: hyperkalaemia
+    label: "Hyperkalaemia with ECG changes"
+    route: IV over 5–10 minutes (rapid bolus in cardiac arrest), ECG monitored
+    text: "10 ml 10% calcium chloride, or 30 ml 10% calcium gluconate; repeat if the ECG changes persist"
+    check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false, todo: "Confirm doses and which salt you teach first." }
+sections:
+  - heading: How quickly
+    body: "Works in minutes and lasts 30–60 minutes: buy time while insulin, salbutamol and dialysis lower the potassium."
+  - heading: Cautions
+    body: "Calcium chloride is irritant: a large vein. Don't run it in the same line as bicarbonate (it precipitates)."
+india: "Both salts are widely available."
+refs: [ukka-hyperk-2023, erc-special-2025]
+check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }

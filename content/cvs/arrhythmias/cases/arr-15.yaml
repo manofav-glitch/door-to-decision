@@ -1,0 +1,227 @@
+# arr-15 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: SVT (AVRT via a concealed accessory pathway) in a 2-month-old, 4.5 kg, presenting with
+# poor feeding and fast breathing. Compensated at first: ice-water facial immersion, then weight-based
+# adenosine converts. An hour later it recurs and she decompensates: synchronised cardioversion 1 J/kg.
+# Never verapamil in infants. Afterwards: sinus ECG, echo, paediatric cardiology.
+# Sources: RCUK 2025 paediatric algorithms, ESC 2019 SVT, owner's SVT notes (paediatric section).
+
+id: cvs-arr-15
+title: "2-month-old, not feeding, breathing fast"
+difficulty: 3
+minutes: 12
+patient: { age: 0, sex: F, weightKg: 4.5 }
+initial:
+  clock: "04:40"
+  rhythm: ecg/arr-15-svt.svg
+  vitals: { hr: 280, sbp: 72, dbp: 44, rr: 62, spo2: 96, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [rcuk-paeds-2025, esc-svt-2019]
+  verified: false
+  todo: "Drafted from guidelines; check the infant vitals and presentation."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [relative:alarmed, nurse:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "She won't feed since yesterday evening. She's breathing so fast and she's sweaty and pale." }
+          - { who: nurse, text: "Heart rate too fast to count by hand: the monitor says 280. Breathing 62. She's alert but grizzly. Capillary refill 3 seconds. Weight 4.5 kg." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: rcuk-paeds-2025, verified: false }
+    prompt: "Your first move?"
+    options:
+      - label: "Resus, monitor, 12-lead ECG, IV or IO access, glucose check, and call the paediatric team"
+        grade: best
+        consequence: "ECG printed; IV access in the hand at the second attempt; glucose 5.1."
+        teaching: "Get the ECG during the tachycardia and senior paediatric help early."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Treat as sepsis: 20 ml/kg fluid bolus and antibiotics, then review"
+        grade: suboptimal
+        consequence: "The rate stays fixed at 280 after the bolus. Your senior asks for an ECG."
+        teaching: "A fixed rate over 220 in an infant is SVT until proven otherwise; fluids don't slow it."
+        effects: { minutes: 20, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: rcuk-paeds-2025, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/arr-15-svt.svg
+    alt: "12-lead ECG of an infant. Regular narrow-complex tachycardia at about 280 per minute, no visible P waves, no variation in rate."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "SVT: regular, narrow, about 280, no P waves, no variation"
+        grade: best
+        consequence: "You prepare for a vagal manoeuvre while the team draws up adenosine."
+        teaching: "Infant SVT is usually over 220/min, fixed and abrupt; sinus tachycardia is usually under 220 and varies."
+        effects: { minutes: 1 }
+        next: vagal
+      - label: "Sinus tachycardia from sepsis or dehydration"
+        grade: suboptimal
+        consequence: "Your senior points out there's no P wave and the rate never changes, even when she cries."
+        teaching: "Sinus tachycardia in infants rarely exceeds 220 and moves with crying, fever and fluids."
+        effects: { minutes: 2 }
+        next: vagal
+
+  vagal:
+    type: choice
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    prompt: "She's compensated: alert, BP 72/44, capillary refill 3 seconds. First treatment?"
+    options:
+      - label: "Ice-water vagal manoeuvre: a bag of iced water wrapped in a cloth over her face for up to 15 seconds, recording running"
+        grade: best
+        consequence: "She gasps and cries; the rate wobbles, then stays at 280."
+        teaching: "The diving reflex is the infant vagal manoeuvre; worth trying first even if it fails."
+        effects: { minutes: 3 }
+        next: adenosine
+      - label: "IV verapamil"
+        grade: harmful
+        consequence: "Your senior stops it before it's given."
+        teaching: "Verapamil can cause profound, sometimes fatal, collapse in infants."
+        effects: { minutes: 3, patient: -25 }
+        next: adenosine
+      - label: "Press on her eyeballs or massage her carotid"
+        grade: harmful
+        consequence: "Your senior stops you."
+        teaching: "Eyeball pressure can injure the eye; carotid massage isn't used in infants."
+        effects: { minutes: 2, patient: -15 }
+        next: adenosine
+
+  adenosine:
+    type: dose
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false, todo: "Correct range 0.1–0.2 mg/kg (0.45–0.9 mg); owner to confirm the paediatric regimen." }
+    prompt: "Adenosine, first dose, for this 4.5 kg infant. Dose in mg?"
+    drug: adenosine
+    dose: infant
+    tolerancePct: 10
+    correct:
+      consequence: "Rapid push with a big flush: two seconds of flat line, then sinus rhythm at 150. She settles and starts to root for a feed."
+      teaching: "0.1–0.2 mg/kg rapid IV/IO with a large flush; if it fails, 0.3 mg/kg."
+      effects: { minutes: 3, setVitals: { hr: 150, sbp: 80, dbp: 50, rr: 40 }, rhythm: ecg/arr-15-sinus.svg }
+    under:
+      consequence: "Nothing happens. A second dose of 0.3 mg/kg converts her to sinus rhythm at 150."
+      teaching: "0.1–0.2 mg/kg for the first dose; too little simply fails."
+      effects: { minutes: 5, setVitals: { hr: 150, sbp: 80, dbp: 50, rr: 40 }, rhythm: ecg/arr-15-sinus.svg }
+    over:
+      consequence: "A long, frightening pause on the monitor before sinus rhythm returns at 150."
+      teaching: "Adult doses in an infant cause prolonged asystole. Always calculate by weight."
+      effects: { minutes: 4, patient: -20, setVitals: { hr: 150, sbp: 78, dbp: 48, rr: 42 }, rhythm: ecg/arr-15-sinus.svg }
+    next: recur
+
+  recur:
+    type: story
+    onEnter: { minutes: 60, setVitals: { hr: 290, sbp: 58, dbp: 34, rr: 68, spo2: 93 }, rhythm: ecg/arr-15-svt.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · An hour later"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "It's back at 290, and she's floppy, mottled and grey. BP 58 over 34." }
+    next: shock
+
+  shock:
+    type: dose
+    check: { source: rcuk-paeds-2025, verified: false }
+    prompt: "Decompensated SVT. Synchronised cardioversion with sedation and analgesia. First shock, in joules?"
+    drug: synchronised-cardioversion
+    dose: paediatric
+    tolerancePct: 25
+    correct:
+      consequence: "One synchronised shock: sinus rhythm at 150; colour returns within a minute."
+      teaching: "1 J/kg (here about 4–5 J), then 2 J/kg, up to 4 J/kg."
+      effects: { minutes: 5, setVitals: { hr: 150, sbp: 78, dbp: 48, rr: 44, spo2: 97 }, rhythm: ecg/arr-15-sinus.svg }
+    under:
+      consequence: "No change. A second shock at 2 J/kg works."
+      teaching: "Start at 1 J/kg; too low a dose just fails."
+      effects: { minutes: 6, patient: -5, setVitals: { hr: 150, sbp: 76, dbp: 46, rr: 46, spo2: 96 }, rhythm: ecg/arr-15-sinus.svg }
+    over:
+      consequence: "It converts, but your senior notes the energy was far above the weight-based dose."
+      teaching: "Weight-based energy for children: 1 J/kg first, never adult settings."
+      effects: { minutes: 5, patient: -15, setVitals: { hr: 150, sbp: 76, dbp: 46, rr: 44, spo2: 97 }, rhythm: ecg/arr-15-sinus.svg }
+    next: after
+
+  after:
+    type: multiselect
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    prompt: "She's in sinus rhythm. Next steps? Choose up to 3."
+    max: 3
+    options:
+      - id: picu
+        label: "Admit under paediatric cardiology for monitoring and a plan to prevent recurrences"
+        grade: best
+        consequence: "Paediatric cardiology admits her and starts maintenance treatment."
+        teaching: "Infants often recur in the first months; prevention is a specialist decision."
+        missedEffects: { patient: -10 }
+      - id: sinus-ecg
+        label: "12-lead ECG in sinus rhythm: look for pre-excitation"
+        grade: best
+        consequence: "No delta wave: a concealed pathway."
+        teaching: "WPW changes the choice of preventive drug."
+        missedEffects: { patient: -5 }
+      - id: echo
+        label: "Echocardiogram for structural disease and heart function"
+        grade: best
+        consequence: "Structurally normal heart, mildly reduced function that should recover."
+        teaching: "Prolonged SVT can cause a tachycardia-induced cardiomyopathy; structural lesions can coexist."
+        missedEffects: { patient: -5 }
+      - id: home
+        label: "Home after an hour in sinus rhythm, with GP follow-up"
+        grade: harmful
+        consequence: "Your senior admits her."
+        teaching: "It already recurred once tonight; infants need specialist admission."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Three days later · Paediatric ward"
+        bubbles:
+          - { who: relative, text: "She's feeding properly again. We know what to look for now." }
+    summary: "You recognised infant SVT behind 'not feeding', used weight-based adenosine and energy, avoided verapamil, and got her specialist care."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "A week later · Paediatric ward"
+    summary: "She recovered, but adult-sized doses, the wrong drug or a delay made her night more dangerous. The debrief shows where."
+
+debrief:
+  diagnosis: "Supraventricular tachycardia (AVRT via a concealed accessory pathway) in a 2-month-old, recurring with decompensation; converted with adenosine, then synchronised cardioversion."
+  keyPoints:
+    - "Infant SVT presents as poor feeding, fast breathing, sweating and pallor; rate usually over 220 and fixed."
+    - "Compensated: ice-water facial immersion, then adenosine 0.1–0.2 mg/kg rapid IV/IO with a large flush (0.3 mg/kg if it fails)."
+    - "Decompensated: synchronised cardioversion 1 J/kg, then 2 J/kg, with sedation and analgesia."
+    - "Never verapamil in infants."
+    - "Afterwards: sinus ECG for pre-excitation, echo, paediatric cardiology admission."
+  pitfalls:
+    - "Treating it as sepsis or dehydration because the child is an infant."
+    - "Adult doses of adenosine or adult shock energies."
+    - "Verapamil, eyeball pressure or carotid massage."
+  unlocks: [infant-svt, adenosine, synchronised-cardioversion]
+  refs: [rcuk-paeds-2025, esc-svt-2019]
+  check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }

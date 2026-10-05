@@ -1,0 +1,8 @@
+# Shared monitor rhythm: sinus tachycardia with a pulse after resuscitation.
+title: "Rhythm strip, lead II: sinus tachycardia after ROSC"
+layout: strip
+rhythm: { kind: sinus, rate: 110 }
+rhythmLead: II
+leads:
+  II: { st: -0.1 }
+check: { source: erc-als-2025, verified: false, todo: "Check it reads as an organised rhythm." }

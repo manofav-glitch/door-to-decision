@@ -1,0 +1,14 @@
+id: cardiac-arrest-als
+title: "Cardiac arrest: the ALS loop and after"
+summary: "High-quality compressions with minimal pauses, early defibrillation for VF/pVT, adrenaline and amiodarone on time, reversible causes, then post-resuscitation care."
+sections:
+  - heading: Shockable (VF/pVT)
+    body: "Shock (≥150 J biphasic), 2 minutes CPR, rhythm check. Adrenaline 1 mg and amiodarone 300 mg after the 3rd shock; adrenaline every 3–5 minutes; amiodarone 150 mg after the 5th."
+  - heading: Non-shockable
+    body: "Adrenaline 1 mg as soon as possible, then every 3–5 minutes."
+  - heading: Reversible causes
+    body: "4 Hs: hypoxia, hypovolaemia, hypo/hyperkalaemia and metabolic, hypothermia. 4 Ts: thrombosis (coronary or pulmonary), tension pneumothorax, tamponade, toxins."
+  - heading: After return of circulation
+    body: "12-lead ECG: ST elevation means emergency coronary angiography. SpO₂ 94–98%, normal CO₂, mean arterial pressure over 65, prevent fever (≤ 37.5 °C) for 72 hours."
+refs: [erc-als-2025]
+check: { source: erc-als-2025, verified: false }

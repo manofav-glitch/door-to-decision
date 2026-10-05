@@ -235,3 +235,20 @@
   citation: "Drew BJ, Ackerman MJ, Funk M, et al. Prevention of torsade de pointes in hospital settings: a scientific statement from the American Heart Association and the American College of Cardiology Foundation. Circulation. 2010;121(8):1047–1060."
   year: 2010
   url: https://doi.org/10.1161/CIRCULATIONAHA.109.192704
+
+- id: erc-special-2025
+  citation: "European Resuscitation Council Guidelines 2025: Special Circumstances in Resuscitation. Resuscitation. 2025."
+  year: 2025
+  url: https://www.resuscitationjournal.com/article/S0300-9572(25)00265-5/fulltext
+  todo: "Add authors, volume and article number."
+
+- id: ukka-hyperk-2023
+  citation: "UK Kidney Association. Clinical Practice Guidelines: Treatment of Acute Hyperkalaemia in Adults. 2023."
+  year: 2023
+  url: https://guidelines.ukkidney.org/hyperkalaemia/
+  todo: "Confirm title and year."
+
+- id: rcuk-paeds-2025
+  citation: "Resuscitation Council UK. 2025 Paediatric emergency algorithms and resources (version 6, February 2026). London: Resuscitation Council UK."
+  year: 2026
+  url: https://www.resus.org.uk/sites/default/files/2026-02/RCUK%20Paediatric%20emergency%20algorithms%20and%20resources%20Feb%2026%20V6.pdf

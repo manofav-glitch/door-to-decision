@@ -1,0 +1,21 @@
+id: defibrillation
+title: "Defibrillation (VF and pulseless VT)"
+summary: "Unsynchronised shock for a shockable cardiac arrest, as early as possible, with minimal pauses in compressions."
+doses:
+  - id: vf
+    label: "VF or pulseless VT, first shock (adult)"
+    route: Unsynchronised, biphasic
+    text: "At least 150 J (pulsed biphasic 130–150 J); increase for later shocks if the device allows"
+    rule: { unit: J, fixed: { min: 150, max: 360 } }
+    check: { source: erc-als-2025, verified: false }
+sections:
+  - heading: The loop
+    body: "Shock, then 2 minutes of compressions straight away without a pulse check; rhythm check; repeat. Charge the defibrillator during compressions to keep pauses under 5 seconds."
+  - heading: Drugs
+    body: "After the 3rd shock: adrenaline 1 mg and amiodarone 300 mg. Adrenaline every 3–5 minutes after that; amiodarone 150 mg after the 5th shock."
+  - heading: Stacked shocks
+    body: "Up to three in a row only for a witnessed, monitored arrest in VF (e.g. in the cath lab or CCU)."
+  - heading: Never sync
+    body: "There are no R waves in VF; a synchronised shock may never fire."
+refs: [erc-als-2025]
+check: { source: erc-als-2025, verified: false }

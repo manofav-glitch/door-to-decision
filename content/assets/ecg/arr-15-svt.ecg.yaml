@@ -1,0 +1,10 @@
+# arr-15: infant SVT. Regular narrow-complex tachycardia ~280/min, no visible P waves, no
+# beat-to-beat variation.
+title: "12-lead ECG during the tachycardia"
+layout: 12-lead
+rhythm: { kind: svt, rate: 280 }
+rhythmLead: II
+leads:
+  V1: { r: 0.5, s: 0.6 }
+  V2: { r: 0.8, s: 0.9 }
+check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false, todo: "Check it reads as infant SVT (rate over 220, fixed)." }

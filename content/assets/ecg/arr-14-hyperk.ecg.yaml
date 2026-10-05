@@ -1,0 +1,17 @@
+# arr-14: severe hyperkalaemia (K 7.8). Slow (~38), no visible P waves, broad QRS, tall narrow-based
+# peaked T waves.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: vt, rate: 38 }
+qrs: 170
+rhythmLead: II
+leads:
+  I: { q: 0, r: 0.6, s: 0.3, t: 0.6, tw: 0.75 }
+  II: { q: 0, r: 0.8, s: 0.4, t: 0.9, tw: 0.75 }
+  III: { q: 0, r: 0.4, s: 0.3, t: 0.5, tw: 0.75 }
+  aVF: { q: 0, r: 0.6, s: 0.3, t: 0.7, tw: 0.75 }
+  V2: { q: 0, r: 0.3, s: 1.0, t: 1.1, tw: 0.7 }
+  V3: { q: 0, r: 0.6, s: 0.8, t: 1.2, tw: 0.7 }
+  V4: { q: 0, r: 0.9, s: 0.5, t: 1.1, tw: 0.7 }
+  V5: { q: 0, r: 1.0, s: 0.3, t: 0.9, tw: 0.75 }
+check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false, todo: "Check it reads as severe hyperkalaemia (broad, slow, peaked T, no P)." }

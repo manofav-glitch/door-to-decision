@@ -1,0 +1,17 @@
+# arr-13: after return of circulation. Sinus tachycardia ~110 with anterior ST elevation (V1–V4) and
+# reciprocal inferior depression: the cause of the arrest.
+title: "12-lead ECG after return of circulation"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 110 }
+rhythmLead: II
+leads:
+  I: { st: 0.1 }
+  aVL: { st: 0.15 }
+  II: { st: -0.1 }
+  III: { st: -0.15 }
+  aVF: { st: -0.12 }
+  V1: { st: 0.2 }
+  V2: { st: 0.4, t: 0.7 }
+  V3: { st: 0.45, t: 0.7 }
+  V4: { st: 0.35, t: 0.6 }
+check: { source: [erc-als-2025, esc-acs-2023], verified: false, todo: "Check it reads as anterior STEMI after ROSC." }
