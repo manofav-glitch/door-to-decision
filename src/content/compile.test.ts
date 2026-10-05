@@ -176,6 +176,8 @@ describe('compileContent', () => {
     function withRhythm(files: Record<string, string>, edit: (s: string) => string) {
       const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
       cpSync(FIXTURE, dir, { recursive: true });
+      // the fixture's empty assets/ecg folder isn't in git, so create it (CI checks out a fresh copy)
+      mkdirSync(join(dir, 'content/assets/ecg'), { recursive: true });
       for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, 'content/assets', f), text);
       const p = join(dir, CASE);
       writeFileSync(p, edit(readFileSync(p, 'utf8')));
