@@ -8,3 +8,6 @@ content/assets/art/**/*.png
 content/assets/art/**/*.jpg
 content/assets/art/**/*.jpeg
 content/assets/art/**/*.webp
+
+# owner's private source notes and research (may contain copyrighted material): never committed
+notes/
