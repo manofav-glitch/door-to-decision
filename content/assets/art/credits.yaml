@@ -68,3 +68,9 @@
   madeBy: Content owner
   date: 2026-10-02
   note: Cut from a 1024 × 1536 px sheet (seven panels, about 490 px wide), enlarged and sharpened.
+
+- folder: arr-01
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/arr-01-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-05
+  note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.
