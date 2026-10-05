@@ -8,6 +8,7 @@ export const kindLabel: Record<CodexKind, string> = {
   anatomy: 'Anatomy',
   pathology: 'Pathology',
   drugs: 'Drugs',
+  procedures: 'Procedures',
   scores: 'Scores',
   ecg: 'ECG',
 };
@@ -78,6 +79,7 @@ export function Codex() {
         <div role="tablist" aria-label="Codex sections" className="mb-4 flex flex-wrap gap-2">
           {CODEX_KINDS.map((k) => {
             const n = cards.filter((c) => c.kind === k).length;
+            if (n === 0) return null; // e.g. Procedures until a module adds one
             return (
               <button
                 key={k}

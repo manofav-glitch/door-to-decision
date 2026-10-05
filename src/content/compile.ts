@@ -496,8 +496,10 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
       }
       const card = ctx.codexById.get(node.drug);
       const dose = card?.doses.find((d) => d.id === node.dose);
-      if (!card || card.kind !== 'drugs') err([...p, 'drug'], `no drug card content/codex/drugs/${node.drug}.yaml`);
-      else if (!dose) err([...p, 'dose'], `drug card "${node.drug}" has no dose with id "${node.dose}"`);
+      // a dose node asks for a drug dose, or an energy/current from a procedure card (shock in J, pacing in mA)
+      if (!card || (card.kind !== 'drugs' && card.kind !== 'procedures'))
+        err([...p, 'drug'], `no drug card content/codex/drugs/${node.drug}.yaml (or procedure card in codex/procedures)`);
+      else if (!dose) err([...p, 'dose'], `${card.kind === 'drugs' ? 'drug' : 'procedure'} card "${node.drug}" has no dose with id "${node.dose}"`);
       else if (!dose.rule) err([...p, 'dose'], `dose "${node.dose}" on "${node.drug}" needs a rule: to be asked in a dose node`);
       else
         doses[`${node.drug}/${node.dose}`] = {

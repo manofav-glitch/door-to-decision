@@ -9,8 +9,8 @@ export type Reference = z.infer<typeof ReferencesFile>[number];
 export type TimeTarget = z.infer<typeof BenchmarksFile>['timeTargets'][number];
 export type VitalLimits = Omit<z.infer<typeof BenchmarksFile>['vitalLimits'], 'check'>;
 
-export type CodexKind = 'anatomy' | 'pathology' | 'drugs' | 'scores' | 'ecg';
-export const CODEX_KINDS: CodexKind[] = ['anatomy', 'pathology', 'drugs', 'scores', 'ecg'];
+export type CodexKind = 'anatomy' | 'pathology' | 'drugs' | 'procedures' | 'scores' | 'ecg';
+export const CODEX_KINDS: CodexKind[] = ['anatomy', 'pathology', 'drugs', 'procedures', 'scores', 'ecg'];
 
 export interface ResolvedDose {
   drugId: string;

@@ -207,4 +207,27 @@ describe('compileContent', () => {
       }
     });
   });
+
+  it('lets a dose question ask for a shock energy from a procedure card', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
+    cpSync(FIXTURE, dir, { recursive: true });
+    mkdirSync(join(dir, 'content/codex/procedures'), { recursive: true });
+    writeFileSync(
+      join(dir, 'content/codex/procedures/sync-shock.yaml'),
+      [
+        'id: sync-shock',
+        'title: Synchronised shock',
+        'summary: A test procedure.',
+        'doses:',
+        '  - { id: flutter, label: Flutter, route: synchronised, text: "70–120 J", rule: { unit: J, fixed: { min: 70, max: 120 } }, check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 } }',
+        'check: { source: ref-a, verified: true, reviewedOn: 2026-01-01 }',
+        '',
+      ].join('\n'),
+    );
+    const p = join(dir, CASE);
+    writeFileSync(p, readFileSync(p, 'utf8').replace('drug: drug-x', 'drug: sync-shock').replace('dose: per-kg', 'dose: flutter'));
+    const c = compileContent(dir);
+    expect(c.cases['demo-c-01']!.doses['sync-shock/flutter']!.rule.unit).toBe('J');
+    expect(c.codex.find((x) => x.id === 'sync-shock')!.kind).toBe('procedures');
+  });
 });
