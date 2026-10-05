@@ -202,6 +202,10 @@ dose-tnk:
 The correct answer is worked out from the drug card and the case's patient (weight, age), so it's never
 typed into the case.
 
+The same question works for **shock energies and pacing current**: put the rule on a card in
+`content/codex/procedures/` (e.g. `synchronised-cardioversion.yaml` with doses in `J`, or `J`/kg for
+children, and `transcutaneous-pacing.yaml` in `mA`) and point `drug:` at that card.
+
 ### calculator: work out a score
 
 ```yaml
