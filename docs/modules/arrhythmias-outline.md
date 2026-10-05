@@ -1,6 +1,6 @@
 # Arrhythmias module — outline for the owner's approval
 
-Status: DRAFT plan, 2026-10-05. Nothing here is built. Every clinical item will be drafted
+Status: APPROVED by the owner 2026-10-05 (decisions in §0). Build in progress. Every clinical item will be drafted
 `verified: false` until the owner checks it.
 
 Sources read: the owner's notes in `notes/arrhythmias/` (SVT; Atrial Fibrillation; Bradyarrhythmias &
@@ -13,6 +13,21 @@ are not used.
 Where it lives: Cardiovascular → **Arrhythmias** (new module beside Chest Pain), case ids `arr-NN`.
 
 ---
+
+## 0. Owner's decisions (2026-10-05)
+
+1. **Follow the European guidelines** where they differ: ESC (SVT 2019, AF 2024, ventricular arrhythmias
+   2022, pacing 2021) and ERC/RCUK 2025 for resuscitation and peri-arrest algorithms.
+2. **Atropine 1 mg** IV for bradycardia (repeat every 3–5 min, max 3 mg) — the owner's choice; note ERC 2025
+   uses 500 micrograms. ERC 2025 also says not to give atropine in high-degree AV block with a wide QRS.
+3. **Shock energies drafted from the guidelines** (ERC 2025 ALS), unverified until checked:
+   VF/pulseless VT ≥150 J biphasic, then increase; synchronised for VT 120–150 J, AF at maximum output,
+   flutter and regular narrow-complex tachycardia 70–120 J, stepwise increases, up to 3 attempts, then
+   amiodarone 300 mg IV over 10–20 min (or procainamide 10–15 mg/kg, max 1 g, over 20 min) and repeat.
+   Adenosine 6 → 12 → 18 mg rapid IV with flush (RCUK 2025). Torsades: magnesium 2 g (8 mmol) IV over 10 min.
+4. **Missing topics drafted from published guidelines** (ERC/RCUK 2025), marked unverified:
+   cardiac arrest, hyperkalaemia and paediatric SVT added as cases 13–15 below.
+5. **Keep all 12 cases and add the missing ones** → 15 cases.
 
 ## 1. Proposed cases (12), in two batches
 
@@ -40,9 +55,17 @@ Each line: story the learner sees → hidden diagnosis → the decisions → the
 | arr-11 | 58F on azithromycin + ondansetron, vomiting, collapses with torsades | Acquired long QT, torsades | defibrillate if pulseless → **magnesium 2 g IV** → K⁺ to 4.5–5 → stop the drugs → raise the rate (isoprenaline acceptable here, or pacing) | amiodarone; procainamide; ignoring the drug list |
 | arr-12 | 27F, 3 weeks postpartum, faints when the alarm rings | Congenital LQT2 | measure QT by hand → **Schwartz score calculator** → nadolol/propranolol (not metoprolol) → potassium → family screening | isoprenaline in congenital LQTS; switching to metoprolol; "it's a seizure" |
 
-**Not proposed yet (your notes don't cover them):** VF/pulseless VT cardiac arrest (ALS), hyperkalaemia
-as its own case, paediatric SVT. They can be added later from guidelines (drafted unverified with
-`needs-source`) or from more notes.
+### Batch C — drafted from published guidelines (not in the owner's notes)
+
+| # | Story | Hidden truth | Key decisions | Traps |
+|---|---|---|---|---|
+| arr-13 | 55M collapses in the ED waiting area | VF cardiac arrest (then ROSC with anterior STEMI) | CPR → **unsynchronised** shock ≥150 J → 2-minute cycles → adrenaline 1 mg and amiodarone 300 mg after the 3rd shock, amiodarone 150 mg after the 5th → 4 Hs and 4 Ts → post-ROSC ECG → cath lab | long pauses for pulse checks; adrenaline before the first shock; leaving the defibrillator in sync mode |
+| arr-14 | 62M on dialysis, missed two sessions, weak, HR 38, broad QRS | Severe hyperkalaemia | **calcium first** (10 ml 10% calcium chloride, ECG before and after) → insulin 10 units + glucose 25 g → salbutamol 10–20 mg nebulised → dialysis | atropine and pacing without calcium; forgetting glucose after insulin |
+| arr-15 | 2-month-old, poor feeding, HR 260, mottled | Infant SVT (AVRT) | ice-water facial immersion → adenosine 0.1–0.2 mg/kg, then 0.3 mg/kg (weight-based dose question) → synchronised 1 J/kg then 2 J/kg if unstable | verapamil in an infant; adult adenosine dose; treating it as sinus tachycardia |
+
+Sources for batch C: ERC 2025 Adult Advanced Life Support; RCUK 2025 adult tachyarrhythmia and
+bradyarrhythmia algorithms; ERC 2025 Special Circumstances (hyperkalaemia); RCUK 2025 paediatric
+emergency algorithms.
 
 ## 2. Codex cards to add
 
@@ -90,4 +113,5 @@ as its own case, paediatric SVT. They can be added later from guidelines (drafte
 2. I build the app features (§3) and show you the new ECGs.
 3. Batch A cases (6), drafted unverified → you play and verify.
 4. Batch B cases (6) → same.
+4b. Batch C cases (3) → same.
 5. Picture prompts per case, same ChatGPT workflow.
