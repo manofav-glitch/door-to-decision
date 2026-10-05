@@ -112,7 +112,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 ## Status
 - Live at https://manofav-glitch.github.io/door-to-decision/ (public repo github.com/manofav-glitch/door-to-decision; Pages via
   GitHub Actions). Owner's token is in the Mac keychain, so `git push` works.
-- Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Pending: owner's low-end Android check (incl. ECG pinch-zoom).
+- Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Owner chose to skip the low-end Android check (2026-10-05).
 - Verification: at the owner's explicit instruction (over a recommendation to keep open TODOs unverified) all 202 items in
   cp-01…11 were marked verified 2026-09-30. Old TODO notes kept; `npm run review` lists them (incl. cp-10/11 Fifth UDMI
   wording) plus `needs-source` items. New content is still drafted verified: false.
