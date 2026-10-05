@@ -258,7 +258,8 @@ export function voltage(sh: Shape, t: number, rh: Rhythm, m: Morphology): number
     if (b.conducted && rh.p.length && rh.baseline === 'none')
       v += sh.pr * smooth(-0.13, -0.11, x) * (1 - smooth(-0.06, -0.04, x));
     const delta = sh.delta + b.delta * 0.35;
-    if (delta) v += b.amp * delta * smooth(-0.06 * w, -0.01 * w, x) * (1 - smooth(0, 0.01 * w, x));
+    if (delta)
+      v += b.amp * delta * smooth(-0.075 * w, -0.004 * w, x) * (1 - smooth(0.004 * w, 0.03 * w, x));
     v +=
       b.amp *
       (-sh.q * g(x + 0.022 * w, 0.008 * f) +
