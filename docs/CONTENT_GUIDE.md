@@ -489,8 +489,29 @@ leads: # override the normal shape of any lead (millivolts; 1 mV = 10 mm)
 check: { source: …, verified: false, todo: 'Check the drawing shows what the case says.' }
 ```
 
-Parts you can set per lead: `p`, `q`, `r`, `s`, `t` (wave heights) and `st` (ST shift). Always look at
-the result: open the case in `npm run dev`.
+Parts you can set per lead: `p`, `q`, `r`, `s`, `t` (wave heights), `st` (ST shift), `pr` (PR-segment
+shift), `delta` (pre-excitation slur), `rp` (a second R, as in RBBB or Brugada), `u` (U wave), `notch`
+(0–1, a notched T) and `tw` (T width: 0.5 = narrow and peaked, 1.5 = broad). For the whole ECG: `qrs`
+(QRS width in ms, default 90) and `qt` (QT in ms, default 390).
+
+Rhythms (`rhythm: { kind: … }`):
+
+| kind | settings | for |
+|---|---|---|
+| `sinus` | `rate`, `pr` (ms, default 160), `alternans` | normal, sinus brady/tachy, first-degree block, WPW (short `pr` + `delta`) |
+| `af` | `rate` | atrial fibrillation |
+| `svt` | `rate` | regular narrow tachycardia with no visible P (AVNRT/AVRT) |
+| `flutter` | `conduction` (2, 3, 4… or `variable`), `atrialRate` (default 300) | atrial flutter |
+| `av-block` | `type` (`mobitz1`, `mobitz2`, `2:1`), `atrialRate`, `pr` | second-degree block |
+| `av-dissociation` | `atrialRate`, `ventricularRate`, `atrial: af` | complete heart block; regularised AF (digoxin) |
+| `vt` | `rate`, `atrialRate` (shows AV dissociation) | VT (set `qrs: 160`); also slow broad rhythms |
+| `torsades` | `rate` | polymorphic VT / torsades |
+| `vf` | — | ventricular fibrillation |
+| `pre-excited-af` | `rate` | AF down an accessory pathway (set `qrs: 140`) |
+| `paced` | `rate`, `capture` (`full`, `intermittent`, `none`), `escapeRate`, `atrialRate` | pacing, loss of capture |
+| `asystole` | `atrialRate` (P waves only) | asystole, P-wave asystole |
+
+Always look at the result: open the case in `npm run dev`.
 
 ---
 

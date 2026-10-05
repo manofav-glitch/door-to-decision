@@ -481,6 +481,11 @@ const LeadShape = z.strictObject({
   t: z.number().optional(),
   st: z.number().optional(),
   pr: z.number().optional(), // PR-segment shift (negative = PR depression, e.g. pericarditis)
+  delta: z.number().optional(), // pre-excitation: slurred upstroke before the R wave (mV)
+  rp: z.number().optional(), // r′: a second R after the S (RBBB, pseudo-r′, Brugada)
+  u: z.number().optional(), // U wave (mV)
+  notch: z.number().min(0).max(1).optional(), // notched / bifid T wave
+  tw: z.number().min(0.3).max(3).optional(), // T width: < 1 narrow and peaked (hyperkalaemia), > 1 broad
 });
 /** content/assets/art/credits.yaml: who made each folder of illustrations, and how. */
 export const ArtCredits = z.array(
@@ -501,6 +506,7 @@ export const EcgSpec = z.strictObject({
       kind: z.literal('sinus'),
       rate: z.number(),
       alternans: z.number().min(0).max(0.9).optional(), // every other QRS smaller by this fraction
+      pr: z.number().optional(), // PR interval in ms (default 160; e.g. 250 for first-degree block)
     }),
     z.strictObject({ kind: z.literal('af'), rate: z.number() }), // irregular, no P waves
 
@@ -508,8 +514,35 @@ export const EcgSpec = z.strictObject({
       kind: z.literal('av-dissociation'),
       atrialRate: z.number(),
       ventricularRate: z.number(),
+      atrial: z.enum(['p', 'af']).optional(), // af = fibrillation over a regular escape ("regularised AF")
     }),
+    z.strictObject({ kind: z.literal('svt'), rate: z.number() }), // regular, no visible P
+    z.strictObject({
+      kind: z.literal('flutter'),
+      atrialRate: z.number().optional(), // default 300
+      conduction: z.union([z.number().int().min(1).max(6), z.literal('variable')]),
+    }),
+    z.strictObject({
+      kind: z.literal('av-block'),
+      type: z.enum(['mobitz1', 'mobitz2', '2:1']),
+      atrialRate: z.number(),
+      pr: z.number().optional(), // ms, default 200
+    }),
+    z.strictObject({ kind: z.literal('vt'), rate: z.number(), atrialRate: z.number().optional() }),
+    z.strictObject({ kind: z.literal('torsades'), rate: z.number() }),
+    z.strictObject({ kind: z.literal('vf') }),
+    z.strictObject({ kind: z.literal('pre-excited-af'), rate: z.number() }),
+    z.strictObject({
+      kind: z.literal('paced'),
+      rate: z.number(),
+      capture: z.enum(['full', 'intermittent', 'none']),
+      escapeRate: z.number().optional(), // the patient's own slow beats when capture fails
+      atrialRate: z.number().optional(),
+    }),
+    z.strictObject({ kind: z.literal('asystole'), atrialRate: z.number().optional() }),
   ]),
+  qrs: z.number().min(60).max(260).optional(), // QRS width in ms (default 90)
+  qt: z.number().min(280).max(700).optional(), // QT in ms (default 390)
   labels: z.array(Text).length(12).optional(), // e.g. right-sided V1R…V6R
   rhythmLead: Text.default('II'),
   voltage: z.number().min(0.1).max(2).default(1), // scales every wave (e.g. 0.4 = low voltage)
