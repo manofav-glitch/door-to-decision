@@ -29,12 +29,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-09/01-arrival
         actors: [patient:alarmed, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: relative, text: "After a fight at home he drank something from the shed. The bottle had a picture of a crop on it." }
           - { who: patient, text: "Can't… breathe…" }
       - scene: resus-bay
+        art: arr-09/02-resus
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "Pulse 42, BP 88 over 56, sats 88%. Drooling, sweating, tiny pupils, and his chest is bubbling. He smells of chemicals." }
@@ -111,6 +113,7 @@ nodes:
     onEnter: { minutes: 20, setVitals: { hr: 108, sbp: 100, dbp: 62, spo2: 93, rr: 22, gcs: 14 }, rhythm: ecg/arr-sinus-fast.svg }
     panels:
       - scene: resus-bay
+        art: arr-09/03-atropine
         actors: [patient-supine:worried, senior:worried]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -186,6 +189,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-09/04-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Six days later · Medical ward"
         bubbles:
@@ -197,6 +201,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-09/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Ten days later · ICU step-down"
     summary: "He survived, after a stormy course. Under-dosed atropine, a premature stop or a missed complication added danger. The debrief shows where."
