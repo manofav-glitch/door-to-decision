@@ -129,6 +129,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
       - scene: resus-bay
+        art: arr-02/03-arrest
         actors: [patient-supine:alarmed, nurse:alarmed, senior:worried]
         bubbles:
           - { who: nurse, text: "No pulse! He's in VF!" }
