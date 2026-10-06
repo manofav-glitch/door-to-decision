@@ -29,12 +29,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-07/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "Twice this week I just dropped. No warning. Today again in the kitchen." }
           - { who: relative, text: "He went white and then woke up a minute later. He's a bit muddled now." }
       - scene: triage-desk
+        art: arr-07/02-triage-staff
         actors: [nurse:alarmed, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 32 and regular. BP 86 over 48. Not on any heart tablets, only something for his prostate." }
@@ -63,6 +65,7 @@ nodes:
     check: { source: esc-pacing-2021, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-07/03-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/arr-07-chb.svg
@@ -159,6 +162,7 @@ nodes:
     check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
     panels:
       - scene: resus-bay
+        art: arr-07/04-pacing
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -215,6 +219,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-07/05-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Three days later · Cardiology ward"
         bubbles:
@@ -226,6 +231,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-07/06-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Cardiology ward"
     summary: "He got his pacemaker, but delays and capture problems left him hypotensive for longer than necessary. The debrief shows where."
