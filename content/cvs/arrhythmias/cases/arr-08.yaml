@@ -30,12 +30,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-08/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
           - { who: patient, text: "I've been vomiting for three days. I feel so weak, and everything has a yellow tinge." }
           - { who: relative, text: "She has an irregular heart. Last week her doctor added another tablet for it." }
       - scene: triage-desk
+        art: arr-08/02-triage-staff
         actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "Pulse 42 and regular. BP 96 over 58. Her heart rate was usually around 80, irregular." }
@@ -64,6 +66,7 @@ nodes:
     check: { source: [pincus-2016, esc-af-2024], verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-08/03-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-08-dig.svg
@@ -93,6 +96,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: arr-08/04-results
         actors: [doctor, nurse]
         caption: "{clock} · Results"
         bubbles:
@@ -129,6 +133,7 @@ nodes:
     check: { source: [pincus-2016, erc-als-2025], verified: false }
     panels:
       - scene: resus-bay
+        art: arr-08/05-waiting
         actors: [patient-supine:worried, senior]
         caption: "{clock} · Waiting for the antidote"
         bubbles:
@@ -167,6 +172,7 @@ nodes:
     onEnter: { minutes: 240, setVitals: { hr: 76, sbp: 118, dbp: 70 }, rhythm: ecg/arr-af-controlled.svg }
     panels:
       - scene: resus-bay
+        art: arr-08/06-antidote
         actors: [patient-supine:relieved, nurse]
         caption: "{clock} · Antibody fragments given"
         bubbles:
@@ -197,6 +203,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-08/07-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Three days later · Medical ward"
         bubbles:
@@ -208,6 +215,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-08/08-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Medical ward"
     summary: "She recovered, but misreading the slow regular rhythm or delaying the antidote prolonged a dangerous toxicity. The debrief shows where."
