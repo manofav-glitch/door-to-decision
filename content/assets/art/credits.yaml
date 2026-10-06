@@ -80,3 +80,9 @@
   madeBy: Content owner
   date: 2026-10-06
   note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened. The arrest panel (03) was redrawn as a single 1536 × 1024 px image (the first showed compressions during a shock).
+
+- folder: arr-03
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/arr-03-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-07
+  note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.

@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-03/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: esc-af-2024, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-03/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-03-af.svg
@@ -87,6 +89,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: arr-03/03-review
         actors: [patient-supine, doctor]
         caption: "{clock} · Majors"
         bubbles:
@@ -231,6 +234,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-03/04-end-good
         actors: [patient:relieved, doctor]
         caption: "Six weeks later · AF clinic"
         bubbles:
@@ -242,6 +246,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-03/05-end-fair
         actors: [patient:worried, doctor]
         caption: "Six weeks later · AF clinic"
     summary: "He's in sinus rhythm, but gaps in rate control or stroke prevention put him at avoidable risk. The debrief shows where."
