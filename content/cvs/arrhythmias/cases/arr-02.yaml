@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-02/01-arrival
         actors: [patient:worried, nurse:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: esc-svt-2019, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-02/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/arr-02-pre-af.svg
@@ -173,6 +175,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: arr-02/04-after-shock
         actors: [patient-supine:worried, senior]
         caption: "{clock} · Resus bay"
         bubbles:
@@ -184,6 +187,7 @@ nodes:
     check: { source: esc-svt-2019, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-02/05-after-ecg
         actors: [patient-supine:relieved, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/arr-02-wpw.svg
@@ -231,6 +235,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-02/06-end-good
         actors: [patient:relieved, doctor]
         caption: "A week later · Cardiology ward"
         bubbles:
@@ -242,6 +247,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-02/07-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · Cardiology ward"
     summary: "He survived and had his pathway ablated, but a drug that blocked the AV node or a poorly set shock put him at serious risk. The debrief shows where."
