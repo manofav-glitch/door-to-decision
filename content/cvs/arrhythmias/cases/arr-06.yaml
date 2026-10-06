@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: arr-06/01-arrival
         actors: [paramedic:worried, patient-supine]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: [esc-va-2022, brugada-1991, vereckei-2008], verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-06/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/arr-06-vt.svg
@@ -121,6 +123,7 @@ nodes:
         caption: "{clock} · Resus bay"
         sfx: "ALARM"
       - scene: resus-bay
+        art: arr-06/03-unstable
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "BP 70 over 40, he's grey and confused!" }
@@ -207,6 +210,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-06/04-end-good
         actors: [patient:relieved, doctor]
         caption: "A week later · Cardiology ward"
         bubbles:
@@ -218,6 +222,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-06/05-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · Cardiology ward"
     summary: "He survived, but treating VT as SVT or delaying the shock when he became unstable put him in danger. The debrief shows where."
