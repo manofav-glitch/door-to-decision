@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-05/01-arrival
         actors: [patient, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: esc-svt-2019, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-05/02-ecg
         actors: [patient-supine, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-05-flutter.svg
@@ -114,6 +116,7 @@ nodes:
       - scene: monitor
         caption: "{clock} · During adenosine"
       - scene: resus-bay
+        art: arr-05/03-adenosine
         actors: [doctor, nurse]
         bubbles:
           - { who: nurse, text: "There they are: flutter waves at 300. Now he's back to 150." }
@@ -190,6 +193,7 @@ nodes:
     check: { source: erc-als-2025, verified: false }
     panels:
       - scene: resus-bay
+        art: arr-05/04-cardioversion
         actors: [patient-supine, doctor]
         caption: "Three weeks later · Day-case cardioversion"
         bubbles:
@@ -237,6 +241,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-05/05-end-good
         actors: [patient:relieved, doctor]
         caption: "Two months later · Cardiology clinic"
         bubbles:
@@ -248,6 +253,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-05/06-end-fair
         actors: [patient:worried, doctor]
         caption: "Two months later · Cardiology clinic"
     summary: "He ended in sinus rhythm, but a premature cardioversion, flecainide alone or stopping anticoagulation early put him at avoidable risk. The debrief shows where."
