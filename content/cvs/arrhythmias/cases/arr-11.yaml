@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-11/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: drew-2010, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-11/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-11-longqt.svg
@@ -82,6 +84,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: arr-11/03-results
         actors: [nurse:worried, doctor]
         caption: "{clock} · Results"
         bubbles:
@@ -97,6 +100,7 @@ nodes:
         caption: "{clock} · Majors"
         sfx: "ALARM"
       - scene: resus-bay
+        art: arr-11/04-arrest
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "She's gone off: twisting broad complexes and no pulse!" }
@@ -186,6 +190,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-11/05-end-good
         actors: [patient:relieved, doctor]
         caption: "Three days later · CCU"
         bubbles:
@@ -197,6 +202,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-11/06-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · CCU"
     summary: "She survived, but a missed QT, the wrong drug or an incomplete fix led to more torsades than necessary. The debrief shows where."
