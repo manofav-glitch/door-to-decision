@@ -508,20 +508,20 @@ shift), `delta` (pre-excitation slur), `rp` (a second R, as in RBBB or Brugada),
 
 Rhythms (`rhythm: { kind: … }`):
 
-| kind | settings | for |
-|---|---|---|
-| `sinus` | `rate`, `pr` (ms, default 160), `alternans` | normal, sinus brady/tachy, first-degree block, WPW (short `pr` + `delta`) |
-| `af` | `rate` | atrial fibrillation |
-| `svt` | `rate` | regular narrow tachycardia with no visible P (AVNRT/AVRT) |
-| `flutter` | `conduction` (2, 3, 4… or `variable`), `atrialRate` (default 300) | atrial flutter |
-| `av-block` | `type` (`mobitz1`, `mobitz2`, `2:1`), `atrialRate`, `pr` | second-degree block |
-| `av-dissociation` | `atrialRate`, `ventricularRate`, `atrial: af` | complete heart block; regularised AF (digoxin) |
-| `vt` | `rate`, `atrialRate` (shows AV dissociation) | VT (set `qrs: 160`); also slow broad rhythms |
-| `torsades` | `rate` | polymorphic VT / torsades |
-| `vf` | — | ventricular fibrillation |
-| `pre-excited-af` | `rate` | AF down an accessory pathway (set `qrs: 140`) |
-| `paced` | `rate`, `capture` (`full`, `intermittent`, `none`), `escapeRate`, `atrialRate` | pacing, loss of capture |
-| `asystole` | `atrialRate` (P waves only) | asystole, P-wave asystole |
+| kind              | settings                                                                       | for                                                                       |
+| ----------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `sinus`           | `rate`, `pr` (ms, default 160), `alternans`                                    | normal, sinus brady/tachy, first-degree block, WPW (short `pr` + `delta`) |
+| `af`              | `rate`                                                                         | atrial fibrillation                                                       |
+| `svt`             | `rate`                                                                         | regular narrow tachycardia with no visible P (AVNRT/AVRT)                 |
+| `flutter`         | `conduction` (2, 3, 4… or `variable`), `atrialRate` (default 300)              | atrial flutter                                                            |
+| `av-block`        | `type` (`mobitz1`, `mobitz2`, `2:1`), `atrialRate`, `pr`                       | second-degree block                                                       |
+| `av-dissociation` | `atrialRate`, `ventricularRate`, `atrial: af`                                  | complete heart block; regularised AF (digoxin)                            |
+| `vt`              | `rate`, `atrialRate` (shows AV dissociation)                                   | VT (set `qrs: 160`); also slow broad rhythms                              |
+| `torsades`        | `rate`                                                                         | polymorphic VT / torsades                                                 |
+| `vf`              | —                                                                              | ventricular fibrillation                                                  |
+| `pre-excited-af`  | `rate`                                                                         | AF down an accessory pathway (set `qrs: 140`)                             |
+| `paced`           | `rate`, `capture` (`full`, `intermittent`, `none`), `escapeRate`, `atrialRate` | pacing, loss of capture                                                   |
+| `asystole`        | `atrialRate` (P waves only)                                                    | asystole, P-wave asystole                                                 |
 
 Always look at the result: open the case in `npm run dev`.
 
