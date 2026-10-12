@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-12/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: [esc-va-2022, schwartz-2011], verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-12/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-12-lqt2.svg
@@ -81,6 +83,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: arr-12/03-causes
         actors: [patient-supine, doctor]
         caption: "{clock} · Results"
         bubbles:
@@ -178,6 +181,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-12/04-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Two weeks later · Cardiology clinic"
         bubbles:
@@ -189,6 +193,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-12/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Cardiology ward"
     summary: "She's on treatment, but a missed QT, the wrong drug or a gap in family screening left her and her baby at risk. The debrief shows where."
