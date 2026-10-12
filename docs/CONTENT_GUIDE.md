@@ -364,6 +364,9 @@ bubbles below it, so no face is covered.
 1. Save the picture (one panel per file; square or wide, ideally about 1024 px across) as
    `content/assets/art/<case>/<name>.png`, e.g. `content/assets/art/cp-01/01-arrival-1.png`.
    `.jpg` and `.webp` work too. To replace a picture, save the new one under the same name.
+   A whole ChatGPT comic page can be cut for you (panels in reading order; `-` skips a panel and
+   leaves it as line art; with the case file it also does step 2's `art:` lines):
+   `node scripts/cut-sheet.ts page.webp cp-01 2 01-arrival,02-ecg,- content/.../cp-01.yaml`
 2. Add `art:` to the panel, folder and name without the extension, and list the characters
    **left to right as they appear in the picture** (bubble tails follow that order):
    ```yaml

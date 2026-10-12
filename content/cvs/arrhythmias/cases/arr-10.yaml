@@ -29,12 +29,14 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-10/01-arrival
         actors: [patient:worried, relative:alarmed]
         caption: "{clock} · Triage"
         bubbles:
           - { who: relative, text: "He has had fever for two days. Tonight he was gasping in his sleep, like snoring but wrong, and I couldn't wake him for a minute." }
           - { who: patient, text: "I just have a fever. My brother died in his sleep at 34, though. They never found out why." }
       - scene: triage-desk
+        art: arr-10/02-triage-staff
         actors: [nurse:worried, doctor]
         bubbles:
           - { who: nurse, text: "Temperature 39.2, pulse 104, BP 118 over 72. He looks fine now." }
@@ -63,6 +65,7 @@ nodes:
     check: { source: antzelevitch-2016, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-10/03-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/arr-10-type2.svg
@@ -93,6 +96,7 @@ nodes:
     check: { source: antzelevitch-2016, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-10/04-high-leads
         actors: [patient-supine:worried, doctor]
         caption: "{clock} · High chest leads"
     image: ecg/arr-10-high.svg
@@ -207,6 +211,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-10/06-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "A week later · Cardiology ward"
         bubbles:
@@ -218,6 +223,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-10/07-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Ten days later · Cardiology ward"
     summary: "He survived the storm, but missed leads, the wrong drugs or a gap in the plan put him and his family at risk. The debrief shows where."

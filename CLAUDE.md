@@ -23,7 +23,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - `npm run validate` — content checks with file:line: schema, broken `next`, unreachable nodes, dead ends, unset flags, missing refs/unlocks/doses/assets
 - `npm run review` — checklist of every unverified clinical item → `docs/CLINICAL_REVIEW.md` (regenerate after content edits)
 - `npm run ecg` — redraw ECG SVGs from `content/assets/ecg/*.ecg.yaml`
-- `npm run art` — owner's illustrations `content/assets/art/<folder>/*.png` (git-ignored) → WebP ≤ 800 px, shape kept, in `content/assets/panels/` (committed); runs before dev/build, skips up-to-date ones
+- `npm run art` — owner's illustrations `content/assets/art/<folder>/*.png` (git-ignored) → WebP ≤ 800 px, shape kept, in `content/assets/panels/` (committed); runs before dev/build, skips up-to-date ones; `node scripts/cut-sheet.ts <sheet> <folder> <cols> <names> [case.yaml]` cuts a ChatGPT sheet into originals and wires `art:` (`-` skips a panel)
 - `npm run graph` — Mermaid flowchart per case → `docs/graphs/<id>.md` (bold = ideal path, red dashed = harmful)
 - `npm run new-case -- <system> <module> <name> "<title>"` — scaffold from `docs/templates/case.yaml`, list in module.yaml, validate + graph (Claude skill: `/new-case`)
 - Dev mode: `?dev=1` (before or after the `#`; `?dev=0` off; kept per tab in sessionStorage): step ids, jump-to-step (run then stops saving), state inspector. Works on the live site.

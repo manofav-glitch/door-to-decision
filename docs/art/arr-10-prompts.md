@@ -23,3 +23,11 @@ Panel 5: Coronary care unit at night, red alarm light. Left to right: THE PATIEN
 Panel 6: A week later, a bright cardiology ward, daylight. Left to right: THE PATIENT sitting up in bed, relieved, a small dressing below his left collarbone; HIS WIFE sitting beside the bed in a yellow salwar kameez, relieved, holding a sheet of paper with faint lines.
 Panel 7: Ten days later, the same ward on a grey day. Left to right: THE PATIENT lying in bed, pale and worried, a drip in his arm; HIS WIFE sitting beside the bed in the yellow salwar kameez, anxious, her hands clasped.
 ```
+
+## Panel 5 redraw (2026-10-12)
+
+The first sheet showed the nurse's hand on the bed rail during the shock. Single-panel redraw:
+
+```
+Same style, setting and people as the uploaded image. ONE landscape panel (3:2), no gutters, no text. Coronary care unit at night, red alarm light. Left to right: THE PATIENT (30-year-old Indian man, average build, short black hair, clean-shaven, pale blue gown open at the chest with two large defibrillator pads on it) lying flat on a bed, unconscious, not graphic; THE NURSE (woman, low bun, teal scrubs) standing a full step back from the bed, her free hand raised and away, the other hand pressing the defibrillator button, looking along the bed to check that nobody is touching it. Nobody touches the patient, the bed or its rails.
+```
