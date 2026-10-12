@@ -143,6 +143,7 @@ nodes:
         caption: "{clock} · CCU"
         sfx: "ALARM"
       - scene: resus-bay
+        art: arr-10/05-vf
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "VF again! That's the third time in an hour, all at night." }
