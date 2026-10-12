@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-14/01-arrival
         actors: [patient:worried, nurse:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-14/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus bay"
     image: ecg/arr-14-hyperk.svg
@@ -157,6 +159,7 @@ nodes:
       - scene: monitor
         caption: "{clock} · On dialysis"
       - scene: resus-bay
+        art: arr-14/03-dialysis
         actors: [patient-supine:relieved, nurse]
         bubbles:
           - { who: nurse, text: "Potassium 5.4, P waves are back, glucose 6.8." }
@@ -169,6 +172,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: arr-14/04-end-good
         actors: [patient:relieved, doctor]
         caption: "Next day · Renal ward"
         bubbles:
@@ -180,6 +184,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-14/05-end-fair
         actors: [patient:worried, doctor]
         caption: "Two days later · Renal ward"
     summary: "He recovered, but treating the heart rate instead of the potassium, or leaving a step out, kept him in danger longer. The debrief shows where."
