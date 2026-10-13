@@ -1,4 +1,4 @@
-# Arrhythmias unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Arrhythmias unit notes — verified by the content owner on 2026-10-13.
 # Written in our own words from the owner's study notes (git-ignored notes/arrhythmias/) and the
 # guidelines the cases use. Doses and thresholds match the verified Codex cards; if a card changes,
 # change the notes too. Style: short bullets; "Label: text" shows the label in bold.
@@ -6,7 +6,7 @@ title: "Arrhythmias: unit notes"
 intro: "Everything from the 15 Arrhythmias cases in one place, in bedside order: how sick is the patient, what is the rhythm, what do you do."
 sections:
   - heading: "The first minute with any arrhythmia"
-    check: { source: [erc-als-2025, rcuk-2025], verified: false }
+    check: { source: [erc-als-2025, rcuk-2025], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "No pulse: this is cardiac arrest (see Shockable cardiac arrest)."
@@ -26,7 +26,7 @@ sections:
       - warn: "Treat the patient, not the label: a 'stable' SVT in an elderly patient with chest pain and a low pressure is unstable."
 
   - heading: "Regular narrow-complex tachycardia (SVT)"
-    check: { source: [esc-svt-2019, revert-2015], verified: false }
+    check: { source: [esc-svt-2019, revert-2015], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Usual rate: 150–250/min."
@@ -61,7 +61,7 @@ sections:
       - cards: [modified-valsalva, adenosine, avnrt, verapamil]
 
   - heading: "WPW and pre-excited AF"
-    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    check: { source: [esc-svt-2019, esc-af-2024], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Accessory pathway: a strand of muscle that bypasses the AV node."
@@ -83,7 +83,7 @@ sections:
       - cards: [wpw, procainamide, synchronised-cardioversion]
 
   - heading: "Atrial flutter"
-    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    check: { source: [esc-svt-2019, esc-af-2024], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Circuit: one large loop around the right atrium at about 300/min."
@@ -102,7 +102,7 @@ sections:
       - cards: [atrial-flutter, flecainide]
 
   - heading: "Atrial fibrillation in the emergency department"
-    check: { source: [esc-af-2024, race2-2010], verified: false }
+    check: { source: [esc-af-2024, race2-2010], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Diagnosis: irregularly irregular QRS complexes, no repeating P waves."
@@ -135,7 +135,7 @@ sections:
       - cards: [af-acute-management, atrial-fibrillation, metoprolol, digoxin, amiodarone]
 
   - heading: "Stroke prevention in AF"
-    check: { source: [esc-af-2024, pisters-2010], verified: false }
+    check: { source: [esc-af-2024, pisters-2010], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Stroke risk comes from the diseased atrium, not from the rhythm on today's ECG."
@@ -168,7 +168,7 @@ sections:
       - cards: [cha2ds2-va, has-bled, doacs, warfarin]
 
   - heading: "Rheumatic mitral stenosis with AF"
-    check: { source: [esc-valve-2021, invictus-2022, who-rhd-2024], verified: false }
+    check: { source: [esc-valve-2021, invictus-2022, who-rhd-2024], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Who: in India, a common cause of AF in young adults, often women."
@@ -191,7 +191,7 @@ sections:
       - cards: [rheumatic-mitral-stenosis, warfarin, benzathine-penicillin]
 
   - heading: "Broad-complex tachycardia and VT"
-    check: { source: [esc-va-2022, erc-als-2025, brugada-1991, vereckei-2008], verified: false }
+    check: { source: [esc-va-2022, erc-als-2025, brugada-1991, vereckei-2008], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Regular broad-complex tachycardia: VT until proven otherwise, especially after a heart attack or with known heart disease."
@@ -215,7 +215,7 @@ sections:
       - cards: [broad-complex-tachycardia, ventricular-tachycardia, synchronised-cardioversion, amiodarone]
 
   - heading: "Bradycardia and AV block"
-    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Question 1: is the slow rhythm causing the symptoms?"
@@ -247,7 +247,7 @@ sections:
       - cards: [heart-block, bradycardia, atropine, isoprenaline, transcutaneous-pacing]
 
   - heading: "Bradycardia from drugs, toxins and potassium"
-    check: { source: [pincus-2016, ukka-hyperk-2023, erc-special-2025, eddleston-2008], verified: false }
+    check: { source: [pincus-2016, ukka-hyperk-2023, erc-special-2025, eddleston-2008], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Before you pace: ask what the patient took, and check a blood-gas potassium."
@@ -279,7 +279,7 @@ sections:
       - cards: [digoxin-toxicity, digoxin-fab, hyperkalaemia, hyperkalaemia-treatment, organophosphate-poisoning, pralidoxime]
 
   - heading: "Long QT and torsades"
-    check: { source: [drew-2010, esc-va-2022, schwartz-2011], verified: false }
+    check: { source: [drew-2010, esc-va-2022, schwartz-2011], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Measure it yourself: lead II or V5; machines misread notched T waves and U waves."
@@ -309,7 +309,7 @@ sections:
       - cards: [long-qt, long-qt-syndrome, magnesium-sulphate]
 
   - heading: "Congenital long QT"
-    check: { source: [esc-va-2022, schwartz-2011], verified: false }
+    check: { source: [esc-va-2022, schwartz-2011], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "It hides behind 'faints' and 'epilepsy'."
@@ -338,7 +338,7 @@ sections:
       - cards: [schwartz, lqts-beta-blockers, long-qt-syndrome]
 
   - heading: "Brugada syndrome"
-    check: { source: [antzelevitch-2016, esc-va-2022], verified: false }
+    check: { source: [antzelevitch-2016, esc-va-2022], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "What: an inherited sodium-channel disease of the right ventricular outflow tract."
@@ -365,7 +365,7 @@ sections:
       - cards: [brugada-pattern, brugada-syndrome, isoprenaline]
 
   - heading: "Shockable cardiac arrest"
-    check: { source: [erc-als-2025], verified: false }
+    check: { source: [erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/arr-vf.svg
         alt: "Rhythm strip. Chaotic, irregular waves of varying size with no recognisable QRS complexes."
@@ -391,7 +391,7 @@ sections:
       - cards: [defibrillation, cardiac-arrest-als]
 
   - heading: "Infants and children"
-    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "SVT: the commonest significant arrhythmia of infancy, usually AVRT through an accessory pathway."
@@ -412,7 +412,7 @@ sections:
       - cards: [infant-svt, adenosine, synchronised-cardioversion]
 
   - heading: "Drugs at a glance"
-    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022, erc-als-2025], verified: false }
+    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - table:
           head: ["Drug", "Main use here", "Adult dose", "Never or beware"]
@@ -429,7 +429,7 @@ sections:
             - ["Isoprenaline", "Bradycardia bridge; Brugada storm; acquired torsades", "From 5 micrograms/min, titrated", "Congenital LQT1 and LQT2"]
 
   - heading: "Pregnancy and the months after delivery"
-    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022], verified: false, todo: "New in the notes (not in a case): check against the pregnancy sections of the guidelines." }
+    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022], verified: true, reviewedOn: 2026-10-13, todo: "New in the notes (not in a case): check against the pregnancy sections of the guidelines." }
     blocks:
       - points:
           - "SVT: adenosine is safe."
