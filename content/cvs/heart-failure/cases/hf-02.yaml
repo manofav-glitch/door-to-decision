@@ -1,0 +1,256 @@
+# hf-02 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: warm–wet decompensation of chronic ischaemic HFrEF (EF 30%), triggered by an NSAID
+# (diclofenac for knee pain) and extra salt. On furosemide 40 mg/day, ramipril, bisoprolol,
+# spironolactone. Poor first natriuretic response → double the dose + acetazolamide (ADVOR).
+# Creatinine rises on day 2 with better congestion: carry on. Keep the pillars.
+# Sources: owner's heart failure note (decongestion algorithm); ESC 2026 via the note; DOSE-AHF; ADVOR.
+
+id: cvs-hf-02
+title: "74F, swollen legs and belly for a week"
+difficulty: 2
+minutes: 12
+patient: { age: 74, sex: F, weightKg: 68 }
+initial:
+  clock: "11:10"
+  vitals: { hr: 96, sbp: 128, dbp: 76, rr: 24, spo2: 92, gcs: 15, temp: 36.7 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-hf-2026
+  verified: false
+  todo: "Teaching composite; check the drug history and vitals."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "My legs are like logs and I can't sleep flat. I've put on 4 kilos this week." }
+          - { who: relative, text: "Her knee was bad, so the chemist gave her diclofenac. And we had a wedding: lots of pickles and papads." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Known heart failure, ejection fraction 30% last year. First move?"
+    options:
+      - label: "Monitor, 12-lead ECG, bloods (kidney function, electrolytes, troponin, NT-proBNP), and a warm/cold, wet/dry assessment"
+        grade: best
+        consequence: "ECG at 6 minutes. Feet warm, pulse pressure normal, JVP to the earlobe, crackles at both bases, oedema to the thighs."
+        teaching: "Phenotype first: she is warm and wet, the commonest ED profile."
+        effects: { minutes: 6, milestone: ecg }
+        next: ecg-1
+      - label: "Chest X-ray first, then decide"
+        grade: suboptimal
+        consequence: "It shows effusions and an enlarged heart, 25 minutes later. The ECG is done after."
+        teaching: "The X-ray adds little to a clear bedside picture and can be clear in heart failure; the ECG comes first."
+        effects: { minutes: 25, milestone: ecg, patient: -5 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-hf-2026, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/hf-02-oldmi.svg
+    alt: "12-lead ECG. Sinus rhythm about 96 per minute. Q waves in V1–V3 with poor R-wave progression; no new ST elevation or depression."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus rhythm with an old anterior infarct; no new ischaemia or arrhythmia"
+        grade: best
+        consequence: "Troponin is only slightly raised and flat. So the trigger is elsewhere: the diclofenac and the salt."
+        teaching: "Look for the trigger in every decompensation; here it's drugs and diet, not ACS or AF."
+        effects: { minutes: 1 }
+        next: diuretic-dose
+      - label: "Anterior STEMI: activate the cath lab"
+        grade: harmful
+        consequence: "Your senior points out the Q waves without ST elevation: an old infarct, unchanged from last year's ECG."
+        teaching: "Compare with an old ECG. Q waves alone mark old damage, not a new occlusion."
+        effects: { minutes: 10, patient: -15 }
+        next: diuretic-dose
+
+  diuretic-dose:
+    type: dose
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+    prompt: "She takes furosemide 40 mg a day by mouth. First IV furosemide dose, in mg?"
+    drug: furosemide
+    dose: home-40
+    tolerancePct: 0
+    correct:
+      consequence: "Given as a bolus. Catheter in, urine collecting."
+      teaching: "1–2.5 × the total daily oral dose, given IV: here 40–100 mg."
+      effects: { minutes: 5 }
+    under:
+      consequence: "20 mg gives almost no urine. Your senior repeats it at a proper dose."
+      teaching: "Too small a dose never reaches the threshold; loop diuretics work above a threshold, then plateau."
+      effects: { minutes: 60, patient: -10 }
+    over:
+      consequence: "250 mg gives a brisk diuresis, but her potassium falls and she becomes dizzy."
+      teaching: "Start at 1–2.5 × the home dose and escalate by response, not with a huge first bolus."
+      effects: { minutes: 5, patient: -10 }
+    next: response
+
+  response:
+    type: choice
+    check: { source: [esc-hf-2026, advor-2022], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [nurse:worried, doctor]
+        caption: "{clock} · Two hours later"
+        bubbles:
+          - { who: nurse, text: "Only 150 ml of urine in two hours. Spot urine sodium is 38 mmol/L." }
+    prompt: "What now?"
+    options:
+      - label: "Poor response: double the loop dose and add acetazolamide 500 mg IV"
+        grade: best
+        consequence: "Over the next 6 hours she passes 1.8 litres."
+        teaching: "Urine sodium under 50–70 mmol/L at 2 hours means double the dose; acetazolamide improves decongestion (ADVOR)."
+        effects: { minutes: 60 }
+        next: acetazolamide
+      - label: "Wait until tomorrow's weight before changing anything"
+        grade: suboptimal
+        consequence: "The next morning she has lost 200 g and is more breathless. Your senior doubles the dose and adds acetazolamide."
+        teaching: "Judge the response at 2 and 6 hours, not tomorrow."
+        effects: { minutes: 240, patient: -15 }
+        next: acetazolamide
+      - label: "Give a litre of fluid: her kidneys are 'dry'"
+        grade: harmful
+        consequence: "Her saturation drops to 86% and she needs CPAP."
+        teaching: "A poor diuretic response in a congested patient is not dehydration."
+        effects: { minutes: 30, spo2: -6, patient: -25 }
+        next: acetazolamide
+
+  acetazolamide:
+    type: dose
+    check: { source: [advor-2022, esc-hf-2026], verified: false }
+    prompt: "Acetazolamide dose, in mg IV?"
+    drug: acetazolamide
+    dose: ahf
+    tolerancePct: 0
+    correct:
+      consequence: "Given once daily alongside the doubled furosemide."
+      teaching: "500 mg IV once daily, added early to the loop diuretic."
+    under:
+      consequence: "Your senior corrects the dose to 500 mg."
+      teaching: "The trial dose was 500 mg IV once daily."
+      effects: { patient: -5 }
+    over:
+      consequence: "Your senior corrects the dose to 500 mg once daily."
+      teaching: "The trial dose was 500 mg IV once daily."
+      effects: { patient: -5 }
+    next: day-2
+
+  day-2:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    onEnter: { minutes: 1200, setVitals: { hr: 84, sbp: 118, dbp: 70, rr: 18, spo2: 96 } }
+    panels:
+      - scene: ward
+        actors: [patient:relieved, nurse:worried]
+        caption: "Next morning · Ward"
+        bubbles:
+          - { who: patient, text: "I slept on one pillow last night." }
+          - { who: nurse, text: "Down 2.4 kg, but her creatinine has gone from 1.3 to 1.6. Should we stop the diuretics, and her ramipril and bisoprolol?" }
+    prompt: "Warm hands, BP 118/70, JVP still raised, legs still swollen. What do you do?"
+    options:
+      - label: "Carry on decongesting; keep ramipril, bisoprolol and spironolactone; recheck kidney function and potassium daily"
+        grade: best
+        consequence: "Over three days she loses 6 kg; creatinine settles at 1.4."
+        teaching: "A creatinine rise with improving congestion and good perfusion is usually harmless: keep going."
+        effects: { minutes: 60 }
+        next: discharge
+      - label: "Stop all diuretics until the creatinine is back to normal"
+        grade: harmful
+        consequence: "She re-accumulates fluid and is breathless again by evening."
+        teaching: "Stopping diuresis for a creatinine rise in a still-congested, well-perfused patient leaves her wet."
+        effects: { minutes: 60, patient: -20 }
+        next: discharge
+      - label: "Stop bisoprolol and ramipril 'to protect the kidneys'"
+        grade: suboptimal
+        consequence: "Your senior restarts them: no hypotension, no hypoperfusion, no reason to stop."
+        teaching: "Keep the pillars through decompensation unless the patient is hypoperfused or the potassium is dangerous."
+        effects: { minutes: 30, patient: -10 }
+        next: discharge
+
+  discharge:
+    type: multiselect
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    prompt: "Day 4: no oedema, JVP normal. Plan for home. Choose up to 4."
+    max: 4
+    options:
+      - id: nsaid
+        label: "Stop diclofenac for good; paracetamol for her knee"
+        grade: best
+        consequence: "Done, with a note to the chemist."
+        teaching: "NSAIDs retain salt and water and blunt diuretics."
+        missedEffects: { patient: -10 }
+      - id: sglt2
+        label: "Add dapagliflozin 10 mg, the fourth pillar"
+        grade: best
+        consequence: "Started before discharge."
+        teaching: "She was on three pillars; an SGLT2 inhibitor adds benefit within weeks."
+        missedEffects: { patient: -5 }
+      - id: weights
+        label: "Daily weights, salt advice, what to do if her weight rises 2 kg in 3 days"
+        grade: best
+        consequence: "Her daughter writes it on the fridge."
+        teaching: "Early warning lets you act before the next admission."
+        missedEffects: { patient: -5 }
+      - id: review
+        label: "Clinic review within 1–2 weeks, with kidney function and potassium"
+        grade: best
+        consequence: "Booked for 10 days."
+        teaching: "The weeks after discharge are the most vulnerable; early review is where the doses go up."
+        missedEffects: { patient: -5 }
+      - id: diuretic-only
+        label: "Home on a higher furosemide dose alone; leave the rest to her GP"
+        grade: harmful
+        consequence: "Your senior adds the missing pieces."
+        teaching: "Diuretics relieve symptoms; the pillars and early review change outcomes."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Ten days later · Heart failure clinic"
+        bubbles:
+          - { who: patient, text: "Weight steady every morning. No more pickles, and no more of that knee tablet." }
+    summary: "You phenotyped her as warm and wet, found the trigger, dosed the diuretic by response, carried on through a harmless creatinine rise, and sent her home on all four pillars."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Three weeks later · Emergency department"
+    summary: "She went home, but under-dosing, stopping too soon or a thin discharge plan brought her back. The debrief shows where."
+
+debrief:
+  diagnosis: "Decompensated chronic HFrEF (warm–wet), triggered by an NSAID and a high-salt diet."
+  keyPoints:
+    - "Phenotype first: warm or cold, wet or dry. Then find the trigger (here diclofenac and salt)."
+    - "IV furosemide at 1–2.5 × the home daily dose."
+    - "Check the response: urine sodium under 50–70 mmol/L at 2 hours, or urine under 100–150 ml/h over 6 hours, means double the dose; add acetazolamide 500 mg IV."
+    - "A creatinine rise while congestion improves and perfusion is good: carry on."
+    - "Keep the pillars through decompensation; discharge euvolaemic on all four, with review in 1–2 weeks."
+  pitfalls:
+    - "Waiting for tomorrow's weight to judge the diuretic."
+    - "Stopping diuretics or the pillars for a creatinine rise."
+    - "Fluid for a poor urine output in a congested patient."
+  unlocks: [decompensated-hf, furosemide, acetazolamide, hf-four-pillars, sglt2-inhibitors, hf-diagnosis]
+  refs: [esc-hf-2026, dose-ahf-2011, advor-2022, strong-hf-2022]
+  check: { source: [esc-hf-2026, advor-2022], verified: false }

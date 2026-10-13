@@ -1,0 +1,14 @@
+id: myocarditis
+title: "Acute myocarditis"
+summary: "Inflammation of the heart muscle, usually after a viral illness. Chest pain, raised troponin, arrhythmias and heart failure in a young patient; it can turn fulminant within hours."
+sections:
+  - heading: Suspect it
+    body: "A young patient with a recent viral illness, chest pain or breathlessness, a raised troponin and ECG changes or arrhythmias, without coronary disease."
+  - heading: Investigate
+    body: "ECG, troponin, echocardiogram, coronary assessment when needed; cardiac MRI or biopsy at a specialist centre."
+  - heading: Fulminant
+    body: "Shock or dangerous arrhythmias: transfer early to a centre with mechanical circulatory support; it is a bridge to recovery, which is often good."
+  - heading: Avoid
+    body: "NSAIDs in myocarditis with heart failure; competitive sport and strenuous exercise for at least 3–6 months; fibrinolysis for a 'STEMI' that is really myocarditis."
+refs: [esc-myopericarditis-2025, esc-hf-2026]
+check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: false }

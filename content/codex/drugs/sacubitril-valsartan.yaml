@@ -1,0 +1,24 @@
+id: sacubitril-valsartan
+title: "Sacubitril–valsartan (ARNI) and ACE inhibitors"
+summary: "The first pillar in HFrEF: an ARNI, or an ACE inhibitor (an ARB if neither is tolerated). The ARNI beat enalapril in PARADIGM-HF."
+doses:
+  - id: arni
+    label: "Sacubitril–valsartan, start → target"
+    route: Oral
+    text: "24/26 mg twice daily → 97/103 mg twice daily"
+    check: { source: esc-hf-2026, verified: false }
+  - id: acei
+    label: "ACE inhibitor, start → target"
+    route: Oral
+    text: "Enalapril 2.5 mg twice daily → 10–20 mg twice daily; ramipril 1.25 mg once daily → 10 mg"
+    check: { source: esc-hf-2026, verified: false }
+sections:
+  - heading: Switching
+    body: "Stop the ACE inhibitor 36 hours before starting the ARNI: together they cause angioedema."
+  - heading: Watch
+    body: "Low BP, high potassium, a creatinine rise. NT-proBNP (not BNP) for monitoring on an ARNI."
+  - heading: Never in pregnancy
+    body: "ACE inhibitors, ARBs and ARNIs are contraindicated in pregnancy; enalapril can be used while breastfeeding."
+india: "If the ARNI is unaffordable, a well-titrated generic ACE inhibitor plus MRA plus SGLT2 inhibitor captures most of the benefit."
+refs: [esc-hf-2026]
+check: { source: esc-hf-2026, verified: false }

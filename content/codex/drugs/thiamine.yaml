@@ -1,0 +1,16 @@
+id: thiamine
+title: "Thiamine (vitamin B1)"
+summary: "Cures wet beriberi, a high-output heart failure from thiamine deficiency. Give it before glucose in anyone at risk."
+doses:
+  - id: beriberi
+    label: "Suspected wet beriberi"
+    route: IV
+    text: "High-dose IV thiamine (commonly 100–500 mg, repeated two to three times a day), then oral"
+    check: { source: who-thiamine-1999, verified: false, todo: "Regimens vary widely; set the dose you want taught." }
+sections:
+  - heading: Who
+    body: "Heavy alcohol use, polished-rice diets, malnutrition, hyperemesis, bariatric surgery, long-term furosemide, dialysis."
+  - heading: Response
+    body: "Often dramatic within hours: the pulse slows, the BP gap narrows, the congestion clears."
+refs: [who-thiamine-1999]
+check: { source: who-thiamine-1999, verified: false }

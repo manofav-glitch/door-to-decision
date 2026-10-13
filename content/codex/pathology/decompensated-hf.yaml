@@ -1,0 +1,16 @@
+id: decompensated-hf
+title: "Decompensated heart failure: warm or cold, wet or dry"
+summary: "Two questions sort every patient: is perfusion adequate (warm or cold), and is there congestion (wet or dry)? Then find the trigger."
+sections:
+  - heading: Warm or cold
+    body: "Cold means hypoperfusion: cool or mottled skin, narrow pulse pressure, confusion, little urine, a rising lactate. It can happen with a normal BP."
+  - heading: Wet or dry
+    body: "Wet means congestion: orthopnoea, raised JVP, crackles or B-lines, oedema, a big liver."
+  - heading: The profiles
+    body: "Warm–wet: the usual ED patient; diuretic, and a vasodilator if the BP is high. Cold–wet: the one that kills; inotrope, pressor if needed, then diuresis. Warm–dry: look for another diagnosis. Cold–dry: low output; careful volume, then reassess."
+  - heading: CHAMPIT triggers
+    body: "ACS, Hypertensive emergency, Arrhythmia, acute Mechanical cause (valve, septum), Pulmonary embolism, Infection, Tamponade. Also NSAIDs, steroids, non-dihydropyridine calcium-channel blockers, alcohol, missed tablets, anaemia, thyroid."
+  - heading: Terms (ESC 2026)
+    body: "HFrEF: ejection fraction under 50%. HFpEF: 50% or more. 'Decompensated HF' replaces 'acute HF'."
+refs: [esc-hf-2026]
+check: { source: esc-hf-2026, verified: false }

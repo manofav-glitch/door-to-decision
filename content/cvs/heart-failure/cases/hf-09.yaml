@@ -1,0 +1,212 @@
+# hf-09 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: hyperkalaemia (K 6.4) with ECG changes in a patient on ramipril, spironolactone and
+# dapagliflozin for HFrEF, after a week of diarrhoea (dehydration, AKI: creatinine 1.4 → 2.3).
+# Treat the potassium (protect, shift); hold the MRA (and ACE inhibitor while dehydrated with AKI),
+# rehydrate cautiously; restart plan with checks; binders where available. Don't stop the pillars for good.
+# Sources: owner's heart failure note (MRA stop above 5.5, binders, CKD); UKKA 2023; ESC 2026 via the note.
+
+id: cvs-hf-09
+title: "70M, weak legs after a week of loose motions"
+difficulty: 2
+minutes: 10
+patient: { age: 70, sex: M, weightKg: 66 }
+initial:
+  clock: "09:50"
+  vitals: { hr: 64, sbp: 104, dbp: 62, rr: 18, spo2: 96, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [ukka-hyperk-2023, esc-hf-2026]
+  verified: false
+  todo: "Teaching composite; check the potassium, creatinine and drug list."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Loose motions for a week, eating little. Today my legs feel weak. I took all my heart tablets as usual." }
+          - { who: nurse, text: "On ramipril 5, spironolactone 25, dapagliflozin 10, bisoprolol 5. Pulse 64, BP 104 over 62. Dry tongue." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: ukka-hyperk-2023, verified: false }
+    prompt: "First move?"
+    options:
+      - label: "Monitor, 12-lead ECG, and a blood gas for potassium, plus kidney function"
+        grade: best
+        consequence: "ECG at 5 minutes. Gas potassium 6.4; creatinine 2.3 (1.4 a month ago)."
+        teaching: "On an ACE inhibitor plus MRA, with diarrhoea and weakness: check the potassium now."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Oral rehydration and home with a follow-up blood test"
+        grade: harmful
+        consequence: "Your senior brings him back from the door for an ECG and blood gas."
+        teaching: "Weakness on RAAS blockers plus an MRA, with dehydration, is hyperkalaemia until proved otherwise."
+        effects: { minutes: 20, milestone: ecg, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: ukka-hyperk-2023, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-09-hyperk.svg
+    alt: "12-lead ECG. Sinus rhythm about 64 per minute. PR interval about 240 ms, QRS slightly wide, tall narrow peaked T waves in II, aVF and V2–V5."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Hyperkalaemia: tall peaked T waves, long PR, slightly wide QRS"
+        grade: best
+        consequence: "With ECG changes, he needs treatment now."
+        teaching: "Peaked T waves, then PR lengthening and QRS widening: the heart is at risk."
+        effects: { minutes: 1 }
+        next: treat
+      - label: "Hyperacute T waves: anterior STEMI"
+        grade: suboptimal
+        consequence: "Your senior points to the narrow-based, symmetrical T waves across many leads and the potassium of 6.4."
+        teaching: "Hyperkalaemic T waves are tall, narrow and widespread; hyperacute T waves are broad and regional."
+        effects: { minutes: 3, patient: -5 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: ukka-hyperk-2023, verified: false }
+    prompt: "Potassium 6.4 with ECG changes. First treatment?"
+    options:
+      - label: "IV calcium to protect the heart, then insulin 10 units with 25 g glucose and nebulised salbutamol"
+        grade: best
+        consequence: "The T waves settle within minutes; an hour later potassium is 5.6."
+        teaching: "Protect first with calcium, then shift potassium into the cells."
+        effects: { minutes: 60 }
+        next: drugs
+      - label: "Insulin 10 units on its own"
+        grade: harmful
+        consequence: "His glucose falls to 2.6 and he sweats. Your senior gives glucose and calcium."
+        teaching: "Never insulin without glucose, especially with kidney injury."
+        effects: { minutes: 45, patient: -20 }
+        next: drugs
+      - label: "Calcium resonium by mouth and recheck tomorrow"
+        grade: suboptimal
+        consequence: "Your senior gives calcium and insulin–glucose: with ECG changes, binders are too slow."
+        teaching: "Binders act over hours; ECG changes need treatment in minutes."
+        effects: { minutes: 30, patient: -10 }
+        next: drugs
+
+  drugs:
+    type: choice
+    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: false }
+    prompt: "What about his heart failure tablets?"
+    options:
+      - label: "Hold spironolactone (potassium over 5.5) and ramipril while he is dehydrated with kidney injury; hold dapagliflozin while unwell; keep bisoprolol; plan to restart each one as he recovers"
+        grade: best
+        consequence: "Written as a clear plan with dates and blood tests."
+        teaching: "Pause the MRA above 5.5, and the RAAS blocker and SGLT2 inhibitor during an acute illness with AKI; then restart. Don't abandon the pillars."
+        effects: { minutes: 15 }
+        next: fluids
+      - label: "Stop all heart failure tablets permanently: they're dangerous for his kidneys"
+        grade: harmful
+        consequence: "Your senior rewrites it as a temporary hold with a restart plan."
+        teaching: "Kidney disease is the commonest wrong reason to withhold the pillars; most patients should restart."
+        effects: { minutes: 15, patient: -20 }
+        next: fluids
+
+  fluids:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Dry tongue, BP 104/62, no oedema, lungs clear, ejection fraction 35%. Fluids?"
+    options:
+      - label: "Cautious IV fluid in small boluses (250 ml), reassessing JVP, lungs and urine output after each"
+        grade: best
+        consequence: "After 750 ml he passes urine; creatinine improves to 1.8 the next day."
+        teaching: "He is dry this time: rehydrate, but in small steps with a weak heart."
+        effects: { minutes: 240, setVitals: { hr: 70, sbp: 116, dbp: 70 } }
+        next: home-plan
+      - label: "No fluids at all: he has heart failure"
+        grade: suboptimal
+        consequence: "His kidney function worsens; your senior gives careful fluid."
+        teaching: "Heart failure patients can be genuinely dehydrated; assess, don't assume."
+        effects: { minutes: 240, patient: -10 }
+        next: home-plan
+      - label: "3 litres of saline fast"
+        grade: harmful
+        consequence: "By evening he is breathless with crackles."
+        teaching: "A weak ventricle tolerates fluid poorly; small boluses with reassessment."
+        effects: { minutes: 240, spo2: -6, patient: -20 }
+        next: home-plan
+
+  home-plan:
+    type: multiselect
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Potassium 4.8, creatinine 1.5, eating again. Before home. Choose up to 3."
+    max: 3
+    options:
+      - id: sick-day
+        label: "Sick-day rules: pause the ACE inhibitor, MRA, SGLT2 inhibitor and diuretic during vomiting or diarrhoea, and restart when eating"
+        grade: best
+        consequence: "Given in writing."
+        teaching: "Simple sick-day rules prevent the next episode."
+        missedEffects: { patient: -5 }
+      - id: restart
+        label: "Restart ramipril and dapagliflozin now; restart spironolactone with a potassium check in 1 week"
+        grade: best
+        consequence: "Booked."
+        teaching: "Potassium and creatinine at 1 and 4 weeks after restarting an MRA."
+        missedEffects: { patient: -10 }
+      - id: binder
+        label: "A potassium binder, if available, to allow the MRA to continue in future"
+        grade: acceptable
+        consequence: "Discussed; cost is the barrier."
+        teaching: "Binders help keep RAAS blockers and MRAs going rather than cutting doses."
+      - id: no-mra
+        label: "Never restart spironolactone"
+        grade: suboptimal
+        consequence: "Your senior plans a careful restart."
+        teaching: "A single episode during dehydration is not a reason to lose a life-prolonging drug."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Two weeks later · Heart failure clinic"
+        bubbles:
+          - { who: patient, text: "Back on all four tablets, potassium normal. I have the sick-day card in my wallet." }
+    summary: "You found the potassium, protected the heart, shifted it safely, paused only what needed pausing, rehydrated carefully, and restarted the pillars with a plan."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A month later · Emergency department"
+    summary: "He recovered, but a missed potassium, insulin without glucose, or losing his heart failure drugs left him worse off. The debrief shows where."
+
+debrief:
+  diagnosis: "Hyperkalaemia (6.4) with ECG changes and acute kidney injury from diarrhoea, in a patient on ACE inhibitor, MRA and SGLT2 inhibitor for HFrEF."
+  keyPoints:
+    - "Weakness on RAAS blockers and an MRA, with dehydration: ECG and blood-gas potassium now."
+    - "ECG changes: IV calcium, then insulin 10 units with 25 g glucose and salbutamol."
+    - "Hold the MRA above 5.5; pause RAAS blockers and SGLT2 inhibitors during acute illness with AKI; then restart with checks."
+    - "Rehydrate a dry heart-failure patient in small boluses with reassessment."
+    - "Sick-day rules; potassium binders can keep the MRA going."
+  pitfalls:
+    - "Stopping the pillars for good."
+    - "Insulin without glucose."
+    - "Withholding fluid from a genuinely dehydrated patient, or flooding a weak heart."
+  unlocks: [hyperkalaemia, hyperkalaemia-treatment, spironolactone, hf-four-pillars, sglt2-inhibitors]
+  refs: [ukka-hyperk-2023, esc-hf-2026]
+  check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: false }

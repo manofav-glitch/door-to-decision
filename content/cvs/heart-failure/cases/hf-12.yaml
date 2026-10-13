@@ -1,0 +1,193 @@
+# hf-12 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: acute viral myocarditis turning fulminant in a 24-year-old: chest pain and breathlessness
+# a week after a flu-like illness, high troponin, diffuse ST elevation and low voltage, runs of VT,
+# then shock. Not an ACS (no lysis). Treat the VT, support the circulation, transfer early to a centre
+# with mechanical support; no NSAIDs; no sport for months.
+# Not in the owner's note beyond MCS: drafted from ESC 2025 myocarditis/pericarditis at the owner's request.
+
+id: cvs-hf-12
+title: "24M, chest pain and breathless a week after flu"
+difficulty: 3
+minutes: 12
+patient: { age: 24, sex: M, weightKg: 68 }
+initial:
+  clock: "02:10"
+  rhythm: ecg/hf-12-myocarditis.svg
+  vitals: { hr: 118, sbp: 104, dbp: 68, rr: 26, spo2: 94, gcs: 15, temp: 37.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-myopericarditis-2025
+  verified: false
+  todo: "Drafted from guidelines (not in the owner's note); check the presentation and timeline."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I had fever and body aches last week. Now my chest hurts and I get breathless just walking. I play cricket every day, I'm fit." }
+          - { who: relative, text: "He fainted for a second in the bathroom tonight." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-myopericarditis-2025, verified: false }
+    prompt: "Pulse 118, BP 104/68, soft S3, fine crackles at the bases. First move?"
+    options:
+      - label: "Resus bay, monitor, 12-lead ECG, troponin, bloods, bedside echo"
+        grade: best
+        consequence: "ECG at 4 minutes. Troponin very high. Echo: globally weak left ventricle, ejection fraction about 30%, small effusion."
+        teaching: "A young patient with chest pain, breathlessness and a recent viral illness: think myocarditis, and monitor."
+        effects: { minutes: 4, milestone: ecg }
+        next: ecg-1
+      - label: "Young and fit: probably viral chest pain; paracetamol and discharge"
+        grade: harmful
+        consequence: "Your senior stops the discharge: a faint, an S3 and crackles in a young man are red flags. The ECG is done late."
+        teaching: "Fainting, an S3 and crackles are never 'just viral'."
+        effects: { minutes: 30, milestone: ecg, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-myopericarditis-2025, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-12-myocarditis.svg
+    alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Low QRS voltages, mild diffuse ST elevation in I, II, aVF and V2–V6 without reciprocal change or a single territory."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus tachycardia, low voltage, diffuse ST elevation without a territory: fits myocarditis"
+        grade: best
+        consequence: "With the troponin and the weak ventricle, myocarditis is the leading diagnosis."
+        teaching: "Myocarditis can look like pericarditis or a STEMI on the ECG; the echo and the story separate them."
+        effects: { minutes: 1 }
+        next: storm
+      - label: "STEMI: give tenecteplase now"
+        grade: harmful
+        consequence: "Your senior stops it: no territory, no reciprocal change, a global (not regional) weakness and a recent viral illness."
+        teaching: "Lysis doesn't help myocarditis and can cause bleeding into an inflamed pericardium."
+        effects: { minutes: 5, patient: -25 }
+        next: storm
+
+  storm:
+    type: choice
+    check: { source: [esc-myopericarditis-2025, esc-va-2022, erc-als-2025], verified: false }
+    onEnter: { minutes: 40, setVitals: { hr: 182, sbp: 78, dbp: 50, gcs: 14 }, rhythm: ecg/hf-12-vt.svg }
+    panels:
+      - scene: monitor
+        caption: "{clock} · 40 minutes later"
+        sfx: "ALARM"
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse:alarmed]
+        bubbles:
+          - { who: nurse, text: "Broad and fast, 180! BP 78 over 50, he's going grey." }
+    prompt: "Sustained VT with shock. Now?"
+    options:
+      - label: "Synchronised cardioversion straight away (sedation only if it doesn't delay you), then amiodarone"
+        grade: best
+        consequence: "One shock: sinus tachycardia at 120, BP 88/58."
+        teaching: "Unstable VT gets an immediate synchronised shock."
+        effects: { minutes: 5, setVitals: { hr: 120, sbp: 88, dbp: 58, gcs: 15 }, rhythm: ecg/hf-12-myocarditis.svg }
+        next: support
+      - label: "Adenosine to see if it is SVT"
+        grade: harmful
+        consequence: "Nothing changes and he worsens. Your senior shocks him."
+        teaching: "A broad-complex tachycardia with shock needs a shock, not a diagnostic drug."
+        effects: { minutes: 5, patient: -20, setVitals: { hr: 120, sbp: 84, dbp: 54, gcs: 15 }, rhythm: ecg/hf-12-myocarditis.svg }
+        next: support
+
+  support:
+    type: choice
+    check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: false }
+    prompt: "Sinus rhythm, BP 88/58, cool hands, lactate 4. Next?"
+    options:
+      - label: "Dobutamine and noradrenaline, and call the regional centre now for transfer: he may need mechanical circulatory support"
+        grade: best
+        consequence: "The centre accepts; the retrieval team leaves at once."
+        teaching: "Fulminant myocarditis can recover fully if mechanical support bridges the worst days; transfer early."
+        effects: { minutes: 60, setVitals: { hr: 112, sbp: 96, dbp: 62 } }
+        next: avoid
+      - label: "Admit to the ward and see how he is in the morning"
+        grade: harmful
+        consequence: "At 5 a.m. he arrests on the ward and is resuscitated. Your senior arranges urgent transfer."
+        teaching: "Shock and VT in myocarditis can deteriorate within hours; plan escalation before it happens."
+        effects: { minutes: 180, patient: -30 }
+        next: avoid
+
+  avoid:
+    type: multiselect
+    check: { source: esc-myopericarditis-2025, verified: false }
+    prompt: "While waiting for the retrieval team. Choose up to 3."
+    max: 3
+    options:
+      - id: no-nsaid
+        label: "No NSAIDs for the chest pain: paracetamol instead"
+        grade: best
+        consequence: "Charted."
+        teaching: "NSAIDs can worsen myocarditis with heart failure."
+        missedEffects: { patient: -5 }
+      - id: electrolytes
+        label: "Keep potassium and magnesium high-normal and keep the defibrillator pads on"
+        grade: best
+        consequence: "Done."
+        teaching: "Further VT is likely; reduce triggers and be ready."
+        missedEffects: { patient: -5 }
+      - id: sport
+        label: "Tell him and his family: no sport or strenuous exercise for at least 3–6 months"
+        grade: best
+        consequence: "His father writes it down."
+        teaching: "Exercise during myocarditis raises the risk of sudden death."
+        missedEffects: { patient: -5 }
+      - id: steroids
+        label: "High-dose steroids for every viral myocarditis"
+        grade: suboptimal
+        consequence: "Your senior explains this depends on the type (e.g. giant-cell or eosinophilic) found on biopsy at the specialist centre."
+        teaching: "Immunosuppression is guided by biopsy, not given routinely in the ED."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Six weeks later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "Three days on the machine, then my heart came back. Ejection fraction 55% now. No cricket till next year, they said." }
+    summary: "You took a fit young man's symptoms seriously, recognised myocarditis rather than a STEMI, shocked his VT, supported his circulation and transferred him early."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Six weeks later · Cardiology ward, tertiary centre"
+    summary: "He survived, but a delayed diagnosis, the wrong drug or a late transfer brought him much closer to death. The debrief shows where."
+
+debrief:
+  diagnosis: "Acute viral myocarditis turning fulminant, with sustained VT and cardiogenic shock."
+  keyPoints:
+    - "A young patient with a recent viral illness, chest pain or breathlessness, a raised troponin and a weak ventricle: myocarditis."
+    - "The ECG can mimic pericarditis or STEMI; no lysis without a clear occlusion story."
+    - "Unstable VT: immediate synchronised shock."
+    - "Shock: inotrope plus pressor, and early transfer to a centre with mechanical support (often a bridge to full recovery)."
+    - "No NSAIDs with heart failure; no sport for 3–6 months."
+  pitfalls:
+    - "'Young and fit, just viral'."
+    - "Thrombolysis for diffuse ST elevation."
+    - "Waiting till morning to escalate."
+  unlocks: [myocarditis, decompensated-hf, synchronised-cardioversion, dobutamine, noradrenaline]
+  refs: [esc-myopericarditis-2025, esc-hf-2026, esc-va-2022]
+  check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: false }

@@ -1,7 +1,7 @@
 # Heart Failure module — outline for the owner's approval
 
-Status: DRAFT plan v2, 2026-10-13, rebuilt on the owner's note. Nothing is built until the owner approves
-(one phase at a time).
+Status: APPROVED by the owner 2026-10-13 (all 10 cases, plus wet beriberi and myocarditis as hf-11 and
+hf-12). All 12 cases drafted (unverified) on 2026-10-13.
 
 Sources read: the owner's note `notes/hf.pdf` (Heart Failure, built on the 2026 ESC heart failure
 guideline, the 2026 Universal Definition, 2022 AHA/ACC/HFSA, and the trials DOSE-AHF, ADVOR, CLOROTIC,

@@ -1,0 +1,12 @@
+# hf-02: decompensated chronic HFrEF. Sinus rhythm ~96 with old anterior infarction (Q waves V1–V3,
+# poor R-wave progression), no new ischaemic change.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 96 }
+rhythmLead: II
+leads:
+  V1: { q: 0.4, r: 0, s: 0.6, t: -0.1 }
+  V2: { q: 0.5, r: 0.05, s: 0.6, t: 0.1 }
+  V3: { q: 0.4, r: 0.15, s: 0.6, t: 0.15 }
+  V4: { r: 0.5, s: 0.6 }
+check: { source: esc-hf-2026, verified: false, todo: "Check it reads as old anterior MI (Q waves V1–V3), no acute change." }

@@ -1,0 +1,7 @@
+# hf-12: the monitor during deterioration: monomorphic VT at ~180.
+title: "Rhythm strip, lead II: ventricular tachycardia"
+layout: strip
+rhythm: { kind: vt, rate: 180 }
+qrs: 160
+rhythmLead: II
+check: { source: [esc-myopericarditis-2025, esc-va-2022], verified: false, todo: "Check it reads as VT." }

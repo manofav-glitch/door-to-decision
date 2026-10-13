@@ -1,0 +1,14 @@
+id: right-heart-failure
+title: "Acute right heart failure"
+summary: "From PE, RV infarction, pulmonary hypertension or lung disease. The usual rules invert: the right ventricle needs its preload and its coronary perfusion."
+sections:
+  - heading: Signs
+    body: "Raised JVP, big tender liver, ascites, oedema, often clear lungs. Kussmaul's sign in constriction or RV infarction."
+  - heading: Do
+    body: "Cautious volume (only if not overloaded); correct hypoxia, hypercapnia and acidosis, which raise pulmonary pressure; noradrenaline early to keep the coronary perfusion of the RV; an inotrope only with a pressor; keep sinus rhythm."
+  - heading: Avoid
+    body: "Aggressive diuresis and nitrates in an under-filled RV; careless intubation (positive pressure and sedation can cause collapse)."
+  - heading: Cor pulmonale
+    body: "Right heart failure from chronic lung disease: treat the exacerbation, target oxygen saturations carefully, and diurese gently for oedema."
+refs: [hfa-rv-2016, esc-ph-2022, esc-hf-2026]
+check: { source: [hfa-rv-2016, esc-ph-2022, esc-hf-2026], verified: false }

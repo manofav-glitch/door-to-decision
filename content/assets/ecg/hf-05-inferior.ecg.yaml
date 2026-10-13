@@ -1,0 +1,11 @@
+# hf-05: two days after an inferior MI. Sinus tachycardia ~118, inferior Q waves with residual ST
+# elevation and T inversion in II, III, aVF.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 118 }
+rhythmLead: II
+leads:
+  II: { q: 0.35, r: 0.5, st: 0.08, t: -0.2 }
+  III: { q: 0.45, r: 0.3, st: 0.1, t: -0.25 }
+  aVF: { q: 0.4, r: 0.4, st: 0.08, t: -0.2 }
+check: { source: [esc-acs-2023, esc-hf-2026], verified: false, todo: "Check it reads as recent inferior MI with Q waves, sinus tachycardia." }

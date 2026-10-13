@@ -1,0 +1,15 @@
+# hf-01: SCAPE. Sinus tachycardia ~124 with LVH (deep S in V1–V2, tall R in V5–V6) and lateral
+# strain (down-sloping ST depression and T inversion in I, aVL, V5–V6). No acute ST elevation.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 124 }
+rhythmLead: II
+leads:
+  I: { r: 1.3, s: 0.1, st: -0.08, t: -0.15 }
+  aVL: { r: 1.2, s: 0.1, st: -0.1, t: -0.2 }
+  V1: { r: 0.15, s: 2.4, t: 0.3 }
+  V2: { r: 0.25, s: 2.8, t: 0.4 }
+  V3: { r: 0.6, s: 1.8 }
+  V5: { r: 2.7, s: 0.2, st: -0.12, t: -0.25 }
+  V6: { r: 2.3, s: 0.1, st: -0.12, t: -0.25 }
+check: { source: [esc-htn-2024, esc-hf-2026], verified: false, todo: "Check it reads as sinus tachycardia with LVH and strain, no STEMI." }

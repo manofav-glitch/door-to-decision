@@ -1,0 +1,168 @@
+# hf-11 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: wet beriberi (high-output heart failure from thiamine deficiency) in a heavy drinker
+# living on polished rice. Warm peripheries, bounding pulse, wide pulse pressure, congestion, lactic
+# acidosis. IV thiamine before glucose → dramatic response. Diuretics alone and vasopressors miss it.
+# Not in the owner's note: drafted from WHO 1999 and general sources at the owner's request.
+
+id: cvs-hf-11
+title: "40M, breathless, swollen, with warm hands"
+difficulty: 3
+minutes: 10
+patient: { age: 40, sex: M, weightKg: 54 }
+initial:
+  clock: "21:20"
+  vitals: { hr: 124, sbp: 128, dbp: 44, rr: 28, spo2: 92, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: who-thiamine-1999
+  verified: false
+  todo: "Drafted from general sources (not in the owner's note); check the presentation and lactate."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He drinks every day, eats only rice. For two weeks his legs are swollen and he gets breathless. Now he can't walk." }
+          - { who: patient, text: "My feet burn and tingle too." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: who-thiamine-1999, verified: false }
+    prompt: "Warm, flushed hands, bounding pulse, BP 128/44, raised JVP, crackles, oedema, reduced ankle reflexes. First move?"
+    options:
+      - label: "Monitor, ECG, blood gas with lactate, glucose, bloods, bedside echo, and note the warm peripheries with a wide pulse pressure"
+        grade: best
+        consequence: "ECG at 5 minutes: sinus tachycardia. Lactate 6.1. Echo: a hyperdynamic heart, dilated right side, good squeeze."
+        teaching: "Heart failure with warm hands, a bounding pulse and a wide pulse pressure is high-output failure."
+        effects: { minutes: 5, milestone: ecg }
+        next: cause
+      - label: "Alcoholic liver disease: albumin infusion and a liver referral"
+        grade: suboptimal
+        consequence: "Your senior points to the raised JVP and hyperdynamic heart: this is cardiac. The ECG is done late."
+        teaching: "Oedema with a raised JVP is not liver disease alone."
+        effects: { minutes: 30, milestone: ecg, patient: -10 }
+        next: cause
+
+  cause:
+    type: choice
+    check: { source: who-thiamine-1999, verified: false }
+    prompt: "High-output heart failure with lactic acidosis in a malnourished drinker. What's the most likely cause?"
+    options:
+      - label: "Wet beriberi: thiamine deficiency"
+        grade: best
+        consequence: "Anaemia, thyrotoxicosis and a fistula are also on your list, but his diet and neuropathy point to thiamine."
+        teaching: "Alcohol, polished rice, malnutrition and neuropathy with high-output failure: think beriberi. It is still seen in India."
+        effects: { minutes: 2 }
+        next: treat
+      - label: "Alcoholic cardiomyopathy with a weak heart"
+        grade: suboptimal
+        consequence: "Your senior shows you the vigorous squeeze on echo: this heart isn't weak, it's working too hard."
+        teaching: "Alcoholic cardiomyopathy gives a dilated, weak ventricle; beriberi gives a hyperdynamic, high-output state."
+        effects: { minutes: 5 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: who-thiamine-1999, verified: false, todo: "Set the thiamine regimen you want taught." }
+    prompt: "Treatment?"
+    options:
+      - label: "High-dose IV thiamine now, before any glucose; then cautious furosemide for the congestion"
+        grade: best
+        consequence: "Within 6 hours his pulse is 96, the diastolic BP rises and the lactate falls to 2.4."
+        teaching: "IV thiamine reverses wet beriberi, often dramatically within hours."
+        effects: { minutes: 360, setVitals: { hr: 96, sbp: 122, dbp: 64, rr: 20, spo2: 95 } }
+        next: after
+      - label: "IV 50% dextrose for low energy, then thiamine later"
+        grade: harmful
+        consequence: "He becomes confused and unsteady. Your senior gives IV thiamine at once."
+        teaching: "Glucose before thiamine in deficiency can precipitate Wernicke's encephalopathy and worsen the acidosis."
+        effects: { minutes: 60, gcs: -2, patient: -20 }
+        next: after
+      - label: "High-dose furosemide alone"
+        grade: suboptimal
+        consequence: "He loses some fluid, but the tachycardia and lactate don't change until your senior adds thiamine."
+        teaching: "Diuretics treat congestion, not the cause; only thiamine fixes the high output."
+        effects: { minutes: 240, patient: -10 }
+        next: after
+      - label: "Noradrenaline for the low diastolic pressure"
+        grade: harmful
+        consequence: "His heart rate rises and his lactate worsens. Your senior stops it and gives thiamine."
+        teaching: "The wide pulse pressure is from low vascular resistance with high output; the fix is thiamine, not a pressor."
+        effects: { minutes: 60, patient: -20 }
+        next: after
+
+  after:
+    type: multiselect
+    check: { source: who-thiamine-1999, verified: false }
+    prompt: "He's improving. Before the ward. Choose up to 3."
+    max: 3
+    options:
+      - id: continue
+        label: "Continue thiamine IV for several days, then oral, plus other B vitamins and nutrition"
+        grade: best
+        consequence: "Prescribed, with a dietician review."
+        teaching: "Deficiency states rarely come alone."
+        missedEffects: { patient: -5 }
+      - id: withdrawal
+        label: "Watch for alcohol withdrawal, and offer help to stop drinking"
+        grade: best
+        consequence: "Withdrawal chart started; addiction team referral."
+        teaching: "The cause needs treating too."
+        missedEffects: { patient: -5 }
+      - id: repeat-echo
+        label: "Repeat the echo once he has recovered"
+        grade: acceptable
+        consequence: "Booked before discharge."
+        teaching: "The high-output state should settle; a weak heart afterwards suggests another cause."
+      - id: home
+        label: "Home tomorrow on oral thiamine once he feels better"
+        grade: suboptimal
+        consequence: "Your senior keeps him in for monitoring and IV treatment."
+        teaching: "Severe wet beriberi with acidosis needs a few days of IV treatment and monitoring."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Five days later · Medical ward"
+        bubbles:
+          - { who: patient, text: "The swelling's gone and I can walk again. I've promised to stop drinking." }
+    summary: "You recognised high-output heart failure, thought of thiamine, gave it before glucose, and saw the classic rapid response."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Ten days later · Medical ward"
+    summary: "He recovered once he got thiamine, but glucose first, pressors or diuretics alone made him sicker. The debrief shows where."
+
+debrief:
+  diagnosis: "Wet beriberi: high-output heart failure from thiamine deficiency in a malnourished heavy drinker."
+  keyPoints:
+    - "Heart failure with warm hands, a bounding pulse, a wide pulse pressure and lactic acidosis: high-output failure."
+    - "Causes: thiamine deficiency (alcohol, polished rice, malnutrition), anaemia, thyrotoxicosis, AV fistula, sepsis."
+    - "High-dose IV thiamine before glucose; the response is often dramatic within hours."
+    - "Diuretics only for congestion; pressors don't fix it."
+  pitfalls:
+    - "Glucose before thiamine."
+    - "Calling it liver disease or alcoholic cardiomyopathy without looking at the echo."
+    - "A pressor for the low diastolic pressure."
+  unlocks: [wet-beriberi, thiamine, decompensated-hf]
+  refs: [who-thiamine-1999, esc-hf-2026]
+  check: { source: who-thiamine-1999, verified: false }

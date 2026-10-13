@@ -1,0 +1,169 @@
+# hf-08 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: decompensated right heart failure (cor pulmonale) from chronic lung disease (post-TB
+# fibrosis and COPD), triggered by a chest infection with hypoxia and hypercapnia. Clear lung fields,
+# big liver, ascites. Principles invert: correct hypoxia/hypercapnia/acidosis, cautious diuresis,
+# noradrenaline early if the BP falls, inotrope only with a pressor; care with intubation.
+# Sources: owner's heart failure note (right HF principles); HFA/ESC acute RV failure 2016; ESC/ERS PH 2022.
+
+id: cvs-hf-08
+title: "60M, swollen belly and legs, blue lips"
+difficulty: 3
+minutes: 12
+patient: { age: 60, sex: M, weightKg: 52 }
+initial:
+  clock: "13:30"
+  vitals: { hr: 108, sbp: 102, dbp: 70, rr: 28, spo2: 80, gcs: 14, temp: 37.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [hfa-rv-2016, esc-ph-2022]
+  verified: false
+  todo: "Teaching composite; check the gas values and vitals."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He had TB years ago and has been breathless ever since. This week, fever and cough, and his belly and legs have swollen up." }
+          - { who: patient, text: "Tight belly... and so sleepy." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: hfa-rv-2016, verified: false }
+    prompt: "Lips blue, JVP to the ear, big tender liver, ascites, leg oedema; crackles only at the right base. First move?"
+    options:
+      - label: "Resus bay, controlled oxygen to sats 88–92%, blood gas, ECG, sputum and blood cultures, bedside echo"
+        grade: best
+        consequence: "ECG at 6 minutes. Gas: pH 7.29, CO₂ 68 mmHg. Echo: huge right ventricle, small squashed left ventricle."
+        teaching: "Hypoxia, hypercapnia and acidosis all raise pulmonary pressures and strain the right ventricle: fix them."
+        effects: { minutes: 6, milestone: ecg, setVitals: { spo2: 88 } }
+        next: ecg-1
+      - label: "15 litres of oxygen by mask until the sats are 100%"
+        grade: suboptimal
+        consequence: "His CO₂ climbs and he becomes drowsier. Your senior reduces the oxygen to a target of 88–92%."
+        teaching: "In chronic hypercapnia, aim for 88–92%; too much oxygen worsens CO₂ retention."
+        effects: { minutes: 10, milestone: ecg, gcs: -2, patient: -15 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-ph-2022, hfa-rv-2016], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-08-cor-pulmonale.svg
+    alt: "12-lead ECG. Sinus tachycardia about 108 per minute. Tall peaked P waves in II, III and aVF; right axis deviation; dominant R wave in V1 with T wave inversion in V1–V3."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Right heart strain: peaked P waves, right axis deviation, dominant R in V1 with T inversion in V1–V3"
+        grade: best
+        consequence: "It fits long-standing pulmonary hypertension from his lung disease."
+        teaching: "P pulmonale, right axis and a dominant R in V1 point to right atrial and ventricular overload."
+        effects: { minutes: 1 }
+        next: support
+      - label: "Anterior ischaemia: aspirin and heparin"
+        grade: suboptimal
+        consequence: "Your senior shows you the right-sided pattern and the echo."
+        teaching: "T inversion in V1–V3 with a dominant R and right axis is RV strain, not anterior ischaemia."
+        effects: { minutes: 3, patient: -5 }
+        next: support
+
+  support:
+    type: choice
+    check: { source: [hfa-rv-2016, esc-hf-2026], verified: false }
+    prompt: "pH 7.29, CO₂ 68, BP 98/66, swollen everywhere. Next?"
+    options:
+      - label: "Bilevel NIV for the hypercapnia, antibiotics for the chest infection, gentle IV furosemide, and noradrenaline early if the BP falls"
+        grade: best
+        consequence: "Over 2 hours the CO₂ falls to 54, he wakes up, and he passes urine steadily."
+        teaching: "Treat what raises pulmonary pressure (hypoxia, hypercapnia, acidosis, infection); protect RV perfusion with noradrenaline."
+        effects: { minutes: 120, setVitals: { hr: 98, sbp: 104, dbp: 68, rr: 22, spo2: 90, gcs: 15 } }
+        next: more
+      - label: "High-dose furosemide (160 mg) and a GTN infusion to offload the heart"
+        grade: harmful
+        consequence: "His BP falls to 76/48 and he becomes grey. Your senior stops the GTN and starts noradrenaline."
+        teaching: "The right ventricle needs its preload and coronary perfusion; aggressive offloading causes collapse."
+        effects: { minutes: 30, setVitals: { sbp: 76, dbp: 48 }, patient: -25 }
+        next: more
+      - label: "Intubate now, before NIV"
+        grade: harmful
+        consequence: "With sedation and positive pressure his BP crashes to 60 systolic; noradrenaline rescues him."
+        teaching: "Intubation can tip a failing right ventricle into arrest; try NIV first and prepare a pressor if you must intubate."
+        effects: { minutes: 30, setVitals: { sbp: 70, dbp: 44 }, patient: -25 }
+        next: more
+
+  more:
+    type: multiselect
+    check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }
+    prompt: "Stabilising. What else? Choose up to 3."
+    max: 3
+    options:
+      - id: target
+        label: "Keep oxygen targeted to 88–92% and repeat the gas"
+        grade: best
+        consequence: "CO₂ keeps falling."
+        teaching: "Controlled oxygen avoids both hypoxia and worse hypercapnia."
+        missedEffects: { patient: -5 }
+      - id: pe
+        label: "Think about PE as another trigger, and anticoagulate prophylactically at least"
+        grade: best
+        consequence: "Low-molecular-weight heparin started; leg veins clear."
+        teaching: "PE is a common cause of acute right heart failure and a trigger in chronic lung disease."
+        missedEffects: { patient: -5 }
+      - id: rhythm
+        label: "Keep him in sinus rhythm; treat any new AF promptly"
+        grade: acceptable
+        consequence: "Noted."
+        teaching: "A failing right ventricle depends on atrial contraction."
+      - id: liver
+        label: "Tap the ascites and refer to hepatology for liver failure"
+        grade: suboptimal
+        consequence: "Your senior explains the ascites is from right heart failure, not primary liver disease."
+        teaching: "Congestive hepatopathy and ascites improve with treating the right heart."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Ten days later · Chest ward"
+        bubbles:
+          - { who: patient, text: "The swelling's gone down and I'm awake again. Oxygen at home, they said." }
+    summary: "You recognised right heart failure from lung disease, targeted oxygen, used NIV, treated the infection and diuresed gently, and protected the right ventricle."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Two weeks later · ICU"
+    summary: "He survived, but over-oxygenation, aggressive offloading or a rushed intubation pushed his right ventricle too far. The debrief shows where."
+
+debrief:
+  diagnosis: "Decompensated right heart failure (cor pulmonale) from chronic lung disease after TB, triggered by a chest infection with hypercapnic respiratory failure."
+  keyPoints:
+    - "Raised JVP, big liver, ascites and oedema with clear lungs: think right heart failure."
+    - "Hypoxia, hypercapnia, acidosis and infection raise pulmonary pressures: correct them (oxygen to 88–92% in chronic hypercapnia, NIV)."
+    - "The rules invert: cautious diuresis, no aggressive nitrates, noradrenaline early to protect RV perfusion, inotrope only with a pressor."
+    - "Intubation can cause collapse: NIV first, pressor ready."
+  pitfalls:
+    - "High-flow oxygen to 100% in chronic hypercapnia."
+    - "Treating the right heart like the left (big diuretic plus nitrate)."
+    - "Calling the ascites liver disease."
+  unlocks: [right-heart-failure, niv-cpap, noradrenaline, furosemide]
+  refs: [hfa-rv-2016, esc-ph-2022, esc-hf-2026]
+  check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }

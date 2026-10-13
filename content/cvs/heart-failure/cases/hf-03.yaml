@@ -1,0 +1,186 @@
+# hf-03 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: cardiogenic shock (cold–wet, SCAI C) in known non-ischaemic dilated cardiomyopathy
+# (EF 15%, LBBB), after weeks of decline and stopping his tablets. No ACS. Dobutamine for output,
+# noradrenaline for pressure, then cautious diuresis; early call to a shock team / transfer.
+# Sources: owner's heart failure note (Stevenson profiles, inotropes, vasopressors, MCS); ESC 2026 via the note.
+
+id: cvs-hf-03
+title: "58M, cold, confused and breathless"
+difficulty: 3
+minutes: 12
+patient: { age: 58, sex: M, weightKg: 70 }
+initial:
+  clock: "19:30"
+  vitals: { hr: 118, sbp: 82, dbp: 64, rr: 28, spo2: 89, gcs: 14, temp: 35.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: esc-hf-2026
+  verified: false
+  todo: "Teaching composite; check the haemodynamics fit SCAI stage C."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:alarmed]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "He has a weak heart muscle. He stopped his tablets a month ago because they made him dizzy. Today he's muddled and won't eat." }
+          - { who: patient, text: "So tired... can't lie down." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Cool, mottled knees, pulse pressure 18 mmHg, crackles to mid-zones, JVP raised. First move?"
+    options:
+      - label: "Resus bay, monitor, ECG, lactate and blood gas, IV access, catheter for hourly urine, and call your senior"
+        grade: best
+        consequence: "ECG at 5 minutes. Lactate 5.2. Urine 10 ml in the first hour."
+        teaching: "Narrow pulse pressure, cool skin, confusion and a high lactate mean hypoperfusion: he is cold and wet."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "He's just dehydrated from not eating: 1 litre of saline fast"
+        grade: harmful
+        consequence: "His saturation falls to 82% and he needs NIV. The ECG is done late."
+        teaching: "Wet lungs and a raised JVP: fluid makes congestion worse. Hypoperfusion here is from pump failure."
+        effects: { minutes: 15, milestone: ecg, spo2: -7, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-hf-2026, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-03-lbbb.svg
+    alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Broad QRS about 150 ms with a left bundle branch block pattern: deep broad S waves in V1–V3 and broad notched R waves in I, aVL, V5 and V6, with T waves opposite to the QRS."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus tachycardia with left bundle branch block, unchanged from his old ECG"
+        grade: best
+        consequence: "Troponin is mildly raised and flat. No acute coronary event; this is his cardiomyopathy failing."
+        teaching: "Known LBBB, unchanged, in dilated cardiomyopathy. Compare with old ECGs before calling a new occlusion."
+        effects: { minutes: 1 }
+        next: support
+      - label: "VT: synchronised cardioversion now"
+        grade: harmful
+        consequence: "Your senior stops you: P waves before every QRS, rate 118, the same as last year's ECG."
+        teaching: "A broad QRS at 118 with P waves is sinus rhythm with bundle branch block, not VT."
+        effects: { minutes: 5, patient: -15 }
+        next: support
+
+  support:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Cold, wet, BP 82/64, lactate 5. Which drugs?"
+    options:
+      - label: "Dobutamine for the low output, with noradrenaline to hold the mean pressure at about 65"
+        grade: best
+        consequence: "Over an hour his feet warm, the lactate falls to 3.1 and urine starts to flow."
+        teaching: "An inotrope for hypoperfusion with low output; a pressor (noradrenaline first) for hypotension."
+        effects: { minutes: 60, setVitals: { hr: 112, sbp: 98, dbp: 66, rr: 24, spo2: 93, gcs: 15 } }
+        next: diuresis
+      - label: "GTN infusion for the wet lungs"
+        grade: harmful
+        consequence: "His BP falls to 64/40. Your senior stops the GTN and starts noradrenaline and dobutamine."
+        teaching: "Vasodilators are for warm, hypertensive patients; in a cold, hypotensive patient they cause collapse."
+        effects: { minutes: 20, sbp: -18, patient: -25 }
+        next: diuresis
+      - label: "Adrenaline infusion first"
+        grade: suboptimal
+        consequence: "The BP rises but so do the heart rate and lactate; your senior switches to noradrenaline with dobutamine."
+        teaching: "Noradrenaline is the first pressor in cardiogenic shock; adrenaline caused more refractory shock and arrhythmia in a comparison trial."
+        effects: { minutes: 45, patient: -10, setVitals: { hr: 132, sbp: 94, dbp: 62 } }
+        next: diuresis
+
+  diuresis:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Now warmer, BP 98/66, still crackles. Next?"
+    options:
+      - label: "IV furosemide now that he is perfused, watching BP and urine output; keep checking lactate"
+        grade: best
+        consequence: "He passes 900 ml over 4 hours and breathes more easily."
+        teaching: "Once perfusion is restored, decongest; the order matters."
+        effects: { minutes: 240, setVitals: { rr: 20, spo2: 95 } }
+        next: escalate
+      - label: "Restart his bisoprolol and ramipril tonight"
+        grade: harmful
+        consequence: "Your senior stops them: he is on inotropes and pressors."
+        teaching: "Beta-blockers and ACE inhibitors wait until the patient is off support and stable."
+        effects: { minutes: 30, patient: -20 }
+        next: escalate
+
+  escalate:
+    type: multiselect
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "What else tonight? Choose up to 3."
+    max: 3
+    options:
+      - id: shock-team
+        label: "Call the cardiology / shock team and discuss transfer to a centre with mechanical support"
+        grade: best
+        consequence: "Accepted by the tertiary centre; transfer in the morning if he stays stable."
+        teaching: "A multidisciplinary shock team decides on devices; early transfer matters more than device choice."
+        missedEffects: { patient: -10 }
+      - id: echo
+        label: "Bedside echo: ejection fraction, valves, effusion, right ventricle"
+        grade: best
+        consequence: "Dilated left ventricle, ejection fraction about 15%, functional mitral regurgitation, no tamponade."
+        teaching: "Echo confirms the mechanism and excludes tamponade, valve rupture and RV failure."
+        missedEffects: { patient: -5 }
+      - id: lmwh
+        label: "Thromboprophylaxis with low-molecular-weight heparin"
+        grade: acceptable
+        consequence: "Prescribed."
+        teaching: "All hospitalised decompensated patients without a contraindication."
+      - id: iabp
+        label: "Routine intra-aortic balloon pump for every cardiogenic shock"
+        grade: suboptimal
+        consequence: "Your senior explains that it didn't improve survival in a large trial and isn't routine."
+        teaching: "Balloon pumps are kept for mechanical complications as a bridge to surgery."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Two weeks later · Cardiology ward, tertiary centre"
+        bubbles:
+          - { who: patient, text: "They've weaned the drips and I'm on low doses of my tablets again. They're talking about a device." }
+    summary: "You recognised hypoperfusion behind a 'muddled' patient, supported him with an inotrope and noradrenaline, decongested once he was perfused, and got the shock team involved early."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Two weeks later · ICU"
+    summary: "He survived, but fluids, vasodilators or the wrong drugs deepened his shock. The debrief shows where."
+
+debrief:
+  diagnosis: "Cardiogenic shock (cold–wet) in non-ischaemic dilated cardiomyopathy after stopping treatment; no acute coronary syndrome."
+  keyPoints:
+    - "Hypoperfusion is not the same as hypotension: look at the skin, pulse pressure, mental state, urine and lactate."
+    - "Cold and wet: an inotrope (dobutamine) for low output, noradrenaline for hypotension; then decongest."
+    - "No vasodilators and no fluid boluses with wet lungs; no new beta-blocker or ACE inhibitor while on support."
+    - "Call the shock team early; balloon pumps are not routine."
+  pitfalls:
+    - "Calling sinus rhythm with LBBB 'VT'."
+    - "Treating shock with wet lungs as dehydration."
+    - "Adrenaline as the first pressor."
+  unlocks: [decompensated-hf, cardiogenic-shock, dobutamine, noradrenaline, furosemide]
+  refs: [esc-hf-2026]
+  check: { source: esc-hf-2026, verified: false }

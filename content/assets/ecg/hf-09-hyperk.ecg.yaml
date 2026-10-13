@@ -1,0 +1,15 @@
+# hf-09: potassium 6.4 on HF medicines. Sinus rhythm ~64, PR ~240 ms, QRS slightly wide, tall narrow
+# peaked T waves.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 64, pr: 240 }
+qrs: 115
+rhythmLead: II
+leads:
+  II: { t: 0.8, tw: 0.7 }
+  aVF: { t: 0.6, tw: 0.7 }
+  V2: { t: 1.0, tw: 0.65 }
+  V3: { t: 1.1, tw: 0.65 }
+  V4: { t: 1.0, tw: 0.65 }
+  V5: { t: 0.8, tw: 0.7 }
+check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: false, todo: "Check it reads as moderate hyperkalaemia (peaked T, long PR)." }

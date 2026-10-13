@@ -1,0 +1,226 @@
+# hf-01 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: SCAPE (sympathetic crashing acute pulmonary oedema) in a 66-year-old with poorly
+# controlled hypertension and LVH; preserved ejection fraction. Redistribution, not fluid gain:
+# NIV + high-dose nitrate first, furosemide secondary. No morphine, no new beta-blocker.
+# Sources: owner's heart failure and hypertension notes; ESC 2026 HF (via the note), ESC 2024 BP, 3CPO.
+
+id: cvs-hf-01
+title: "66M, woke up drowning"
+difficulty: 2
+minutes: 10
+patient: { age: 66, sex: M, weightKg: 82 }
+initial:
+  clock: "03:40"
+  vitals: { hr: 124, sbp: 212, dbp: 118, rr: 36, spo2: 82, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-htn-2024, esc-hf-2026]
+  verified: false
+  todo: "Teaching composite; check the vitals fit SCAPE."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic:alarmed, patient-supine:alarmed]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: paramedic, text: "Woke up an hour ago fighting for breath. BP 212 over 118, sats 82% on air, crackles to the shoulders. Takes amlodipine, sometimes." }
+          - { who: patient, text: "Can't... breathe... lying down..." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: [esc-hf-2026, threecpo-2008], verified: false }
+    prompt: "He is sitting bolt upright, sweating, frothy sputum. First move?"
+    options:
+      - label: "Sit him up, oxygen, monitor and 12-lead ECG, and CPAP straight away"
+        grade: best
+        consequence: "CPAP at 8 cmH₂O goes on; ECG at 4 minutes. His breathing rate starts to settle."
+        teaching: "Positive pressure pushes fluid out of the alveoli and lowers preload and afterload. Start it early."
+        effects: { minutes: 4, milestone: ecg, setVitals: { spo2: 90, rr: 30 } }
+        next: ecg-1
+      - label: "Arterial blood gas first, then decide on ventilation"
+        grade: suboptimal
+        consequence: "Ten minutes pass with him gasping; your senior starts CPAP and you get the ECG."
+        teaching: "Clinical distress is the indication for NIV; the gas can follow."
+        effects: { minutes: 12, milestone: ecg, patient: -10 }
+        next: ecg-1
+      - label: "Lie him flat for a chest X-ray first"
+        grade: harmful
+        consequence: "Lying flat, his saturation falls to 74%. You sit him up and start CPAP."
+        teaching: "Never lay a patient with acute pulmonary oedema flat."
+        effects: { minutes: 10, milestone: ecg, spo2: -8, patient: -20 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:alarmed, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-01-lvh.svg
+    alt: "12-lead ECG. Sinus tachycardia about 124 per minute. Tall R waves in V5–V6 and deep S waves in V1–V2, with down-sloping ST depression and T inversion in I, aVL, V5 and V6. No ST elevation."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus tachycardia with left ventricular hypertrophy and strain; no STEMI"
+        grade: best
+        consequence: "You look for other triggers: no chest pain, no new arrhythmia, no fever. This looks like a hypertensive crisis."
+        teaching: "LVH with lateral strain fits long-standing hypertension. Check for ACS, but don't call strain an NSTEMI."
+        effects: { minutes: 1 }
+        next: vasodilator
+      - label: "Lateral ischaemia: treat as NSTEMI with heparin and ticagrelor first"
+        grade: suboptimal
+        consequence: "Your senior points out the classic LVH strain pattern and the BP of 210: treat the pulmonary oedema now."
+        teaching: "Strain from LVH mimics ischaemia. Troponin and the clinical story decide; the oedema can't wait."
+        effects: { minutes: 3, patient: -5 }
+        next: vasodilator
+
+  vasodilator:
+    type: choice
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: false }
+    prompt: "On CPAP, BP 208/116, sats 90%. The main treatment now?"
+    options:
+      - label: "High-dose nitrate: sublingual doses every 3–5 minutes while a GTN infusion is prepared, then escalate the infusion fast"
+        grade: best
+        consequence: "Within minutes his breathing eases."
+        teaching: "SCAPE is fluid redistributed into the lungs by a sudden rise in afterload: vasodilatation is the treatment."
+        effects: { minutes: 2 }
+        next: gtn-dose
+      - label: "Furosemide 120 mg IV and wait for him to pass urine"
+        grade: suboptimal
+        consequence: "He passes little urine over 20 minutes and is still drowning. Your senior starts high-dose nitrate."
+        teaching: "Most SCAPE patients haven't gained fluid; a diuretic alone is slow and misses the mechanism."
+        effects: { minutes: 20, patient: -15 }
+        next: gtn-dose
+      - label: "Morphine 5 mg IV to ease his distress"
+        grade: harmful
+        consequence: "He becomes drowsy and his CO₂ climbs. Your senior stops the morphine and starts nitrate."
+        teaching: "Routine morphine in acute pulmonary oedema is linked to more intubation and worse outcomes."
+        effects: { minutes: 10, gcs: -2, patient: -20 }
+        next: gtn-dose
+
+  gtn-dose:
+    type: dose
+    check: { source: [esc-htn-2024], verified: false, todo: "High-dose sublingual GTN for SCAPE: confirm the dose you teach." }
+    prompt: "Sublingual GTN for SCAPE, each dose in micrograms?"
+    drug: nitrates
+    dose: scape-sl
+    tolerancePct: 0
+    correct:
+      consequence: "Three doses over 10 minutes, then an infusion from 100 micrograms/min, quickly increased. BP falls to 160/94, sats 95% on CPAP."
+      teaching: "400–800 micrograms every 3–5 minutes, then a fast-escalating infusion; wean as the BP falls."
+      effects: { minutes: 15, setVitals: { hr: 102, sbp: 160, dbp: 94, rr: 24, spo2: 95 } }
+    under:
+      consequence: "A standard chest-pain dose barely touches the BP. Your senior increases it; it takes longer."
+      teaching: "The chest-pain dose (300–600 micrograms once) is too small for SCAPE; it needs high, repeated doses."
+      effects: { minutes: 25, patient: -10, setVitals: { hr: 108, sbp: 170, dbp: 98, rr: 26, spo2: 93 } }
+    over:
+      consequence: "His BP drops to 100/60 and he feels faint. You stop the nitrate and the BP recovers."
+      teaching: "Higher than the recommended dose risks overshoot: aim for steady, titrated reductions."
+      effects: { minutes: 15, patient: -10, setVitals: { hr: 110, sbp: 118, dbp: 70, rr: 24, spo2: 94 } }
+    next: diuretic
+
+  diuretic:
+    type: choice
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:relieved, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: nurse, text: "Much better. No leg swelling, weight steady at his clinic visits, he says. Do you want furosemide?" }
+    prompt: "Furosemide?"
+    options:
+      - label: "A modest dose (40 mg IV) because he is still congested, while the nitrate does the main work"
+        grade: best
+        consequence: "He passes urine and the crackles recede."
+        teaching: "In SCAPE the diuretic is secondary; give it for real congestion, not as the first or only drug."
+        effects: { minutes: 30 }
+        next: after
+      - label: "A large dose (160 mg IV) to dry him out fast"
+        grade: suboptimal
+        consequence: "He diureses 2 litres and becomes dizzy on standing; creatinine rises the next day."
+        teaching: "He hadn't gained fluid; big diuresis in a redistributed patient risks dehydration and kidney injury."
+        effects: { minutes: 30, patient: -10 }
+        next: after
+      - label: "Start bisoprolol now for his heart rate"
+        grade: harmful
+        consequence: "Your senior stops it: you don't start a beta-blocker during decompensation."
+        teaching: "Beta-blockers are started once the patient is stable, not during acute pulmonary oedema."
+        effects: { minutes: 5, patient: -15 }
+        next: after
+
+  after:
+    type: multiselect
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
+    prompt: "He's off CPAP, BP 150/88. Before he goes to the ward. Choose up to 3."
+    max: 3
+    options:
+      - id: wean
+        label: "Wean the GTN infusion as the BP falls, and plan oral antihypertensives"
+        grade: best
+        consequence: "Infusion weaned over 6 hours; amlodipine and an ACE inhibitor started."
+        teaching: "Nitrates are short and physiology-led; long-term BP control prevents the next episode."
+        missedEffects: { patient: -5 }
+      - id: echo
+        label: "Echocardiogram, troponin and kidney function"
+        grade: best
+        consequence: "Thick left ventricle, ejection fraction 58%, no valve disease; troponin flat."
+        teaching: "Define the phenotype (here HFpEF with LVH) and exclude ACS and valve disease."
+        missedEffects: { patient: -5 }
+      - id: renal
+        label: "Look for a renal artery stenosis if pulmonary oedema recurs with kidney impairment"
+        grade: acceptable
+        consequence: "Noted for follow-up."
+        teaching: "Recurrent 'flash' oedema can come from bilateral renal artery stenosis."
+      - id: home
+        label: "Discharge from the ED now that he feels better"
+        grade: harmful
+        consequence: "Your senior admits him."
+        teaching: "Feeling better is not the endpoint; he needs BP control, investigations and a plan."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three days later · Medical ward"
+        bubbles:
+          - { who: patient, text: "I'll take the BP tablets every day now. I never want to feel that again." }
+    summary: "You recognised SCAPE, started CPAP early, used high-dose nitrate as the main treatment, kept the diuretic modest, and avoided morphine."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · Medical ward"
+    summary: "He recovered, but delays, the wrong main drug or harmful extras made his night more dangerous. The debrief shows where."
+
+debrief:
+  diagnosis: "SCAPE: hypertensive acute pulmonary oedema (sympathetic crashing acute pulmonary oedema) with LVH and preserved ejection fraction."
+  keyPoints:
+    - "Sudden severe breathlessness with a very high BP is redistribution of fluid, not fluid gain."
+    - "Sit up, CPAP/NIV early (don't wait for a gas), then high-dose nitrate: 400–800 micrograms sublingual every 3–5 minutes and a fast-escalating infusion."
+    - "Furosemide is secondary, for real congestion."
+    - "No routine morphine; don't start a beta-blocker during the episode."
+    - "Afterwards: echo, troponin, kidney function, BP control."
+  pitfalls:
+    - "Lying the patient flat."
+    - "A chest-pain dose of nitrate, or furosemide as the only treatment."
+    - "Calling LVH strain an NSTEMI and delaying treatment."
+  unlocks: [scape, niv-cpap, nitrates, decompensated-hf, furosemide]
+  refs: [esc-hf-2026, esc-htn-2024, threecpo-2008]
+  check: { source: [esc-hf-2026, esc-htn-2024], verified: false }

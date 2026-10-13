@@ -1,0 +1,16 @@
+id: hf-four-pillars
+title: "The four pillars and the way home"
+summary: "Diuretics relieve symptoms; only the four foundational drugs, started before discharge and increased quickly, improve survival in HFrEF."
+sections:
+  - heading: The pillars
+    body: "ARNI (or ACE inhibitor or ARB), beta-blocker, MRA, SGLT2 inhibitor. In HFpEF: MRA and SGLT2 inhibitor."
+  - heading: All at once, fast
+    body: "Start them together at low doses and increase every 1–2 weeks. STRONG-HF: fast up-titration with close follow-up cut 180-day readmission or death from 23% to 15%."
+  - heading: Ready to go home?
+    body: "No residual congestion (JVP, oedema, lungs, B-lines, orthopnoea), not just weight loss; stable kidney function and potassium; trigger dealt with; pillars started; review within 1–2 weeks booked."
+  - heading: Keep going
+    body: "Continue the pillars even when symptoms or the ejection fraction improve: stopping them brings relapse."
+  - heading: Counsel
+    body: "Daily weights, what to do when weight rises, salt advice, no NSAIDs, vaccinations, rehabilitation."
+refs: [esc-hf-2026, strong-hf-2022]
+check: { source: [esc-hf-2026, strong-hf-2022], verified: false }

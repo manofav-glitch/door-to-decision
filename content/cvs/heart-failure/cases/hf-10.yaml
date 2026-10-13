@@ -1,0 +1,150 @@
+# hf-10 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: day 4 after admission for de novo ischaemic HFrEF (EF 30%); weight down 5 kg but
+# residual congestion (JVP up, B-lines, ankle oedema). Finish decongestion; start all four pillars
+# before discharge at low doses (generic ACE inhibitor if ARNI unaffordable), daily weights, review in
+# 1–2 weeks (STRONG-HF); no NSAIDs; ICD only after 3 months of treatment.
+# Sources: owner's heart failure note (3-phase approach, residual congestion, FMT, India layer); STRONG-HF; ESC 2026 via the note.
+
+id: cvs-hf-10
+title: "62M, day four on the ward, wants to go home"
+difficulty: 1
+minutes: 10
+patient: { age: 62, sex: M, weightKg: 70 }
+initial:
+  clock: "10:30"
+  vitals: { hr: 88, sbp: 118, dbp: 74, rr: 18, spo2: 95, gcs: 15, temp: 36.6 }
+  flags: []
+check:
+  source: [esc-hf-2026, strong-hf-2022]
+  verified: false
+  todo: "Teaching composite; check the drug doses and residual congestion findings."
+
+start: rounds
+
+nodes:
+  rounds:
+    type: story
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "{clock} · Medical ward, day 4"
+        bubbles:
+          - { who: patient, text: "I feel much better, doctor. Five kilos lighter. Can I go home today? My son has the car." }
+          - { who: doctor, text: "First-ever heart failure, ejection fraction 30%, angiogram showed old blocked arteries. On furosemide only so far." }
+    next: dry-yet
+
+  dry-yet:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "JVP 5 cm above the angle, mild ankle oedema, 2–3 B-lines in a few zones on ultrasound, orthopnoea gone. Is he ready?"
+    options:
+      - label: "Not yet: residual congestion. Another 1–2 days of IV diuresis while starting the pillars"
+        grade: best
+        consequence: "Two days later his JVP is normal and the B-lines have gone."
+        teaching: "Residual congestion at discharge is the strongest modifiable predictor of readmission; weight alone isn't the endpoint."
+        effects: { minutes: 2880, setVitals: { hr: 78, sbp: 112, dbp: 70 } }
+        next: pillars
+      - label: "Yes: he's lost 5 kg and feels well"
+        grade: suboptimal
+        consequence: "Your senior finds the raised JVP and oedema and keeps him two more days."
+        teaching: "'Feels better' and weight loss come before full decongestion. Check JVP, oedema and the lungs."
+        effects: { minutes: 2880, patient: -10, setVitals: { hr: 80, sbp: 112, dbp: 70 } }
+        next: pillars
+
+  pillars:
+    type: choice
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    prompt: "Euvolaemic, BP 112/70, potassium 4.3, creatinine stable. Which drugs before he goes?"
+    options:
+      - label: "Start all four at low doses now: ramipril (or sacubitril–valsartan if affordable), bisoprolol, spironolactone, dapagliflozin; plus his furosemide"
+        grade: best
+        consequence: "All four started over 2 days with daily checks; he tolerates them."
+        teaching: "Start them together, early and low, then increase every 1–2 weeks (STRONG-HF)."
+        effects: { minutes: 1440 }
+        next: education
+      - label: "Start ramipril now; add the others one at a time, a month apart, in clinic"
+        grade: suboptimal
+        consequence: "Your senior explains that sequencing over months delays benefit; all four are started."
+        teaching: "The old one-at-a-time sequence wastes months of benefit; benefit of SGLT2 inhibitors shows within weeks."
+        effects: { minutes: 1440, patient: -10 }
+        next: education
+      - label: "Home on furosemide alone; his GP can start the rest"
+        grade: harmful
+        consequence: "Your senior stops the discharge until the pillars are started."
+        teaching: "Only the foundational drugs change survival; the GDMT gap is the biggest fixable problem in Indian heart failure care."
+        effects: { minutes: 60, patient: -20 }
+        next: education
+
+  education:
+    type: multiselect
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    prompt: "Discharge plan. Choose up to 4."
+    max: 4
+    options:
+      - id: review
+        label: "Clinic review within 1–2 weeks with blood pressure, pulse, potassium and creatinine, to increase the doses"
+        grade: best
+        consequence: "Booked for day 10."
+        teaching: "STRONG-HF: fast up-titration with early review cut readmission or death; it costs clinic time, not money."
+        missedEffects: { patient: -10 }
+      - id: weights
+        label: "Daily weights, and a plan: if up 2 kg in 3 days, take an extra furosemide and call"
+        grade: best
+        consequence: "He'll weigh himself every morning after the toilet."
+        teaching: "Congestion builds for days before symptoms; weights catch it early."
+        missedEffects: { patient: -5 }
+      - id: nsaid
+        label: "No NSAIDs or painkillers from the chemist; salt advice; vaccinations; cardiac rehabilitation"
+        grade: best
+        consequence: "Explained with his son present."
+        teaching: "Simple measures that prevent readmission."
+        missedEffects: { patient: -5 }
+      - id: icd
+        label: "Refer for an ICD before discharge because his ejection fraction is 30%"
+        grade: suboptimal
+        consequence: "Your senior explains: reassess after 3 months of optimal treatment; the ejection fraction often improves."
+        teaching: "Primary-prevention ICD is considered after at least 3 months of optimal therapy, not at the first admission."
+      - id: stop-later
+        label: "Tell him he can stop the tablets once he feels well"
+        grade: harmful
+        consequence: "Your senior corrects it: the tablets are for life."
+        teaching: "Stopping the pillars after recovery brings relapse."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three months later · Heart failure clinic"
+        bubbles:
+          - { who: patient, text: "All four tablets at full dose now, and my heart is pumping at 40%. Not one admission." }
+    summary: "You didn't let weight loss fool you, finished decongestion, started all four pillars before discharge, and set up early review."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Three weeks later · Emergency department"
+    summary: "He was readmitted: residual congestion, slow sequencing or a thin plan let the next decompensation in. The debrief shows where."
+
+debrief:
+  diagnosis: "First presentation of ischaemic HFrEF (ejection fraction 30%), decongested and ready for discharge planning."
+  keyPoints:
+    - "Discharge on euvolaemia, not weight or 'feels better': check JVP, oedema, lungs, B-lines, orthopnoea."
+    - "Start all four pillars before discharge, together and at low doses: ARNI or ACE inhibitor, beta-blocker, MRA, SGLT2 inhibitor."
+    - "If the ARNI is unaffordable, a generic ACE inhibitor plus MRA plus SGLT2 inhibitor captures most of the benefit."
+    - "Review in 1–2 weeks to increase doses (STRONG-HF); daily weights; no NSAIDs; rehabilitation."
+    - "ICD only after 3 months of optimal treatment; the pillars are for life."
+  pitfalls:
+    - "Discharging with residual congestion."
+    - "Adding one drug a month."
+    - "Leaving the pillars to someone else."
+  unlocks: [hf-four-pillars, sacubitril-valsartan, hf-beta-blockers, spironolactone, sglt2-inhibitors]
+  refs: [esc-hf-2026, strong-hf-2022]
+  check: { source: [esc-hf-2026, strong-hf-2022], verified: false }

@@ -1,0 +1,15 @@
+# hf-08: cor pulmonale. Sinus tachycardia ~108, tall peaked P waves in II (P pulmonale), right axis
+# deviation, dominant R in V1 with T inversion in V1–V3.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 108 }
+rhythmLead: II
+leads:
+  I: { p: 0.1, r: 0.2, s: 0.6 }
+  II: { p: 0.32, r: 0.7, s: 0.3 }
+  III: { p: 0.28, r: 1.0, s: 0.1, t: -0.1 }
+  aVF: { p: 0.3, r: 0.9, s: 0.1 }
+  V1: { r: 0.9, s: 0.3, t: -0.3 }
+  V2: { r: 0.8, s: 0.6, t: -0.3 }
+  V3: { r: 0.7, s: 0.8, t: -0.2 }
+check: { source: [esc-ph-2022, hfa-rv-2016], verified: false, todo: "Check it reads as right heart strain with P pulmonale and right axis." }

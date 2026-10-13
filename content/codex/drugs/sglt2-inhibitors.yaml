@@ -1,0 +1,19 @@
+id: sglt2-inhibitors
+title: "SGLT2 inhibitors (dapagliflozin, empagliflozin)"
+summary: "One of the four pillars, at any ejection fraction, with or without diabetes. Benefit appears within weeks. No titration."
+doses:
+  - id: hf
+    label: "Heart failure"
+    route: Oral
+    text: "Dapagliflozin 10 mg or empagliflozin 10 mg once daily"
+    check: { source: esc-hf-2026, verified: false }
+sections:
+  - heading: Starting in hospital
+    body: "Reasonable once the patient is stable (ESC 2026), watching BP and kidney function."
+  - heading: Hold it
+    body: "For major surgery, fasting, or acute illness such as sepsis: risk of euglycaemic ketoacidosis."
+  - heading: Side effects
+    body: "Volume depletion and genital fungal infection."
+india: "Generic dapagliflozin and empagliflozin are now inexpensive: treat them as standard, not a luxury."
+refs: [esc-hf-2026, esc-hf-2023]
+check: { source: [esc-hf-2026, esc-hf-2023], verified: false }

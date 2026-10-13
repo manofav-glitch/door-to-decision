@@ -1,0 +1,17 @@
+id: acetazolamide
+title: "Acetazolamide (in decompensated heart failure)"
+summary: "Blocks sodium bicarbonate reabsorption in the proximal tubule, sending more sodium to the loop of Henle. Added early to IV loop diuretics, it decongests more patients."
+doses:
+  - id: ahf
+    label: "Decompensated HF with congestion, added to an IV loop diuretic"
+    route: IV
+    text: "500 mg once daily"
+    rule: { unit: mg, fixed: { min: 500, max: 500 } }
+    check: { source: [advor-2022, esc-hf-2026], verified: false }
+sections:
+  - heading: Evidence
+    body: "ADVOR: successful decongestion in 42% with acetazolamide against 31% with placebo, and a shorter stay, without excess kidney harm."
+  - heading: Also
+    body: "Corrects the metabolic alkalosis that loop diuretics cause."
+refs: [advor-2022, esc-hf-2026]
+check: { source: [advor-2022, esc-hf-2026], verified: false }

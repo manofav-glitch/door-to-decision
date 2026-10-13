@@ -1,0 +1,14 @@
+id: niv-cpap
+title: "CPAP and NIV in acute pulmonary oedema"
+summary: "Positive pressure pushes fluid out of the alveoli, lowers preload and afterload, and eases the work of breathing. Start it early."
+sections:
+  - heading: Settings
+    body: "CPAP 5–10 cmH₂O, or bilevel when the patient is tiring or the CO₂ is high. Sit the patient up."
+  - heading: When
+    body: "Respiratory distress, a fast breathing rate, low oxygen, or a rising CO₂. Don't wait for the blood gas."
+  - heading: Evidence
+    body: "3CPO: faster relief of breathlessness and better physiology than oxygen alone, with no difference in mortality."
+  - heading: Caution
+    body: "Hypotension, and right-ventricle-dependent physiology."
+refs: [threecpo-2008, esc-hf-2026]
+check: { source: [threecpo-2008, esc-hf-2026], verified: false }

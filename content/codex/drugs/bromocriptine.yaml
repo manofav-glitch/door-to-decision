@@ -1,0 +1,16 @@
+id: bromocriptine
+title: "Bromocriptine (peripartum cardiomyopathy)"
+summary: "Blocks prolactin, whose cleaved fragment is thought to injure the heart in peripartum cardiomyopathy. An add-on, still debated."
+doses:
+  - id: ppcm
+    label: "Peripartum cardiomyopathy"
+    route: Oral
+    text: "2.5 mg twice daily for 2 weeks, then once daily for 6 weeks (or 1 week of 2.5 mg daily in milder cases)"
+    check: { source: hfa-ppcm-2019, verified: false }
+sections:
+  - heading: Always with anticoagulation
+    body: "Bromocriptine raises the risk of thrombosis: give prophylactic (or therapeutic) heparin with it."
+  - heading: Breastfeeding
+    body: "It stops lactation: discuss this with the mother."
+refs: [hfa-ppcm-2019, esc-hf-2026]
+check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }

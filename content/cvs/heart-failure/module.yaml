@@ -1,0 +1,5 @@
+id: heart-failure
+title: Heart Failure
+blurb: "Drowning, swollen or cold: decide warm or cold, wet or dry, find the trigger, and send them home on the right drugs."
+# Case files in play order (content/cvs/heart-failure/cases/<name>.yaml)
+cases: [hf-01, hf-02, hf-03, hf-04, hf-05, hf-06, hf-07, hf-08, hf-09, hf-10, hf-11, hf-12]

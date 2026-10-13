@@ -1,0 +1,18 @@
+# hf-12: acute myocarditis. Sinus tachycardia ~118, low voltage, diffuse mild ST elevation without
+# a territorial pattern.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 118 }
+rhythmLead: II
+leads:
+  I: { r: 0.5, st: 0.1, t: 0.2 }
+  II: { r: 0.6, st: 0.12, t: 0.25 }
+  III: { r: 0.3, st: 0.05 }
+  aVF: { r: 0.4, st: 0.1 }
+  aVL: { r: 0.3, st: 0.05 }
+  V2: { r: 0.3, s: 0.6, st: 0.12 }
+  V3: { r: 0.5, s: 0.5, st: 0.12 }
+  V4: { r: 0.6, s: 0.3, st: 0.12 }
+  V5: { r: 0.6, st: 0.12 }
+  V6: { r: 0.5, st: 0.1 }
+check: { source: [esc-myopericarditis-2025], verified: false, todo: "Check it reads as myocarditis (tachycardia, low voltage, diffuse ST elevation)." }

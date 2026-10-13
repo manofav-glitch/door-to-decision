@@ -1,0 +1,14 @@
+id: scape
+title: "SCAPE: hypertensive acute pulmonary oedema"
+summary: "Sudden severe breathlessness with a very high BP. The fluid has been redistributed into the lungs rather than gained: the treatment is vasodilatation and positive pressure, not just diuretics."
+sections:
+  - heading: Do
+    body: "Sit up; CPAP or NIV at once; high-dose nitrate (sublingual 400–800 micrograms every 3–5 minutes, then an infusion escalated fast); wean as the BP falls."
+  - heading: Diuretic
+    body: "Secondary: give it if there is real fluid overload (weight gain, oedema)."
+  - heading: Avoid
+    body: "Routine morphine (linked to more intubation); starting a beta-blocker during the episode; large furosemide doses as the only treatment."
+  - heading: Rheumatic mitral stenosis
+    body: "Pulmonary oedema with tight mitral stenosis is rate-driven: slow the heart; pure arterial dilators make it worse."
+refs: [esc-htn-2024, esc-hf-2026, threecpo-2008]
+check: { source: [esc-htn-2024, esc-hf-2026], verified: false }

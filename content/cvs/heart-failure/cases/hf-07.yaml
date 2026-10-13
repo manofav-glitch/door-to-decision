@@ -1,0 +1,168 @@
+# hf-07 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: severe calcific aortic stenosis with decompensated heart failure and exertional
+# syncope in a 79-year-old. Careful diuresis; nitrate only in small cautious doses (fixed outflow
+# obstruction); no big fluid boluses; valve team for TAVI or surgery.
+# Sources: owner's heart failure and hypertension notes (AS cautions); ESC 2025 valvular via the note; ESC 2026 HF.
+
+id: cvs-hf-07
+title: "79M, breathless, and fainted twice on the stairs"
+difficulty: 2
+minutes: 10
+patient: { age: 79, sex: M, weightKg: 64 }
+initial:
+  clock: "10:05"
+  vitals: { hr: 76, sbp: 118, dbp: 82, rr: 24, spo2: 91, gcs: 15, temp: 36.6 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-valve-2025, esc-hf-2026]
+  verified: false
+  todo: "Teaching composite; check the examination findings."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "For two months I get breathless on the stairs. Twice I blacked out at the top. Now I can't sleep flat." }
+          - { who: relative, text: "His doctor said 'murmur, old age'." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-valve-2025, verified: false }
+    prompt: "Slow-rising, small-volume pulse, a harsh ejection systolic murmur to the neck, quiet second sound, crackles at the bases. First move?"
+    options:
+      - label: "Monitor, 12-lead ECG, bloods, and a bedside echo for the valve"
+        grade: best
+        consequence: "ECG at 5 minutes; the echo shows a heavily calcified aortic valve that barely opens."
+        teaching: "Exertional syncope, breathlessness and an ejection murmur with a slow-rising pulse: severe aortic stenosis."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Faints: send for a CT head and a neurology opinion"
+        grade: suboptimal
+        consequence: "CT is normal; your senior points out the murmur and the exertional pattern. The ECG is done late."
+        teaching: "Fainting on exertion is cardiac until proved otherwise."
+        effects: { minutes: 40, milestone: ecg, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-valve-2025, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/hf-07-lvh.svg
+    alt: "12-lead ECG. Sinus rhythm about 76 per minute. Very tall R waves in V5–V6 and deep S waves in V1–V2, with down-sloping ST depression and T inversion in I, aVL, V5 and V6."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Left ventricular hypertrophy with strain, fitting severe aortic stenosis"
+        grade: best
+        consequence: "Troponin is mildly raised, as often in severe AS."
+        teaching: "The thick, pressure-loaded ventricle shows LVH and a strain pattern."
+        effects: { minutes: 1 }
+        next: treat
+      - label: "Lateral NSTEMI: load with ticagrelor and send for urgent angiography"
+        grade: suboptimal
+        consequence: "Your senior reframes it: LVH strain in severe AS, with the valve as the main problem."
+        teaching: "Strain and a small troponin rise are common in severe AS; treat the valve problem."
+        effects: { minutes: 5, patient: -5 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: [esc-valve-2025, esc-hf-2026, esc-htn-2024], verified: false }
+    prompt: "BP 118/82, crackles, sats 91%. Treatment?"
+    options:
+      - label: "Sit up, oxygen, gentle IV furosemide, and only very cautious nitrate if needed, watching the BP closely"
+        grade: best
+        consequence: "His breathing improves with a modest diuresis; the BP holds."
+        teaching: "The narrow valve fixes the output: a sudden fall in preload or afterload can cause collapse. Go gently."
+        effects: { minutes: 60, setVitals: { hr: 78, sbp: 112, dbp: 76, rr: 20, spo2: 95 } }
+        next: plan
+      - label: "High-dose GTN infusion as for SCAPE"
+        grade: harmful
+        consequence: "His BP drops to 72/50 and he faints on the trolley. You stop the GTN and give a small fluid bolus."
+        teaching: "In severe aortic stenosis a large drop in afterload can't be matched by more output."
+        effects: { minutes: 20, setVitals: { sbp: 74, dbp: 50 }, patient: -25 }
+        next: plan
+      - label: "A litre of fluid: older patients faint because they are dry"
+        grade: harmful
+        consequence: "His saturation falls to 84%."
+        teaching: "He is congested; the faints come from a fixed outflow, not dehydration."
+        effects: { minutes: 20, spo2: -7, patient: -20 }
+        next: plan
+
+  plan:
+    type: multiselect
+    check: { source: [esc-valve-2025, esc-hf-2026], verified: false }
+    prompt: "Echo confirms severe aortic stenosis with a normal ejection fraction. Plan? Choose up to 3."
+    max: 3
+    options:
+      - id: valve
+        label: "Refer to the valve team for TAVI or surgery"
+        grade: best
+        consequence: "TAVI assessment booked during this admission."
+        teaching: "Severe symptomatic aortic stenosis needs valve replacement; medicines only buy time."
+        missedEffects: { patient: -10 }
+      - id: admit
+        label: "Admit with monitoring: exertional syncope in severe AS"
+        grade: best
+        consequence: "Admitted to a monitored bed."
+        teaching: "Syncope in severe AS signals high risk of sudden death."
+        missedEffects: { patient: -5 }
+      - id: avoid
+        label: "Write 'avoid vasodilators and large diuretic doses' on the chart"
+        grade: acceptable
+        consequence: "The ward team sees it."
+        teaching: "Hand the haemodynamic cautions over."
+      - id: home
+        label: "Discharge with furosemide and a routine cardiology letter"
+        grade: harmful
+        consequence: "Your senior admits him."
+        teaching: "Syncope and heart failure with severe AS are not routine."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Six weeks later · Cardiology clinic"
+        bubbles:
+          - { who: patient, text: "Since the new valve I climb the stairs without stopping, and no more blackouts." }
+    summary: "You recognised severe aortic stenosis behind 'faints and old age', treated the congestion gently, avoided vasodilator collapse, and got him a new valve."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Two weeks later · Medical ward"
+    summary: "He reached the valve team, but a collapse in the ED or a delayed diagnosis made it harder. The debrief shows where."
+
+debrief:
+  diagnosis: "Severe calcific aortic stenosis with decompensated heart failure and exertional syncope."
+  keyPoints:
+    - "Exertional breathlessness, angina or syncope with an ejection murmur and slow-rising pulse: severe aortic stenosis."
+    - "The output is fixed: avoid big drops in preload and afterload. Gentle diuresis; nitrates only cautiously."
+    - "No fluid boluses for faints in a congested patient."
+    - "Symptomatic severe AS needs TAVI or surgery; syncope means admit and monitor."
+  pitfalls:
+    - "SCAPE-dose nitrate in aortic stenosis."
+    - "Calling LVH strain an NSTEMI."
+    - "'Murmur, old age'."
+  unlocks: [aortic-stenosis-hf, nitrates, furosemide]
+  refs: [esc-valve-2025, esc-hf-2026]
+  check: { source: [esc-valve-2025, esc-hf-2026], verified: false }

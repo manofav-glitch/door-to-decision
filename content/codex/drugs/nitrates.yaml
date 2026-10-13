@@ -7,11 +7,22 @@ doses:
     route: Sublingual tablet or spray
     text: "0.3–0.6 mg, repeat every 5 minutes if needed and BP allows (max 3 doses)"
     check: { source: acc-aha-acs-2025, verified: true, reviewedOn: 2026-09-30, todo: "Confirm dose and the local tablet/spray strengths." }
+  - id: scape-sl
+    label: "SCAPE (hypertensive acute pulmonary oedema), high-dose sublingual"
+    route: Sublingual
+    text: "400–800 micrograms every 3–5 minutes while the infusion is prepared"
+    rule: { unit: micrograms, fixed: { min: 400, max: 800 } }
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: false, todo: "From the owner's hypertension note; check against local protocol." }
+  - id: iv-infusion
+    label: "Acute heart failure with high or normal BP, IV infusion"
+    route: IV infusion
+    text: "10–20 micrograms/min, titrated up to 200 micrograms/min; in SCAPE start about 100 micrograms/min and escalate fast (up to 300–400) to effect, weaning as the BP falls"
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: false, todo: "The HF note gives up to 200; the hypertension note 300–400 in SCAPE. Confirm the ceiling you teach." }
 sections:
   - heading: Contraindications
     body: >-
       Systolic BP < 90 mmHg; suspected RV infarction; a phosphodiesterase-5 inhibitor in the last
       24 hours (sildenafil) or 48 hours (tadalafil); severe aortic stenosis or hypertrophic obstructive
       cardiomyopathy; marked bradycardia or tachycardia.
-refs: [esc-acs-2023, acc-aha-acs-2025]
+refs: [esc-acs-2023, acc-aha-acs-2025, esc-hf-2026, esc-htn-2024]
 check: { source: [esc-acs-2023, acc-aha-acs-2025], verified: true, reviewedOn: 2026-09-30 }

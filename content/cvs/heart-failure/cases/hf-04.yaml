@@ -1,0 +1,218 @@
+# hf-04 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: HFpEF (EF 60%) decompensated by new fast AF, in an 81-year-old with hypertension and
+# mild COPD. Is it really heart failure? NT-proBNP by age (AF raises it), lung ultrasound B-lines
+# (chest X-ray only mildly abnormal). Rate control (beta-blocker; diltiazem only once EF is known to
+# be preserved), diuresis, anticoagulation by CHA₂DS₂-VA (4). Amiodarone = unplanned cardioversion.
+# Sources: owner's heart failure note (natriuretic peptides, POCUS, AF in HF); ESC 2026 via the note; ESC 2024 AF.
+
+id: cvs-hf-04
+title: "81F, breathless and muddled for three days"
+difficulty: 2
+minutes: 12
+patient: { age: 81, sex: F, weightKg: 58 }
+initial:
+  clock: "08:20"
+  rhythm: ecg/hf-04-af.svg
+  vitals: { hr: 132, sbp: 148, dbp: 86, rr: 28, spo2: 90, gcs: 14, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-hf-2026, esc-af-2024]
+  verified: false
+  todo: "Teaching composite; check the vitals and NT-proBNP value."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: relative, text: "Mummy has had a cough and breathlessness for three days, and she's been confused since yesterday. She uses an inhaler for her lungs." }
+          - { who: patient, text: "My chest is tight. I can't climb the stairs." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: esc-hf-2026, verified: false }
+    prompt: "Pulse fast and irregular, a few wheezes and fine crackles at both bases, ankles puffy. First move?"
+    options:
+      - label: "Monitor, 12-lead ECG, bloods including NT-proBNP, troponin, kidney function and thyroid, and a bedside lung and heart ultrasound"
+        grade: best
+        consequence: "ECG at 5 minutes; ultrasound at the bedside."
+        teaching: "In an elderly breathless patient, the ECG and point-of-care ultrasound answer 'is this heart failure?' fastest."
+        effects: { minutes: 5, milestone: ecg }
+        next: ecg-1
+      - label: "Salbutamol and ipratropium nebulisers for her COPD, and review later"
+        grade: suboptimal
+        consequence: "The nebulisers push her heart rate to 150 and she is no better. The ECG is done 20 minutes later."
+        teaching: "Confusion and breathlessness in the elderly may be heart failure; nebulised beta-agonists speed up AF."
+        effects: { minutes: 20, milestone: ecg, setVitals: { hr: 150 }, patient: -10 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-af-2024, esc-hf-2026], verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/hf-04-af.svg
+    alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 132 per minute with no P waves; slight ST depression in V5–V6."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "AF with a fast ventricular rate"
+        grade: best
+        consequence: "New compared with her ECG last year, which was sinus rhythm. AF is a likely trigger."
+        teaching: "New AF is one of the commonest triggers of decompensation, especially in HFpEF."
+        effects: { minutes: 1 }
+        next: is-it-hf
+      - label: "Multifocal atrial tachycardia from her COPD"
+        grade: suboptimal
+        consequence: "Your senior shows you there are no P waves at all: this is AF."
+        teaching: "MAT has at least three different P-wave shapes; AF has none."
+        effects: { minutes: 2 }
+        next: is-it-hf
+
+  is-it-hf:
+    type: choice
+    check: { source: [esc-hf-2026, januzzi-2006], verified: false }
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Bedside ultrasound and results"
+        bubbles:
+          - { who: doctor, text: "Lungs: three or more B-lines in most zones on both sides, smooth pleura. Heart: thick walls, good squeeze, big left atrium. NT-proBNP 4200. Chest X-ray: mild blunting at the bases only." }
+    prompt: "Heart failure, or her COPD?"
+    options:
+      - label: "Heart failure: NT-proBNP well above the cut-off for her age (over 1800) and bilateral B-lines with a smooth pleura"
+        grade: best
+        consequence: "You treat for decompensated HFpEF triggered by AF, alongside her COPD."
+        teaching: "Use age-adjusted NT-proBNP cut-offs (AF raises it a little); B-lines are more sensitive than the chest X-ray."
+        effects: { minutes: 2 }
+        next: rate
+      - label: "COPD exacerbation: the chest X-ray shows no pulmonary oedema"
+        grade: harmful
+        consequence: "She is given steroids and more nebulisers and gets worse. Your senior reviews the ultrasound."
+        teaching: "A near-normal chest X-ray doesn't exclude heart failure; ultrasound and NT-proBNP do better."
+        effects: { minutes: 30, patient: -20, setVitals: { hr: 146, spo2: 87 } }
+        next: rate
+
+  rate:
+    type: choice
+    check: { source: [esc-af-2024, esc-hf-2026], verified: false }
+    prompt: "AF at 130–145, BP 148/86, congested. Treatment?"
+    options:
+      - label: "IV furosemide for the congestion, plus cautious IV metoprolol for rate; diltiazem only once the echo confirms a preserved ejection fraction"
+        grade: best
+        consequence: "Rate falls to 98, she passes urine well, the confusion clears."
+        teaching: "Beta-blocker first in heart failure; diltiazem is avoided until you know the ejection fraction isn't low."
+        effects: { minutes: 90, setVitals: { hr: 98, sbp: 132, dbp: 78, rr: 20, spo2: 94, gcs: 15 } }
+        next: anticoag
+      - label: "IV amiodarone to control the rate"
+        grade: harmful
+        consequence: "She converts to sinus rhythm an hour later: an unplanned cardioversion after three days of AF, with no anticoagulation."
+        teaching: "Amiodarone cardioverts. In AF of more than 24 hours (or unknown) without anticoagulation, that carries a stroke risk."
+        effects: { minutes: 60, patient: -20, setVitals: { hr: 88, sbp: 128, dbp: 76, rr: 22, spo2: 93 } }
+        next: anticoag
+      - label: "Diltiazem straight away, before any echo"
+        grade: suboptimal
+        consequence: "The rate falls, and luckily the echo later shows a preserved ejection fraction."
+        teaching: "In heart failure of unknown ejection fraction, diltiazem can tip a weak heart into shock; check first."
+        effects: { minutes: 60, patient: -5, setVitals: { hr: 102, sbp: 124, dbp: 74, rr: 22, spo2: 93, gcs: 15 } }
+        next: anticoag
+
+  anticoag:
+    type: calculator
+    check: { source: esc-af-2024, verified: false, todo: "Answers: heart failure yes, hypertension yes, age 81 → 2. Total 4." }
+    prompt: "Work out her CHA₂DS₂-VA score."
+    score: cha2ds2-va
+    answers:
+      chf: true
+      htn: true
+      age: 81
+      diabetes: false
+      stroke: false
+      vascular: false
+    correct:
+      consequence: "CHA₂DS₂-VA 4: anticoagulate. You start apixaban 5 mg twice daily (she meets only one reduction criterion)."
+      teaching: "Heart failure 1, hypertension 1, age 75 or over 2. Heart failure counts at any ejection fraction."
+    close:
+      consequence: "Right group (anticoagulate), but some items were scored differently."
+      teaching: "Heart failure counts whatever the ejection fraction; age 75 or over scores 2."
+    wrong:
+      consequence: "Your score puts her in the wrong group."
+      teaching: "She has heart failure, hypertension and is 81: that's 4."
+    next: plan
+
+  plan:
+    type: multiselect
+    check: { source: [esc-hf-2026, esc-af-2024], verified: false }
+    prompt: "Echo: ejection fraction 60%, thick walls (HFpEF). Before she goes to the ward. Choose up to 3."
+    max: 3
+    options:
+      - id: pillars
+        label: "Add an SGLT2 inhibitor and an MRA: the treatments with benefit in HFpEF"
+        grade: best
+        consequence: "Started once stable."
+        teaching: "In HFpEF, the SGLT2 inhibitor and MRA are the foundational drugs."
+        missedEffects: { patient: -5 }
+      - id: bp
+        label: "Control her blood pressure and treat the COPD alongside"
+        grade: best
+        consequence: "Both written into the plan."
+        teaching: "HFpEF is driven by hypertension, AF, obesity, diabetes and kidney disease; treat the comorbidities."
+        missedEffects: { patient: -5 }
+      - id: thyroid
+        label: "Check thyroid function as part of the AF work-up"
+        grade: acceptable
+        consequence: "Normal."
+        teaching: "Thyrotoxicosis is a reversible cause of AF and decompensation."
+      - id: aspirin
+        label: "Aspirin instead of an anticoagulant, because of her age"
+        grade: harmful
+        consequence: "Your senior keeps the apixaban."
+        teaching: "Aspirin doesn't prevent AF strokes and bleeds almost as much; age is a reason to anticoagulate."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Five days later · Medical ward"
+        bubbles:
+          - { who: relative, text: "She's herself again, and she knows her new tablets." }
+    summary: "You recognised heart failure behind confusion and 'COPD', used age-adjusted NT-proBNP and ultrasound, controlled the rate safely, and anticoagulated by score."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Ten days later · Medical ward"
+    summary: "She recovered slowly: a missed diagnosis or the wrong rate-control drug cost her days. The debrief shows where."
+
+debrief:
+  diagnosis: "Decompensated HFpEF triggered by new AF with a fast ventricular rate, in an elderly patient with hypertension and COPD."
+  keyPoints:
+    - "In the elderly, confusion and falling function can be the 'breathlessness' of heart failure."
+    - "NT-proBNP rules in by age: over 450 under 50 years, over 900 at 50–75, over 1800 over 75; under 300 rules out."
+    - "Lung ultrasound B-lines beat the chest X-ray; a clear film doesn't exclude heart failure."
+    - "Rate control in heart failure: beta-blocker first; diltiazem only with a preserved ejection fraction; amiodarone cardioverts."
+    - "Anticoagulate by CHA₂DS₂-VA; HFpEF treatment: SGLT2 inhibitor, MRA, and the comorbidities."
+  pitfalls:
+    - "Treating it as COPD because the chest X-ray looks clear."
+    - "Diltiazem before you know the ejection fraction."
+    - "Aspirin instead of anticoagulation in the elderly."
+  unlocks: [hf-diagnosis, decompensated-hf, cha2ds2-va, metoprolol, diltiazem, sglt2-inhibitors, spironolactone]
+  refs: [esc-hf-2026, esc-af-2024, januzzi-2006]
+  check: { source: [esc-hf-2026, esc-af-2024], verified: false }

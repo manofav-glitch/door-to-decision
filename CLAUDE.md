@@ -111,10 +111,10 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 
 ## Status
 - Live: https://manofav-glitch.github.io/door-to-decision/ (public repo manofav-glitch/door-to-decision; `git push` deploys).
-- Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Owner chose to skip the low-end Android check (2026-10-05).
+- Phases 0–6 done 2026-09-29…30 (PageSpeed mobile 98/100/100/100). Owner chose to skip the low-end Android check (2026-10-05). Owner's source notes live in git-ignored notes/.
 - Verification: owner instructed marking all 202 items in cp-01…11 verified (2026-09-30) and all 226 arrhythmia items
   (2026-10-13, accepting the 5 open dose questions as drafted); old TODOs kept. New content is still drafted verified: false.
-- Arrhythmias module (Phase 7, from 2026-10-05): plan in docs/modules/arrhythmias-outline.md (15 cases, owner's decisions in §0;
-  owner's source notes in git-ignored notes/). All 15 cases (arr-01…15) illustrated (89 pictures) and owner-verified 2026-10-13. Unit notes (notes.yaml, 17 sections) owner-verified 2026-10-13. Chest Pain notes (16 sections) owner-verified 2026-10-13.
+- Arrhythmias (docs/modules/arrhythmias-outline.md, owner's decisions in §0): all 15 cases (arr-01…15) illustrated (89 pictures) and owner-verified 2026-10-13. Unit notes (notes.yaml, 17 sections) owner-verified 2026-10-13. Chest Pain notes (16 sections) owner-verified 2026-10-13.
+- Heart Failure (cvs/heart-failure, hf-01…12, from owner's notes/hf.pdf + SCAPE from notes/htn.pdf; ESC 2026 per the note) drafted unverified 2026-10-13; next: owner review, pictures, notes.
 - Illustrations 2026-10-02: all 11 cases use the owner's ChatGPT pictures (cut from sheets; `npm run art` enlarges ≤2× + sharpens;
   monitor close-ups stay code). Prompts + cast-reference.png in docs/art/. Women patients: gown covers chest; shocks: nobody touching (prompt + check both).

@@ -1,0 +1,9 @@
+# hf-04: HFpEF decompensated by AF. AF at ~132, narrow QRS, mild rate-related ST depression V5–V6.
+title: "12-lead ECG at arrival"
+layout: 12-lead
+rhythm: { kind: af, rate: 132 }
+rhythmLead: II
+leads:
+  V5: { st: -0.08 }
+  V6: { st: -0.08 }
+check: { source: [esc-hf-2026, esc-af-2024], verified: false, todo: "Check it reads as fast AF." }

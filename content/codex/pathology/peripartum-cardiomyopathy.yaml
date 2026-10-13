@@ -1,0 +1,18 @@
+id: peripartum-cardiomyopathy
+title: "Peripartum cardiomyopathy"
+summary: "Heart failure with an ejection fraction under 45% late in pregnancy or in the months after delivery, with no other cause. Commoner in India than European figures suggest."
+sections:
+  - heading: Don't miss it
+    body: "Breathlessness lying flat, swollen legs and a fast pulse after delivery are not just anaemia or anxiety. Exclude PE and pre-eclampsia; get an echocardiogram."
+  - heading: Still pregnant
+    body: "No ACE inhibitor, ARB, ARNI, MRA, ivabradine or SGLT2 inhibitor. Use hydralazine with a nitrate, a beta-1-selective blocker, and diuretics only for congestion."
+  - heading: After delivery
+    body: "Standard HF treatment; enalapril and metoprolol are compatible with breastfeeding."
+  - heading: Clots
+    body: "Anticoagulate when the ejection fraction is under 30%, and always with bromocriptine."
+  - heading: Bromocriptine
+    body: "An add-on that remains debated; it stops lactation."
+  - heading: Future pregnancy
+    body: "High risk of relapse if the ejection fraction hasn't recovered: counsel before any further pregnancy."
+refs: [hfa-ppcm-2019, esc-hf-2026]
+check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }

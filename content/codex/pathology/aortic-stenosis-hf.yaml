@@ -1,0 +1,12 @@
+id: aortic-stenosis-hf
+title: "Severe aortic stenosis with heart failure"
+summary: "A fixed outflow obstruction. The ventricle can't raise its output when the afterload falls, so vasodilators can cause collapse."
+sections:
+  - heading: Clues
+    body: "Exertional breathlessness, angina or fainting; slow-rising low-volume pulse; ejection systolic murmur, quiet second sound; LVH on the ECG."
+  - heading: Treatment
+    body: "Careful diuresis; nitrates only in small, cautious doses (ideally with arterial monitoring); avoid large fluid boluses and big drops in afterload."
+  - heading: Definitive
+    body: "Severe aortic stenosis with symptoms or heart failure needs valve replacement (TAVI or surgery): refer to the valve team."
+refs: [esc-valve-2025, esc-hf-2026]
+check: { source: [esc-valve-2025, esc-hf-2026], verified: false }

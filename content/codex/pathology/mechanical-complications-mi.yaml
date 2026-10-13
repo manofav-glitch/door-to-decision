@@ -1,0 +1,12 @@
+id: mechanical-complications-mi
+title: "Mechanical complications of MI"
+summary: "Papillary muscle rupture, ventricular septal rupture and free-wall rupture, usually in the first week. A new murmur with sudden pulmonary oedema or shock means echo now."
+sections:
+  - heading: Papillary muscle rupture
+    body: "Acute severe mitral regurgitation, often after an inferior MI (the posteromedial muscle has a single blood supply). Sudden pulmonary oedema; the murmur may be soft because pressures equalise fast."
+  - heading: Bridge
+    body: "NIV, afterload reduction if the BP allows, an inotrope, and an intra-aortic balloon pump as a bridge: one of the few places it still helps."
+  - heading: Definitive
+    body: "Emergency surgery."
+refs: [esc-acs-2023, esc-hf-2026]
+check: { source: [esc-acs-2023, esc-hf-2026], verified: false }

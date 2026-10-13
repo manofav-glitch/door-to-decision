@@ -1,0 +1,188 @@
+# hf-06 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: peripartum cardiomyopathy (LVEF 28%) three weeks after a normal delivery; breastfeeding.
+# Exclude PE and pre-eclampsia; echo; postpartum HF treatment compatible with breastfeeding
+# (enalapril, metoprolol, furosemide); anticoagulate (EF under 30%); bromocriptine contested and only
+# with anticoagulation; counselling on future pregnancy.
+# Sources: owner's heart failure note (special populations); HFA PPCM position statement 2019; ESC 2026 via the note.
+
+id: cvs-hf-06
+title: "29F, three weeks after delivery, can't lie flat"
+difficulty: 2
+minutes: 12
+patient: { age: 29, sex: F, weightKg: 60 }
+initial:
+  clock: "16:45"
+  vitals: { hr: 116, sbp: 104, dbp: 68, rr: 26, spo2: 92, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [hfa-ppcm-2019, esc-hf-2026]
+  verified: false
+  todo: "Teaching composite; check the vitals and timeline."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative:worried]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Since the baby I get breathless walking to the bathroom. At night I have to sit up in a chair. My feet are swollen." }
+          - { who: relative, text: "The doctor near home said it was weakness after delivery and gave iron tablets." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
+    prompt: "Pulse 116, crackles at both bases, JVP raised, BP 104/68 (normal at her antenatal visits). First move?"
+    options:
+      - label: "ECG, bloods (blood count, NT-proBNP, troponin, kidney function, urine protein), and a bedside echo; think heart failure, PE and pre-eclampsia"
+        grade: best
+        consequence: "ECG at 6 minutes; NT-proBNP 3800; haemoglobin 11.2; no proteinuria."
+        teaching: "Breathlessness and orthopnoea after delivery is heart failure until proved otherwise; anaemia doesn't explain a raised JVP and crackles."
+        effects: { minutes: 6, milestone: ecg }
+        next: ecg-1
+      - label: "Reassure: postpartum anaemia and anxiety; increase the iron"
+        grade: harmful
+        consequence: "She returns 6 hours later, worse. The ECG is done then."
+        teaching: "Orthopnoea, oedema and a raised JVP are not anaemia or anxiety."
+        effects: { minutes: 30, milestone: ecg, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: hfa-ppcm-2019, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Majors"
+    image: ecg/hf-06-sinus-tachy.svg
+    alt: "12-lead ECG. Sinus tachycardia about 116 per minute. Flattened T waves in I, V5 and V6. No S1Q3T3 pattern and no ST elevation."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Sinus tachycardia with non-specific lateral T-wave flattening"
+        grade: best
+        consequence: "Non-specific; the echo will decide."
+        teaching: "The ECG in peripartum cardiomyopathy is often non-specific; it rarely makes the diagnosis."
+        effects: { minutes: 1 }
+        next: echo
+      - label: "Right heart strain from PE: thrombolyse"
+        grade: harmful
+        consequence: "Your senior stops you: no RV strain pattern, normotensive, and a fibrinolytic three weeks postpartum carries real bleeding risk."
+        teaching: "Thrombolysis is for high-risk PE with shock; here PE is a possibility to test for, not to lyse blindly."
+        effects: { minutes: 5, patient: -20 }
+        next: echo
+
+  echo:
+    type: choice
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine:worried, doctor]
+        caption: "{clock} · Bedside echo"
+        bubbles:
+          - { who: doctor, text: "A dilated, globally weak left ventricle, ejection fraction about 28%. Right ventricle normal size. No clot seen. B-lines both sides." }
+    prompt: "What is the diagnosis, and what about PE?"
+    options:
+      - label: "Peripartum cardiomyopathy; PE is still possible, so check leg veins and do a CT pulmonary angiogram if her probability stays high"
+        grade: best
+        consequence: "Leg ultrasound is clear; CT shows no PE but pulmonary oedema."
+        teaching: "PPCM is heart failure with an ejection fraction under 45% late in pregnancy or in the months after, with no other cause."
+        effects: { minutes: 45 }
+        next: treat
+      - label: "Severe anaemia causing high-output failure: transfuse 2 units"
+        grade: harmful
+        consequence: "Her breathing worsens with the transfusion. Your senior stops it."
+        teaching: "A haemoglobin of 11 doesn't explain an ejection fraction of 28%; transfusion adds volume to a failing heart."
+        effects: { minutes: 60, spo2: -5, patient: -20 }
+        next: treat
+
+  treat:
+    type: choice
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false, todo: "Confirm the drugs you teach as compatible with breastfeeding." }
+    prompt: "She is breastfeeding. Treatment?"
+    options:
+      - label: "IV furosemide now; then start enalapril and a beta-1-selective blocker (metoprolol) once stable, both compatible with breastfeeding"
+        grade: best
+        consequence: "She diureses well and can lie on two pillows by morning."
+        teaching: "After delivery, standard HF drugs that are safe in breastfeeding; diuretics for congestion."
+        effects: { minutes: 240, setVitals: { hr: 96, sbp: 102, dbp: 64, rr: 18, spo2: 96 } }
+        next: anticoag
+      - label: "Sacubitril–valsartan, spironolactone and dapagliflozin, all started today"
+        grade: suboptimal
+        consequence: "Your pharmacist flags that these lack safety data in breastfeeding; you switch to enalapril and metoprolol."
+        teaching: "Choose drugs with breastfeeding data; ARNIs, MRAs and SGLT2 inhibitors are avoided while breastfeeding (and all are contraindicated in pregnancy)."
+        effects: { minutes: 240, patient: -5, setVitals: { hr: 98, sbp: 100, dbp: 62, rr: 18, spo2: 96 } }
+        next: anticoag
+
+  anticoag:
+    type: multiselect
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
+    prompt: "Ejection fraction 28%. What else? Choose up to 3."
+    max: 3
+    options:
+      - id: lmwh
+        label: "Anticoagulate with low-molecular-weight heparin: ejection fraction under 30%"
+        grade: best
+        consequence: "Started."
+        teaching: "The pregnant and postpartum state plus a very weak ventricle carries a high clot risk."
+        missedEffects: { patient: -10 }
+      - id: bromo
+        label: "Discuss bromocriptine with the cardiologist: an add-on, still debated, only with anticoagulation, and it stops breastfeeding"
+        grade: acceptable
+        consequence: "After a joint discussion she chooses to try it, with heparin, and to stop breastfeeding."
+        teaching: "Bromocriptine blocks prolactin; it raises clot risk and ends lactation."
+      - id: counsel
+        label: "Explain the risk of relapse in a future pregnancy, and plan contraception"
+        grade: best
+        consequence: "She and her husband understand."
+        teaching: "Relapse risk is high if the ejection fraction hasn't recovered; counsel before any pregnancy."
+        missedEffects: { patient: -5 }
+      - id: bromo-alone
+        label: "Bromocriptine without anticoagulation"
+        grade: harmful
+        consequence: "Your senior adds heparin."
+        teaching: "Bromocriptine is never given without anticoagulation."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative:relieved]
+        caption: "Six months later · Heart failure clinic"
+        bubbles:
+          - { who: patient, text: "My heart is pumping at 50% now. I'm looking after my baby without getting breathless." }
+    summary: "You didn't accept 'weakness after delivery', excluded PE and pre-eclampsia, confirmed peripartum cardiomyopathy, chose breastfeeding-safe drugs and anticoagulated."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative:worried]
+        caption: "Three weeks later · Cardiology ward"
+    summary: "She is improving, but a delayed diagnosis or the wrong treatment made her journey harder. The debrief shows where."
+
+debrief:
+  diagnosis: "Peripartum cardiomyopathy (ejection fraction 28%) three weeks after delivery."
+  keyPoints:
+    - "Breathlessness, orthopnoea and oedema late in pregnancy or after delivery: echo; don't settle for anaemia or anxiety."
+    - "Exclude PE and pre-eclampsia alongside."
+    - "In pregnancy: no ACE inhibitor, ARB, ARNI, MRA, ivabradine or SGLT2 inhibitor; hydralazine with a nitrate and a beta-1-selective blocker instead."
+    - "After delivery and breastfeeding: furosemide, enalapril, metoprolol."
+    - "Anticoagulate when the ejection fraction is under 30%, and always with bromocriptine; counsel about future pregnancy."
+  pitfalls:
+    - "Calling it postpartum anaemia or anxiety."
+    - "Transfusing a failing heart."
+    - "Bromocriptine without anticoagulation."
+  unlocks: [peripartum-cardiomyopathy, bromocriptine, sacubitril-valsartan, hf-beta-blockers, furosemide]
+  refs: [hfa-ppcm-2019, esc-hf-2026]
+  check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }

@@ -1,0 +1,16 @@
+id: hf-beta-blockers
+title: "Beta-blockers in heart failure"
+summary: "A pillar of HFrEF treatment. Never start one during active decompensation, but don't stop it either unless the patient is hypoperfused."
+doses:
+  - id: titration
+    label: "HFrEF, start → target"
+    route: Oral
+    text: "Bisoprolol 1.25 mg → 10 mg once daily; carvedilol 3.125 mg → 25–50 mg twice daily; metoprolol succinate 12.5–25 mg → 200 mg once daily"
+    check: { source: esc-hf-2026, verified: false }
+sections:
+  - heading: During decompensation
+    body: "Continue it unless the patient is cold and hypoperfused; reduce the dose in advanced HF with hypoperfusion."
+  - heading: Pregnancy
+    body: "Beta-1-selective agents (metoprolol, bisoprolol) rather than non-selective ones."
+refs: [esc-hf-2026]
+check: { source: esc-hf-2026, verified: false }

@@ -1,0 +1,180 @@
+# hf-05 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# Hidden truth: posteromedial papillary muscle rupture two days after an inferior MI (treated late,
+# no PCI) → acute severe mitral regurgitation with flash pulmonary oedema, heading for shock.
+# Bedside echo → NIV, afterload reduction while the BP allows, inotrope, intra-aortic balloon pump as a
+# bridge → emergency surgery.
+# Sources: owner's heart failure note (CHAMPIT 'M', IABP role in mechanical complications); ESC 2023 ACS; ESC 2026 HF via the note.
+
+id: cvs-hf-05
+title: "45M, suddenly can't breathe two days after a heart attack"
+difficulty: 3
+minutes: 10
+patient: { age: 45, sex: M, weightKg: 72 }
+initial:
+  clock: "22:15"
+  vitals: { hr: 118, sbp: 96, dbp: 60, rr: 34, spo2: 84, gcs: 15, temp: 37.1 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check:
+  source: [esc-acs-2023, esc-hf-2026]
+  verified: false
+  todo: "Teaching composite; check the timeline and vitals."
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [paramedic:alarmed, patient-supine:alarmed]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: paramedic, text: "Heart attack two days ago, came to a small hospital late and took medicines only. Tonight, sudden breathlessness. Sats 84%, BP 96 over 60." }
+          - { who: patient, text: "It came on in a minute. Like drowning." }
+    next: first-move
+
+  first-move:
+    type: choice
+    check: { source: [esc-hf-2026, esc-acs-2023], verified: false }
+    prompt: "Crackles everywhere. You hear a loud murmur at the apex, through to the armpit. First move?"
+    options:
+      - label: "Resus bay, sit up, oxygen and CPAP, ECG, and a bedside echo now because of the new murmur"
+        grade: best
+        consequence: "ECG at 5 minutes; your senior brings the ultrasound."
+        teaching: "Sudden pulmonary oedema with a new murmur days after an MI is a mechanical complication until proved otherwise."
+        effects: { minutes: 5, milestone: ecg, setVitals: { spo2: 89 } }
+        next: ecg-1
+      - label: "Furosemide 80 mg IV and send him to the cardiac ward"
+        grade: harmful
+        consequence: "On the ward he becomes grey and his BP falls to 78/50. He comes back to resus; the ECG is done late."
+        teaching: "Diuretics alone miss a surgical problem."
+        effects: { minutes: 30, milestone: ecg, setVitals: { sbp: 78, dbp: 50, spo2: 82 }, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: esc-acs-2023, verified: false }
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:alarmed, nurse]
+        caption: "{clock} · Resus"
+    image: ecg/hf-05-inferior.svg
+    alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Q waves in II, III and aVF with slight residual ST elevation and T wave inversion. No new ST elevation elsewhere."
+    prompt: "What does the ECG show?"
+    options:
+      - label: "Recent inferior MI with Q waves; nothing new to explain sudden pulmonary oedema"
+        grade: best
+        consequence: "So the cause is likely mechanical: you go straight to the echo."
+        teaching: "When the ECG doesn't explain a sudden collapse after an MI, think rupture: papillary muscle, septum or free wall."
+        effects: { minutes: 1 }
+        next: echo
+      - label: "A new STEMI: give tenecteplase"
+        grade: harmful
+        consequence: "Your senior stops you: Q waves and fading ST elevation from two days ago, not a new occlusion."
+        teaching: "Lysis doesn't treat a mechanical complication and can be dangerous if the heart has ruptured."
+        effects: { minutes: 5, patient: -20 }
+        next: echo
+
+  echo:
+    type: story
+    panels:
+      - scene: ultrasound
+        actors: [patient-supine:alarmed, senior:worried]
+        caption: "{clock} · Bedside echo"
+        bubbles:
+          - { who: senior, text: "A flail mitral leaflet with a mobile lump attached: a ruptured papillary muscle. Severe regurgitation. The left ventricle is squeezing hard." }
+    next: bridge
+
+  bridge:
+    type: choice
+    check: { source: [esc-hf-2026, esc-acs-2023], verified: false }
+    prompt: "BP 92/58, sats 89% on CPAP. How do you get him to surgery alive?"
+    options:
+      - label: "Keep NIV, small doses of nitrate only while the BP holds to reduce afterload, start an inotrope if he cools, and ask for an intra-aortic balloon pump as a bridge while you call the cardiac surgeons"
+        grade: best
+        consequence: "The balloon pump cuts the regurgitant flow; his saturation rises to 94% and the surgeons take him at midnight."
+        teaching: "Afterload reduction lets more blood go forwards. A balloon pump is still useful as a bridge in acute mitral regurgitation."
+        effects: { minutes: 45, setVitals: { hr: 104, sbp: 100, dbp: 62, rr: 24, spo2: 94 } }
+        next: after
+      - label: "A big fluid bolus for the low BP"
+        grade: harmful
+        consequence: "He floods his lungs further and needs intubation."
+        teaching: "The low BP is from blood going backwards, not from a lack of volume."
+        effects: { minutes: 20, spo2: -8, patient: -25 }
+        next: after
+      - label: "Optimise medically on the ward and plan surgery in a few weeks"
+        grade: harmful
+        consequence: "Your senior calls the surgeons tonight."
+        teaching: "Papillary muscle rupture is a surgical emergency; medical treatment is only a bridge."
+        effects: { minutes: 30, patient: -20 }
+        next: after
+
+  after:
+    type: multiselect
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "While theatre is prepared. Choose up to 3."
+    max: 3
+    options:
+      - id: angio
+        label: "Coronary angiography at the time of surgery, so bypass can be added if needed"
+        grade: best
+        consequence: "Done on the table: right coronary occlusion, bypassed with the valve repair."
+        teaching: "Revascularisation is usually combined with the valve operation."
+        missedEffects: { patient: -5 }
+      - id: family
+        label: "Speak to the family about the risks of emergency surgery"
+        grade: best
+        consequence: "His wife understands the risk and the reason."
+        teaching: "Mortality is high; honest early conversations matter."
+        missedEffects: { patient: -5 }
+      - id: lab
+        label: "Group and cross-match, coagulation, kidney function"
+        grade: best
+        consequence: "Sent."
+        teaching: "Prepare for theatre while you stabilise."
+        missedEffects: { patient: -5 }
+      - id: beta
+        label: "IV metoprolol for the heart rate"
+        grade: harmful
+        consequence: "Your senior stops it: the tachycardia is compensating."
+        teaching: "In acute severe regurgitation the fast rate keeps the forward output going."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Ten days later · Cardiothoracic ward"
+        bubbles:
+          - { who: patient, text: "They fixed the valve and bypassed the artery. I'm walking the corridor." }
+    summary: "You heard the murmur, got an echo straight away, bridged him with NIV, afterload reduction and a balloon pump, and sent him to emergency surgery."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Three weeks later · Cardiothoracic ICU"
+    summary: "He survived surgery, but a missed murmur, fluid or the wrong drugs made him much sicker on the way. The debrief shows where."
+
+debrief:
+  diagnosis: "Acute severe mitral regurgitation from posteromedial papillary muscle rupture two days after an inferior MI."
+  keyPoints:
+    - "Sudden pulmonary oedema or shock days after an MI with a new murmur: echo now (papillary muscle, septal or free-wall rupture)."
+    - "The murmur can be soft in acute regurgitation; don't rely on its loudness."
+    - "Bridge: NIV, cautious afterload reduction, inotrope, and an intra-aortic balloon pump; one of the few places it still helps."
+    - "Definitive treatment: emergency surgery, usually with revascularisation."
+  pitfalls:
+    - "Diuretics and a ward bed for a surgical emergency."
+    - "Fluid for the low BP of acute regurgitation."
+    - "Slowing the compensatory tachycardia."
+  unlocks: [mechanical-complications-mi, decompensated-hf, niv-cpap]
+  refs: [esc-acs-2023, esc-hf-2026]
+  check: { source: [esc-acs-2023, esc-hf-2026], verified: false }

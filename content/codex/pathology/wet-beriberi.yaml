@@ -1,0 +1,12 @@
+id: wet-beriberi
+title: "Wet beriberi"
+summary: "High-output heart failure from thiamine deficiency: warm hands, a bounding pulse, a wide pulse pressure, and congestion. IV thiamine reverses it, often within hours."
+sections:
+  - heading: Who
+    body: "Heavy alcohol use, diets of polished rice, malnutrition, prolonged vomiting, long-term diuretics, dialysis. Still seen in India."
+  - heading: Clues
+    body: "Warm peripheries and wide pulse pressure despite heart failure; lactic acidosis; sometimes neuropathy. Shoshin beriberi is the fulminant form with shock."
+  - heading: Treat
+    body: "High-dose IV thiamine before glucose; standard support for congestion. Diuretics alone don't fix it."
+refs: [who-thiamine-1999, esc-hf-2026]
+check: { source: who-thiamine-1999, verified: false }

@@ -1,0 +1,16 @@
+id: hf-diagnosis
+title: "Is it heart failure? Natriuretic peptides and lung ultrasound"
+summary: "Natriuretic peptides are best at ruling heart failure out; bedside ultrasound shows what is happening now."
+sections:
+  - heading: Rule out
+    body: "BNP under 100 pg/mL or NT-proBNP under 300 pg/mL makes acute heart failure very unlikely."
+  - heading: Rule in (NT-proBNP by age)
+    body: "Under 50 years: over 450 pg/mL. 50–75: over 900. Over 75: over 1800. BNP over 500 pg/mL strongly supports it."
+  - heading: Falsely high or low
+    body: "High: older age, AF, kidney disease, PE, sepsis. Low: obesity, very early flash pulmonary oedema, constriction."
+  - heading: Lung ultrasound
+    body: "3 or more B-lines per zone in 2 or more zones on each side means an interstitial syndrome; smooth pleura and an even spread suggest a cardiac cause. More sensitive than a chest X-ray, which can be clear in heart failure."
+  - heading: Always
+    body: "ECG, troponin, kidney function, electrolytes, blood count, thyroid, and an echocardiogram."
+refs: [esc-hf-2026, januzzi-2006]
+check: { source: [esc-hf-2026, januzzi-2006], verified: false }

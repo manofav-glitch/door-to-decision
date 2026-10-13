@@ -1,0 +1,29 @@
+id: furosemide
+title: "Furosemide (IV loop diuretic)"
+summary: "The first drug for congestion. Dose it by response: check urine sodium at 2 hours and urine output over 6 hours, and double the dose if the response is poor."
+doses:
+  - id: naive
+    label: "Decompensated HF, not on a loop diuretic"
+    route: IV bolus
+    text: "20–40 mg"
+    rule: { unit: mg, fixed: { min: 20, max: 40 } }
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+  - id: home-40
+    label: "Decompensated HF, on furosemide 40 mg a day by mouth"
+    route: IV bolus
+    text: "1–2.5 × the total daily oral dose: 40–100 mg"
+    rule: { unit: mg, fixed: { min: 40, max: 100 } }
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+sections:
+  - heading: Is it working?
+    body: "Spot urine sodium at 2 hours: under 50–70 mmol/L is a poor response. Urine output over the first 6 hours: under 100–150 ml/h is a poor response. Either way, double the dose."
+  - heading: Still not enough
+    body: "Add a drug that works elsewhere in the nephron: acetazolamide 500 mg IV, a thiazide (hydrochlorothiazide 25–100 mg or metolazone 2.5–10 mg), or a higher-dose MRA. Watch potassium, sodium, magnesium and creatinine."
+  - heading: Creatinine rises
+    body: "If congestion is improving and perfusion is good, carry on: this is usually a harmless fall in filtration. Stop and reassess only with low BP, poor perfusion or real dehydration."
+  - heading: Bolus or infusion
+    body: "In DOSE-AHF, bolus and infusion, and high and low doses, gave similar outcomes; the higher dose relieved symptoms faster with a transient creatinine rise."
+  - heading: Endpoint
+    body: "Euvolaemia (JVP, oedema, lungs, orthopnoea), not 'feels better'."
+refs: [esc-hf-2026, dose-ahf-2011]
+check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
