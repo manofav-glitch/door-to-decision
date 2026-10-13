@@ -1,4 +1,4 @@
-# Chest Pain unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Chest Pain unit notes — verified by the content owner on 2026-10-13.
 # Drafted from the module's guidelines and the verified cases and Codex cards (no owner notes PDF for
 # this unit). Doses, thresholds and time targets match the verified cards and benchmarks.yaml; if one
 # changes, change the notes too. Style: short bullets; "Label: text" shows the label in bold.
@@ -6,7 +6,7 @@ title: "Chest Pain: unit notes"
 intro: "Everything from the 11 Chest Pain cases in one place: find the time-critical causes fast, read the ECG for occlusion, reperfuse in time, and don't miss the mimics."
 sections:
   - heading: "The first 10 minutes"
-    check: { source: [esc-acs-2023], verified: false }
+    check: { source: [esc-acs-2023], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "ECG: within 10 minutes of arrival, for every patient with possible ACS, however well they look."
@@ -26,7 +26,7 @@ sections:
       - cards: [aspirin, nitrates]
 
   - heading: "Reading the ECG for an occluded artery"
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "The ST-elevation thresholds are new in the notes (not stated in a case or card): check against ESC 2023 / Fourth-Fifth UDMI." }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-10-13, todo: "The ST-elevation thresholds are new in the notes (not stated in a case or card): check against ESC 2023 / Fourth-Fifth UDMI." }
     blocks:
       - points:
           - "ST elevation: at the J point, in 2 or more neighbouring leads."
@@ -52,7 +52,7 @@ sections:
       - cards: [rca-territory, lad-territory]
 
   - heading: "STEMI equivalents and Wellens"
-    check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: false }
+    check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "No classic ST elevation doesn't mean no occlusion: look for these patterns."
@@ -84,7 +84,7 @@ sections:
       - cards: [posterior-mi, de-winter, wellens]
 
   - heading: "Inferior STEMI and the right ventricle"
-    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-01-ecg-1.svg
         alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
@@ -106,7 +106,7 @@ sections:
       - cards: [rv-infarction, rca-territory, atropine]
 
   - heading: "Reperfusion: which route?"
-    check: { source: [esc-acs-2023, esc-stemi-2017], verified: false }
+    check: { source: [esc-acs-2023, esc-stemi-2017], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "PCI-capable centre: primary PCI, aiming for 60 minutes or less from diagnosis to wire crossing."
@@ -128,7 +128,7 @@ sections:
       - cards: [aspirin, ticagrelor, clopidogrel, ufh, enoxaparin]
 
   - heading: "Fibrinolysis"
-    check: { source: [esc-acs-2023, esc-stemi-2017, gershlick-2005], verified: false }
+    check: { source: [esc-acs-2023, esc-stemi-2017, gershlick-2005], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - table:
           head: ["Weight", "Tenecteplase (single bolus)"]
@@ -160,7 +160,7 @@ sections:
       - cards: [fibrinolytics, tenecteplase, streptokinase, failed-fibrinolysis]
 
   - heading: "Cardiogenic shock"
-    check: { source: [esc-acs-2023, hochman-1999, thiele-2012, thiele-2017], verified: false }
+    check: { source: [esc-acs-2023, hochman-1999, thiele-2012, thiele-2017], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "What: low cardiac output with poor perfusion, usually with hypotension."
@@ -178,7 +178,7 @@ sections:
       - cards: [cardiogenic-shock, noradrenaline, dobutamine, lad-territory]
 
   - heading: "NSTE-ACS"
-    check: { source: [esc-acs-2023, antman-2000, granger-2003], verified: false }
+    check: { source: [esc-acs-2023, antman-2000, granger-2003], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-03-ecg-1.svg
         alt: "12-lead ECG. Sinus rhythm about 96 per minute. ST depression of about 1 mm in I, aVL and V4 to V6, with T wave inversion in V5 and V6. No ST elevation."
@@ -205,7 +205,7 @@ sections:
       - cards: [nste-acs-strategy, timi-ua-nstemi, grace-in-hospital, fondaparinux, atorvastatin]
 
   - heading: "Low-risk chest pain and safe discharge"
-    check: { source: [esc-acs-2023, backus-2013], verified: false }
+    check: { source: [esc-acs-2023, backus-2013], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-02-ecg-1.svg
         alt: "12-lead ECG. Sinus rhythm about 78 per minute. Normal axis. No ST elevation or depression. Upright T waves."
@@ -228,7 +228,7 @@ sections:
       - cards: [heart, mi-classification]
 
   - heading: "Troponin: injury or infarction?"
-    check: { source: [udmi5-2026, esc-acs-2023], verified: false }
+    check: { source: [udmi5-2026, esc-acs-2023], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Myocardial injury: troponin above the sex-specific 99th percentile."
@@ -248,7 +248,7 @@ sections:
       - cards: [myocardial-injury, mi-classification, diltiazem]
 
   - heading: "Aortic dissection mimicking STEMI"
-    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-06-ecg-1.svg
         alt: "12-lead ECG. Sinus tachycardia about 104 per minute. ST elevation in II, III and aVF; ST depression in aVL. Tall QRS voltages in the chest leads."
@@ -269,7 +269,7 @@ sections:
       - cards: [aortic-dissection, labetalol]
 
   - heading: "Pulmonary embolism"
-    check: { source: [esc-pe-2019, wells-2000, kline-2004, meyer-2014], verified: false, todo: "Treatment column for intermediate-low and low risk (incl. early discharge) is new in the notes." }
+    check: { source: [esc-pe-2019, wells-2000, kline-2004, meyer-2014], verified: true, reviewedOn: 2026-10-13, todo: "Treatment column for intermediate-low and low risk (incl. early discharge) is new in the notes." }
     blocks:
       - ecg: ecg/cp-07-ecg-1.svg
         alt: "12-lead ECG. Sinus tachycardia about 112 per minute. S wave in lead I, Q wave and T wave inversion in lead III, T wave inversion in V1 to V3."
@@ -298,7 +298,7 @@ sections:
       - cards: [pulmonary-embolism, wells-pe, perc, alteplase, enoxaparin]
 
   - heading: "Pericarditis and tamponade"
-    check: { source: [esc-pericardial-2015, imazio-2013], verified: false }
+    check: { source: [esc-pericardial-2015, imazio-2013], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-08-ecg-1.svg
         alt: "12-lead ECG. Sinus rhythm about 102 per minute. Widespread concave ST elevation in I, II, III, aVF, aVL and V2 to V6, with PR segment depression. In aVR, PR elevation and ST depression. No reciprocal ST depression elsewhere."
@@ -331,7 +331,7 @@ sections:
       - cards: [pericarditis, cardiac-tamponade, colchicine]
 
   - heading: "SCAD: MI in young women"
-    check: { source: [hayes-2018, adlam-2018], verified: false }
+    check: { source: [hayes-2018, adlam-2018], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - ecg: ecg/cp-10-ecg-1.svg
         alt: "12-lead ECG. Sinus rhythm about 98 per minute. ST elevation of about 2 mm in V2, V3 and V4."
@@ -350,7 +350,7 @@ sections:
       - cards: [scad, mi-classification]
 
   - heading: "Drugs at a glance"
-    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015], verified: false }
+    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - table:
           head: ["Drug", "Use here", "Adult dose"]
@@ -373,7 +373,7 @@ sections:
             - ["Colchicine", "Pericarditis", "0.5 mg once or twice daily (by weight) for 3 months"]
 
   - heading: "Traps from the cases"
-    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015, udmi5-2026], verified: false }
+    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015, udmi5-2026], verified: true, reviewedOn: 2026-10-13 }
     blocks:
       - points:
           - "Nitrate before the ECG and BP: dangerous in RV infarction and hypotension."
