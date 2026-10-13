@@ -1,7 +1,7 @@
 // Browser-side access to compiled content. Cases and codex load lazily (separate chunks).
 import { useEffect, useState } from 'react';
-import { caseLoaders, index, loadCodex } from 'virtual:content';
-import type { CaseSummary, CodexEntry, CompiledCase } from './types';
+import { caseLoaders, index, loadCodex, notesLoaders } from 'virtual:content';
+import type { CaseSummary, CodexEntry, CompiledCase, CompiledNotes } from './types';
 
 export { index };
 
@@ -38,6 +38,21 @@ function useLoad<T>(key: string, load: () => Promise<T | undefined>): Loadable<T
 export function useCase(caseId: string): Loadable<LoadedCase> {
   return useLoad(`case:${caseId}`, async () => {
     const loader = caseLoaders[caseId];
+    if (!loader) return undefined;
+    const m = await loader();
+    return { data: m.default, assets: m.assets };
+  });
+}
+
+export interface LoadedNotes {
+  data: CompiledNotes;
+  assets: Record<string, string>;
+}
+
+/** a unit's notes; key is "<system>/<module>" */
+export function useNotes(key: string): Loadable<LoadedNotes> {
+  return useLoad(`notes:${key}`, async () => {
+    const loader = notesLoaders[key];
     if (!loader) return undefined;
     const m = await loader();
     return { data: m.default, assets: m.assets };

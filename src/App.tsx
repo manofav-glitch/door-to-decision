@@ -15,6 +15,7 @@ const ArtSheet = lazy(() => import('./screens/ArtSheet').then((m) => ({ default:
 const Codex = lazy(() => import('./screens/Codex').then((m) => ({ default: m.Codex })));
 const CodexCard = lazy(() => import('./screens/CodexCard').then((m) => ({ default: m.CodexCard })));
 const Debrief = lazy(() => import('./screens/Debrief').then((m) => ({ default: m.Debrief })));
+const Notes = lazy(() => import('./screens/Notes').then((m) => ({ default: m.Notes })));
 const Player = lazy(() => import('./screens/Player').then((m) => ({ default: m.Player })));
 const Revise = lazy(() => import('./screens/Revise').then((m) => ({ default: m.Revise })));
 
@@ -31,6 +32,7 @@ export function App() {
                 <Route index element={<Home />} />
                 <Route path="s/:systemId" element={<System />} />
                 <Route path="s/:systemId/:moduleId" element={<Module />} />
+                <Route path="s/:systemId/:moduleId/notes" element={<Notes />} />
                 <Route path="case/:caseId" element={<CaseSetup />} />
                 <Route path="debrief/:caseId" element={<Debrief />} />
                 <Route path="codex" element={<Codex />} />

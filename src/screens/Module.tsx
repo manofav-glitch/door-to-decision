@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { index, isPlayable } from '../content/client';
+import { NotesCard } from '../components/NotesCard';
 import { BackLink, Difficulty, NotFound, Stars, UnverifiedBadge } from '../components/ui';
 import { useProgress } from '../store/progress';
 import { useSettings } from '../store/settings';
@@ -43,6 +44,7 @@ export function Module() {
           </li>
         ))}
       </ul>
+      <NotesCard systemId={system.id} mod={mod} />
       {hidden > 0 && (
         <p className="panel mt-6 border-dashed p-4 text-grey-1">
           {hidden} draft case{hidden === 1 ? ' is' : 's are'} hidden because{' '}

@@ -13,6 +13,7 @@ import {
   CodexCard,
   EcgSpec,
   ModuleFile,
+  NotesFile,
   ReferencesFile,
   SystemsFile,
   type Condition,
@@ -28,6 +29,8 @@ import {
   type Check,
   type CheckEntry,
   type CodexEntry,
+  type CompiledNoteBlock,
+  type CompiledNotes,
   type CompiledCase,
   type ContentIndex,
   type ModuleSummary,
@@ -53,6 +56,10 @@ export interface Compiled {
   files: string[];
   /** case id -> asset paths (relative to content/assets) */
   caseAssets: Record<string, string[]>;
+  /** "<system>/<module>" -> the unit's notes */
+  notes: Record<string, CompiledNotes>;
+  /** "<system>/<module>" -> asset paths the notes show */
+  notesAssets: Record<string, string[]>;
   ecgSpecs: Record<string, { file: string; spec: z.infer<typeof EcgSpec> }>;
   references: Reference[];
   /** style hints that don't block the build */
@@ -216,6 +223,8 @@ export function compileContent(root: string): Compiled {
   // ---- systems → modules → cases ----
   const cases: Record<string, CompiledCase> = {};
   const caseAssets: Record<string, string[]> = {};
+  const notes: Record<string, CompiledNotes> = {};
+  const notesAssets: Record<string, string[]> = {};
   const systemSummaries: SystemSummary[] = [];
 
   for (const sys of systems?.data ?? []) {
@@ -296,7 +305,38 @@ export function compileContent(root: string): Compiled {
           artBytes,
         });
       });
-      modules.push({ id: mod.data.id, title: mod.data.title, blurb: mod.data.blurb, cases: summaries });
+      const notesFile = join(sysDir, modDir, 'notes.yaml');
+      const notesLoaded = existsSync(notesFile) ? load(notesFile, NotesFile) : undefined;
+      let notesSummary: ModuleSummary['notes'];
+      if (notesLoaded) {
+        const before = problems.length;
+        const compiledNotes = compileNotes(notesLoaded, `${sys.id}/${mod.data.id}`, mod.data.title, {
+          refs,
+          codexById,
+          contentDir,
+          ecgSpecs,
+          problems,
+        });
+        if (problems.length === before) {
+          collectChecks(notesLoaded);
+          notes[compiledNotes.key] = compiledNotes;
+          notesAssets[compiledNotes.key] = [
+            ...new Set(compiledNotes.sections.flatMap((x) => x.blocks.flatMap((b) => (b.ecg ? [b.ecg] : [])))),
+          ];
+          notesSummary = {
+            title: compiledNotes.title,
+            headings: compiledNotes.sections.map((x) => x.heading),
+            draft: compiledNotes.draft,
+          };
+        }
+      }
+      modules.push({
+        id: mod.data.id,
+        title: mod.data.title,
+        blurb: mod.data.blurb,
+        cases: summaries,
+        ...(notesSummary && { notes: notesSummary }),
+      });
     }
     systemSummaries.push({ id: sys.id, name: sys.name, status: sys.status, blurb: sys.blurb, modules });
   }
@@ -327,6 +367,8 @@ export function compileContent(root: string): Compiled {
     checks,
     files,
     caseAssets,
+    notes,
+    notesAssets,
     ecgSpecs,
     references: [...refs.values()],
     warnings,
@@ -647,6 +689,65 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     artSizes,
     rhythms,
   };
+}
+
+interface NotesContext {
+  refs: Map<string, Reference>;
+  codexById: Map<string, CodexEntry>;
+  contentDir: string;
+  ecgSpecs: Compiled['ecgSpecs'];
+  problems: ContentProblem[];
+}
+
+function compileNotes(
+  loaded: Loaded<z.output<typeof NotesFile>>,
+  key: string,
+  moduleTitle: string,
+  ctx: NotesContext,
+): CompiledNotes {
+  const n = loaded.data;
+  const err = (path: Path, message: string) =>
+    ctx.problems.push({ file: loaded.file, line: loaded.lineOf(path), where: path.join('.'), message });
+  let draft = false;
+  const sections = n.sections.map((section, si) => {
+    if (!section.check.verified) draft = true;
+    const blocks = section.blocks.map((b, bi): CompiledNoteBlock => {
+      const p: Path = ['sections', si, 'blocks', bi];
+      if (b.ecg) {
+        if (!existsSync(join(ctx.contentDir, 'assets', b.ecg)))
+          err([...p, 'ecg'], `image content/assets/${b.ecg} does not exist`);
+        const spec = ctx.ecgSpecs[b.ecg];
+        if (spec && !spec.spec.check.verified) draft = true;
+      }
+      b.table?.rows.forEach((row, ri) => {
+        if (row.length !== b.table!.head.length)
+          err([...p, 'table', 'rows', ri], `row has ${row.length} cells but the table has ${b.table!.head.length} columns`);
+      });
+      const { cards, ...rest } = b;
+      if (!cards) return rest;
+      return {
+        ...rest,
+        cards: cards.flatMap((id, ci) => {
+          const card = ctx.codexById.get(id);
+          if (!card) {
+            err([...p, 'cards', ci], `no codex card with id "${id}"`);
+            return [];
+          }
+          return [{ id: card.id, kind: card.kind, title: card.title }];
+        }),
+      };
+    });
+    return { heading: section.heading, check: section.check, blocks };
+  });
+  const refs = n.refs.flatMap((r, i) => {
+    const ref = ctx.refs.get(r);
+    if (!ref) {
+      err(['refs', i], `unknown reference "${r}"`);
+      return [];
+    }
+    return [ref];
+  });
+  return { key, title: n.title ?? `${moduleTitle} notes`, intro: n.intro, sections, refs, draft };
 }
 
 // ---------- style warnings (never block the build) ----------

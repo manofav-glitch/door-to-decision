@@ -1,5 +1,5 @@
 // Per-device progress: active (resumable) runs, finished runs, best stars, unlocked codex cards,
-// and the mistakes deck. Runs are stored as the learner's inputs and rebuilt with the engine.
+// unlocked unit notes, and the mistakes deck. Runs are stored as the learner's inputs and rebuilt with the engine.
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Grade } from '../content/schema';
@@ -72,6 +72,9 @@ interface ProgressState {
   mistakes: Mistake[];
   /** Revise: correct answers in a row per card key */
   reviseStreak: Record<string, number>;
+  /** units ("<system>/<module>") whose notes were earned; they stay open if cases are added later */
+  notesUnlocked: string[];
+  unlockNotes: (key: string) => void;
   begin: (run: Omit<SavedRun, 'inputs'>) => void;
   record: (caseId: string, inputs: Input[]) => void;
   finish: (caseId: string, result: RunResult, unlocks: string[]) => void;
@@ -92,6 +95,11 @@ export const useProgress = create<ProgressState>()(
       unlocked: [],
       mistakes: [],
       reviseStreak: {},
+      notesUnlocked: [],
+      unlockNotes: (key) =>
+        set((s) =>
+          s.notesUnlocked.includes(key) ? {} : { notesUnlocked: [...s.notesUnlocked, key] },
+        ),
       begin: (run) =>
         set((s) => ({ active: { ...s.active, [run.caseId]: { ...run, inputs: [] } } })),
       record: (caseId, inputs) =>
@@ -158,9 +166,10 @@ export const useProgress = create<ProgressState>()(
     }),
     {
       name: 'd2d.progress',
-      version: 2,
-      // v1 → v2: add Revise streaks
-      migrate: (old) => ({ reviseStreak: {}, ...(old as object) }) as ProgressState,
+      version: 3,
+      // v1 → v2: add Revise streaks; v2 → v3: add unlocked notes
+      migrate: (old) =>
+        ({ reviseStreak: {}, notesUnlocked: [], ...(old as object) }) as unknown as ProgressState,
     },
   ),
 );

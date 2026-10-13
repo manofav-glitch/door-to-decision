@@ -92,6 +92,85 @@ describe('compileContent', () => {
     expect(ps.map((p) => p.message)).toContain('unknown field(s): promt — check spelling');
   });
 
+  describe('unit notes', () => {
+    const NOTES = 'content/demo/basics/notes.yaml';
+    const good = `
+intro: Everything in one place.
+sections:
+  - heading: First things
+    check: { source: ref-a, verified: true, reviewedOn: 2026-10-13 }
+    blocks:
+      - text: A paragraph.
+      - points: [One, Two]
+      - warn: Never do this.
+      - table: { head: [Drug, Dose], rows: [[X, 1 unit]] }
+      - ecg: ecg/demo.svg
+        alt: A demo strip.
+        caption: Look at the rate.
+      - cards: [drug-x]
+refs: [ref-a]
+`;
+    /** Fixture copy with notes.yaml (and a demo ECG image); returns the dir. */
+    function withNotes(yaml: string) {
+      const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, dir, { recursive: true });
+      writeFileSync(join(dir, NOTES), yaml);
+      mkdirSync(join(dir, 'content/assets/ecg'), { recursive: true });
+      writeFileSync(join(dir, 'content/assets/ecg/demo.svg'), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+      return dir;
+    }
+    const messages = (yaml: string) => {
+      try {
+        compileContent(withNotes(yaml));
+        return [];
+      } catch (e) {
+        if (e instanceof ContentError) return e.problems.map((p) => p.message);
+        throw e;
+      }
+    };
+
+    it('compiles notes, resolves Codex links and lists the ECG as an asset', () => {
+      const c = compileContent(withNotes(good));
+      const n = c.notes['demo/basics']!;
+      expect(n.title).toBe('Basics notes');
+      expect(n.draft).toBe(false);
+      expect(n.sections[0]!.blocks[5]!.cards).toEqual([{ id: 'drug-x', kind: 'drugs', title: 'Drug X' }]);
+      expect(n.refs.map((r) => r.id)).toEqual(['ref-a']);
+      expect(c.notesAssets['demo/basics']).toEqual(['ecg/demo.svg']);
+      expect(c.index.systems[0]!.modules[0]!.notes).toEqual({
+        title: 'Basics notes',
+        headings: ['First things'],
+        draft: false,
+      });
+      expect(c.checks.some((x) => x.file.endsWith('notes.yaml') && x.where === 'sections.0')).toBe(true);
+    });
+
+    it('a unit without notes.yaml has no notes', () => {
+      expect(compileContent(FIXTURE).index.systems[0]!.modules[0]!.notes).toBeUndefined();
+    });
+
+    it('an unverified section makes the notes a draft and joins the review list', () => {
+      const c = compileContent(withNotes(good.replace('verified: true, reviewedOn: 2026-10-13', 'verified: false')));
+      expect(c.notes['demo/basics']!.draft).toBe(true);
+      expect(c.checks.filter((x) => !x.verified && x.file.endsWith('notes.yaml'))).toHaveLength(1);
+    });
+
+    it('reports broken links, missing pictures and malformed blocks', () => {
+      expect(messages(good.replace('cards: [drug-x]', 'cards: [nope]'))).toContain('no codex card with id "nope"');
+      expect(messages(good.replace('refs: [ref-a]', 'refs: [ref-z]'))).toContain('unknown reference "ref-z"');
+      expect(messages(good.replace('ecg: ecg/demo.svg', 'ecg: ecg/gone.svg'))).toContain(
+        'image content/assets/ecg/gone.svg does not exist',
+      );
+      expect(messages(good.replace('[[X, 1 unit]]', '[[X]]'))).toContain('row has 1 cells but the table has 2 columns');
+      expect(messages(good.replace('- text: A paragraph.', '- { text: A, warn: B }'))).toContain(
+        'each block needs exactly one of: text, points, warn, table, ecg, cards',
+      );
+      expect(messages(good.replace('        alt: A demo strip.\n', ''))).toContain(
+        'an ecg block needs alt: (what the ECG shows)',
+      );
+    });
+  });
+
   describe('illustrations', () => {
     /** Fixture copy whose first panel uses art: pics/p1; `files` are written relative to content/assets. */
     function withArt(files: Record<string, string | Buffer>) {

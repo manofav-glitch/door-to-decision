@@ -1,5 +1,5 @@
 // Shapes of the compiled content the app and engine consume (produced by compile.ts).
-import type { Case, CodexCard, DoseRule, EcgSpec, Node, ScoreDef } from './schema.ts';
+import type { Case, CodexCard, DoseRule, EcgSpec, Node, NotesBlock, ScoreDef } from './schema.ts';
 import type { z } from 'zod';
 import type { EcgLayout } from '../art/ecgLayout.ts';
 import type { Check as CheckSchema, BenchmarksFile, ReferencesFile } from './schema.ts';
@@ -80,6 +80,29 @@ export interface ModuleSummary {
   title: string;
   blurb?: string;
   cases: CaseSummary[];
+  /** the unit's revision notes, if it has any (the full text loads separately) */
+  notes?: { title: string; headings: string[]; draft: boolean };
+}
+
+/** a notes block with its Codex card links resolved */
+export type CompiledNoteBlock = Omit<NotesBlock, 'cards'> & {
+  cards?: { id: string; kind: CodexKind; title: string }[];
+};
+
+/** content/<system>/<module>/notes.yaml, compiled */
+export interface CompiledNotes {
+  /** "<system>/<module>" */
+  key: string;
+  title: string;
+  intro?: string;
+  sections: {
+    heading: string;
+    check: Check;
+    blocks: CompiledNoteBlock[];
+  }[];
+  refs: Reference[];
+  /** true if any section or ECG drawing is unverified */
+  draft: boolean;
 }
 
 export interface SystemSummary {

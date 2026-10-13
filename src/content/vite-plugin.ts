@@ -2,6 +2,7 @@
 //   virtual:content          — index (systems, modules, case summaries, codex titles, version) + loaders
 //   virtual:content/case/<id> — one case (lazy chunk) with its image URLs
 //   virtual:content/codex    — all codex cards (lazy chunk)
+//   virtual:content/notes/<system>/<module> — one unit's notes (lazy chunk) with its image URLs
 // Invalid content throws, which fails `vite build` and shows the error overlay in `vite dev`.
 import { join } from 'node:path';
 import type { Plugin, ViteDevServer } from 'vite';
@@ -10,6 +11,7 @@ import { compileContent, type Compiled } from './compile.ts';
 const INDEX = 'virtual:content';
 const CODEX = 'virtual:content/codex';
 const CASE = 'virtual:content/case/';
+const NOTES = 'virtual:content/notes/';
 
 export function contentPlugin(root: string): Plugin {
   const contentDir = join(root, 'content');
@@ -26,7 +28,7 @@ export function contentPlugin(root: string): Plugin {
   return {
     name: 'd2d-content',
     resolveId(id) {
-      if (id === INDEX || id === CODEX || id.startsWith(CASE)) return '\0' + id;
+      if (id === INDEX || id === CODEX || id.startsWith(CASE) || id.startsWith(NOTES)) return '\0' + id;
     },
     load(id) {
       if (!id.startsWith('\0' + INDEX)) return;
@@ -35,17 +37,30 @@ export function contentPlugin(root: string): Plugin {
         const loaders = Object.keys(c.cases)
           .map((cid) => `  ${JSON.stringify(cid)}: () => import(${JSON.stringify(CASE + cid)}),`)
           .join('\n');
+        const notesLoaders = Object.keys(c.notes)
+          .map((key) => `  ${JSON.stringify(key)}: () => import(${JSON.stringify(NOTES + key)}),`)
+          .join('\n');
         return [
           `export const index = ${JSON.stringify(c.index)};`,
           `export const caseLoaders = {\n${loaders}\n};`,
+          `export const notesLoaders = {\n${notesLoaders}\n};`,
           `export const loadCodex = () => import(${JSON.stringify(CODEX)});`,
         ].join('\n');
       }
       if (id === '\0' + CODEX) return `export default ${JSON.stringify(c.codex)};`;
-      const caseId = id.slice(('\0' + CASE).length);
-      const data = c.cases[caseId];
-      if (!data) throw new Error(`Unknown case "${caseId}"`);
-      const assets = c.caseAssets[caseId] ?? [];
+      let data: unknown;
+      let assets: string[];
+      if (id.startsWith('\0' + NOTES)) {
+        const key = id.slice(('\0' + NOTES).length);
+        data = c.notes[key];
+        if (!data) throw new Error(`No notes for "${key}"`);
+        assets = c.notesAssets[key] ?? [];
+      } else {
+        const caseId = id.slice(('\0' + CASE).length);
+        data = c.cases[caseId];
+        if (!data) throw new Error(`Unknown case "${caseId}"`);
+        assets = c.caseAssets[caseId] ?? [];
+      }
       const imports = assets.map(
         (a, i) => `import a${i} from ${JSON.stringify(join(contentDir, 'assets', a) + '?url')};`,
       );

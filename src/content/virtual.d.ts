@@ -5,5 +5,9 @@ declare module 'virtual:content' {
     string,
     () => Promise<{ default: CompiledCase; assets: Record<string, string> }>
   >;
+  export const notesLoaders: Record<
+    string,
+    () => Promise<{ default: import('./types').CompiledNotes; assets: Record<string, string> }>
+  >;
   export const loadCodex: () => Promise<{ default: import('./types').CodexEntry[] }>;
 }

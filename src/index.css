@@ -76,6 +76,21 @@
   color-scheme: dark;
 }
 
+/* Paper is white and ink is black on print, whatever the screen theme (unit notes → Save as PDF). */
+@media print {
+  :root,
+  :root[data-theme='dark'],
+  :root:not([data-theme='light']) {
+    --paper: #ffffff;
+    --paper-2: #f2f2f2;
+    --ink: #000000;
+    --grey-1: #3a3a3a;
+    --grey-2: #8a877d;
+    --alarm: #b00020;
+    color-scheme: light;
+  }
+}
+
 :root[data-text-size='large'] {
   font-size: 112.5%;
 }

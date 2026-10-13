@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, index, useCase, type LoadedCase } from '../content/client';
+import { DebriefNotes } from '../components/NotesCard';
 import { DoseWorking, LeadsResult } from '../components/player/Sheet';
 import { ScoreBreakdown } from '../components/ScoreParts';
 import { BackLink, GradeChip, Loading, NotFound, Stars, UnverifiedBadge } from '../components/ui';
@@ -132,6 +133,8 @@ function DebriefView({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun })
           </span>
         </Meter>
       </section>
+
+      {saved.mode !== 'present' && <DebriefNotes systemId={found.system.id} mod={found.module} />}
 
       <section className="mb-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

@@ -16,6 +16,7 @@ content/
   cvs/chest-pain/
     module.yaml                the module: title, hospital settings, list of cases in order
     cases/cp-01.yaml …         one file per case
+    notes.yaml                 the unit's revision notes: the reward for finishing the unit (§13)
   codex/
     anatomy/ pathology/ drugs/ scores/ ecg/    one file per Codex card
   assets/ecg/
@@ -269,7 +270,7 @@ effects:
 
 The monitor close-up (`scene: monitor`) draws the patient's current rhythm. Set the starting rhythm with
 `initial: { rhythm: ecg/arr-01-svt.svg, … }` and change it with `rhythm:` in any effects. Each must be a
-drawn ECG (§13); keep the heart rate in `vitals` consistent with it.
+drawn ECG (§14); keep the heart rate in `vitals` consistent with it.
 
 ---
 
@@ -485,7 +486,45 @@ matching tests are updated.
 
 ---
 
-## 13. Drawing an ECG
+## 13. Unit notes (the reward)
+
+Each unit can have revision notes in `content/<system>/<unit>/notes.yaml`. Learners see them once
+they have **2 or more stars on every case** in the unit. The unit page shows a locked card with
+progress ("9 of 15 cases done"), and the debrief of the case that completes the set says the notes
+are unlocked. Once earned, notes stay open even if you add cases later. The notes page has a
+**Save as PDF or print** button, and it prints black on white whatever the screen theme.
+
+Write the notes in your own words and cite your sources, like everything else: they are public.
+
+```yaml
+title: 'Arrhythmias: unit notes' # optional; default "<unit title> notes"
+intro: 'Everything from the 15 cases in one place.' # optional
+sections:
+  - heading: Narrow-complex tachycardia
+    check: { source: [esc-svt-2019], verified: false } # one check per section
+    blocks: # each block is exactly one of the kinds below
+      - text: 'A paragraph.'
+      - points: ['A bullet', 'Another bullet']
+      - warn: 'A pitfall: shown in a red-edged "Watch out" box.'
+      - table:
+          head: [Drug, Dose, Note]
+          rows:
+            - [Adenosine, 6 mg rapid IV, then 12 mg]
+      - ecg: ecg/arr-svt.svg # any drawn ECG; tap to enlarge
+        alt: 'Regular narrow-complex tachycardia at 180, no visible P waves.' # required
+        caption: 'Look for the pseudo-R′ in V1.' # optional
+      - cards: [adenosine, avnrt] # links to Codex cards
+refs: [esc-svt-2019] # listed at the end as Sources
+```
+
+Like cases, notes with any unverified section are drafts: learners don't see them, and they show
+with an UNVERIFIED badge when **Show draft cases** is on (draft notes open without the stars, so
+you can review them). In dev mode (`?dev=1`) every unit's notes open. Every row of a table needs
+the same number of cells as `head`.
+
+---
+
+## 14. Drawing an ECG
 
 Create `content/assets/ecg/<name>.ecg.yaml`, then run `npm run ecg` to make `<name>.svg`.
 
@@ -527,7 +566,7 @@ Always look at the result: open the case in `npm run dev`.
 
 ---
 
-## 14. When validate complains
+## 15. When validate complains
 
 | Message                                         | What to do                                            |
 | ----------------------------------------------- | ----------------------------------------------------- |
@@ -549,7 +588,7 @@ If a message is unclear, paste it to Claude.
 
 ---
 
-## 15. House-style checklist for a new case
+## 16. House-style checklist for a new case
 
 - [ ] Title describes the presentation, not the diagnosis.
 - [ ] Every decision has at least one `best` option; harmful options have a clear, kind teaching point.

@@ -7,7 +7,7 @@ export function Layout() {
   const dev = useDevMode();
   return (
     <div className="mx-auto min-h-dvh max-w-5xl px-4 pb-16">
-      <header className="flex items-center justify-between py-4">
+      <header className="flex items-center justify-between py-4 print:hidden">
         <Link to="/" className="flex min-h-11 items-center text-xl font-bold">
           Door to Decision
           {dev && (

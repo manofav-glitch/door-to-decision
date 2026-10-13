@@ -386,6 +386,39 @@ export const ModuleFile = z.strictObject({
   cases: z.array(z.string()).min(1), // case file names in play order, e.g. cp-01
 });
 
+// content/<system>/<module>/notes.yaml: the unit's revision notes, unlocked by playing its cases.
+const NOTE_BLOCKS = ['text', 'points', 'warn', 'table', 'ecg', 'cards'] as const;
+export const NotesBlock = z
+  .strictObject({
+    text: Text.optional(), // a paragraph
+    points: z.array(Text).min(1).optional(), // bullet list
+    warn: Text.optional(), // a pitfall or "never do" box
+    table: z
+      .strictObject({ head: z.array(Text).min(2), rows: z.array(z.array(Text)).min(1) })
+      .optional(),
+    ecg: z.string().regex(/^ecg\/[a-z0-9-]+\.svg$/, 'an ECG drawing, e.g. ecg/arr-svt.svg').optional(),
+    alt: Text.optional(), // what the ECG shows, for screen readers (required with ecg)
+    caption: Text.optional(),
+    cards: z.array(Id).min(1).optional(), // Codex cards to read next
+  })
+  .refine((b) => NOTE_BLOCKS.filter((k) => b[k] !== undefined).length === 1, {
+    message: `each block needs exactly one of: ${NOTE_BLOCKS.join(', ')}`,
+  })
+  .refine((b) => !b.ecg || b.alt, { message: 'an ecg block needs alt: (what the ECG shows)', path: ['alt'] })
+  .refine((b) => b.ecg || (!b.alt && !b.caption), {
+    message: 'alt and caption only go with an ecg block',
+  });
+export type NotesBlock = z.infer<typeof NotesBlock>;
+
+export const NotesFile = z.strictObject({
+  title: Text.optional(), // default "<module title> notes"
+  intro: Text.optional(),
+  sections: z
+    .array(z.strictObject({ heading: Text, check: Check, blocks: z.array(NotesBlock).min(1) }))
+    .min(1),
+  refs: z.array(Id).default([]),
+});
+
 export const ReferencesFile = z.array(
   z.strictObject({
     id: Id,

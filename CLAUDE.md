@@ -35,16 +35,16 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
   `codex/{anatomy,pathology,drugs,scores,ecg}/*.yaml` (id = file name), `assets/ecg/*.ecg.yaml` → `*.svg`,
   `assets/art/credits.yaml` (required for every art folder) + originals, `assets/panels/<folder>/*.webp`
 - `src/content/` — `schema.ts` (Zod: the authoring format), `compile.ts` (YAML → validated JSON, cross-checks),
-  `vite-plugin.ts` (virtual modules; each case and the codex are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
+  `vite-plugin.ts` (virtual modules; each case, the codex and each unit's notes are lazy chunks), `client.ts` (browser loaders/hooks), `types.ts`
 - `src/engine/` — pure TS: `engine.ts` (state, effects, conditions, branching, grading, stars, ideal path, replay), `dose.ts`. No React, no clinical facts.
-- `src/screens/` — Home (+ Revise banner), System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, Revise (mistakes deck), Codex (tabs + search), CodexCard (with standalone calculator for scores), Settings
+- `src/screens/` — Home (+ Revise banner), System, Module (case list), CaseSetup (setting + mode, resume), Player, Debrief, Revise (mistakes deck), Codex (tabs + search), CodexCard (with standalone calculator for scores), Notes (unit notes; print → PDF), Settings
 - `src/components/` — Layout, Disclaimer, ThemeSync, ui.tsx (badges, chips, stars), ScoreParts.tsx (CalcForm, ScoreBreakdown, ScoreCalculator), `player/` (Hud, PanelView, EcgFigure with zoom view + lead hotspots, Sheet incl. LeadGrid)
-- `src/store/` — `settings.ts`, `progress.ts` (v2; runs saved as inputs and replayed; stars, unlocks, mistakes deck + Revise streaks: a card leaves after 2 correct in a row)
+- `src/lib/notes.ts` — unit notes reward: `content/<sys>/<unit>/notes.yaml` opens at ≥2★ on every playable case (earned list kept in progress); draft notes need Show drafts (open as preview), dev mode opens all
+- `src/store/` — `settings.ts`, `progress.ts` (v3; runs saved as inputs and replayed; stars, unlocks, mistakes deck + Revise streaks: a card leaves after 2 correct in a row)
 - `src/clinical/score.ts` — generic additive-score arithmetic (items: choice / yesno / number-with-bins; bands; riskTable). Point tables live in `content/codex/scores/*.yaml` (heart, timi-ua-nstemi, grace-in-hospital); vectors in `score.test.ts`
 - `src/art/` — code-drawn SVG line art: `registry.ts` (scene/actor/mood names; actors in YAML as `patient:pain`), `cast.tsx` (7 busts incl. patient on trolley; moods via brows + mouth), `scenes.tsx` (10 scenes; monitor shows live vitals + the run's `rhythm` ECG), `PanelArt.tsx`, `ecgDraw.ts` (rhythms + wave shapes; strips, 12-leads, monitor trace), `ecgLayout.ts` (12-lead geometry shared with compiler + hotspots). Dev-only art sheet at `#/dev/art`
 - `scripts/` — validate.ts (errors + style warnings), review.ts, graph.ts, new-case.ts, draw-ecg.ts, art.ts (sharp) (run by Node's built-in TS support), make-icons.mjs; logic lives in `src/content/{compile,graph,scaffold}.ts`
-- `src/lib/offline.ts` — illustration caching (cache `d2d-art`, shared with the SW runtime route in vite.config.ts): case prefetch while playing, "Save pictures" on CaseSetup, "Save all cases" in Settings
-- `.claude/skills/new-case/` — the /new-case project skill
+- `src/lib/offline.ts` — illustration caching (cache `d2d-art`, shared with the SW route in vite.config.ts): case prefetch, "Save pictures" (CaseSetup), "Save all cases" (Settings). `.claude/skills/new-case/` — the /new-case skill
 - `test/` — `cases.test.ts` plays every real case (ideal path = 3 stars; 400 random runs must visit every node); `calculator.test.ts`, `leads.test.ts`, `authoring.test.ts` (graph, scaffold, warnings); `fixtures/mini/` for compiler/engine tests; art tests in `src/art/art.test.tsx`
 - `.github/workflows/deploy.yml` — lint+test+build on every push/PR; deploys `main` to Pages (`BASE_PATH=/<repo>/`)
 
