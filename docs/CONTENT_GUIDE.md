@@ -520,7 +520,7 @@ refs: [esc-svt-2019] # listed at the end as Sources
 Like cases, notes with any unverified section are drafts: learners don't see them, and they show
 with an UNVERIFIED badge when **Show draft cases** is on (draft notes open without the stars, so
 you can review them). In dev mode (`?dev=1`) every unit's notes open. Every row of a table needs
-the same number of cells as `head`.
+the same number of cells as `head`; use `""` for an empty cell.
 
 ---
 

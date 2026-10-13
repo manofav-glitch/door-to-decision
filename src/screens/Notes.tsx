@@ -81,15 +81,17 @@ function NotesView({
 
       <nav aria-label="Contents" className="panel mb-8 p-4 print:hidden">
         <h2 className="mb-2 text-sm font-bold tracking-wider text-grey-1 uppercase">Contents</h2>
-        <ol className="flex list-decimal flex-col gap-1 pl-6">
+        <ol className="flex flex-col gap-1">
           {n.sections.map((s, i) => (
             <li key={s.heading}>
+              {/* numbers drawn here, not by list-decimal, so they sit on a wrapped heading's first line */}
               <button
                 type="button"
-                className="min-h-8 text-left underline-offset-4 hover:underline"
+                className="flex min-h-8 gap-2 text-left underline-offset-4 hover:underline"
                 onClick={() => jump(i)}
               >
-                {s.heading}
+                <span className="w-6 shrink-0 text-right tabular-nums">{i + 1}.</span>
+                <span>{s.heading}</span>
               </button>
             </li>
           ))}

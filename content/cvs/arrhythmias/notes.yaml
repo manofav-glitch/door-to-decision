@@ -1,0 +1,311 @@
+# Arrhythmias unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Written in our own words from the owner's study notes (git-ignored notes/arrhythmias/) and the
+# guidelines the cases use. Doses and thresholds match the verified Codex cards; if a card changes,
+# change the notes too.
+title: "Arrhythmias: unit notes"
+intro: "Everything from the 15 Arrhythmias cases in one place, in the order you meet it at the bedside: first decide how sick the patient is, then read the rhythm, then treat."
+sections:
+  - heading: "The first minute with any arrhythmia"
+    check: { source: [erc-als-2025, rcuk-2025], verified: false }
+    blocks:
+      - points:
+          - "Pulse? No pulse: this is cardiac arrest (see the last adult section)."
+          - "Life-threatening features: shock, syncope, myocardial ischaemia, severe heart failure. A fast rhythm with any of these gets a synchronised shock; a slow one gets atropine and pacing. Don't wait for a diagnosis."
+          - "Stable: record a 12-lead ECG during the arrhythmia before you treat it. The strip you print after it stops tells you much less."
+          - "Then sort the rhythm by three questions: fast or slow, narrow or broad (QRS under or over 120 ms), regular or irregular."
+      - table:
+          head: ["Fast rhythm", "Regular", "Irregular"]
+          rows:
+            - ["Narrow", "AVNRT, AVRT, atrial flutter with 2:1 block (exactly 150), atrial tachycardia, sinus tachycardia", "AF, flutter with variable block, multifocal atrial tachycardia"]
+            - ["Broad", "VT until proven otherwise; SVT with bundle branch block is the exception, not the rule", "Pre-excited AF (WPW), AF with bundle branch block, torsades (polymorphic)"]
+      - warn: "Don't let the rhythm label distract you from the patient: a 'stable' SVT in an elderly patient with chest pain and a low pressure is unstable."
+
+  - heading: "Regular narrow-complex tachycardia (SVT)"
+    check: { source: [esc-svt-2019, revert-2015], verified: false }
+    blocks:
+      - text: "Most regular narrow tachycardias at 150–250/min are re-entry using the AV node: AVNRT (the commonest, circuit inside the node) or AVRT (an accessory pathway). The history gives it away: palpitations that switch on and off abruptly, sometimes neck pounding or passing a lot of urine afterwards."
+      - ecg: ecg/arr-01-svt.svg
+        alt: "12-lead ECG. Regular narrow-complex tachycardia at about 186 per minute. No P waves visible; a small extra wave at the end of the QRS in V1 and the inferior leads."
+        caption: "Typical AVNRT: P waves hidden, with a small pseudo-r′ in V1 and pseudo-S in the inferior leads."
+      - table:
+          head: ["Where is the P wave?", "Think of"]
+          rows:
+            - ["Hidden, or just at the end of the QRS", "Typical AVNRT"]
+            - ["Clearly after the QRS, in the ST segment", "AVRT via an accessory pathway"]
+            - ["Well before the next QRS (long RP)", "Atrial tachycardia, atypical AVNRT, sinus tachycardia"]
+      - points:
+          - "1. Modified Valsalva first: strain into a 10 ml syringe for 15 seconds sitting at 45°, then lie flat with the legs raised to 45° for 15 seconds. In REVERT it converted 43% against 17% for the standard strain."
+          - "2. Adenosine: 6 mg, then 12 mg, then 18 mg, each as a fast push through a large antecubital cannula with an immediate fast flush, monitor printing. Warn the patient about a few seconds of flushing and dread."
+          - "3. If adenosine fails or the SVT keeps returning: IV verapamil (or diltiazem), or a beta-blocker, but not both together."
+          - "4. Unstable at any point: synchronised cardioversion, 70–120 J first."
+      - text: "Adenosine is also a test. Abrupt termination means the circuit used the AV node (AVNRT or AVRT). Brief slowing that uncovers flutter waves or atrial activity, without stopping, means an atrial arrhythmia. No effect at all: check the dose and how it was given before you change the diagnosis."
+      - warn: "Before discharge, look at the sinus-rhythm ECG for a short PR and delta wave. WPW changes which drugs are safe, and recurrent SVT deserves a referral for ablation, which cures most patients."
+      - cards: [modified-valsalva, adenosine, avnrt, verapamil]
+
+  - heading: "WPW and pre-excited AF"
+    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    blocks:
+      - text: "An accessory pathway is a strand of muscle that bypasses the AV node. In sinus rhythm it shows as a short PR (under 120 ms) and a slurred start to the QRS, the delta wave. Most people with the pattern never have trouble; the danger is AF, because the pathway lacks the AV node's protective delay and can conduct to the ventricles at 250/min or more, which can turn into VF."
+      - ecg: ecg/arr-02-wpw.svg
+        alt: "12-lead ECG. Sinus rhythm at 82. Short PR interval, slurred upstroke at the start of the QRS (delta wave) in most leads, QRS slightly wide."
+        caption: "WPW in sinus rhythm: short PR and delta wave."
+      - ecg: ecg/arr-02-pre-af.svg
+        alt: "12-lead ECG. Irregular broad-complex tachycardia at about 230 per minute; QRS shape and width change from beat to beat."
+        caption: "Pre-excited AF: fast, broad, irregular, with the QRS changing shape from beat to beat."
+      - points:
+          - "Unstable, or in any doubt: synchronised cardioversion."
+          - "Stable: procainamide 10–15 mg/kg (maximum 1 g) if you have it, stopping for hypotension, QRS widening over 50% or conversion. Otherwise cardiovert under sedation."
+          - "Afterwards: refer for an electrophysiology study and pathway ablation, which is usually curative."
+      - warn: "Never block the AV node in pre-excited AF: no adenosine, beta-blocker, verapamil, diltiazem, digoxin or IV amiodarone. Blocking the node sends more impulses down the pathway and can trigger VF."
+      - text: "In much of India procainamide is not on the shelf, which makes cardioversion the practical default for stable pre-excited AF."
+      - cards: [wpw, procainamide, synchronised-cardioversion]
+
+  - heading: "Atrial flutter"
+    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    blocks:
+      - text: "A single large circuit around the right atrium at about 300/min. With 2:1 conduction the ventricles beat at a steady 150, and every second flutter wave hides in the QRS or T wave, so the rhythm is easily labelled 'SVT'. A regular rate of exactly 150 should make you hunt for flutter waves."
+      - ecg: ecg/arr-05-flutter.svg
+        alt: "12-lead ECG. Regular narrow-complex tachycardia at 150 per minute. Sawtooth waves at about 300 per minute in II, III and aVF; discrete atrial waves in V1."
+        caption: "Flutter with 2:1 block: sawtooth waves in the inferior leads."
+      - points:
+          - "Adenosine slows the ventricles for a few seconds and uncovers the flutter waves, but doesn't stop flutter."
+          - "Treat it like AF: the same rules for anticoagulation and for when it is safe to cardiovert."
+          - "It converts with lower energy than AF: 70–120 J synchronised."
+          - "Ablation of the cavotricuspid isthmus cures most typical flutter: refer."
+      - warn: "Flecainide on its own can slow flutter to about 200/min, which the AV node can then conduct 1:1: a broad-complex tachycardia at 200. Always give an AV-nodal blocker with it."
+      - cards: [atrial-flutter, flecainide]
+
+  - heading: "Atrial fibrillation in the emergency department"
+    check: { source: [esc-af-2024, race2-2010], verified: false }
+    blocks:
+      - text: "Irregularly irregular QRS complexes and no repeating P waves, for at least 30 seconds on a strip or on a 12-lead, make the diagnosis. Then ask five questions in order."
+      - ecg: ecg/arr-03-af.svg
+        alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 140 per minute, no P waves, slight ST depression in V5–V6."
+        caption: "Fast AF. The ST depression is rate-related: repeat the ECG once the rate is controlled."
+      - table:
+          head: ["Question", "If yes"]
+          rows:
+            - ["1. Unstable from the rate?", "Synchronised cardioversion now (maximum output for AF)"]
+            - ["2. Fast, broad and irregular?", "Pre-excited AF: no AV-nodal blockers (see WPW)"]
+            - ["3. Driven by something else (sepsis, PE, thyrotoxicosis, dehydration, alcohol, low potassium or magnesium, pain)?", "Treat the cause; rate control only as an adjunct; don't chase sinus rhythm"]
+            - ["4. Onset clearly within 24 hours, with no reason to fear clot?", "Cardioversion is an option now, then 4 weeks of anticoagulation"]
+            - ["5. Everyone", "Rate control if needed, and a stroke-risk decision (next section)"]
+      - points:
+          - "If the onset time is uncertain, treat it as outside the window: 3 weeks of anticoagulation, or a TOE to exclude clot, before an elective cardioversion."
+          - "After any cardioversion, anticoagulate for 4 weeks whatever the score: the atrium is stunned and clot risk peaks after the shock."
+          - "Rate target: under 110 at rest (lenient control was as good as strict in RACE II)."
+          - "LVEF over 40%: beta-blocker, diltiazem or verapamil. LVEF under 40%: beta-blocker or digoxin."
+          - "Metoprolol 2.5–5 mg IV, repeated every 5 minutes to 15 mg. Digoxin 0.25–0.5 mg IV, then 0.25 mg every 6 hours to 1.5 mg in 24 hours."
+      - warn: "Amiodarone given for 'rate control' in AF of unknown duration, without anticoagulation, is an unplanned cardioversion with the same stroke risk."
+      - text: "Don't diagnose ischaemia from the ECG during fast AF: rate-related ST depression is common and a small troponin rise is usually from the rate. Reassess once controlled."
+      - cards: [af-acute-management, atrial-fibrillation, metoprolol, digoxin, amiodarone]
+
+  - heading: "Stroke prevention in AF"
+    check: { source: [esc-af-2024, pisters-2010], verified: false }
+    blocks:
+      - text: "Stroke risk comes from the diseased atrium, not from the rhythm on today's ECG. So the anticoagulation decision doesn't change with the pattern of AF, with cardioversion, or after ablation."
+      - table:
+          head: ["CHA₂DS₂-VA item", "Points"]
+          rows:
+            - ["Heart failure or LV dysfunction (any ejection fraction)", "1"]
+            - ["Hypertension (treated or not)", "1"]
+            - ["Age 75 or over", "2"]
+            - ["Diabetes", "1"]
+            - ["Previous stroke, TIA or thromboembolism", "2"]
+            - ["Vascular disease (previous MI, peripheral arterial disease, aortic plaque)", "1"]
+            - ["Age 65–74", "1"]
+      - points:
+          - "2 or more: anticoagulate. 1: consider it. 0: no anticoagulation. Sex no longer counts (ESC 2024)."
+          - "A DOAC is preferred to warfarin, except in moderate-to-severe rheumatic mitral stenosis or a mechanical valve, where only warfarin will do."
+          - "Each DOAC has its own dose-reduction rule, judged by creatinine clearance. Apixaban: 5 mg twice daily, or 2.5 mg twice daily only with two of age 80 or over, weight 60 kg or less, creatinine 133 µmol/L (1.5 mg/dL) or more. Under-dosing causes strokes."
+          - "HAS-BLED flags bleeding risks to fix (blood pressure, NSAIDs, alcohol, labile INR); 3 or more means closer review, never a reason on its own to withhold anticoagulation."
+          - "Aspirin is not an alternative to anticoagulation, and a risk of falls is not a contraindication to it."
+      - cards: [cha2ds2-va, has-bled, doacs, warfarin]
+
+  - heading: "Rheumatic mitral stenosis with AF"
+    check: { source: [esc-valve-2021, invictus-2022, who-rhd-2024], verified: false }
+    blocks:
+      - text: "In India this is a common cause of AF in young adults, often women, and pregnancy may be what first unmasks it. Look for a loud first heart sound, an opening snap and a low rumbling murmur in diastole at the apex; on the ECG, coarse AF and often right axis deviation."
+      - ecg: ecg/arr-04-af.svg
+        alt: "12-lead ECG. Irregularly irregular rhythm at about 148 per minute, coarse fibrillatory waves, no P waves, right axis deviation."
+        caption: "Coarse fibrillatory waves suggest a large, high-pressure left atrium."
+      - points:
+          - "The left ventricle fills only in diastole, through a narrow valve: a fast rate floods the lungs. Slowing the rate (a beta-blocker first, carefully) and furosemide clear them."
+          - "No fluid boluses for a borderline blood pressure: the lungs are already congested."
+          - "No early cardioversion when the duration is unknown: these huge atria form clot readily."
+          - "Warfarin with an INR of 2–3 for everyone, whatever the CHA₂DS₂-VA score. In INVICTUS, rivaroxaban led to more strokes and more deaths than a vitamin K antagonist."
+          - "Clot often forms in the atrial body, so appendage occlusion is not an alternative."
+          - "Upstream: benzathine penicillin prophylaxis, and referral for balloon mitral valvotomy or surgery."
+      - cards: [rheumatic-mitral-stenosis, warfarin, benzathine-penicillin]
+
+  - heading: "Broad-complex tachycardia and VT"
+    check: { source: [esc-va-2022, erc-als-2025, brugada-1991, vereckei-2008], verified: false }
+    blocks:
+      - text: "A regular broad-complex tachycardia is VT until proven otherwise, especially after a heart attack or with known heart disease. Being well enough to talk doesn't make it SVT."
+      - ecg: ecg/arr-06-vt.svg
+        alt: "12-lead ECG. Regular broad-complex tachycardia at about 172 per minute, QRS about 170 ms. All chest leads positive. Initial R wave in aVR. P waves visible marching through at a slower rate."
+        caption: "VT: concordance in the chest leads, an initial R in aVR, and P waves marching through (AV dissociation)."
+      - points:
+          - "Clues to VT: AV dissociation (P waves marching through, capture or fusion beats), concordance across the chest leads, an initial R wave in aVR, no RS complex in any chest lead, a very wide QRS, previous MI."
+          - "The Brugada algorithm (chest leads) and the Vereckei algorithm (aVR alone) help, but neither is perfect: when unsure, treat as VT."
+          - "Unstable: synchronised shock, 120–150 J, up to three times; then amiodarone 300 mg IV and shock again."
+          - "Stable (ESC 2022): synchronised cardioversion under sedation first if the sedation risk is low. Otherwise procainamide, or amiodarone 300 mg if procainamide is unavailable or unsuitable."
+          - "Afterwards: potassium and magnesium, look for ischaemia, echocardiogram, and assessment for an ICD and ablation."
+      - warn: "Never give verapamil or diltiazem to a broad-complex tachycardia: if it is VT, the blood pressure can fall abruptly."
+      - cards: [broad-complex-tachycardia, ventricular-tachycardia, synchronised-cardioversion, amiodarone]
+
+  - heading: "Bradycardia and AV block"
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    blocks:
+      - text: "Two questions matter more than the heart rate: is the slow rhythm causing the symptoms, and is the block in the AV node or below it?"
+      - table:
+          head: ["", "Block in the AV node", "Block below the node"]
+          rows:
+            - ["Typical ECG", "Mobitz I (PR lengthens until a beat drops); complete block with a narrow escape", "Mobitz II (fixed PR, sudden dropped beats); complete block with a broad escape"]
+            - ["Escape rhythm", "Junctional, 40–60/min, fairly reliable", "Ventricular, 20–40/min, can stop without warning"]
+            - ["Atropine", "Usually helps", "Unlikely to help; may worsen the ratio"]
+            - ["Common causes", "Inferior MI, vagal tone, AV-nodal drugs", "Degenerative fibrosis, anterior MI"]
+      - ecg: ecg/arr-07-chb.svg
+        alt: "12-lead ECG. P waves at about 80 per minute with no fixed relationship to slow, broad QRS complexes at about 32 per minute."
+        caption: "Complete heart block with a broad ventricular escape: needs pacing."
+      - points:
+          - "Unstable: atropine 1 mg IV, repeated every 3–5 minutes to 3 mg (our chosen dose; ERC 2025 starts at 500 micrograms). Don't let it delay pacing when the escape is broad."
+          - "Bridge: isoprenaline from 5 micrograms/min, or adrenaline 2–10 micrograms/min, titrated to the heart rate."
+          - "Transcutaneous pacing: pads front and back, demand mode at about 70; raise the current until every spike is followed by a broad complex (usually 50–100 mA). Confirm a femoral pulse at the paced rate; muscle twitching makes the carotid and radial pulses unreliable. Give analgesia and sedation."
+          - "Then a transvenous wire, and look for reversible causes (next section)."
+          - "Mobitz II, high-grade and complete block need a permanent pacemaker even without symptoms."
+      - cards: [heart-block, bradycardia, atropine, isoprenaline, transcutaneous-pacing]
+
+  - heading: "Bradycardia from drugs, toxins and potassium"
+    check: { source: [pincus-2016, ukka-hyperk-2023, erc-special-2025, eddleston-2008], verified: false }
+    blocks:
+      - text: "Before you pace, ask what the patient took and check a blood-gas potassium. These causes have specific antidotes, and pacing alone often fails."
+      - ecg: ecg/arr-08-dig.svg
+        alt: "12-lead ECG. Fibrillating baseline with no P waves, but slow and perfectly regular narrow QRS complexes at 42 per minute. Sagging ST depression in the lateral leads."
+        caption: "Digoxin toxicity: AF that has become slow and regular (AV block with a junctional escape)."
+      - points:
+          - "Digoxin toxicity: nausea, vomiting, confusion, yellow vision; AF that becomes slow and regular. Usually triggered by kidney injury, dehydration, low potassium or a new drug (verapamil, diltiazem, amiodarone, macrolides). Stop digoxin and the interacting drug; antibody fragments for life-threatening toxicity; atropine and pacing as a bridge."
+          - "Hyperkalaemia: tall narrow peaked T waves, then flattened P waves, a broad QRS and a sine wave. Protect the heart with IV calcium, shift potassium with insulin 10 units plus 25 g glucose and nebulised salbutamol 10–20 mg, then remove it (dialysis). Atropine and pacing don't fix it."
+          - "Organophosphates: wet lungs, sweating, pinpoint pupils, slow heart. Atropine 1.8–3 mg IV, doubled every 5 minutes until the chest is clear, heart rate over 80, systolic over 80, axillae dry and pupils no longer pinpoint; then an infusion. Tachycardia is not a reason to stop. Pralidoxime as an add-on; avoid suxamethonium; watch for neck and breathing weakness over days 1–4."
+      - ecg: ecg/arr-14-hyperk.svg
+        alt: "12-lead ECG. Slow broad-complex rhythm at about 38 per minute, no visible P waves, tall narrow peaked T waves in the chest and inferior leads."
+        caption: "Severe hyperkalaemia mimicking complete heart block."
+      - warn: "Insulin without glucose causes dangerous hypoglycaemia, especially in kidney failure. And the cardiac atropine dose is far too small for organophosphate poisoning."
+      - text: "Antibody fragments for digoxin are not stocked everywhere in India: know your hospital's route to them before you need them."
+      - cards: [digoxin-toxicity, digoxin-fab, hyperkalaemia, hyperkalaemia-treatment, organophosphate-poisoning, pralidoxime]
+
+  - heading: "Long QT and torsades"
+    check: { source: [drew-2010, esc-va-2022, schwartz-2011], verified: false }
+    blocks:
+      - text: "Measure the QT yourself, in lead II or V5: the end of the T wave is where a tangent to its steepest downslope meets the baseline; leave out the U wave and average several beats. Machines misread notched T waves and U waves."
+      - points:
+          - "Prolonged: 450 ms or more in men, 460 ms or more in women. 500 ms or more, or a rise of 60 ms on a drug: real risk of torsades."
+          - "Most long QT in the ED is acquired: QT drugs (macrolides, fluoroquinolones, ondansetron, antipsychotics, methadone, many antiarrhythmics) plus low potassium, low magnesium or a slow heart rate."
+          - "Torsades: polymorphic VT twisting around the baseline, often after a short–long–short sequence. Pulseless: defibrillate."
+          - "Then magnesium 2 g IV (may be repeated), potassium up to 4.5–5 mmol/L, stop the drugs, and raise the heart rate (pacing, or isoprenaline in acquired long QT only)."
+      - ecg: ecg/arr-11-longqt.svg
+        alt: "12-lead ECG. Sinus rhythm at 58. Very long QT interval (about 560 ms), flattened T waves and prominent U waves in V2–V4."
+        caption: "Acquired long QT with low potassium: flat T waves and U waves."
+      - ecg: ecg/arr-torsades.svg
+        alt: "Rhythm strip. Polymorphic broad-complex tachycardia whose QRS height rises and falls, twisting around the baseline."
+        caption: "Torsades de pointes."
+      - warn: "Amiodarone prolongs the QT: don't use it for torsades."
+      - cards: [long-qt, long-qt-syndrome, magnesium-sulphate]
+
+  - heading: "Congenital long QT"
+    check: { source: [esc-va-2022, schwartz-2011], verified: false }
+    blocks:
+      - text: "It hides behind 'faints' and 'epilepsy'. Brief jerking during a faint is common; a faint triggered by exertion, swimming or a sudden noise, or a family history of sudden death, needs an ECG before a neurology referral."
+      - table:
+          head: ["Type", "Typical trigger", "T wave"]
+          rows:
+            - ["LQT1", "Exercise, especially swimming", "Broad-based"]
+            - ["LQT2", "Sudden noise (alarm clock, doorbell), emotion, the months after delivery", "Low and notched"]
+            - ["LQT3", "Sleep and rest", "Late, after a long flat ST segment"]
+      - ecg: ecg/arr-12-lqt2.svg
+        alt: "12-lead ECG. Sinus rhythm at 70. Long QT interval; low-amplitude T waves with a notch (two humps) in II, aVF and V2–V5."
+        caption: "LQT2: low, notched T waves."
+      - points:
+          - "Exclude acquired causes first, then score it: a Schwartz score of 3.5 or more means a high probability."
+          - "Treatment: a non-selective beta-blocker (nadolol about 0.5–1 mg/kg/day, or propranolol), continued through pregnancy and especially the postpartum months. Not metoprolol: patients switched to it have had breakthrough events."
+          - "Give a list of QT drugs to avoid, advise on triggers, and arrange genetic testing and ECGs for children, parents and siblings: it is usually autosomal dominant."
+          - "An ICD is for arrest, or events despite treatment, not for everyone."
+      - warn: "Isoprenaline can trigger torsades in congenital LQT1 and LQT2. It is for acquired long QT only."
+      - cards: [schwartz, lqts-beta-blockers, long-qt-syndrome]
+
+  - heading: "Brugada syndrome"
+    check: { source: [antzelevitch-2016, esc-va-2022], verified: false }
+    blocks:
+      - text: "An inherited sodium-channel disease of the right ventricular outflow tract. Events come at night, at rest, with fever or after alcohol. Gasping, snoring-like breathing in sleep that a relative can't wake you from is self-terminating VF until proven otherwise."
+      - ecg: ecg/arr-10-high.svg
+        alt: "12-lead ECG with V1 and V2 recorded in both the 4th and the 2nd intercostal spaces. In the 2nd-space leads, coved ST elevation of more than 2 mm descends into a negative T wave."
+        caption: "Type 1 pattern, visible only with V1–V2 moved up to the 2nd intercostal space."
+      - points:
+          - "Type 1 (diagnostic): coved ST elevation of 2 mm or more in V1–V2 sloping down into a negative T wave. Type 2 (saddleback, positive T): only suspicious."
+          - "Record V1 and V2 again in the 3rd and 2nd intercostal spaces. Missing this is the commonest reason the pattern is missed."
+          - "Fever unmasks it: record the ECG while the patient is still febrile."
+          - "Mimics: sodium-channel-blocker overdose (including tricyclics), hyperkalaemia, cocaine, pericarditis, PE."
+          - "Electrical storm: defibrillate each episode; isoprenaline infusion; quinidine where available; treat the fever."
+          - "Afterwards: an ICD after arrest or arrhythmic syncope. For everyone: treat every fever early, avoid drugs on the Brugada list, little alcohol, ECGs for first-degree relatives."
+      - warn: "Avoid amiodarone, class I drugs (flecainide, procainamide) and beta-blockers in Brugada. And before giving flecainide to a young patient with 'lone' AF, record high chest leads and ask about sudden deaths in the family."
+      - cards: [brugada-pattern, brugada-syndrome, isoprenaline]
+
+  - heading: "Shockable cardiac arrest"
+    check: { source: [erc-als-2025], verified: false }
+    blocks:
+      - points:
+          - "VF or pulseless VT: unsynchronised shock of at least 150 J, then 2 minutes of compressions straight away, without a pulse check; rhythm check; repeat. Charge during compressions to keep pauses under 5 seconds."
+          - "After the 3rd shock: adrenaline 1 mg and amiodarone 300 mg. Adrenaline every 3–5 minutes after that; amiodarone 150 mg after the 5th shock."
+          - "Never press sync for VF: there are no R waves, and the shock may never fire."
+          - "Up to three stacked shocks only for a witnessed, monitored VF arrest (CCU, cath lab)."
+          - "Reversible causes: hypoxia, hypovolaemia, hypo/hyperkalaemia, hypothermia; coronary or pulmonary thrombosis, tension pneumothorax, tamponade, toxins."
+      - ecg: ecg/arr-vf.svg
+        alt: "Rhythm strip. Chaotic, irregular waves of varying size with no recognisable QRS complexes."
+        caption: "Ventricular fibrillation."
+      - warn: "Everyone stands clear for every shock: nobody touches the patient or the trolley while the button is pressed."
+      - text: "After return of circulation: a 12-lead ECG (ST elevation means emergency coronary angiography), oxygen saturation 94–98%, normal CO₂, mean arterial pressure over 65, and prevent fever for 72 hours."
+      - cards: [defibrillation, cardiac-arrest-als]
+
+  - heading: "Infants and children"
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    blocks:
+      - text: "SVT is the commonest significant arrhythmia of infancy, usually AVRT through an accessory pathway. Infants don't report palpitations: they stop feeding, breathe fast, sweat and go pale."
+      - ecg: ecg/arr-15-svt.svg
+        alt: "12-lead ECG of an infant. Regular narrow-complex tachycardia at about 280 per minute, no visible P waves, no variation in rate."
+        caption: "Infant SVT: over 220/min, fixed, no P waves."
+      - points:
+          - "SVT: usually over 220/min in infants (over 180 in children), fixed rate. Sinus tachycardia: usually under 220 and varies with crying, fever and fluids."
+          - "Compensated: a bag of ice water wrapped in a cloth over the face for up to 15 seconds; then adenosine 0.1–0.2 mg/kg (maximum 6 mg) rapid IV/IO with a large flush, then 0.3 mg/kg."
+          - "Decompensated: synchronised cardioversion 1 J/kg, then 2 J/kg (up to 4 J/kg), with sedation and analgesia; don't delay for IV access."
+          - "Afterwards: sinus ECG for pre-excitation, echocardiogram, paediatric cardiology admission."
+      - warn: "Never verapamil in infants (profound, sometimes fatal, collapse), and no eyeball pressure or carotid massage."
+      - cards: [infant-svt, adenosine, synchronised-cardioversion]
+
+  - heading: "Drugs at a glance"
+    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022, erc-als-2025], verified: false }
+    blocks:
+      - table:
+          head: ["Drug", "Main use here", "Adult dose", "Never or beware"]
+          rows:
+            - ["Adenosine", "Regular narrow-complex tachycardia", "6 mg, then 12 mg, then 18 mg, fast push and flush", "Pre-excited AF; severe asthma"]
+            - ["Verapamil", "SVT after adenosine", "0.075–0.15 mg/kg (typically 5–10 mg)", "Broad-complex tachycardia, pre-excited AF, HFrEF, infants, with an IV beta-blocker"]
+            - ["Metoprolol", "AF or flutter rate control", "2.5–5 mg IV every 5 minutes to 15 mg", "Heart failure, shock, AV block"]
+            - ["Digoxin", "AF rate control, low LVEF", "0.25–0.5 mg, then 0.25 mg 6-hourly to 1.5 mg/24 h", "Pre-excited AF; kidney injury"]
+            - ["Amiodarone", "VT; failed shocks; arrest", "300 mg (then 900 mg/24 h); arrest: 300 mg after 3rd shock, 150 mg after 5th", "Pre-excited AF, torsades, Brugada; AF of unknown duration without anticoagulation"]
+            - ["Procainamide", "Stable VT or pre-excited AF", "10–15 mg/kg (max 1 g)", "Heart failure, long QT, Brugada"]
+            - ["Flecainide", "Recent-onset AF, normal heart", "200–300 mg orally, with an AV-nodal blocker", "Coronary disease, low LVEF, Brugada"]
+            - ["Magnesium", "Torsades", "2 g IV, may repeat", ""]
+            - ["Atropine", "Bradycardia", "1 mg every 3–5 minutes to 3 mg", "Broad-escape block (unlikely to help)"]
+            - ["Isoprenaline", "Bradycardia bridge; Brugada storm; acquired torsades", "From 5 micrograms/min, titrated", "Congenital LQT1 and LQT2"]
+
+  - heading: "Pregnancy and the months after delivery"
+    check: { source: [esc-svt-2019, esc-af-2024, esc-va-2022], verified: false, todo: "New in the notes (not in a case): check against the pregnancy sections of the guidelines." }
+    blocks:
+      - points:
+          - "Adenosine is safe for SVT in pregnancy, and synchronised cardioversion is safe in every trimester when needed; monitor the fetus."
+          - "Metoprolol or propranolol for rate control; avoid atenolol (fetal growth restriction)."
+          - "No DOACs in pregnancy: low-molecular-weight heparin, with specialist advice for valve disease."
+          - "New AF or breathlessness in pregnancy may be undiagnosed rheumatic mitral stenosis: get an echocardiogram early."
+          - "Congenital LQT2 events cluster in the months after delivery: keep the beta-blocker going and plan for sleep and quiet alarms."
+
+refs: [esc-svt-2019, revert-2015, esc-af-2024, race2-2010, pisters-2010, esc-valve-2021, invictus-2022, who-rhd-2024, esc-va-2022, brugada-1991, vereckei-2008, esc-pacing-2021, erc-als-2025, rcuk-2025, erc-special-2025, pincus-2016, ukka-hyperk-2023, eddleston-2008, drew-2010, schwartz-2011, antzelevitch-2016, rcuk-paeds-2025]

@@ -394,7 +394,7 @@ export const NotesBlock = z
     points: z.array(Text).min(1).optional(), // bullet list
     warn: Text.optional(), // a pitfall or "never do" box
     table: z
-      .strictObject({ head: z.array(Text).min(2), rows: z.array(z.array(Text)).min(1) })
+      .strictObject({ head: z.array(z.string()).min(2), rows: z.array(z.array(z.string())).min(1) }) // "" = empty cell
       .optional(),
     ecg: z.string().regex(/^ecg\/[a-z0-9-]+\.svg$/, 'an ECG drawing, e.g. ecg/arr-svt.svg').optional(),
     alt: Text.optional(), // what the ECG shows, for screen readers (required with ecg)

@@ -115,6 +115,6 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - Verification: owner instructed marking all 202 items in cp-01…11 verified (2026-09-30) and all 226 arrhythmia items
   (2026-10-13, accepting the 5 open dose questions as drafted); old TODOs kept. New content is still drafted verified: false.
 - Arrhythmias module (Phase 7, from 2026-10-05): plan in docs/modules/arrhythmias-outline.md (15 cases, owner's decisions in §0;
-  owner's source notes in git-ignored notes/). All 15 cases (arr-01…15) illustrated (89 pictures) and owner-verified 2026-10-13. Next: unit-notes reward.
+  owner's source notes in git-ignored notes/). All 15 cases (arr-01…15) illustrated (89 pictures) and owner-verified 2026-10-13. Unit notes (notes.yaml, 17 sections) drafted unverified; next: owner review.
 - Illustrations 2026-10-02: all 11 cases use the owner's ChatGPT pictures (cut from sheets; `npm run art` enlarges ≤2× + sharpens;
   monitor close-ups stay code). Prompts + cast-reference.png in docs/art/. Women patients: gown covers chest; shocks: nobody touching (prompt + check both).
