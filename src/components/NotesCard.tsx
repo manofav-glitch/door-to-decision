@@ -61,7 +61,7 @@ export function NotesCard({ systemId, mod }: { systemId: string; mod: ModuleSumm
         {title}
       </h2>
       <p>
-        Get <Stars n={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more on every case in this
+        Get <Stars n={NOTES_STARS} of={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more on every case in this
         unit to unlock its notes: a summary of the whole unit to revise from.
       </p>
       <NotesProgressBar progress={progress} label="Cases towards the notes" />
@@ -85,7 +85,7 @@ export function DebriefNotes({ systemId, mod }: { systemId: string; mod: ModuleS
           Unit complete: notes unlocked
         </h2>
         <p>
-          You have <Stars n={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more on every{' '}
+          You have <Stars n={NOTES_STARS} of={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more on every{' '}
           {mod.title} case. Your reward is <strong>{mod.notes.title}</strong>, a summary of the
           whole unit to revise from.
         </p>
@@ -107,7 +107,7 @@ export function DebriefNotes({ systemId, mod }: { systemId: string; mod: ModuleS
     <section className="mb-8 flex flex-col gap-2" aria-label="Progress towards the unit notes">
       <p className="text-sm">
         <span className="font-semibold">Unit notes:</span> {progress.done} of {progress.total} cases
-        have <Stars n={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more. Get there on every
+        have <Stars n={NOTES_STARS} of={NOTES_STARS} label={`${NOTES_STARS} stars`} /> or more. Get there on every
         case to unlock them.
       </p>
       <NotesProgressBar progress={progress} label="Cases towards the unit notes" />
