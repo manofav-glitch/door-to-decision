@@ -27,6 +27,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: hf-01/01-arrival
         actors: [paramedic:alarmed, patient-supine:alarmed]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -63,6 +64,7 @@ nodes:
     check: { source: [esc-htn-2024, esc-hf-2026], verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-01/02-ecg
         actors: [patient-supine:alarmed, nurse]
         caption: "{clock} · Resus"
     image: ecg/hf-01-lvh.svg
@@ -132,6 +134,7 @@ nodes:
     check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
     panels:
       - scene: resus-bay
+        art: hf-01/03-better
         actors: [patient-supine:relieved, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -194,6 +197,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-01/04-end-good
         actors: [patient:relieved, doctor]
         caption: "Three days later · Medical ward"
         bubbles:
@@ -205,6 +209,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-01/05-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · Medical ward"
     summary: "He recovered, but delays, the wrong main drug or harmful extras made his night more dangerous. The debrief shows where."
