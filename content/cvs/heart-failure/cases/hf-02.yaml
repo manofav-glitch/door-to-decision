@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-02/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: esc-hf-2026, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-02/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/hf-02-oldmi.svg
@@ -103,6 +105,7 @@ nodes:
     check: { source: [esc-hf-2026, advor-2022], verified: false }
     panels:
       - scene: resus-bay
+        art: hf-02/03-response
         actors: [nurse:worried, doctor]
         caption: "{clock} · Two hours later"
         bubbles:
@@ -154,6 +157,7 @@ nodes:
     onEnter: { minutes: 1200, setVitals: { hr: 84, sbp: 118, dbp: 70, rr: 18, spo2: 96 } }
     panels:
       - scene: ward
+        art: hf-02/04-day-2
         actors: [patient:relieved, nurse:worried]
         caption: "Next morning · Ward"
         bubbles:
@@ -224,6 +228,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-02/05-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Ten days later · Heart failure clinic"
         bubbles:
@@ -235,6 +240,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-02/06-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Three weeks later · Emergency department"
     summary: "She went home, but under-dosing, stopping too soon or a thin discharge plan brought her back. The debrief shows where."
