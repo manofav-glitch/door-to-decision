@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: arr-15/01-arrival
         actors: [relative:alarmed, nurse:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: rcuk-paeds-2025, verified: false }
     panels:
       - scene: ecg-machine
+        art: arr-15/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
     image: ecg/arr-15-svt.svg
@@ -131,6 +133,7 @@ nodes:
         caption: "{clock} · An hour later"
         sfx: "ALARM"
       - scene: resus-bay
+        art: arr-15/03-recur
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "It's back at 290, and she's floppy, mottled and grey. BP 58 over 34." }
@@ -195,7 +198,8 @@ nodes:
     outcome: good
     panels:
       - scene: ward
-        actors: [patient:relieved, relative:relieved]
+        art: arr-15/04-end-good
+        actors: [relative:relieved, patient:relieved]
         caption: "Three days later · Paediatric ward"
         bubbles:
           - { who: relative, text: "She's feeding properly again. We know what to look for now." }
@@ -206,6 +210,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: arr-15/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "A week later · Paediatric ward"
     summary: "She recovered, but adult-sized doses, the wrong drug or a delay made her night more dangerous. The debrief shows where."
