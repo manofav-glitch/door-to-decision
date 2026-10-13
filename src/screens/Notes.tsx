@@ -5,7 +5,7 @@ import type { CompiledNoteBlock, ModuleSummary } from '../content/types';
 import { NotesCard } from '../components/NotesCard';
 import { EcgFigure } from '../components/player/EcgFigure';
 import { BackLink, Loading, NotFound, UnverifiedBadge } from '../components/ui';
-import { NOTES_STARS, useUnitNotes } from '../lib/notes';
+import { NOTES_STARS, splitLabel, useUnitNotes } from '../lib/notes';
 
 export function Notes() {
   const { systemId, moduleId } = useParams();
@@ -137,13 +137,25 @@ function NotesView({
   );
 }
 
+function Point({ text }: { text: string }) {
+  const parts = splitLabel(text);
+  if (!parts) return <>{text}</>;
+  return (
+    <>
+      <strong>{parts[0]}:</strong> {parts[1]}
+    </>
+  );
+}
+
 function Block({ block: b, assets }: { block: CompiledNoteBlock; assets: Record<string, string> }) {
   if (b.text) return <p>{b.text}</p>;
   if (b.points)
     return (
       <ul className="flex list-disc flex-col gap-1 pl-6">
         {b.points.map((p) => (
-          <li key={p}>{p}</li>
+          <li key={p}>
+            <Point text={p} />
+          </li>
         ))}
       </ul>
     );

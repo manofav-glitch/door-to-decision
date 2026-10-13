@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NOTES_STARS, notesProgress } from './notes.ts';
+import { NOTES_STARS, notesProgress, splitLabel } from './notes.ts';
 
 const mod = {
   cases: [
@@ -40,5 +40,19 @@ describe('earned notes', () => {
     useProgress.getState().unlockNotes('cvs/arrhythmias');
     useProgress.getState().unlockNotes('cvs/arrhythmias');
     expect(useProgress.getState().notesUnlocked).toEqual(['cvs/arrhythmias']);
+  });
+});
+
+describe('bullet labels', () => {
+  it('splits a short "Label: text" bullet', () => {
+    expect(splitLabel('Unstable: synchronised shock.')).toEqual([
+      'Unstable',
+      'synchronised shock.',
+    ]);
+  });
+  it('leaves sentences, ratios and long lead-ins alone', () => {
+    expect(splitLabel('Stop the QT drugs.')).toBeUndefined();
+    expect(splitLabel('With 2:1 block, the rate is 150.')).toBeUndefined();
+    expect(splitLabel(`${'x'.repeat(60)}: text`)).toBeUndefined();
   });
 });

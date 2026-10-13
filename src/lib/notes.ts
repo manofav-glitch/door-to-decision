@@ -56,3 +56,9 @@ export function useUnitNotes(systemId: string, mod: ModuleSummary) {
   else access = { state: 'locked', progress };
   return { key, access, fresh: fresh && access.state === 'open' };
 }
+
+/** "Short label: the rest" shows the label in bold, so a list can be scanned by its labels. */
+export function splitLabel(text: string): [string, string] | undefined {
+  const m = /^([^:.]{1,55}):\s+(.+)$/s.exec(text);
+  return m ? [m[1]!, m[2]!] : undefined;
+}

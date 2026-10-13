@@ -522,6 +522,11 @@ with an UNVERIFIED badge when **Show draft cases** is on (draft notes open witho
 you can review them). In dev mode (`?dev=1`) every unit's notes open. Every row of a table needs
 the same number of cells as `head`; use `""` for an empty cell.
 
+Prefer short bullets to paragraphs: they read far better on a phone. Start a bullet with a short label
+and a colon (`Unstable: synchronised shock now.`) and the label shows in **bold**, so the list can be
+scanned by its labels. Labels are up to about 55 characters, without a full stop; anything else shows
+as a plain bullet.
+
 ---
 
 ## 14. Drawing an ECG
