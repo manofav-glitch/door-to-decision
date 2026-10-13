@@ -1,0 +1,392 @@
+# Chest Pain unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Drafted from the module's guidelines and the verified cases and Codex cards (no owner notes PDF for
+# this unit). Doses, thresholds and time targets match the verified cards and benchmarks.yaml; if one
+# changes, change the notes too. Style: short bullets; "Label: text" shows the label in bold.
+title: "Chest Pain: unit notes"
+intro: "Everything from the 11 Chest Pain cases in one place: find the time-critical causes fast, read the ECG for occlusion, reperfuse in time, and don't miss the mimics."
+sections:
+  - heading: "The first 10 minutes"
+    check: { source: [esc-acs-2023], verified: false }
+    blocks:
+      - points:
+          - "ECG: within 10 minutes of arrival, for every patient with possible ACS, however well they look."
+          - "STEMI is an ECG diagnosis: don't wait for troponin to reperfuse."
+          - "Pain-free on arrival: doesn't mean low risk."
+      - points:
+          - "Acute coronary syndrome: STEMI, a STEMI equivalent, or NSTE-ACS."
+          - "Aortic dissection: abrupt, tearing pain, often to the back."
+          - "Pulmonary embolism: breathless, fast, low saturations."
+          - "Pericarditis and tamponade: sharp pain, worse lying flat."
+          - "Everything else: only once these are thought about."
+      - points:
+          - "Oxygen: only if the saturation is below 90%; routine oxygen doesn't help."
+          - "Aspirin: 150–300 mg once you've thought about dissection."
+          - "Nitrate: 0.3–0.6 mg sublingual every 5 minutes (maximum 3 doses), only once you have the ECG and the blood pressure."
+      - warn: "No nitrate with a systolic below 90, suspected RV infarction, sildenafil in the last 24 hours (tadalafil 48), severe aortic stenosis, or marked bradycardia or tachycardia."
+      - cards: [aspirin, nitrates]
+
+  - heading: "Reading the ECG for an occluded artery"
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false, todo: "The ST-elevation thresholds are new in the notes (not stated in a case or card): check against ESC 2023 / Fourth-Fifth UDMI." }
+    blocks:
+      - points:
+          - "ST elevation: at the J point, in 2 or more neighbouring leads."
+          - "Most leads: 1 mm or more."
+          - "V2–V3: 2 mm or more in men 40 or over, 2.5 mm in men under 40, 1.5 mm in women."
+          - "Reciprocal ST depression: supports a STEMI and argues against pericarditis."
+      - table:
+          head: ["ST elevation in", "Wall", "Usual artery"]
+          rows:
+            - ["II, III, aVF", "Inferior", "RCA (sometimes circumflex)"]
+            - ["V1–V4", "Anterior", "LAD"]
+            - ["V1–V4 plus I and aVL", "Large anterior", "Proximal LAD (before the first diagonal)"]
+            - ["I, aVL, V5–V6", "Lateral", "Circumflex or a diagonal"]
+            - ["V7–V9 (ST depression in V1–V3)", "Posterior", "Circumflex or RCA"]
+            - ["V4R (with inferior STEMI)", "Right ventricle", "Proximal RCA"]
+      - points:
+          - "RCA rather than circumflex: ST elevation greater in III than II, with ST depression in I and aVL."
+          - "Very proximal LAD: ST elevation in aVR, or a new right bundle branch block."
+          - "Wraparound LAD: adds inferior ST elevation to an anterior pattern."
+      - ecg: ecg/cp-04-ecg-1.svg
+        alt: "12-lead ECG. Sinus tachycardia about 112 per minute. ST elevation in V1 to V4 and in I and aVL. ST depression in II, III and aVF."
+        caption: "Proximal LAD occlusion: anterior plus I and aVL, with inferior reciprocal depression."
+      - cards: [rca-territory, lad-territory]
+
+  - heading: "STEMI equivalents and Wellens"
+    check: { source: [esc-acs-2023, de-winter-2008, de-zwaan-1982], verified: false }
+    blocks:
+      - points:
+          - "No classic ST elevation doesn't mean no occlusion: look for these patterns."
+      - points:
+          - "Posterior STEMI: horizontal ST depression in V1–V3 with tall R waves and upright T waves."
+          - "Confirm it: record V7–V9 on the left back at the level of V6; ST elevation of 0.5 mm or more there is a posterior STEMI."
+          - "Treat it: like any STEMI. Calling it NSTE-ACS delays reperfusion."
+      - ecg: ecg/cp-09-ecg-a1.svg
+        alt: "12-lead ECG, patient A. Sinus rhythm about 84 per minute. Horizontal ST depression in V1 to V3 with tall R waves and upright T waves. No ST elevation."
+        caption: "Posterior STEMI on the standard leads: the mirror image in V1–V3."
+      - ecg: ecg/cp-09-ecg-a2.svg
+        alt: "ECG with posterior leads for patient A: V7, V8 and V9 replace V4 to V6. ST elevation of about 1.5 mm in V7 to V9. ST depression persists in V1 to V3."
+        caption: "The same patient with V7–V9: ST elevation confirms it."
+      - points:
+          - "de Winter: J-point depression in the chest leads, sloping up into tall, symmetrical T waves; often slight ST elevation in aVR."
+          - "What it means: an acute proximal LAD occlusion. Activate the reperfusion pathway; don't wait for it to 'evolve'."
+      - ecg: ecg/cp-09-ecg-b.svg
+        alt: "12-lead ECG, patient B. Sinus rhythm about 90 per minute. J-point ST depression in V2 to V5, up-sloping into tall, symmetrical T waves. Slight ST elevation in aVR."
+        caption: "de Winter pattern: a STEMI equivalent."
+      - points:
+          - "Wellens: in a patient now pain-free, deep symmetrical T inversion (type B) or biphasic T waves (type A) in V2–V3."
+          - "What it means: a critical proximal LAD stenosis that may re-occlude."
+          - "Troponin: often normal or only mildly raised; don't be reassured."
+          - "Plan: early coronary angiography."
+      - ecg: ecg/cp-09-ecg-c.svg
+        alt: "12-lead ECG, patient C, pain-free. Sinus rhythm about 72 per minute. Deep symmetrical T wave inversion in V2 to V4, milder in V5. Preserved R waves, no Q waves, no significant ST elevation."
+        caption: "Wellens type B."
+      - warn: "Never send a Wellens patient for a stress test: it can provoke a large anterior MI."
+      - cards: [posterior-mi, de-winter, wellens]
+
+  - heading: "Inferior STEMI and the right ventricle"
+    check: { source: [esc-acs-2023, zimetbaum-2003], verified: false }
+    blocks:
+      - ecg: ecg/cp-01-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 52 per minute. ST segments raised in II, III and aVF, most in III. ST segments depressed in I and aVL. Slight ST elevation in V1."
+        caption: "Inferior STEMI from the RCA: III more than II, depression in aVL, slight elevation in V1."
+      - points:
+          - "V4R: record it in every inferior STEMI."
+          - "RV involvement: ST elevation in V4R (and often V1)."
+          - "What happens: the ischaemic RV pumps poorly, so the left heart under-fills and the pressure drops, often with clear lungs and a raised JVP."
+          - "Preload-dependent: nitrates, diuretics and to a lesser extent opioids can cause sudden severe hypotension."
+      - ecg: ecg/cp-01-v4r.svg
+        alt: "Right-sided ECG. Limb leads as before. ST elevation about 1.5 mm in V4R, with smaller elevation in V3R and V5R."
+        caption: "Right-sided leads: ST elevation in V4R means RV infarction."
+      - points:
+          - "Hypotension: cautious fluid boluses, reassessing after each; large volumes distend the RV."
+          - "No nitrates or diuretics."
+          - "No IV beta-blocker with bradycardia, hypotension or AV block."
+          - "AV block: usually in the AV node, and often responds to atropine; pace if unstable."
+          - "Definitive treatment: reperfusion. The RV often recovers."
+      - cards: [rv-infarction, rca-territory, atropine]
+
+  - heading: "Reperfusion: which route?"
+    check: { source: [esc-acs-2023, esc-stemi-2017], verified: false }
+    blocks:
+      - points:
+          - "PCI-capable centre: primary PCI, aiming for 60 minutes or less from diagnosis to wire crossing."
+          - "PCI more than about 2 hours away: fibrinolysis within 10 minutes of diagnosis, if there's no contraindication."
+          - "After fibrinolysis: transfer to a PCI centre in every case (pharmaco-invasive strategy)."
+          - "Failed: rescue PCI straight away."
+          - "Worked: routine angiography within 2–24 hours."
+      - table:
+          head: ["", "Primary PCI", "Fibrinolysis"]
+          rows:
+            - ["Aspirin", "150–300 mg, then 75–100 mg daily", "150–300 mg, then 75–100 mg daily"]
+            - ["P2Y12 inhibitor", "Ticagrelor 180 mg, then 90 mg twice daily (clopidogrel 600 mg if it can't be used)", "Clopidogrel 300 mg (75 mg, no load, if over 75)"]
+            - ["Anticoagulant", "Unfractionated heparin 70–100 units/kg", "Enoxaparin (preferred) or unfractionated heparin"]
+      - points:
+          - "Enoxaparin with lysis, under 75: 30 mg IV bolus, then 1 mg/kg SC 15 minutes later and every 12 hours (first two SC doses maximum 100 mg)."
+          - "Enoxaparin with lysis, 75 or over: no IV bolus; 0.75 mg/kg SC every 12 hours (first two doses maximum 75 mg)."
+          - "Unfractionated heparin with lysis: 60 units/kg (maximum 4000), then 12 units/kg/h (maximum 1000), adjusted to the aPTT."
+      - warn: "Ticagrelor is not given with fibrinolysis: clopidogrel is the P2Y12 inhibitor used with lytics."
+      - cards: [aspirin, ticagrelor, clopidogrel, ufh, enoxaparin]
+
+  - heading: "Fibrinolysis"
+    check: { source: [esc-acs-2023, esc-stemi-2017, gershlick-2005], verified: false }
+    blocks:
+      - table:
+          head: ["Weight", "Tenecteplase (single bolus)"]
+          rows:
+            - ["Under 60 kg", "30 mg"]
+            - ["60–69 kg", "35 mg"]
+            - ["70–79 kg", "40 mg"]
+            - ["80–89 kg", "45 mg"]
+            - ["90 kg or more", "50 mg"]
+      - points:
+          - "Age 75 or over: consider half-dose tenecteplase."
+          - "Streptokinase: 1.5 million units over 30–60 minutes; widely used in India because it costs less."
+          - "Streptokinase hypotension: common; slow or pause the infusion. It isn't anaphylaxis."
+          - "Streptokinase before: don't repeat it (antibodies reduce its effect and raise the allergy risk)."
+      - points:
+          - "Absolute contraindications: any previous intracranial haemorrhage or stroke of unknown origin; ischaemic stroke in the last 6 months; CNS damage, tumour or AV malformation; major trauma, surgery or head injury in about the last month; GI bleeding in the last month; a known bleeding disorder; aortic dissection; non-compressible punctures in the last 24 hours."
+          - "Relative contraindications: TIA in the last 6 months; oral anticoagulants; pregnancy or the first week after delivery; blood pressure over 180/110 despite treatment; advanced liver disease; endocarditis; active peptic ulcer; prolonged or traumatic CPR."
+          - "Not contraindications: age alone; diabetic retinopathy; an ischaemic stroke more than 6 months ago."
+      - ecg: ecg/cp-05-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 88 per minute. ST elevation in II, III, aVF, V5 and V6. ST depression in aVL, V1 and V2."
+        caption: "Inferolateral STEMI before streptokinase."
+      - ecg: ecg/cp-05-ecg-2.svg
+        alt: "Repeat 12-lead ECG 75 minutes after the fibrinolytic. ST elevation in II, III, aVF, V5 and V6 has fallen only slightly compared with the first ECG."
+        caption: "75 minutes later: less than 50% resolution, so fibrinolysis has failed."
+      - points:
+          - "Check at 60–90 minutes: repeat the ECG and ask about pain."
+          - "Failed: ST elevation down by less than half in the worst lead, ongoing pain, or instability."
+          - "Then: rescue PCI. Never a second fibrinolytic."
+      - cards: [fibrinolytics, tenecteplase, streptokinase, failed-fibrinolysis]
+
+  - heading: "Cardiogenic shock"
+    check: { source: [esc-acs-2023, hochman-1999, thiele-2012, thiele-2017], verified: false }
+    blocks:
+      - points:
+          - "What: low cardiac output with poor perfusion, usually with hypotension."
+          - "Look for: cold, clammy, mottled skin; confusion; little urine; a rising lactate."
+          - "Why it matters: the leading cause of death in hospitalised MI."
+      - points:
+          - "The treatment that works: emergency PCI of the culprit artery. Don't delay it to 'stabilise' first."
+          - "Multivessel disease: treat the culprit lesion first, stage the rest."
+          - "Hypoxia: oxygen or ventilation."
+          - "Hypotension: noradrenaline, from about 0.05 µg/kg/min, titrated to a mean arterial pressure of about 65."
+          - "Low output: add dobutamine 2–20 µg/kg/min."
+          - "Wet lungs: no big fluid boluses."
+          - "Balloon pump: not routine; no survival benefit in a large trial."
+      - warn: "No nitrates or beta-blockers in a hypotensive, tachycardic patient, and don't treat shock with wet lungs as dehydration."
+      - cards: [cardiogenic-shock, noradrenaline, dobutamine, lad-territory]
+
+  - heading: "NSTE-ACS"
+    check: { source: [esc-acs-2023, antman-2000, granger-2003], verified: false }
+    blocks:
+      - ecg: ecg/cp-03-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 96 per minute. ST depression of about 1 mm in I, aVL and V4 to V6, with T wave inversion in V5 and V6. No ST elevation."
+        caption: "NSTE-ACS: lateral ST depression with T inversion."
+      - points:
+          - "NSTE-ACS: ischaemic symptoms without persistent ST elevation."
+          - "NSTEMI: plus a rising hs-troponin above the sex-specific 99th percentile."
+          - "Lateral ST depression: not a STEMI, and not to be dismissed as rate-related."
+      - points:
+          - "Everyone: aspirin, a parenteral anticoagulant and a high-intensity statin."
+          - "Fondaparinux: 2.5 mg once daily; give unfractionated heparin during PCI."
+          - "Atorvastatin: 40–80 mg once daily, started early."
+          - "No fibrinolysis in NSTE-ACS."
+      - table:
+          head: ["Angiography", "When"]
+          rows:
+            - ["Immediate (within about 2 hours)", "Shock or instability; recurrent or refractory pain; life-threatening arrhythmia or arrest; mechanical complications; acute heart failure from ischaemia; recurrent dynamic ST changes"]
+            - ["Early (within 24 hours)", "Confirmed NSTEMI; dynamic ST/T changes; transient ST elevation; GRACE over 140"]
+            - ["Selective", "Lower risk: guided by symptoms and non-invasive tests"]
+      - points:
+          - "TIMI: seven yes/no items, 1 point each (age 65 or over, 3 or more risk factors, known stenosis of 50% or more, aspirin in the last 7 days, 2 or more angina episodes in 24 hours, ST deviation of 0.5 mm or more, raised markers)."
+          - "GRACE: estimates in-hospital death; over 140 supports angiography within 24 hours."
+          - "Risk is dynamic: recurrent pain with dynamic ST changes means immediate angiography."
+      - cards: [nste-acs-strategy, timi-ua-nstemi, grace-in-hospital, fondaparinux, atorvastatin]
+
+  - heading: "Low-risk chest pain and safe discharge"
+    check: { source: [esc-acs-2023, backus-2013], verified: false }
+    blocks:
+      - ecg: ecg/cp-02-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 78 per minute. Normal axis. No ST elevation or depression. Upright T waves."
+        caption: "A normal ECG: score it as normal, not 'non-specific'."
+      - table:
+          head: ["HEART item", "0", "1", "2"]
+          rows:
+            - ["History", "Slightly suspicious", "Moderately suspicious", "Highly suspicious"]
+            - ["ECG", "Normal", "Non-specific repolarisation disturbance", "Significant ST deviation"]
+            - ["Age", "Under 45", "45–64", "65 or over"]
+            - ["Risk factors", "None known", "1–2", "3 or more, or known atherosclerotic disease"]
+            - ["Troponin", "At or below the limit", "1–3 × the limit", "More than 3 × the limit"]
+      - points:
+          - "HEART 0–3: low risk (about 1.7% major cardiac events at 6 weeks)."
+          - "HEART 4–6: moderate (about 17%). 7 or more: high (about 50%)."
+          - "Rule out MI: a serial hs-troponin pathway; single-sample rule-out only in narrow, assay-specific circumstances."
+          - "Low score plus negative serial troponins: supports early discharge."
+          - "Safe discharge: explanation, clear return advice and follow-up, not just 'your heart is fine'."
+      - warn: "Don't discharge on appearance or a single early troponin, don't over-call a normal ECG, and don't send untargeted D-dimers in low-risk chest pain."
+      - cards: [heart, mi-classification]
+
+  - heading: "Troponin: injury or infarction?"
+    check: { source: [udmi5-2026, esc-acs-2023], verified: false }
+    blocks:
+      - points:
+          - "Myocardial injury: troponin above the sex-specific 99th percentile."
+          - "Acute injury: values rise and/or fall. Chronic: stable (e.g. kidney disease, heart failure)."
+          - "Myocardial infarction: acute injury plus evidence of ischaemia (symptoms, new ischaemic ECG changes, imaging or angiography)."
+          - "Primary MI: caused by an acute coronary event (plaque rupture or erosion, or SCAD)."
+          - "Secondary MI: supply–demand mismatch without an acute coronary event (fast AF, severe anaemia, hypotension, sepsis)."
+          - "Non-ischaemic injury: myocarditis, sepsis, PE, heart failure, kidney failure, stroke, cardiotoxic drugs, trauma."
+      - ecg: ecg/cp-11-ecg-1.svg
+        alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 150 per minute with no P waves. ST depression of about 1 mm in V4 to V6."
+        caption: "Fast AF with pneumonia: rate-related ST depression and a rising troponin, a secondary MI."
+      - points:
+          - "Treat the cause: sepsis, dehydration, thyroid, electrolytes; control the rate."
+          - "Don't load antiplatelets and heparin, or rush to angiography, when the rise is explained by something else."
+          - "AF: still think about stroke prevention, even when an illness triggered it."
+      - warn: "Not every raised troponin is an NSTEMI."
+      - cards: [myocardial-injury, mi-classification, diltiazem]
+
+  - heading: "Aortic dissection mimicking STEMI"
+    check: { source: [esc-aortic-2024, acc-aha-aortic-2022], verified: false }
+    blocks:
+      - ecg: ecg/cp-06-ecg-1.svg
+        alt: "12-lead ECG. Sinus tachycardia about 104 per minute. ST elevation in II, III and aVF; ST depression in aVL. Tall QRS voltages in the chest leads."
+        caption: "Inferior ST elevation from a type A dissection over the right coronary ostium."
+      - points:
+          - "Pain: abrupt, maximal at onset, often tearing, to the back."
+          - "Examination: a pulse deficit or an arm blood-pressure difference, a new aortic regurgitation murmur, neurological signs, shock."
+          - "STEMI mimic: a type A flap can block a coronary ostium, usually the right, giving inferior ST elevation."
+          - "Pause before antithrombotics: when the story or examination doesn't fit a simple STEMI."
+      - points:
+          - "Imaging: CT aortic angiography. A normal chest X-ray or D-dimer shouldn't delay it in a high-risk patient."
+          - "Bedside echo: may show a flap, a dilated root, aortic regurgitation or an effusion, but can't exclude it."
+          - "Pain relief."
+          - "Beta-blocker first: labetalol 20 mg IV over 2 minutes, then repeated or an infusion, titrated to heart rate and BP."
+          - "Then a vasodilator: only if the BP is still high (alone it causes a reflex tachycardia)."
+          - "Type A: emergency cardiac surgery. Type B: usually medical unless complicated."
+      - warn: "Antiplatelets, heparin or fibrinolysis can be fatal in dissection. Never send a type A dissection for coronary stenting, and never explain away an arm BP difference."
+      - cards: [aortic-dissection, labetalol]
+
+  - heading: "Pulmonary embolism"
+    check: { source: [esc-pe-2019, wells-2000, kline-2004, meyer-2014], verified: false, todo: "Treatment column for intermediate-low and low risk (incl. early discharge) is new in the notes." }
+    blocks:
+      - ecg: ecg/cp-07-ecg-1.svg
+        alt: "12-lead ECG. Sinus tachycardia about 112 per minute. S wave in lead I, Q wave and T wave inversion in lead III, T wave inversion in V1 to V3."
+        caption: "PE with RV strain: tachycardia, S1Q3T3 and T inversion in V1–V3."
+      - points:
+          - "Think of it: chest pain with a fast heart rate and low saturations, especially in a young patient."
+          - "Risk factors in the cases: oral contraceptive, long-haul travel, a calf DVT."
+      - points:
+          - "Low probability: PERC; all eight criteria absent rules it out without a D-dimer."
+          - "PE unlikely (Wells 4 or less): D-dimer; normal rules it out."
+          - "PE likely (Wells over 4): CT pulmonary angiography; don't use PERC or D-dimer."
+          - "While you wait: start anticoagulation if PE is likely and bleeding risk allows."
+      - table:
+          head: ["Risk group", "Features", "Treatment"]
+          rows:
+            - ["High", "Shock or sustained hypotension", "Systemic thrombolysis (alteplase 100 mg over 2 hours)"]
+            - ["Intermediate-high", "Normal BP, RV dysfunction on imaging AND raised troponin", "Anticoagulate, monitor closely; rescue thrombolysis only if they deteriorate"]
+            - ["Intermediate-low", "One of those, or neither with a high severity score", "Anticoagulate"]
+            - ["Low", "None, and a low severity score", "Anticoagulate; consider early discharge"]
+      - points:
+          - "Enoxaparin: 1 mg/kg every 12 hours (or 1.5 mg/kg once daily); adjust in kidney impairment."
+          - "Alteplase alternative: 0.6 mg/kg over 15 minutes (maximum 50 mg)."
+          - "Peri-arrest PE: the balance shifts towards thrombolysis."
+          - "Fluids: be cautious; a big fluid load can worsen a failing right ventricle."
+      - warn: "Don't thrombolyse intermediate-risk PE routinely, but do thrombolyse when the patient collapses."
+      - cards: [pulmonary-embolism, wells-pe, perc, alteplase, enoxaparin]
+
+  - heading: "Pericarditis and tamponade"
+    check: { source: [esc-pericardial-2015, imazio-2013], verified: false }
+    blocks:
+      - ecg: ecg/cp-08-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 102 per minute. Widespread concave ST elevation in I, II, III, aVF, aVL and V2 to V6, with PR segment depression. In aVR, PR elevation and ST depression. No reciprocal ST depression elsewhere."
+        caption: "Pericarditis: widespread concave ST elevation, PR depression, the opposite in aVR."
+      - points:
+          - "Pain: sharp, pleuritic, better sitting forward, often after a viral illness."
+          - "Diagnosis, 2 of 4: typical pain; friction rub; new widespread ST elevation or PR depression; a new or worse effusion."
+      - table:
+          head: ["", "Pericarditis", "STEMI"]
+          rows:
+            - ["ST elevation", "Widespread, concave", "Territorial"]
+            - ["Reciprocal depression", "Only in aVR (and V1)", "Yes, in the opposite leads"]
+            - ["PR segment", "Depressed (elevated in aVR)", "Usually normal"]
+            - ["Q waves", "No", "May develop"]
+      - points:
+          - "Treatment: an NSAID or high-dose aspirin, plus colchicine, with gastric protection."
+          - "Colchicine: 0.5 mg once daily (under 70 kg) or twice daily (70 kg or more) for 3 months."
+          - "Steroids: not first line (more recurrence)."
+          - "Exercise: restrict strenuous activity."
+          - "Admit if: fever over 38 °C, a large effusion or tamponade, no response to NSAIDs, myopericarditis, immunosuppression, trauma or anticoagulant use."
+          - "Low risk: home with follow-up and clear safety-netting."
+      - ecg: ecg/cp-08-ecg-2.svg
+        alt: "12-lead ECG. Sinus tachycardia about 124 per minute. Low QRS voltages in all leads; the QRS height alternates from beat to beat."
+        caption: "Tamponade: low voltage and electrical alternans."
+      - points:
+          - "Tamponade, signs: tachycardia, hypotension, raised JVP, quiet heart sounds, pulsus paradoxus (systolic falls more than 10 mmHg on inspiration)."
+          - "Bedside echo: effusion with right atrial or right ventricular collapse in diastole, and a plethoric IVC."
+          - "Treatment: urgent pericardiocentesis or surgical drainage; a small fluid bolus may help briefly."
+      - warn: "No fibrinolysis for widespread ST elevation that is really pericarditis, no anticoagulants in pericarditis, and in tamponade no diuretics, no vasodilators and great care with intubation before drainage."
+      - cards: [pericarditis, cardiac-tamponade, colchicine]
+
+  - heading: "SCAD: MI in young women"
+    check: { source: [hayes-2018, adlam-2018], verified: false }
+    blocks:
+      - ecg: ecg/cp-10-ecg-1.svg
+        alt: "12-lead ECG. Sinus rhythm about 98 per minute. ST elevation of about 2 mm in V2, V3 and V4."
+        caption: "Anterior STEMI six weeks after delivery: SCAD of the LAD."
+      - points:
+          - "What: a tear or bleed in the coronary artery wall, not atherosclerosis."
+          - "Who: mostly women, often without risk factors; around pregnancy and after delivery, fibromuscular dysplasia, extreme physical or emotional stress."
+          - "Presents: like any ACS. Chest pain in a young woman is not 'anxiety' until the ECG says so."
+          - "Treat the ECG, not the risk profile: primary PCI shows whether it is SCAD."
+      - points:
+          - "Stable with good flow: usually conservative; most dissections heal."
+          - "PCI: for ongoing ischaemia or instability; it is technically harder and can spread the dissection."
+          - "No fibrinolysis: it can extend the dissection."
+          - "Afterwards: beta-blocker, blood-pressure control, screening for fibromuscular dysplasia, advice about future pregnancy, cardiac rehabilitation."
+          - "Statins: not routine, unless there is another reason."
+      - cards: [scad, mi-classification]
+
+  - heading: "Drugs at a glance"
+    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015], verified: false }
+    blocks:
+      - table:
+          head: ["Drug", "Use here", "Adult dose"]
+          rows:
+            - ["Aspirin", "ACS", "150–300 mg, then 75–100 mg daily"]
+            - ["Ticagrelor", "ACS, primary PCI", "180 mg, then 90 mg twice daily"]
+            - ["Clopidogrel", "With fibrinolysis", "300 mg (75 mg, no load, over 75)"]
+            - ["Clopidogrel", "PCI when ticagrelor can't be used", "600 mg, then 75 mg daily"]
+            - ["Unfractionated heparin", "Primary PCI", "70–100 units/kg"]
+            - ["Enoxaparin", "With fibrinolysis; PE", "See Reperfusion; PE 1 mg/kg 12-hourly"]
+            - ["Fondaparinux", "NSTE-ACS", "2.5 mg once daily"]
+            - ["Tenecteplase", "STEMI", "30–50 mg by weight, single bolus"]
+            - ["Streptokinase", "STEMI", "1.5 million units over 30–60 minutes"]
+            - ["Alteplase", "High-risk PE", "100 mg over 2 hours"]
+            - ["Nitrate (GTN)", "Ischaemic pain", "0.3–0.6 mg SL every 5 minutes, maximum 3"]
+            - ["Atorvastatin", "ACS", "40–80 mg once daily"]
+            - ["Labetalol", "Aortic dissection", "20 mg IV over 2 minutes, then titrate"]
+            - ["Noradrenaline", "Cardiogenic shock", "From 0.05 µg/kg/min to MAP about 65"]
+            - ["Dobutamine", "Low output", "2–20 µg/kg/min"]
+            - ["Colchicine", "Pericarditis", "0.5 mg once or twice daily (by weight) for 3 months"]
+
+  - heading: "Traps from the cases"
+    check: { source: [esc-acs-2023, esc-aortic-2024, esc-pe-2019, esc-pericardial-2015, udmi5-2026], verified: false }
+    blocks:
+      - points:
+          - "Nitrate before the ECG and BP: dangerous in RV infarction and hypotension."
+          - "Inferior ST elevation called 'pericarditis': look for reciprocal change first."
+          - "Ticagrelor with fibrinolysis: use clopidogrel."
+          - "Transfer for primary PCI that will take more than about 2 hours: lyse first."
+          - "'Successful' lysis without measuring ST resolution."
+          - "Posterior STEMI treated as NSTE-ACS."
+          - "Wellens sent for a stress test."
+          - "Reflex STEMI treatment in a tearing pain with an arm BP difference."
+          - "PERC or D-dimer used in a high-probability PE."
+          - "Fibrinolysis for widespread concave ST elevation."
+          - "Chest pain in a young postpartum woman called anxiety."
+          - "Every raised troponin called an NSTEMI."
+
+refs: [esc-acs-2023, esc-stemi-2017, udmi5-2026, zimetbaum-2003, de-winter-2008, de-zwaan-1982, gershlick-2005, hochman-1999, thiele-2012, thiele-2017, antman-2000, granger-2003, backus-2013, esc-aortic-2024, acc-aha-aortic-2022, esc-pe-2019, wells-2000, kline-2004, meyer-2014, esc-pericardial-2015, imazio-2013, hayes-2018, adlam-2018]
