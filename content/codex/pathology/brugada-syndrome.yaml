@@ -7,4 +7,4 @@ sections:
   - heading: Long term
     body: "ICD after arrest or arrhythmic syncope. For everyone: treat every fever early, avoid drugs on the Brugada list, little alcohol, and ECGs for first-degree relatives."
 refs: [esc-va-2022, antzelevitch-2016]
-check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+check: { source: [esc-va-2022, antzelevitch-2016], verified: true, reviewedOn: 2026-10-13 }

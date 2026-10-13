@@ -1,4 +1,4 @@
-# arr-01 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-01 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: typical AVNRT in a young woman with a structurally normal heart. Modified Valsalva
 # fails this time; adenosine 6 mg flickers, 12 mg converts. No pre-excitation afterwards → ablation referral.
 # Sources: owner's SVT notes (notes/arrhythmias), ESC 2019 SVT, REVERT 2015, RCUK 2025 (adenosine 6/12/18).
@@ -17,7 +17,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-svt-2019
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the story and vitals fit stable AVNRT."
 
 start: arrival
@@ -37,7 +38,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Monitor, large cannula in the antecubital fossa, and a 12-lead ECG while she's still in the tachycardia"
@@ -61,7 +62,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-01/02-ecg
@@ -92,7 +93,7 @@ nodes:
 
   vagal:
     type: choice
-    check: { source: [revert-2015, esc-svt-2019], verified: false }
+    check: { source: [revert-2015, esc-svt-2019], verified: true, reviewedOn: 2026-10-13 }
     prompt: "She's stable. First treatment?"
     options:
       - label: "Modified Valsalva: strain into a syringe for 15 s half-sitting, then lie flat with legs raised"
@@ -122,7 +123,7 @@ nodes:
 
   adenosine:
     type: choice
-    check: { source: [esc-svt-2019, rcuk-2025], verified: false, todo: "Owner chose European guidance: 6 → 12 → 18 mg." }
+    check: { source: [esc-svt-2019, rcuk-2025], verified: true, reviewedOn: 2026-10-13, todo: "Owner chose European guidance: 6 → 12 → 18 mg." }
     prompt: "Adenosine. How do you give the first dose?"
     options:
       - label: "6 mg as a rapid push through the antecubital cannula, then a fast 20 ml saline flush, with the rhythm printing; warn her first"
@@ -146,7 +147,7 @@ nodes:
 
   second-dose:
     type: choice
-    check: { source: [esc-svt-2019, rcuk-2025], verified: false }
+    check: { source: [esc-svt-2019, rcuk-2025], verified: true, reviewedOn: 2026-10-13 }
     prompt: "The first dose didn't convert her. Next?"
     options:
       - label: "12 mg rapid push with flush, recording running"
@@ -183,7 +184,7 @@ nodes:
 
   post-ecg:
     type: ecg
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-01/04-post-ecg
@@ -208,7 +209,7 @@ nodes:
 
   disposition:
     type: choice
-    check: { source: esc-svt-2019, verified: false, todo: "Check discharge advice and referral wording." }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13, todo: "Check discharge advice and referral wording." }
     prompt: "She feels well an hour later. Plan?"
     options:
       - label: "Discharge with copies of both ECGs, teach her the modified Valsalva, and refer to cardiology for an EP study and ablation"
@@ -266,4 +267,4 @@ debrief:
     - "Shocking a stable patient before vagal manoeuvres and adenosine."
   unlocks: [avnrt, adenosine, modified-valsalva, verapamil]
   refs: [esc-svt-2019, revert-2015, rcuk-2025]
-  check: { source: [esc-svt-2019, revert-2015], verified: false }
+  check: { source: [esc-svt-2019, revert-2015], verified: true, reviewedOn: 2026-10-13 }

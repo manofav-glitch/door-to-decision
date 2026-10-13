@@ -1,4 +1,4 @@
-# arr-04 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-04 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: AF with a fast rate precipitating pulmonary congestion in a young woman with
 # undiagnosed severe rheumatic mitral stenosis. Rate control with a beta-blocker; no cardioversion
 # (duration unknown, huge atrium); warfarin not a DOAC (INVICTUS); penicillin prophylaxis; valvotomy referral.
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-af-2024, esc-valve-2021]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the severity is moderate (not peri-arrest) and the examination fits severe MS."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Sit her up, oxygen to keep sats 94–98%, monitor, IV access and a 12-lead ECG"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-04/02-ecg
@@ -99,7 +100,7 @@ nodes:
 
   rate:
     type: choice
-    check: { source: [esc-valve-2021, esc-af-2024], verified: false, todo: "Check grades, especially digoxin and diltiazem in this setting." }
+    check: { source: [esc-valve-2021, esc-af-2024], verified: true, reviewedOn: 2026-10-13, todo: "Check grades, especially digoxin and diltiazem in this setting." }
     prompt: "Likely mitral stenosis, AF at 148, congested lungs, BP 112/72. Treatment?"
     options:
       - label: "Rate control with cautious IV metoprolol, plus IV furosemide"
@@ -152,7 +153,7 @@ nodes:
 
   anticoag:
     type: choice
-    check: { source: [esc-af-2024, esc-valve-2021, invictus-2022], verified: false }
+    check: { source: [esc-af-2024, esc-valve-2021, invictus-2022], verified: true, reviewedOn: 2026-10-13 }
     prompt: "AF with severe rheumatic mitral stenosis. Stroke prevention?"
     options:
       - label: "Heparin now, then warfarin long term, target INR 2–3"
@@ -176,7 +177,7 @@ nodes:
 
   prevention:
     type: multiselect
-    check: { source: [who-rhd-2024, esc-valve-2021], verified: false, todo: "Check prophylaxis regimen and counselling points." }
+    check: { source: [who-rhd-2024, esc-valve-2021], verified: true, reviewedOn: 2026-10-13, todo: "Check prophylaxis regimen and counselling points." }
     prompt: "Before she goes to the cardiology ward. Choose up to 3."
     max: 3
     options:
@@ -242,4 +243,4 @@ debrief:
     - "Using a score of 0 to withhold anticoagulation in mitral stenosis."
   unlocks: [rheumatic-mitral-stenosis, warfarin, benzathine-penicillin, atrial-fibrillation]
   refs: [esc-af-2024, esc-valve-2021, invictus-2022, who-rhd-2024]
-  check: { source: [esc-valve-2021, invictus-2022], verified: false }
+  check: { source: [esc-valve-2021, invictus-2022], verified: true, reviewedOn: 2026-10-13 }

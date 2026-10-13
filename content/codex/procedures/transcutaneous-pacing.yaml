@@ -6,7 +6,7 @@ doses:
     label: "Pacing current"
     route: Demand mode, rate about 70
     text: "Increase the current until every spike is followed by a broad complex (usually 50–100 mA), then set a little above that threshold"
-    check: { source: [esc-pacing-2021, erc-als-2025], verified: false, todo: "Confirm wording; no guideline gives a fixed current." }
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13, todo: "Confirm wording; no guideline gives a fixed current." }
 sections:
   - heading: Pads
     body: "Anterior–posterior if you can; it captures more reliably."
@@ -17,4 +17,4 @@ sections:
   - heading: Next
     body: "Arrange transvenous pacing; look for reversible causes: potassium, drugs (beta-blockers, calcium-channel blockers, digoxin), ischaemia."
 refs: [esc-pacing-2021, erc-als-2025]
-check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

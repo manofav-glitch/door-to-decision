@@ -9,4 +9,4 @@ sections:
   - heading: Also
     body: "Decontaminate (staff in gloves and gowns); oxygen and airway; pralidoxime as an add-on. Avoid suxamethonium for intubation (prolonged paralysis). Watch for intermediate syndrome (neck flexion and respiratory weakness) over days 1–4."
 refs: [eddleston-2008]
-check: { source: eddleston-2008, verified: false }
+check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13 }

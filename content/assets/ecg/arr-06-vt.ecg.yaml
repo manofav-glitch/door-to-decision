@@ -18,4 +18,4 @@ leads:
   V4: { q: 0, r: 1.5, s: 0.1, t: -0.4 }
   V5: { q: 0, r: 1.3, s: 0.1, t: -0.35 }
   V6: { q: 0, r: 1.1, s: 0.1, t: -0.3 }
-check: { source: esc-va-2022, verified: false, todo: "Check it reads as VT: broad, regular, concordant, AV dissociation." }
+check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13, todo: "Check it reads as VT: broad, regular, concordant, AV dissociation." }

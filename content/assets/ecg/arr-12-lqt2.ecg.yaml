@@ -13,4 +13,4 @@ leads:
   V3: { t: 0.35, notch: 0.9 }
   V4: { t: 0.32, notch: 0.9 }
   V5: { t: 0.28, notch: 0.9 }
-check: { source: [esc-va-2022, schwartz-2011], verified: false, todo: "Check the notched T waves are clear in at least 3 leads and the QT looks long." }
+check: { source: [esc-va-2022, schwartz-2011], verified: true, reviewedOn: 2026-10-13, todo: "Check the notched T waves are clear in at least 3 leads and the QT looks long." }

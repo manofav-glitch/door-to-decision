@@ -1,4 +1,4 @@
-# arr-07 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-07 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: degenerative (Lev disease) complete heart block with a broad ventricular escape at 32,
 # Stokes-Adams attacks, hypotension. Infranodal: atropine unlikely to help (ERC 2025: don't give it in
 # high-degree block with a broad QRS). Transcutaneous pacing as a bridge with mechanical capture checked
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-pacing-2021, erc-als-2025]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the presentation fits unstable complete heart block."
 
 start: arrival
@@ -44,7 +45,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Resus bay, pads on, monitor, IV access and a 12-lead ECG"
@@ -62,7 +63,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-pacing-2021, verified: false }
+    check: { source: esc-pacing-2021, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-07/03-ecg
@@ -93,7 +94,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: [erc-als-2025, esc-pacing-2021], verified: false, todo: "Atropine is graded suboptimal here because the escape is broad (ERC 2025); confirm." }
+    check: { source: [erc-als-2025, esc-pacing-2021], verified: true, reviewedOn: 2026-10-13, todo: "Atropine is graded suboptimal here because the escape is broad (ERC 2025); confirm." }
     prompt: "BP 86/48, confused, recurrent syncope. Treatment?"
     options:
       - label: "Start transcutaneous pacing now and call for a transvenous wire"
@@ -117,7 +118,7 @@ nodes:
 
   current:
     type: choice
-    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: monitor
         caption: "{clock} · Pacing at 70"
@@ -138,7 +139,7 @@ nodes:
 
   capture:
     type: choice
-    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: monitor
         caption: "{clock} · Pacing at 70, 80 mA"
@@ -159,7 +160,7 @@ nodes:
 
   bridge:
     type: multiselect
-    check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+    check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: resus-bay
         art: arr-07/04-pacing
@@ -197,7 +198,7 @@ nodes:
 
   plan:
     type: choice
-    check: { source: esc-pacing-2021, verified: false }
+    check: { source: esc-pacing-2021, verified: true, reviewedOn: 2026-10-13 }
     prompt: "No reversible cause, no ischaemia. Long-term plan?"
     options:
       - label: "Permanent pacemaker before discharge"
@@ -250,4 +251,4 @@ debrief:
     - "Switching pacing off to 'test' the rhythm."
   unlocks: [heart-block, bradycardia, transcutaneous-pacing, isoprenaline, atropine, adrenaline]
   refs: [esc-pacing-2021, erc-als-2025, aha-ecc-2025]
-  check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+  check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

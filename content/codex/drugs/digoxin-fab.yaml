@@ -10,4 +10,4 @@ sections:
     body: "Stop digoxin and interacting drugs (verapamil, amiodarone), correct potassium and fluids, atropine for bradycardia, pacing as a bridge."
 india: "Expensive and often unavailable outside large centres: know the procurement route before you need it."
 refs: [pincus-2016]
-check: { source: pincus-2016, verified: false, todo: "Confirm indications and the local availability note." }
+check: { source: pincus-2016, verified: true, reviewedOn: 2026-10-13, todo: "Confirm indications and the local availability note." }

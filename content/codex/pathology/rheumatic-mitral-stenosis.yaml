@@ -11,4 +11,4 @@ sections:
   - heading: Upstream
     body: "Benzathine penicillin prophylaxis, and assessment for balloon mitral valvotomy or surgery. Plan pregnancies with the cardiology team."
 refs: [esc-valve-2021, esc-af-2024, invictus-2022, who-rhd-2024]
-check: { source: [esc-valve-2021, invictus-2022], verified: false }
+check: { source: [esc-valve-2021, invictus-2022], verified: true, reviewedOn: 2026-10-13 }

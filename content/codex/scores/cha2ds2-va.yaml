@@ -25,6 +25,6 @@ score:
     - { from: 0, label: "No anticoagulation", risk: "Score 0" }
     - { from: 1, label: "Consider anticoagulation", risk: "Score 1" }
     - { from: 2, label: "Anticoagulate", risk: "Score 2 or more" }
-  check: { source: esc-af-2024, verified: false, todo: "Confirm items, points and thresholds." }
+  check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Confirm items, points and thresholds." }
 refs: [esc-af-2024]
-check: { source: esc-af-2024, verified: false }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }

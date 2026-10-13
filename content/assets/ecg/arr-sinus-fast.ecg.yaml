@@ -3,4 +3,4 @@ title: "Rhythm strip, lead II: sinus tachycardia"
 layout: strip
 rhythm: { kind: sinus, rate: 112 }
 rhythmLead: II
-check: { source: eddleston-2008, verified: false, todo: "Check it reads as sinus tachycardia." }
+check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13, todo: "Check it reads as sinus tachycardia." }

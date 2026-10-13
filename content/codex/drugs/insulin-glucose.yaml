@@ -6,9 +6,9 @@ doses:
     label: "Moderate or severe hyperkalaemia"
     route: IV over 15 minutes
     text: "10 units soluble insulin with 25 g glucose; if the starting glucose is under 7 mmol/L, follow with 10% glucose at 50 ml/h for 5 hours; check glucose hourly"
-    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-13 }
 sections:
   - heading: With it
     body: "Nebulised salbutamol 10–20 mg adds a further fall. Neither removes potassium from the body: dialysis or a potassium binder does."
 refs: [erc-special-2025, ukka-hyperk-2023]
-check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+check: { source: [erc-special-2025, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-13 }

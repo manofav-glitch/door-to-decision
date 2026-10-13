@@ -13,4 +13,4 @@ sections:
   - heading: Don't
     body: "Pace or give atropine and forget the potassium; give insulin without glucose."
 refs: [ukka-hyperk-2023, erc-special-2025]
-check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }
+check: { source: [ukka-hyperk-2023, erc-special-2025], verified: true, reviewedOn: 2026-10-13 }

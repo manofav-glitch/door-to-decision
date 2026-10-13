@@ -1,4 +1,4 @@
-# arr-10 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-10 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: Brugada syndrome unmasked by fever (viral illness), presenting with nocturnal agonal
 # breathing (self-terminating VF). Standard-position ECG shows only a saddleback (type 2); V1–V2 in the
 # 2nd intercostal space show coved type 1. That night: VF storm → defibrillation, isoprenaline, fever
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-va-2022, antzelevitch-2016]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the story supports arrhythmic syncope and a fever-unmasked pattern."
 
 start: arrival
@@ -44,7 +45,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-va-2022, verified: false }
+    check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Monitor and a 12-lead ECG now, while he's still febrile"
@@ -62,7 +63,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: antzelevitch-2016, verified: false }
+    check: { source: antzelevitch-2016, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-10/03-ecg
@@ -93,7 +94,7 @@ nodes:
 
   ecg-high:
     type: ecg
-    check: { source: antzelevitch-2016, verified: false }
+    check: { source: antzelevitch-2016, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-10/04-high-leads
@@ -118,7 +119,7 @@ nodes:
 
   fever:
     type: choice
-    check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: true, reviewedOn: 2026-10-13 }
     prompt: "Type 1 Brugada pattern with fever. Immediate management?"
     options:
       - label: "Paracetamol and cooling now; admit to a monitored bed with pads on; avoid sodium-channel-blocking drugs"
@@ -136,7 +137,7 @@ nodes:
 
   storm:
     type: choice
-    check: { source: [esc-va-2022, antzelevitch-2016], verified: false, todo: "Check storm management, including quinidine availability." }
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: true, reviewedOn: 2026-10-13, todo: "Check storm management, including quinidine availability." }
     onEnter: { minutes: 120, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 85, gcs: 3 }, rhythm: ecg/arr-vf.svg }
     panels:
       - scene: monitor
@@ -170,7 +171,7 @@ nodes:
 
   long-term:
     type: multiselect
-    check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+    check: { source: [esc-va-2022, antzelevitch-2016], verified: true, reviewedOn: 2026-10-13 }
     prompt: "He's stable. Before discharge. Choose up to 4."
     max: 4
     options:
@@ -242,4 +243,4 @@ debrief:
     - "Giving flecainide or amiodarone."
   unlocks: [brugada-pattern, brugada-syndrome, isoprenaline]
   refs: [esc-va-2022, antzelevitch-2016]
-  check: { source: [esc-va-2022, antzelevitch-2016], verified: false }
+  check: { source: [esc-va-2022, antzelevitch-2016], verified: true, reviewedOn: 2026-10-13 }

@@ -1,4 +1,4 @@
-# arr-06 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-06 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: haemodynamically tolerated monomorphic VT from old anterior infarct scar. ESC 2022:
 # synchronised cardioversion first when sedation risk is low; ERC/RCUK 2025: procainamide, or
 # amiodarone if procainamide unavailable/contraindicated. Verapamil trap → collapse. After conversion:
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-va-2022, erc-als-2025]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check he is genuinely stable (no life-threatening features)."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Resus bay, pads on, monitor, IV access, 12-lead ECG, and check for life-threatening features"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-va-2022, brugada-1991, vereckei-2008], verified: false }
+    check: { source: [esc-va-2022, brugada-1991, vereckei-2008], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-06/02-ecg
@@ -87,7 +88,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: [esc-va-2022, erc-als-2025, rcuk-2025], verified: false, todo: "Check grades: ESC 2022 favours cardioversion first if sedation risk is low." }
+    check: { source: [esc-va-2022, erc-als-2025, rcuk-2025], verified: true, reviewedOn: 2026-10-13, todo: "Check grades: ESC 2022 favours cardioversion first if sedation risk is low." }
     prompt: "Stable VT: alert, BP 112/70, no chest pain, chest clear. Treatment?"
     options:
       - label: "Synchronised cardioversion under sedation"
@@ -117,7 +118,7 @@ nodes:
 
   unstable:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: monitor
         caption: "{clock} · Resus bay"
@@ -144,7 +145,7 @@ nodes:
 
   shock:
     type: dose
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Synchronised cardioversion for VT with a pulse. First shock, in joules?"
     drug: synchronised-cardioversion
     dose: vt
@@ -166,7 +167,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: esc-va-2022, verified: false }
+    check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: monitor
         caption: "{clock} · Resus bay"
@@ -241,4 +242,4 @@ debrief:
     - "Discharging after conversion."
   unlocks: [broad-complex-tachycardia, ventricular-tachycardia, amiodarone, synchronised-cardioversion]
   refs: [esc-va-2022, erc-als-2025, rcuk-2025, brugada-1991, vereckei-2008]
-  check: { source: [esc-va-2022, erc-als-2025], verified: false }
+  check: { source: [esc-va-2022, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

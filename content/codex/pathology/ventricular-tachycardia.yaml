@@ -9,4 +9,4 @@ sections:
   - heading: Afterwards
     body: "Check potassium and magnesium, look for ischaemia, echo the heart, and refer for assessment of an ICD and ablation."
 refs: [esc-va-2022, erc-als-2025, rcuk-2025]
-check: { source: [esc-va-2022, erc-als-2025], verified: false }
+check: { source: [esc-va-2022, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

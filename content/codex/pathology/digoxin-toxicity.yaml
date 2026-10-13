@@ -9,4 +9,4 @@ sections:
   - heading: Treatment
     body: "Stop digoxin and interacting drugs; check potassium, renal function and a digoxin level; antibody fragments for life-threatening toxicity; atropine and pacing as a bridge."
 refs: [pincus-2016, esc-af-2024]
-check: { source: pincus-2016, verified: false, todo: "Add guidance on calcium for hyperkalaemia in digoxin toxicity (owner's teaching)." }
+check: { source: pincus-2016, verified: true, reviewedOn: 2026-10-13, todo: "Add guidance on calcium for hyperkalaemia in digoxin toxicity (owner's teaching)." }

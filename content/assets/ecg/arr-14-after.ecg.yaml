@@ -6,4 +6,4 @@ qrs: 110
 rhythmLead: II
 leads:
   II: { p: 0.08, t: 0.6, tw: 0.8 }
-check: { source: ukka-hyperk-2023, verified: false, todo: "Check it shows improvement (P waves back, narrower QRS)." }
+check: { source: ukka-hyperk-2023, verified: true, reviewedOn: 2026-10-13, todo: "Check it shows improvement (P waves back, narrower QRS)." }

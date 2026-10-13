@@ -11,4 +11,4 @@ sections:
   - heading: Flecainide trap
     body: "Without an AV-nodal blocker, flecainide can slow flutter enough for 1:1 conduction at about 200/min."
 refs: [esc-svt-2019, erc-als-2025]
-check: { source: [esc-svt-2019, erc-als-2025], verified: false }
+check: { source: [esc-svt-2019, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

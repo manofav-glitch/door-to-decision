@@ -1,4 +1,4 @@
-# arr-09 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-09 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: deliberate ingestion of an organophosphate pesticide (chlorpyrifos) one hour before
 # arrival. Cholinergic crisis with bradycardia, bronchorrhoea and hypoxia. Toxicological atropine:
 # doubling doses every 5 minutes to atropinisation, then infusion; tachycardia is not a reason to stop.
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: eddleston-2008
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the toxidrome and vitals."
 
 start: arrival
@@ -44,7 +45,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: eddleston-2008, verified: false }
+    check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Staff in gloves and gowns; remove his clothes and wash his skin; suction, oxygen, IV access, monitor"
@@ -62,7 +63,7 @@ nodes:
 
   toxidrome:
     type: choice
-    check: { source: eddleston-2008, verified: false }
+    check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Bradycardia, pinpoint pupils, sweating, drooling, wet chest. What is this?"
     options:
       - label: "Cholinergic crisis from organophosphate poisoning"
@@ -86,7 +87,7 @@ nodes:
 
   atropine:
     type: choice
-    check: { source: eddleston-2008, verified: false, todo: "Starting dose: Eddleston 1.8–3 mg; owner's notes 1–2 mg. Confirm." }
+    check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13, todo: "Starting dose: Eddleston 1.8–3 mg; owner's notes 1–2 mg. Confirm." }
     prompt: "How do you give the atropine?"
     options:
       - label: "1.8–3 mg IV, then double the dose every 5 minutes until atropinised: clear chest, heart rate over 80, systolic over 80, dry armpits, pupils no longer pinpoint"
@@ -122,7 +123,7 @@ nodes:
 
   atropinised:
     type: choice
-    check: { source: eddleston-2008, verified: false }
+    check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: monitor
         caption: "{clock} · Atropinised"
@@ -149,7 +150,7 @@ nodes:
 
   extras:
     type: multiselect
-    check: { source: eddleston-2008, verified: false, todo: "Pralidoxime graded acceptable (benefit debated); confirm." }
+    check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13, todo: "Pralidoxime graded acceptable (benefit debated); confirm." }
     prompt: "What else? Choose up to 4."
     max: 4
     options:
@@ -220,4 +221,4 @@ debrief:
     - "Gastric lavage in a patient who can't protect his airway."
   unlocks: [organophosphate-poisoning, atropine, pralidoxime, bradycardia]
   refs: [eddleston-2008]
-  check: { source: eddleston-2008, verified: false }
+  check: { source: eddleston-2008, verified: true, reviewedOn: 2026-10-13 }

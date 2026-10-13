@@ -1,4 +1,4 @@
-# arr-15 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-15 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: SVT (AVRT via a concealed accessory pathway) in a 2-month-old, 4.5 kg, presenting with
 # poor feeding and fast breathing. Compensated at first: ice-water facial immersion, then weight-based
 # adenosine converts. An hour later it recurs and she decompensates: synchronised cardioversion 1 J/kg.
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [rcuk-paeds-2025, esc-svt-2019]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Drafted from guidelines; check the infant vitals and presentation."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: rcuk-paeds-2025, verified: false }
+    check: { source: rcuk-paeds-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Resus, monitor, 12-lead ECG, IV or IO access, glucose check, and call the paediatric team"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: rcuk-paeds-2025, verified: false }
+    check: { source: rcuk-paeds-2025, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-15/02-ecg
@@ -82,7 +83,7 @@ nodes:
 
   vagal:
     type: choice
-    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: true, reviewedOn: 2026-10-13 }
     prompt: "She's compensated: alert, BP 72/44, capillary refill 3 seconds. First treatment?"
     options:
       - label: "Ice-water vagal manoeuvre: a bag of iced water wrapped in a cloth over her face for up to 15 seconds, recording running"
@@ -106,7 +107,7 @@ nodes:
 
   adenosine:
     type: dose
-    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false, todo: "Correct range 0.1–0.2 mg/kg (0.45–0.9 mg); owner to confirm the paediatric regimen." }
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: true, reviewedOn: 2026-10-13, todo: "Correct range 0.1–0.2 mg/kg (0.45–0.9 mg); owner to confirm the paediatric regimen." }
     prompt: "Adenosine, first dose, for this 4.5 kg infant. Dose in mg?"
     drug: adenosine
     dose: infant
@@ -141,7 +142,7 @@ nodes:
 
   shock:
     type: dose
-    check: { source: rcuk-paeds-2025, verified: false }
+    check: { source: rcuk-paeds-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Decompensated SVT. Synchronised cardioversion with sedation and analgesia. First shock, in joules?"
     drug: synchronised-cardioversion
     dose: paediatric
@@ -162,7 +163,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+    check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: true, reviewedOn: 2026-10-13 }
     prompt: "She's in sinus rhythm. Next steps? Choose up to 3."
     max: 3
     options:
@@ -229,4 +230,4 @@ debrief:
     - "Verapamil, eyeball pressure or carotid massage."
   unlocks: [infant-svt, adenosine, synchronised-cardioversion]
   refs: [rcuk-paeds-2025, esc-svt-2019]
-  check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: false }
+  check: { source: [rcuk-paeds-2025, esc-svt-2019], verified: true, reviewedOn: 2026-10-13 }

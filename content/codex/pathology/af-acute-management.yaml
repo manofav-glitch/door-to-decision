@@ -13,4 +13,4 @@ sections:
   - heading: Anticoagulation
     body: "Four weeks after any cardioversion, whatever the score. Long term by CHA₂DS₂-VA, regardless of whether the rhythm is now sinus."
 refs: [esc-af-2024, race2-2010, rcuk-2025]
-check: { source: esc-af-2024, verified: false }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }

@@ -1,4 +1,4 @@
-# arr-05 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-05 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: typical atrial flutter with 2:1 block (ventricular rate exactly 150), labelled "SVT" at
 # triage. Onset two days ago, so outside the 24-hour window. Adenosine unmasks flutter waves but doesn't
 # end it. Rate control, anticoagulation by AF rules (CHA₂DS₂-VA 1 → consider; needed anyway around
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-svt-2019, esc-af-2024]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the timeline and anticoagulation reasoning."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG and monitor"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-05/02-ecg
@@ -88,7 +89,7 @@ nodes:
 
   adenosine:
     type: choice
-    check: { source: esc-svt-2019, verified: false }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }
     prompt: "A colleague still thinks it's SVT and suggests adenosine. Your view?"
     options:
       - label: "Give it as a diagnostic test with the rhythm printing: expect it to uncover the flutter waves, not stop the rhythm"
@@ -125,7 +126,7 @@ nodes:
   plan:
     type: choice
     onEnter: { rhythm: ecg/arr-05-flutter.svg } # the adenosine effect has worn off
-    check: { source: [esc-af-2024, esc-svt-2019], verified: false, todo: "Check grades: onset 2 days ago, so outside the 24-hour window." }
+    check: { source: [esc-af-2024, esc-svt-2019], verified: true, reviewedOn: 2026-10-13, todo: "Check grades: onset 2 days ago, so outside the 24-hour window." }
     prompt: "Flutter for two days, stable. Plan?"
     options:
       - label: "Rate control and anticoagulation now; cardioversion after 3 weeks of anticoagulation or after a TOE; refer for flutter ablation"
@@ -149,7 +150,7 @@ nodes:
 
   rate:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Rate control. No heart failure, BP 128/80."
     options:
       - label: "IV metoprolol 2.5–5 mg slowly, repeated to effect, then oral"
@@ -167,7 +168,7 @@ nodes:
 
   cha2ds2:
     type: calculator
-    check: { source: esc-af-2024, verified: false, todo: "Confirm answers: hypertension only, age 59. Total 1." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Confirm answers: hypertension only, age 59. Total 1." }
     prompt: "Work out his CHA₂DS₂-VA score."
     score: cha2ds2-va
     answers:
@@ -190,7 +191,7 @@ nodes:
 
   shock:
     type: dose
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: resus-bay
         art: arr-05/04-cardioversion
@@ -219,7 +220,7 @@ nodes:
 
   long-term:
     type: choice
-    check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+    check: { source: [esc-svt-2019, esc-af-2024], verified: true, reviewedOn: 2026-10-13 }
     prompt: "He's in sinus rhythm. Long-term plan?"
     options:
       - label: "Refer for cavotricuspid isthmus ablation; continue anticoagulation at least 4 weeks, then decide by the score with him"
@@ -272,4 +273,4 @@ debrief:
     - "Cardioverting after two days of flutter without anticoagulation or TOE."
   unlocks: [atrial-flutter, synchronised-cardioversion, flecainide, cha2ds2-va]
   refs: [esc-svt-2019, esc-af-2024, erc-als-2025]
-  check: { source: [esc-svt-2019, esc-af-2024], verified: false }
+  check: { source: [esc-svt-2019, esc-af-2024], verified: true, reviewedOn: 2026-10-13 }

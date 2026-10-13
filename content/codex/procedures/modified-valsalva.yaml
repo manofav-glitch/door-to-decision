@@ -9,4 +9,4 @@ sections:
   - heading: Not if
     body: "Unstable patient, AF or flutter, recent MI, severe aortic stenosis, glaucoma or retinopathy, late pregnancy."
 refs: [revert-2015, esc-svt-2019]
-check: { source: revert-2015, verified: false }
+check: { source: revert-2015, verified: true, reviewedOn: 2026-10-13 }

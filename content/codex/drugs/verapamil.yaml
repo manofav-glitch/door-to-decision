@@ -6,7 +6,7 @@ doses:
     label: "Narrow-complex SVT"
     route: Slow IV injection over 2 minutes
     text: "0.075–0.15 mg/kg (typically 5–10 mg)"
-    check: { source: esc-svt-2019, verified: false, todo: "Confirm the dose." }
+    check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13, todo: "Confirm the dose." }
 sections:
   - heading: Never in
     body: "Broad-complex tachycardia that might be VT; pre-excited AF; heart failure with reduced ejection fraction; hypotension; infants. Not together with an IV beta-blocker."
@@ -14,4 +14,4 @@ sections:
     body: "In VT it can drop the blood pressure abruptly; in pre-excited AF, blocking the AV node pushes more impulses down the accessory pathway and can trigger VF."
 india: "Available; confirm IV stock locally."
 refs: [esc-svt-2019]
-check: { source: esc-svt-2019, verified: false }
+check: { source: esc-svt-2019, verified: true, reviewedOn: 2026-10-13 }

@@ -6,7 +6,7 @@ doses:
     label: "Pill in the pocket (recent-onset AF, normal heart)"
     route: Oral, single dose, after a first supervised dose in hospital
     text: "200–300 mg, with an AV-nodal blocker"
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
 sections:
   - heading: Never in
     body: "Coronary disease, previous MI, reduced ejection fraction or significant LV hypertrophy; Brugada pattern; sinus node or conduction disease."
@@ -16,4 +16,4 @@ sections:
     body: "Record an ECG with high chest leads first: flecainide can unmask Brugada."
 india: "Available in some centres; confirm supply."
 refs: [esc-af-2024]
-check: { source: esc-af-2024, verified: false }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }

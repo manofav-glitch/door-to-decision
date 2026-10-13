@@ -11,4 +11,4 @@ leads:
   aVL: { r: 0.15, s: 0.5 }
   aVF: { p: 0.2, r: 0.9 }
   V1: { p: 0.3, r: 0.5, s: 0.6 }
-check: { source: esc-af-2024, verified: false, todo: "Check coarse AF and right axis deviation are visible." }
+check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Check coarse AF and right axis deviation are visible." }

@@ -7,4 +7,4 @@ rhythmLead: II
 leads:
   V1: { r: 0.25, s: 0.6, rp: 0.35, st: 0.2, t: 0.25 }
   V2: { r: 0.35, s: 0.8, rp: 0.4, st: 0.22, t: 0.35 }
-check: { source: antzelevitch-2016, verified: false, todo: "Check V1–V2 look saddleback (type 2), not coved." }
+check: { source: antzelevitch-2016, verified: true, reviewedOn: 2026-10-13, todo: "Check V1–V2 look saddleback (type 2), not coved." }

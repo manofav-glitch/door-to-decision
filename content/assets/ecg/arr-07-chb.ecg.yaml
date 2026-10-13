@@ -14,4 +14,4 @@ leads:
   V3: { q: 0, r: 0.3, s: 1.2, t: 0.3 }
   V5: { q: 0, r: 1.2, s: 0.1, t: -0.35 }
   V6: { q: 0, r: 1.1, s: 0.05, t: -0.3 }
-check: { source: esc-pacing-2021, verified: false, todo: "Check it reads as complete heart block with a broad escape." }
+check: { source: esc-pacing-2021, verified: true, reviewedOn: 2026-10-13, todo: "Check it reads as complete heart block with a broad escape." }

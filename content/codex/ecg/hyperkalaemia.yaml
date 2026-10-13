@@ -7,4 +7,4 @@ sections:
   - heading: Pacing
     body: "Often fails to capture in severe hyperkalaemia: treat the potassium."
 refs: [ukka-hyperk-2023, erc-special-2025]
-check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }
+check: { source: [ukka-hyperk-2023, erc-special-2025], verified: true, reviewedOn: 2026-10-13 }

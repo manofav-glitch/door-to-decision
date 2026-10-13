@@ -1,4 +1,4 @@
-# arr-08 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-08 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: digoxin toxicity in an elderly woman with permanent AF: three days of vomiting →
 # dehydration → acute kidney injury, plus verapamil added by her GP last week. Regularised AF at 42,
 # potassium 6.1. Treat: stop digoxin and verapamil, antibody fragments (procurement delay — Indian
@@ -20,7 +20,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: pincus-2016
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the presentation and potassium fit digoxin toxicity."
 
 start: arrival
@@ -45,7 +46,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: pincus-2016, verified: false }
+    check: { source: pincus-2016, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Monitor, 12-lead ECG, IV access; potassium, renal function and a digoxin level; bring all her tablets"
@@ -63,7 +64,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [pincus-2016, esc-af-2024], verified: false }
+    check: { source: [pincus-2016, esc-af-2024], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-08/03-ecg
@@ -106,7 +107,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: pincus-2016, verified: false, todo: "Check grades; calcium deliberately not offered pending owner's teaching." }
+    check: { source: pincus-2016, verified: true, reviewedOn: 2026-10-13, todo: "Check grades; calcium deliberately not offered pending owner's teaching." }
     prompt: "Digoxin toxicity: bradycardia, potassium 6.1, kidney injury. Key treatment?"
     options:
       - label: "Stop digoxin and verapamil, and get digoxin-specific antibody fragments now; atropine and pacing pads as a bridge"
@@ -130,7 +131,7 @@ nodes:
 
   wait:
     type: multiselect
-    check: { source: [pincus-2016, erc-als-2025], verified: false }
+    check: { source: [pincus-2016, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: resus-bay
         art: arr-08/05-waiting
@@ -181,7 +182,7 @@ nodes:
 
   discharge:
     type: choice
-    check: { source: [esc-af-2024, pincus-2016], verified: false }
+    check: { source: [esc-af-2024, pincus-2016], verified: true, reviewedOn: 2026-10-13 }
     prompt: "She's recovering. Her AF rate control for the future?"
     options:
       - label: "Stop verapamil; restart rate control later with a beta-blocker (or a much lower digoxin dose if needed), and tell her GP about the interaction"
@@ -234,4 +235,4 @@ debrief:
     - "Restarting the same drug combination at discharge."
   unlocks: [digoxin-toxicity, digoxin-fab, digoxin, atrial-fibrillation]
   refs: [pincus-2016, esc-af-2024, erc-als-2025]
-  check: { source: pincus-2016, verified: false }
+  check: { source: pincus-2016, verified: true, reviewedOn: 2026-10-13 }

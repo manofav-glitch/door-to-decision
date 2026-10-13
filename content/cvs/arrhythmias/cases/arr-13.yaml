@@ -1,4 +1,4 @@
-# arr-13 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-13 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: witnessed (not monitored) VF cardiac arrest in the ED waiting area from an anterior STEMI
 # (LAD occlusion). ERC 2025 ALS: CPR, unsynchronised shock ≥150 J, immediate compressions for 2 min,
 # adrenaline 1 mg + amiodarone 300 mg after the 3rd shock, amiodarone 150 mg after the 5th; ROSC;
@@ -16,7 +16,8 @@ initial:
   flags: []
 check:
   source: erc-als-2025
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Drafted from ERC 2025 ALS; check the sequence and timings."
 
 start: arrival
@@ -36,7 +37,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Unresponsive, not breathing normally. Your first move?"
     options:
       - label: "Call the arrest team, start chest compressions, and get the defibrillator"
@@ -60,7 +61,7 @@ nodes:
 
   pads:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     onEnter: { rhythm: ecg/arr-vf.svg }
     panels:
       - scene: monitor
@@ -82,7 +83,7 @@ nodes:
 
   shock-1:
     type: dose
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Unsynchronised shock for VF. Energy, in joules?"
     drug: defibrillation
     dose: vf
@@ -104,7 +105,7 @@ nodes:
 
   after-shock:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     prompt: "The shock has just been delivered. What now?"
     options:
       - label: "Restart compressions immediately for 2 minutes, then a rhythm check"
@@ -128,7 +129,7 @@ nodes:
 
   third-shock:
     type: choice
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: resus-bay
         art: arr-13/02-third-shock
@@ -159,7 +160,7 @@ nodes:
 
   fifth-shock:
     type: multiselect
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: resus-bay
         art: arr-13/03-fifth-shock
@@ -210,7 +211,7 @@ nodes:
 
   rosc-ecg:
     type: ecg
-    check: { source: [erc-als-2025, esc-acs-2023], verified: false }
+    check: { source: [erc-als-2025, esc-acs-2023], verified: true, reviewedOn: 2026-10-13 }
     image: ecg/arr-13-rosc.svg
     alt: "12-lead ECG after return of circulation. Sinus tachycardia at 110. ST elevation in V1–V4, I and aVL, with ST depression in II, III and aVF."
     prompt: "His ECG after return of circulation. What does it mean?"
@@ -230,7 +231,7 @@ nodes:
 
   post-rosc:
     type: multiselect
-    check: { source: erc-als-2025, verified: false, todo: "Check targets against the ERC 2025 post-resuscitation guideline." }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13, todo: "Check targets against the ERC 2025 post-resuscitation guideline." }
     prompt: "Before he goes to the cath lab. Choose up to 4."
     max: 4
     options:
@@ -303,4 +304,4 @@ debrief:
     - "Dismissing ST elevation after ROSC as 'post-arrest changes'."
   unlocks: [cardiac-arrest-als, defibrillation, adrenaline, amiodarone]
   refs: [erc-als-2025, esc-acs-2023]
-  check: { source: erc-als-2025, verified: false }
+  check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }

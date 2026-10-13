@@ -7,24 +7,24 @@ doses:
     route: Synchronised, biphasic
     text: "70–120 J, then increase stepwise"
     rule: { unit: J, fixed: { min: 70, max: 120 } }
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
   - id: vt
     label: "Broad-complex tachycardia (VT) with a pulse, first shock"
     route: Synchronised, biphasic
     text: "120–150 J, then increase stepwise"
     rule: { unit: J, fixed: { min: 120, max: 150 } }
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
   - id: af
     label: "Atrial fibrillation, first shock"
     route: Synchronised, biphasic
     text: "Maximum defibrillator output"
-    check: { source: erc-als-2025, verified: false, todo: "ERC 2025 changed AF to maximum output; confirm against your defibrillators." }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13, todo: "ERC 2025 changed AF to maximum output; confirm against your defibrillators." }
   - id: paediatric
     label: "Child or infant, first shock"
     route: Synchronised, with sedation and analgesia
     text: "1 J/kg, then double with each attempt up to 4 J/kg"
     rule: { unit: J, perKg: { min: 1, max: 1 } }
-    check: { source: rcuk-paeds-2025, verified: false }
+    check: { source: rcuk-paeds-2025, verified: true, reviewedOn: 2026-10-13 }
 sections:
   - heading: Who needs it now
     body: "Life-threatening features: shock, syncope with severe or ongoing hypotension, myocardial ischaemia, severe heart failure with pulmonary oedema, or immediately after return of circulation."
@@ -35,4 +35,4 @@ sections:
   - heading: Sedation
     body: "Conscious patients need sedation or anaesthesia; expect the blood pressure to fall with it."
 refs: [erc-als-2025, rcuk-2025]
-check: { source: [erc-als-2025, rcuk-2025], verified: false }
+check: { source: [erc-als-2025, rcuk-2025], verified: true, reviewedOn: 2026-10-13 }

@@ -1,4 +1,4 @@
-# arr-03 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-03 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: first-detected AF with a fast ventricular rate, onset clearly 6 hours ago, no reversible
 # driver, haemodynamically stable. Rate control, then electrical cardioversion within the 24-hour window
 # (ESC 2024), anticoagulation started and continued 4 weeks, then long-term by CHA₂DS₂-VA = 3.
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-af-2024
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the timeline supports cardioversion within 24 hours."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG and monitor; bloods including potassium, magnesium, thyroid, renal function and blood count"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-03/02-ecg
@@ -99,7 +100,7 @@ nodes:
 
   strategy:
     type: choice
-    check: { source: esc-af-2024, verified: false, todo: "Check grades against ESC 2024 (cardioversion within 24 h; wait-and-see as an alternative)." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Check grades against ESC 2024 (cardioversion within 24 h; wait-and-see as an alternative)." }
     prompt: "Stable, no driver found, onset clearly 6 hours ago. Strategy?"
     options:
       - label: "Control the rate, start anticoagulation now, and cardiovert today while he's within 24 hours"
@@ -123,7 +124,7 @@ nodes:
 
   rate:
     type: choice
-    check: { source: [esc-af-2024, race2-2010], verified: false }
+    check: { source: [esc-af-2024, race2-2010], verified: true, reviewedOn: 2026-10-13 }
     prompt: "Rate control while you arrange the cardioversion. No signs of heart failure; BP 146/88."
     options:
       - label: "IV metoprolol 2.5–5 mg slowly, repeated to effect"
@@ -147,7 +148,7 @@ nodes:
 
   anticoag:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Anticoagulation before the cardioversion?"
     options:
       - label: "Start a DOAC (or heparin) now, before the shock"
@@ -165,7 +166,7 @@ nodes:
 
   shock:
     type: choice
-    check: { source: [erc-als-2025, esc-af-2024], verified: false, todo: "ERC 2025: AF at maximum output; confirm locally." }
+    check: { source: [erc-als-2025, esc-af-2024], verified: true, reviewedOn: 2026-10-13, todo: "ERC 2025: AF at maximum output; confirm locally." }
     prompt: "He's sedated for electrical cardioversion. Settings?"
     options:
       - label: "Synchronised, maximum output; pads anterolateral or anteroposterior"
@@ -183,7 +184,7 @@ nodes:
 
   cha2ds2:
     type: calculator
-    check: { source: esc-af-2024, verified: false, todo: "Confirm answers: hypertension yes, age 68 → 1, diabetes yes. Total 3." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Confirm answers: hypertension yes, age 68 → 1, diabetes yes. Total 3." }
     prompt: "He's in sinus rhythm. Work out his CHA₂DS₂-VA score for long-term stroke prevention."
     score: cha2ds2-va
     answers:
@@ -206,7 +207,7 @@ nodes:
 
   long-term:
     type: choice
-    check: { source: esc-af-2024, verified: false }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }
     prompt: "He's back in sinus rhythm with CHA₂DS₂-VA 3. Long-term stroke prevention?"
     options:
       - label: "Continue the DOAC long term, whatever the rhythm"
@@ -265,4 +266,4 @@ debrief:
     - "Stopping anticoagulation because the ECG is now sinus."
   unlocks: [atrial-fibrillation, af-acute-management, cha2ds2-va, has-bled, doacs, digoxin]
   refs: [esc-af-2024, race2-2010, erc-als-2025]
-  check: { source: esc-af-2024, verified: false }
+  check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13 }

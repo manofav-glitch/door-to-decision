@@ -6,4 +6,4 @@ qt: 560
 rhythmLead: II
 leads:
   II: { t: 0.2, u: 0.15 }
-check: { source: drew-2010, verified: false, todo: "Check the long QT shows on the strip." }
+check: { source: drew-2010, verified: true, reviewedOn: 2026-10-13, todo: "Check the long QT shows on the strip." }

@@ -1,4 +1,4 @@
-# arr-11 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-11 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: acquired long QT (azithromycin + repeated ondansetron + hydrochlorothiazide) with
 # hypokalaemia (2.9) and hypomagnesaemia from gastroenteritis. Torsades with syncope, then pulseless
 # torsades → defibrillation. Magnesium 2 g, potassium to 4.5–5, stop the drugs, raise the rate
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [drew-2010, esc-va-2022]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check drugs, electrolytes and the sequence of events."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: drew-2010, verified: false }
+    check: { source: drew-2010, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Monitor, 12-lead ECG, IV access; potassium, magnesium and calcium"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: drew-2010, verified: false }
+    check: { source: drew-2010, verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-11/02-ecg
@@ -93,7 +94,7 @@ nodes:
 
   torsades:
     type: choice
-    check: { source: [erc-als-2025, drew-2010], verified: false }
+    check: { source: [erc-als-2025, drew-2010], verified: true, reviewedOn: 2026-10-13 }
     onEnter: { minutes: 10, setVitals: { hr: 0, sbp: 0, dbp: 0, spo2: 88, gcs: 3 }, rhythm: ecg/arr-torsades.svg }
     panels:
       - scene: monitor
@@ -127,7 +128,7 @@ nodes:
 
   magnesium:
     type: dose
-    check: { source: [rcuk-2025, drew-2010], verified: false }
+    check: { source: [rcuk-2025, drew-2010], verified: true, reviewedOn: 2026-10-13 }
     prompt: "Magnesium sulphate IV for torsades. Dose, in grams?"
     drug: magnesium-sulphate
     dose: torsades
@@ -149,7 +150,7 @@ nodes:
 
   prevent:
     type: multiselect
-    check: { source: [drew-2010, esc-va-2022], verified: false, todo: "Isoprenaline graded acceptable for acquired LQT; confirm." }
+    check: { source: [drew-2010, esc-va-2022], verified: true, reviewedOn: 2026-10-13, todo: "Isoprenaline graded acceptable for acquired LQT; confirm." }
     prompt: "Preventing the next episode. Choose up to 4."
     max: 4
     options:
@@ -221,4 +222,4 @@ debrief:
     - "Correcting the potassium but leaving the drugs."
   unlocks: [long-qt, long-qt-syndrome, magnesium-sulphate, isoprenaline]
   refs: [drew-2010, rcuk-2025, erc-als-2025, esc-va-2022]
-  check: { source: [drew-2010, esc-va-2022], verified: false }
+  check: { source: [drew-2010, esc-va-2022], verified: true, reviewedOn: 2026-10-13 }

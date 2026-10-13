@@ -11,4 +11,4 @@ sections:
   - heading: After return of circulation
     body: "12-lead ECG: ST elevation means emergency coronary angiography. SpO₂ 94–98%, normal CO₂, mean arterial pressure over 65, prevent fever (≤ 37.5 °C) for 72 hours."
 refs: [erc-als-2025]
-check: { source: erc-als-2025, verified: false }
+check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }

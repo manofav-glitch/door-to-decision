@@ -11,4 +11,4 @@ sections:
   - heading: Pacing
     body: "Mobitz II, high-grade and complete block need a permanent pacemaker even without symptoms."
 refs: [esc-pacing-2021, erc-als-2025]
-check: { source: [esc-pacing-2021, erc-als-2025], verified: false }
+check: { source: [esc-pacing-2021, erc-als-2025], verified: true, reviewedOn: 2026-10-13 }

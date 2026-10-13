@@ -1,4 +1,4 @@
-# arr-14 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-14 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: severe hyperkalaemia (K 7.8, pH 7.18) in a haemodialysis patient who missed two
 # sessions: bradycardia with broad QRS, no P waves, peaked T. Calcium first (protects the heart), then
 # insulin–glucose and salbutamol to shift, urgent dialysis to remove. Atropine/pacing without calcium
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [erc-special-2025, ukka-hyperk-2023]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Drafted from guidelines; check the potassium, pH and ECG severity fit."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: ukka-hyperk-2023, verified: false }
+    check: { source: ukka-hyperk-2023, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "Monitor, 12-lead ECG, and a blood gas for potassium now; IV access in the right arm"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [ukka-hyperk-2023, erc-special-2025], verified: false }
+    check: { source: [ukka-hyperk-2023, erc-special-2025], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-14/02-ecg
@@ -88,7 +89,7 @@ nodes:
 
   calcium:
     type: choice
-    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-13 }
     prompt: "Potassium 7.8 with a broad, slow rhythm. First treatment?"
     options:
       - label: "IV calcium now (10 ml 10% calcium chloride or 30 ml 10% calcium gluconate), ECG running; repeat if the changes persist"
@@ -118,7 +119,7 @@ nodes:
 
   shift:
     type: multiselect
-    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+    check: { source: [erc-special-2025, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-13 }
     prompt: "Now lower the potassium. Choose up to 3."
     max: 3
     options:
@@ -203,4 +204,4 @@ debrief:
     - "Waiting for a lab potassium with a broad-complex ECG."
   unlocks: [hyperkalaemia, hyperkalaemia-treatment, calcium, insulin-glucose]
   refs: [erc-special-2025, ukka-hyperk-2023]
-  check: { source: [erc-special-2025, ukka-hyperk-2023], verified: false }
+  check: { source: [erc-special-2025, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-13 }

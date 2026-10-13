@@ -1,7 +1,7 @@
 # Arrhythmias module — outline for the owner's approval
 
-Status: APPROVED by the owner 2026-10-05 (decisions in §0). All 15 cases drafted (unverified) by 2026-10-05. Every clinical item will be drafted
-`verified: false` until the owner checks it.
+Status: APPROVED by the owner 2026-10-05 (decisions in §0). All 15 cases drafted by 2026-10-05 and verified by the owner
+on 2026-10-13 (the five open dose questions accepted as drafted).
 
 Sources read: the owner's notes in `notes/arrhythmias/` (SVT; Atrial Fibrillation; Bradyarrhythmias &
 AV Block; Inherited Channelopathies). Cases will cite the guidelines those notes rest on, paraphrased:

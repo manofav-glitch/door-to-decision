@@ -3,4 +3,4 @@ title: "Rhythm strip, lead II: sinus rhythm"
 layout: strip
 rhythm: { kind: sinus, rate: 150, pr: 110 }
 rhythmLead: II
-check: { source: rcuk-paeds-2025, verified: false, todo: "Check it reads as normal infant sinus rhythm." }
+check: { source: rcuk-paeds-2025, verified: true, reviewedOn: 2026-10-13, todo: "Check it reads as normal infant sinus rhythm." }

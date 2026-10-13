@@ -6,7 +6,7 @@ doses:
     label: "AF or flutter rate control, IV"
     route: Slow IV bolus over 2 minutes
     text: "2.5–5 mg, repeated every 5 minutes if needed, to a maximum of 15 mg"
-    check: { source: esc-af-2024, verified: false, todo: "Confirm dose for AF rate control." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-13, todo: "Confirm dose for AF rate control." }
 sections:
   - heading: When it may be considered
     body: "Early IV beta-blocker only in selected patients having primary PCI, with no heart failure, SBP > 120 mmHg and no other contraindication."

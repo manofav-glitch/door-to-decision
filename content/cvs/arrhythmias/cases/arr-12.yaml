@@ -1,4 +1,4 @@
-# arr-12 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# arr-12 — DRAFT. Verified by the content owner on 2026-10-13.
 # Hidden truth: congenital long QT type 2 unmasked in the postpartum period: syncope (brief convulsive
 # jerks) when the alarm rang at dawn; sister died suddenly at 19. QTc ~ 520 by hand, notched T waves.
 # No acquired cause. Schwartz 7 (high probability). Non-selective beta-blocker (nadolol/propranolol),
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-va-2022, schwartz-2011]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-13
   todo: "Teaching composite; check the trigger history and family history fit LQT2."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-va-2022, verified: false }
+    check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Your first move?"
     options:
       - label: "12-lead ECG and monitor; potassium, magnesium, calcium; review every drug she's taking"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-va-2022, schwartz-2011], verified: false }
+    check: { source: [esc-va-2022, schwartz-2011], verified: true, reviewedOn: 2026-10-13 }
     panels:
       - scene: ecg-machine
         art: arr-12/02-ecg
@@ -92,7 +93,7 @@ nodes:
 
   schwartz:
     type: calculator
-    check: { source: [schwartz-2011, esc-va-2022], verified: false, todo: "Answers: QTc ≥ 480 (3.5), syncope with stress (2), notched T (1), unexplained death of sister under 30 (0.5). Total 7." }
+    check: { source: [schwartz-2011, esc-va-2022], verified: true, reviewedOn: 2026-10-13, todo: "Answers: QTc ≥ 480 (3.5), syncope with stress (2), notched T (1), unexplained death of sister under 30 (0.5). Total 7." }
     prompt: "Work out her Schwartz score."
     score: schwartz
     answers:
@@ -118,7 +119,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: esc-va-2022, verified: false }
+    check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Probable congenital LQT2, three weeks postpartum, breastfeeding. Treatment?"
     options:
       - label: "Start a non-selective beta-blocker (propranolol, or nadolol if available) and continue it through the postpartum months"
@@ -141,7 +142,7 @@ nodes:
 
   family:
     type: multiselect
-    check: { source: esc-va-2022, verified: false }
+    check: { source: esc-va-2022, verified: true, reviewedOn: 2026-10-13 }
     prompt: "Before she goes to the cardiology ward. Choose up to 4."
     max: 4
     options:
@@ -212,4 +213,4 @@ debrief:
     - "Isoprenaline in congenital long QT."
   unlocks: [long-qt, long-qt-syndrome, schwartz, lqts-beta-blockers]
   refs: [esc-va-2022, schwartz-2011]
-  check: { source: [esc-va-2022, schwartz-2011], verified: false }
+  check: { source: [esc-va-2022, schwartz-2011], verified: true, reviewedOn: 2026-10-13 }

@@ -14,4 +14,4 @@ leads:
   V2: { st: 0.4, t: 0.7 }
   V3: { st: 0.45, t: 0.7 }
   V4: { st: 0.35, t: 0.6 }
-check: { source: [erc-als-2025, esc-acs-2023], verified: false, todo: "Check it reads as anterior STEMI after ROSC." }
+check: { source: [erc-als-2025, esc-acs-2023], verified: true, reviewedOn: 2026-10-13, todo: "Check it reads as anterior STEMI after ROSC." }

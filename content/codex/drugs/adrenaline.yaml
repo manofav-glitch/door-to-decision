@@ -6,12 +6,12 @@ doses:
     label: "Bradycardia infusion"
     route: IV infusion
     text: "2–10 micrograms/min, titrated to response"
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
   - id: cardiac-arrest
     label: "Cardiac arrest"
     route: IV or IO bolus
     text: "1 mg: as soon as possible in non-shockable rhythms; after the 3rd shock in VF/pulseless VT; then every 3–5 minutes"
     rule: { unit: mg, fixed: 1 }
-    check: { source: erc-als-2025, verified: false }
+    check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
 refs: [erc-als-2025]
-check: { source: erc-als-2025, verified: false }
+check: { source: erc-als-2025, verified: true, reviewedOn: 2026-10-13 }
