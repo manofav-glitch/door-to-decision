@@ -12,12 +12,12 @@ doses:
     route: Sublingual
     text: "400–800 micrograms every 3–5 minutes while the infusion is prepared"
     rule: { unit: micrograms, fixed: { min: 400, max: 800 } }
-    check: { source: [esc-htn-2024, esc-hf-2026], verified: false, todo: "From the owner's hypertension note; check against local protocol." }
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: true, reviewedOn: 2026-10-13 }
   - id: iv-infusion
     label: "Acute heart failure with high or normal BP, IV infusion"
     route: IV infusion
-    text: "10–20 micrograms/min, titrated up to 200 micrograms/min; in SCAPE start about 100 micrograms/min and escalate fast (up to 300–400) to effect, weaning as the BP falls"
-    check: { source: [esc-hf-2026, esc-htn-2024], verified: false, todo: "The HF note gives up to 200; the hypertension note 300–400 in SCAPE. Confirm the ceiling you teach." }
+    text: "10–20 micrograms/min, titrated upwards; in SCAPE start about 100 micrograms/min and escalate fast to 300–400 micrograms/min to effect, weaning as the BP falls"
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: true, reviewedOn: 2026-10-13 }
 sections:
   - heading: Contraindications
     body: >-

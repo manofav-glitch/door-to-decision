@@ -103,7 +103,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false, todo: "Confirm the drugs you teach as compatible with breastfeeding." }
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
     prompt: "She is breastfeeding. Treatment?"
     options:
       - label: "IV furosemide now; then start enalapril and a beta-1-selective blocker (metoprolol) once stable, both compatible with breastfeeding"

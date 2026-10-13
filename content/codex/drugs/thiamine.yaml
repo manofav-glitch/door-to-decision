@@ -6,7 +6,7 @@ doses:
     label: "Suspected wet beriberi"
     route: IV
     text: "High-dose IV thiamine (commonly 100–500 mg, repeated two to three times a day), then oral"
-    check: { source: who-thiamine-1999, verified: false, todo: "Regimens vary widely; set the dose you want taught." }
+    check: { source: who-thiamine-1999, verified: false }
 sections:
   - heading: Who
     body: "Heavy alcohol use, polished-rice diets, malnutrition, hyperemesis, bariatric surgery, long-term furosemide, dialysis."

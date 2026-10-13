@@ -255,9 +255,9 @@
 
 # ---- Heart Failure module (drafted 2026-10-13) ----
 - id: esc-hf-2026
-  citation: "ESC Scientific Document Group. 2026 ESC Guidelines for the management of heart failure. Eur Heart J. 2026 (published 28 August 2026)."
+  citation: "Køber L, Adamo M, et al. 2026 ESC Guidelines for the management of heart failure. Eur Heart J. 2026;47(38):5346–5457."
   year: 2026
-  todo: "Published after Claude's training data; taken from the owner's note. Add authors, volume and pages, and check every fact drawn from it."
+  url: https://doi.org/10.1093/eurheartj/ehag100
 
 - id: esc-hf-2021
   citation: "McDonagh TA, Metra M, Adamo M, et al. 2021 ESC Guidelines for the diagnosis and treatment of acute and chronic heart failure. Eur Heart J. 2021;42(36):3599–3726."
@@ -305,9 +305,9 @@
   url: https://doi.org/10.1002/ejhf.1493
 
 - id: esc-valve-2025
-  citation: "Praz F, Borger MA, et al. 2025 ESC/EACTS Guidelines for the management of valvular heart disease. Eur Heart J. 2025."
+  citation: "Praz F, Borger MA, Lanz J, et al. 2025 ESC/EACTS Guidelines for the management of valvular heart disease. Eur Heart J. 2025;46(44):4635–4736."
   year: 2025
-  todo: "Confirm authors, volume and pages."
+  url: https://doi.org/10.1093/eurheartj/ehaf194
 
 - id: hfa-rv-2016
   citation: "Harjola VP, Mebazaa A, Čelutkienė J, et al. Contemporary management of acute right ventricular failure: a statement from the Heart Failure Association and the Working Group on Pulmonary Circulation and Right Ventricular Function of the ESC. Eur J Heart Fail. 2016;18(3):226–241."
@@ -320,11 +320,10 @@
   url: https://doi.org/10.1093/eurheartj/ehac237
 
 - id: esc-myopericarditis-2025
-  citation: "Schulz-Menger J, et al. 2025 ESC Guidelines for the management of myocarditis and pericarditis. Eur Heart J. 2025."
+  citation: "Schulz-Menger J, et al. 2025 ESC Guidelines for the management of myocarditis and pericarditis. Eur Heart J. 2025;46(40):3952–4041."
   year: 2025
-  todo: "Confirm authors, volume and pages."
+  url: https://doi.org/10.1093/eurheartj/ehaf192
 
 - id: who-thiamine-1999
   citation: "World Health Organization. Thiamine deficiency and its prevention and control in major emergencies. Geneva: WHO; 1999 (WHO/NHD/99.13)."
   year: 1999
-  todo: "Wet beriberi dosing: add a clinical review the owner trusts."

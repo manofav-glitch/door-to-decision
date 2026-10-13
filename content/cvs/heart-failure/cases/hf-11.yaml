@@ -72,7 +72,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: who-thiamine-1999, verified: false, todo: "Set the thiamine regimen you want taught." }
+    check: { source: who-thiamine-1999, verified: false }
     prompt: "Treatment?"
     options:
       - label: "High-dose IV thiamine now, before any glucose; then cautious furosemide for the congestion"
