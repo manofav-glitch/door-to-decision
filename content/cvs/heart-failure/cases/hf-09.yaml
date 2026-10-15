@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-09/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: ukka-hyperk-2023, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-09/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
     image: ecg/hf-09-hyperk.svg
@@ -180,6 +182,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-09/03-end-good
         actors: [patient:relieved, doctor]
         caption: "Two weeks later · Heart failure clinic"
         bubbles:
@@ -191,6 +194,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-09/04-end-fair
         actors: [patient:worried, doctor]
         caption: "A month later · Emergency department"
     summary: "He recovered, but a missed potassium, insulin without glucose, or losing his heart failure drugs left him worse off. The debrief shows where."
