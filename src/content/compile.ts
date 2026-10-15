@@ -262,6 +262,7 @@ export function compileContent(root: string): Compiled {
           module: mod.data.id,
           name,
           settings: mod.data.settings,
+          shuffleOptions: mod.data.shuffleOptions,
           refs,
           targets,
           vitalLimits: bench?.data.vitalLimits,
@@ -382,6 +383,7 @@ interface CaseContext {
   module: string;
   name: string;
   settings: { id: string; label: string; description: string }[];
+  shuffleOptions: boolean;
   refs: Map<string, Reference>;
   targets: Map<string, CompiledCase['timeTargets'][string][number]>;
   vitalLimits: z.infer<typeof BenchmarksFile>['vitalLimits'] | undefined;
@@ -403,7 +405,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
 
   const warn = (path: Path, message: string) =>
     ctx.warnings.push({ file: loaded.file, line: loaded.lineOf(path), where: path.join('.'), message });
-  styleWarnings(c, warn);
+  styleWarnings(c, warn, ctx.shuffleOptions);
 
   const expectedId = `${ctx.system}-${ctx.name}`;
   if (c.id !== expectedId) err(['id'], `id must be "${expectedId}" (system + file name)`);
@@ -684,6 +686,7 @@ function compileCase(loaded: Loaded<Case>, ctx: CaseContext): CompiledCase | und
     leadLayouts,
     debrief: { ...c.debrief, unlocks, refs: refList },
     draft: true,
+    shuffleOptions: ctx.shuffleOptions,
     unverifiedCount: 0,
     imageChecks,
     artSizes,
@@ -760,7 +763,7 @@ const SPOILERS = [
 ];
 export const MAX_LINE = 220; // characters: roughly what fits in a feedback card without scrolling
 
-function styleWarnings(c: Case, warn: (path: Path, message: string) => void) {
+function styleWarnings(c: Case, warn: (path: Path, message: string) => void, hardOptions = false) {
   const title = c.title.toLowerCase();
   const hit = SPOILERS.find((w) => new RegExp(`(^|[^a-z])${w}([^a-z]|$)`).test(title));
   if (hit) warn(['title'], `the title may give away the diagnosis ("${hit}"); describe the presentation instead`);
@@ -768,6 +771,20 @@ function styleWarnings(c: Case, warn: (path: Path, message: string) => void) {
     const p: Path = ['nodes', id];
     if ((node.type === 'choice' || node.type === 'ecg') && !node.options.some((o) => o.grade === 'best'))
       warn(p, 'no option is graded best; the ideal path will use the first acceptable one');
+    // units written to the harder-option rules (shuffleOptions): the answer mustn't give itself away
+    if (hardOptions && (node.type === 'choice' || node.type === 'ecg')) {
+      const best = node.options.find((o) => o.grade === 'best');
+      const others = node.options.filter((o) => o !== best);
+      if (best && others.length) {
+        const mean = others.reduce((sum, o) => sum + o.label.length, 0) / others.length;
+        if (best.label.length > mean * 1.3 && best.label.length - mean > 25)
+          warn(p, `the best answer is much longer than the others (${best.label.length} vs about ${Math.round(mean)} characters): it gives itself away`);
+      }
+    }
+    if (hardOptions && node.type === 'multiselect') {
+      const right = node.options.filter((o) => o.grade === 'best').length;
+      if (node.max === right) warn([...p, 'max'], `"choose up to ${node.max}" equals the number of best answers: it gives the count away`);
+    }
     const lines: { text: string; path: Path }[] = [];
     if ('options' in node)
       node.options.forEach((o, i) => {

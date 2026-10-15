@@ -241,6 +241,23 @@ A **critical** ending always gives 1 star. Write it as teaching, never blame.
 
 ---
 
+## 5b. Writing options that don't give the answer away (units from 2026-10-15)
+
+New units set `shuffleOptions: true` in `module.yaml`: the app then shows each question's answers in a
+shuffled order (stable within a playthrough, new on replay and in Revise). Older units keep the right
+answer first. Write every option so it could be right:
+
+- **Same length and detail** for every option; the best answer is not the longest. Validate warns when
+  the best answer is much longer than the others.
+- **Tempting wrong answers**: the right drug at the wrong dose or time, an older or American guideline's
+  answer, the right treatment for a look-alike condition, a sensible step in the wrong order. No absurd
+  options ("lie him flat for an X-ray").
+- **No tell-tale words** only in the best answer: "carefully", "cautiously", "after checking", "and call
+  your senior".
+- **More partly right answers**: acceptable and suboptimal options, not one best against three harmful.
+- **ECG options** with the same structure and close differentials (flutter vs AVNRT, LVH strain vs NSTEMI).
+- **Multiselect**: `max` differs from the number of best answers (validate warns if they match).
+
 ## 6. Grades, meters and stars
 
 - **Grades:** best · acceptable · suboptimal · harmful. Each **harmful** pick is counted as a _safety

@@ -52,6 +52,8 @@ export interface CompiledCase extends Omit<Case, 'settings' | 'timeTargets' | 'd
   };
   /** true if any clinical item this case depends on is unverified */
   draft: boolean;
+  /** show each question's answers in a shuffled order (set per unit in module.yaml) */
+  shuffleOptions: boolean;
   unverifiedCount: number;
   /** lead positions for ecg-leads nodes, keyed by image path */
   leadLayouts: Record<string, EcgLayout>;

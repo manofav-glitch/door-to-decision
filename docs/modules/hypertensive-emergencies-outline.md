@@ -1,6 +1,8 @@
 # Hypertensive Emergencies module — outline for the owner's approval
 
-Status: DRAFT plan, 2026-10-15. Nothing is built until the owner approves (one phase at a time).
+Status: APPROVED by the owner 2026-10-15: the 10 cases plus extras (all five, as htn-11…15; the owner
+may drop any), the note's "practical resolution" where guidelines disagree, in Cardiovascular. First unit
+written to the harder-option rules (CONTENT_GUIDE §5b) with `shuffleOptions: true`.
 
 Source: the owner's note `notes/htn.pdf` ("Hypertensive Urgency vs Emergency — Drug Choice by
 End-Organ"; 2025 AHA/ACC high BP, 2024 ESC elevated BP and hypertension, 2019 ESC Council position
@@ -39,7 +41,17 @@ type B case about the BP targets themselves.
 | htn-09 | 6-year-old boy, scorpion sting an hour ago, sweating, cold hands, vomiting, BP 160/110 | Indian red scorpion envenomation: autonomic storm | prazosin 30 micrograms/kg by mouth, repeated 3-hourly until perfusion recovers; scorpion antivenom where available; watch for myocarditis and pulmonary oedema (dobutamine, GTN) | atropine; nifedipine; discharge because the pain settled |
 | htn-10 | 11-year-old girl, puffy face, cola-coloured urine, headache, a seizure, BP 170/110 | Post-streptococcal glomerulonephritis with hypertensive encephalopathy and fluid overload | use age percentiles; reduce by ≤25% of the planned fall over 8 h; furosemide for the overload (here it helps); labetalol or nicardipine; treat the seizure | adult thresholds; dropping BP fast; withholding the diuretic |
 
-## 2. Questions for the owner
+### Extras (approved 2026-10-15)
+
+| # | Story | Hidden truth | Key decisions | Traps |
+|---|---|---|---|---|
+| htn-11 | 63M, crushing chest pain, BP 210/120, lateral ST depression | NSTE-ACS with severe hypertension | GTN infusion, oral beta-blocker early (IV only without HF, shock or bradycardia), target SBP under 140; usual ACS care | hydralazine or a DHP without beta-blockade (reflex tachycardia); lysis thinking |
+| htn-12 | 26M, agitated, sweating, chest pain after a party, BP 200/120, HR 140, temp 38.9 | Sympathomimetic (amphetamine/cocaine) toxicity | benzodiazepines titrated to calm and active cooling first; then phentolamine, GTN or nicardipine; pure beta-blockers avoided | metoprolol first; restraint without sedation; haloperidol as the main drug |
+| htn-13 | 30M with a T4 spinal cord injury, pounding headache, flushed face, BP 210/110, HR 48 | Autonomic dysreflexia | sit up, loosen clothing, check the catheter (blocked), relieve the bladder; GTN paste if SBP stays ≥150 | lying flat; IV antihypertensive before finding the trigger |
+| htn-14 | 48F, sudden worst-ever headache, BP 200/110, CT: subarachnoid blood | Aneurysmal subarachnoid haemorrhage | analgesia, antiemetic; avoid extreme BP before the aneurysm is secured (working target SBP under 160) with titratable labetalol or nicardipine; neurosurgery | dropping BP to normal; nitroprusside; missing the diagnosis with a normal early CT |
+| htn-15 | 24F, dizzy, arm claudication, left arm BP 110/70 but right arm 180/110, absent left radial pulse, creatinine up | Takayasu arteritis with renovascular hypertension | four-limb BP and treat the highest reliable reading; careful with RAAS blockers (bilateral renal artery stenosis); rheumatology | treating the low arm reading; ACE inhibitor causing AKI |
+
+## 2. Questions for the owner (answered 2026-10-15)
 
 1. Approve these 10 cases (or change them)? Possible extras from the note: ACS with severe
    hypertension, sympathomimetic toxicity (cocaine/amphetamines: benzodiazepines first), autonomic

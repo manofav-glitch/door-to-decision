@@ -92,6 +92,37 @@ describe('compileContent', () => {
     expect(ps.map((p) => p.message)).toContain('unknown field(s): promt — check spelling');
   });
 
+  describe('harder options (shuffleOptions units)', () => {
+    const MOD = 'content/demo/basics/module.yaml';
+    function compileWith(moduleEdit: (s: string) => string) {
+      const dir = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, dir, { recursive: true });
+      const p = join(dir, MOD);
+      writeFileSync(p, moduleEdit(readFileSync(p, 'utf8')));
+      return compileContent(dir);
+    }
+    it('passes the unit setting to its cases (off by default)', () => {
+      expect(compileContent(FIXTURE).cases['demo-c-01']!.shuffleOptions).toBe(false);
+      expect(compileWith((s) => s + 'shuffleOptions: true\n').cases['demo-c-01']!.shuffleOptions).toBe(true);
+    });
+    it('only warns about a give-away best answer in units that shuffle', () => {
+      const longBest = (dir: string) => {
+        const p = join(dir, CASE);
+        writeFileSync(p, readFileSync(p, 'utf8').replace('{ label: Test,', '{ label: Test with a long careful explanation of every step,'));
+        return compileContent(dir);
+      };
+      const giveaway = (c: ReturnType<typeof compileContent>) =>
+        c.warnings.filter((w) => w.message.includes('gives itself away')).length;
+      const plain = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, plain, { recursive: true });
+      expect(giveaway(longBest(plain))).toBe(0);
+      const shuffledDir = mkdtempSync(join(tmpdir(), 'd2d-'));
+      cpSync(FIXTURE, shuffledDir, { recursive: true });
+      writeFileSync(join(shuffledDir, MOD), readFileSync(join(shuffledDir, MOD), 'utf8') + 'shuffleOptions: true\n');
+      expect(giveaway(longBest(shuffledDir))).toBe(1);
+    });
+  });
+
   describe('unit notes', () => {
     const NOTES = 'content/demo/basics/notes.yaml';
     const good = `

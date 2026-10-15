@@ -33,6 +33,7 @@ import {
 import { DevPanel } from '../components/player/DevPanel';
 import { useDevMode } from '../lib/dev';
 import { prefetchCaseArt } from '../lib/offline';
+import { shuffled } from '../lib/shuffle';
 import { useProgress, type SavedRun } from '../store/progress';
 import { useSettings } from '../store/settings';
 
@@ -70,6 +71,9 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
     revealed?: boolean;
   } | null>(null);
   const present = saved.mode === 'present';
+  // units with shuffleOptions show answers in a stable per-playthrough order
+  const ordered = <T,>(options: T[], nodeId: string) =>
+    c.shuffleOptions ? shuffled(options, `${saved.seed ?? c.id}|${nodeId}`) : options;
   // presenter mode: how many of the current step's panels are showing
   const [shown, setShown] = useState<{ node: string; count: number }>({ node: '', count: 1 });
   const heading = useRef<HTMLHeadingElement>(null);
@@ -214,7 +218,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         />
         {present && 'options' in node && (
           <AllOptions
-            options={visibleOptions(pending.prev, node)}
+            options={ordered(visibleOptions(pending.prev, node), pending.prev.nodeId)}
             chosen={pending.res.picks.filter((p) => !p.missed).map((p) => p.optionId)}
           />
         )}
@@ -239,7 +243,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         title = viewNode.prompt;
         body = (
           <ChoiceList
-            options={visibleOptions(run, viewNode)}
+            options={ordered(visibleOptions(run, viewNode), viewNodeId!)}
             onPick={(optionId) => doAct({ kind: 'pick', optionId })}
           />
         );
@@ -249,7 +253,7 @@ function Play({ loaded, saved }: { loaded: LoadedCase; saved: SavedRun }) {
         body = (
           <MultiSelect
             node={viewNode}
-            options={visibleOptions(run, viewNode)}
+            options={ordered(visibleOptions(run, viewNode), viewNodeId!)}
             onSubmit={(optionIds) => doAct({ kind: 'multi', optionIds })}
           />
         );

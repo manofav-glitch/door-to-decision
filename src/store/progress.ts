@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Grade } from '../content/schema';
 import type { Input, RunResult } from '../engine/engine';
+import { newSeed } from '../lib/shuffle';
 
 export type Mode = 'learn' | 'exam' | 'present';
 
@@ -13,6 +14,8 @@ export interface SavedRun {
   mode: Mode;
   inputs: Input[];
   contentVersion: string;
+  /** seeds the answer order in units that shuffle their options */
+  seed?: string;
 }
 
 export interface Mistake {
@@ -101,7 +104,9 @@ export const useProgress = create<ProgressState>()(
           s.notesUnlocked.includes(key) ? {} : { notesUnlocked: [...s.notesUnlocked, key] },
         ),
       begin: (run) =>
-        set((s) => ({ active: { ...s.active, [run.caseId]: { ...run, inputs: [] } } })),
+        set((s) => ({
+          active: { ...s.active, [run.caseId]: { ...run, inputs: [], seed: newSeed() } },
+        })),
       record: (caseId, inputs) =>
         set((s) => {
           const run = s.active[caseId];

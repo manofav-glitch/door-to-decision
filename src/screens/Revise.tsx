@@ -7,6 +7,7 @@ import { EcgFigure } from '../components/player/EcgFigure';
 import { ChoiceList, ContinueButton } from '../components/player/Sheet';
 import { GradeChip, Loading } from '../components/ui';
 import { startRun, visibleOptions } from '../engine/engine';
+import { shuffled } from '../lib/shuffle';
 import { MASTERED_AFTER, reviseDeck, useProgress, type ReviseCard } from '../store/progress';
 
 export function Revise() {
@@ -166,7 +167,9 @@ function CardView({ card, onDone }: { card: ReviseCard; onDone: (correct: boolea
   // flashcard: ask the question again
   if (node.type === 'choice' || node.type === 'ecg') {
     const setting = card.setting ?? c.settings[0]?.id ?? null;
-    const options = visibleOptions(startRun(c, setting), node);
+    const all = visibleOptions(startRun(c, setting), node);
+    // units with shuffleOptions: a new order on each attempt at the card
+    const options = c.shuffleOptions ? shuffled(all, `${card.key}|${card.streak}`) : all;
     const choice = options.find((o) => o.id === picked);
     const best = options.filter((o) => o.grade === 'best');
     return (

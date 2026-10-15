@@ -52,7 +52,7 @@ No backend, accounts, analytics, ads, runtime AI/API calls, or runtime CDNs. Fon
 - The engine is content-agnostic: new systems/modules/cases are added by adding content files only.
 - Hierarchy: System → Module → Case → Nodes → Panels. Codex (anatomy, pathology, drugs, scores, ECG) is unlocked by cases and browsable anytime.
 - Node types built: story, choice, ecg, ecg-leads (tap the leads), multiselect, dose, calculator, ending. Planned: order. Add a type = schema + engine `act`/`idealInput` + a Sheet view.
-- Options are graded best / acceptable / suboptimal / harmful, with a one-line consequence and a teaching point.
+- Options are graded best / acceptable / suboptimal / harmful, with a one-line consequence and a teaching point. Units from 2026-10-15 set `shuffleOptions: true` and follow the hard-option rules (CONTENT_GUIDE §5b); older units keep the best answer first (owner's choice).
 - Hidden patient state: vitals, case clock, flags. Meters: Patient, Time, Safety. End grade 1–3 stars. Modes: Learn / Exam / Present
   (presenter: `data-present` on <html> scales rem to 137.5%; panels one click at a time; answers locked in, then Reveal shows
   every option's grade; the HUD waits for Reveal; F = full screen; present runs don't touch stars, unlocks or the mistakes deck).
