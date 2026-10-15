@@ -33,6 +33,10 @@ nodes:
 
   ecg-1:
     type: ecg
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Resus"
     check: { source: [esc-acs-2023, hancock-2009], verified: false }
     onEnter: { milestone: ecg }
     image: ecg/htn-11-nste.svg

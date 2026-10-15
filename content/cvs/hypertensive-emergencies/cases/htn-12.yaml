@@ -62,6 +62,12 @@ nodes:
 
   cool:
     type: choice
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: nurse, text: "Calm now, but he's burning up: 39.2 and climbing." }
     check: { source: mccord-cocaine-2008, verified: false }
     prompt: "Calm now. Temperature 39.2 and rising. Next?"
     options:

@@ -93,6 +93,12 @@ nodes:
 
   still-high:
     type: choice
+    panels:
+      - scene: resus-bay
+        actors: [patient:pain, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: patient, text: "That's better, but my head is still pounding." }
     check: { source: pva-ad-2021, verified: false }
     prompt: "Five minutes after draining: BP 164/94, headache still there. Next?"
     options:

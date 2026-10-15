@@ -62,6 +62,10 @@ nodes:
 
   ecg-1:
     type: ecg
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine:pain, nurse]
+        caption: "{clock} · Resus"
     check: { source: aha-asa-sah-2023, verified: false }
     image: ecg/htn-14-neuro.svg
     alt: "12-lead ECG. Sinus rhythm about 64 per minute. Deep, broad, symmetrical T wave inversion in I, aVL and V2 to V6. Long QT interval, about 520 ms. No ST elevation."

@@ -36,6 +36,11 @@ nodes:
 
   fit:
     type: choice
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse, relative]
+        caption: "{clock} · Labour room"
+        sfx: "Generalised fit"
     check: { source: [who-pe-2011, isshp-2021], verified: false }
     prompt: "A generalised fit, a minute so far. First?"
     options:

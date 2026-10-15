@@ -103,6 +103,10 @@ nodes:
 
   ecg-1:
     type: ecg
+    panels:
+      - scene: ecg-machine
+        actors: [patient-supine, nurse]
+        caption: "{clock} · Triage"
     check: { source: [hancock-2009, esc-htn-2024], verified: false }
     image: ecg/htn-01-lvh.svg
     alt: "12-lead ECG. Sinus rhythm about 84 per minute. Very tall R waves in V5 and V6 and aVL, deep S waves in V1 and V2. Down-sloping ST depression with T inversion in I, aVL, V5 and V6. No ST elevation."
