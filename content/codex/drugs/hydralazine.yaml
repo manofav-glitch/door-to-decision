@@ -1,0 +1,16 @@
+id: hydralazine
+title: "Hydralazine (IV)"
+summary: "A direct arteriolar dilator. Its place today is mainly severe hypertension in pregnancy when labetalol or nifedipine are unsuitable; its effect is slow and unpredictable."
+doses:
+  - id: pregnancy
+    label: "Severe hypertension in pregnancy"
+    route: IV over 2 minutes
+    text: "5–10 mg; if still severe after 20 minutes, 10 mg; then switch to labetalol"
+    rule: { unit: mg, fixed: { min: 5, max: 10 } }
+    check: { source: acog-767-2019, verified: false }
+sections:
+  - heading: Cautions
+    body: "Reflex tachycardia: avoid in ACS, aortic dissection and tight mitral stenosis. Delayed, prolonged falls in BP (onset 10–20 minutes, lasting hours). Not a titratable drug for other emergencies."
+india: "Recurrent supply gaps in India."
+refs: [acog-767-2019, esc-he-2019]
+check: { source: [acog-767-2019, esc-he-2019], verified: false }

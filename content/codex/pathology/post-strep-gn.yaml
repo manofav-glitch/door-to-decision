@@ -1,0 +1,14 @@
+id: post-strep-gn
+title: "Post-streptococcal glomerulonephritis in children"
+summary: "1–3 weeks after a sore throat or skin infection: puffy face, cola-coloured urine, high BP from salt and water retention. Can cause encephalopathy and heart failure."
+sections:
+  - heading: Child BP
+    body: "Use age-, sex- and height-specific percentiles; adult thresholds miss emergencies in children."
+  - heading: Lowering
+    body: "No more than 25% of the planned fall in the first 8 hours, the rest over 24–48 hours. Labetalol, nicardipine, esmolol or hydralazine."
+  - heading: Diuretic
+    body: "Here the hypertension is from overload, so furosemide helps: the opposite of malignant hypertension. Restrict salt and fluid."
+  - heading: Tests
+    body: "Urine for blood, protein and casts; creatinine and potassium; C3 (low, recovers within 8 weeks); ASO or anti-DNase B."
+refs: [aap-htn-2017]
+check: { source: aap-htn-2017, verified: false }

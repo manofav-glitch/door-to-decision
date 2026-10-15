@@ -1,0 +1,261 @@
+# htn-02 — DRAFT for the content owner's review.
+# Hidden truth: malignant hypertension (acute hypertensive microangiopathy) with TMA and AKI, from
+# undiagnosed chronic glomerulonephritis. Fundoscopy and smear make the diagnosis; MAP down 20–25% over
+# hours with labetalol (or nicardipine); he is dry (pressure natriuresis): no reflex furosemide;
+# low-dose RAAS block once replete; separate hypertensive TMA from TTP; don't label ESKD early.
+# Sources: owner's HTN note (malignant hypertension, TMA); ESC Council 2019; ESC 2024.
+
+id: cvs-htn-02
+title: "34M, headache and blurred vision for three weeks"
+difficulty: 2
+minutes: 10
+patient: { age: 34, sex: M, weightKg: 68 }
+initial:
+  clock: "21:10"
+  vitals: { hr: 96, sbp: 238, dbp: 142, rr: 18, spo2: 97, gcs: 15, temp: 37.0 }
+  flags: []
+check: { source: [esc-he-2019, esc-htn-2024], verified: false, todo: "Teaching composite; check the blood results." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Headache for three weeks, and now everything is blurred. I've lost weight. I pass urine at night a lot." }
+          - { who: relative, text: "He has never had his BP checked. He was told about protein in his urine at a camp years ago." }
+          - { who: nurse, text: "238 over 142 on repeat, right cuff, both arms the same. Alert, no weakness." }
+    next: assess
+
+  assess:
+    type: choice
+    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    prompt: "238/142, blurred vision, alert, no focal signs. What will tell you most, fastest?"
+    options:
+      - label: "Fundoscopy yourself, a blood smear, creatinine, urine dip and an ECG"
+        grade: best
+        consequence: "Within 30 minutes you have the answer at the bedside and on the smear."
+        teaching: "Fundoscopy and a smear for schistocytes are cheap, fast and the highest-yield tests."
+        effects: { minutes: 30 }
+        next: results
+      - label: "CT head first for the headache and blurred vision, then blood tests"
+        grade: suboptimal
+        consequence: "CT is normal; the bloods come back an hour later than they could have."
+        teaching: "Without focal signs or reduced alertness, the eyes and blood tell you more than a CT."
+        effects: { minutes: 75, patient: -5 }
+        next: results
+      - label: "Bloods, urine and ECG now; dilated fundoscopy by ophthalmology tomorrow"
+        grade: suboptimal
+        consequence: "The diagnosis waits for the bloods; ophthalmology was not needed to see papilloedema."
+        teaching: "Fundoscopy is a mandatory ED examination in severe hypertension, and often skipped."
+        effects: { minutes: 60, patient: -5 }
+        next: results
+      - label: "Urgent MRI brain to look for PRES before starting any treatment"
+        grade: suboptimal
+        consequence: "No MRI slot until morning; treatment waits."
+        teaching: "Don't hold treatment for MRI; treat on clinical grounds and image when stable."
+        effects: { minutes: 90, patient: -10 }
+        next: results
+
+  results:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: narrator, text: "Both fundi: flame haemorrhages, cotton-wool spots, swollen discs. Hb 9.2, platelets 68,000, schistocytes on the smear, LDH 820." }
+          - { who: narrator, text: "Creatinine 3.4 mg/dL (no old result). Urine 2+ blood, 3+ protein. Dry tongue, JVP not seen, chest clear." }
+    next: name
+
+  name:
+    type: choice
+    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    prompt: "What is this?"
+    options:
+      - label: "Malignant hypertension with thrombotic microangiopathy and kidney injury"
+        grade: best
+        consequence: "Your senior agrees and starts the ICU referral."
+        teaching: "Extreme BP with acute microvascular injury in the retina, blood and kidney: malignant hypertension."
+        effects: { minutes: 5 }
+        next: target
+      - label: "TTP: start plasma exchange and treat the BP once the platelets recover"
+        grade: suboptimal
+        consequence: "Your senior sends ADAMTS13 before any plasma, but treats the BP now: TTP rarely drives BP this high."
+        teaching: "Hypertensive TMA improves within days of BP control; persistent low platelets or ADAMTS13 at 10% or less point to TTP."
+        effects: { minutes: 20, patient: -10 }
+        next: target
+      - label: "End-stage kidney disease from chronic glomerulonephritis, needing dialysis"
+        grade: suboptimal
+        consequence: "Your senior points out the haemolysis, the low platelets and the retina: something acute is happening."
+        teaching: "Don't label end-stage disease in the ED; kidneys often recover over weeks once BP is controlled."
+        effects: { minutes: 10, patient: -5 }
+        next: target
+      - label: "Hypertensive encephalopathy with grade IV retinopathy and anaemia"
+        grade: acceptable
+        consequence: "Close, but he is alert with no confusion; the kidney and blood findings are the bigger story."
+        teaching: "Encephalopathy means confusion, seizures or reduced consciousness; he has microangiopathy without it."
+        effects: { minutes: 5 }
+        next: target
+
+  target:
+    type: choice
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    prompt: "MAP is about 174. Your target for the first few hours?"
+    options:
+      - label: "MAP down 20–25% over several hours, to about 130–140, never below 125"
+        grade: best
+        consequence: "Written on the chart: a number, a time and a floor."
+        teaching: "Malignant hypertension: MAP down 20–25% over hours; the reset autoregulation can't take more."
+        effects: { minutes: 5 }
+        next: drug
+      - label: "SBP down by 25% in the first hour, then to 160/100 over the next 2–6 hours"
+        grade: acceptable
+        consequence: "A reasonable general plan; your senior prefers a slower first step in a dry patient."
+        teaching: "The AHA staged rule; for malignant hypertension the ESC spreads the first fall over several hours."
+        effects: { minutes: 5 }
+        next: drug
+      - label: "Below 140/90 within the first hour, to protect the kidneys from more injury"
+        grade: harmful
+        consequence: "At 136/84 he becomes drowsy and his urine stops. Your senior lets the BP rise."
+        teaching: "Falls below the reset autoregulation cause watershed stroke, blindness and worse kidney injury."
+        effects: { minutes: 60, setVitals: { sbp: 136, dbp: 84 }, patient: -25 }
+        next: drug
+      - label: "Hold treatment until the nephrologist sees him in the morning"
+        grade: suboptimal
+        consequence: "By morning his platelets are 52,000 and he is confused."
+        teaching: "Malignant hypertension is an emergency: treatment starts in the ED."
+        effects: { minutes: 300, patient: -15 }
+        next: drug
+
+  drug:
+    type: choice
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    prompt: "Which drug?"
+    options:
+      - label: "Labetalol 20 mg IV, then repeat boluses or an infusion to the target"
+        grade: best
+        consequence: "Over 4 hours MAP falls to 136."
+        teaching: "Labetalol is stocked everywhere and works as boluses where pumps are scarce."
+        effects: { minutes: 240, setVitals: { hr: 82, sbp: 186, dbp: 112 } }
+        next: fluids
+      - label: "Nicardipine infusion from 5 mg/h, up 2.5 mg/h every 15 minutes"
+        grade: acceptable
+        consequence: "Equally good; pharmacy takes 45 minutes to find it. MAP 138 by 5 hours."
+        teaching: "Nicardipine is first-line too, and titrates predictably; it's not always stocked."
+        effects: { minutes: 300, setVitals: { hr: 98, sbp: 188, dbp: 114 } }
+        next: fluids
+      - label: "Nitroprusside infusion for 48 hours to keep the BP under tight control"
+        grade: harmful
+        consequence: "On day 2 he is confused and his lactate is rising. Nitroprusside is stopped."
+        teaching: "Prolonged nitroprusside with kidney failure lets thiocyanate and cyanide build up."
+        effects: { minutes: 240, setVitals: { sbp: 176, dbp: 108 }, patient: -20 }
+        next: fluids
+      - label: "Furosemide 40 mg IV and oral amlodipine, to offload the kidneys and BP"
+        grade: harmful
+        consequence: "His BP barely moves, his urine output falls and creatinine climbs to 4.1."
+        teaching: "Very high BP drives salt loss: he is dry. A reflex diuretic deepens the volume loss and the renin drive."
+        effects: { minutes: 240, setVitals: { sbp: 214, dbp: 128 }, patient: -20 }
+        next: fluids
+
+  fluids:
+    type: choice
+    check: { source: esc-he-2019, verified: false }
+    prompt: "At 4 hours: BP 186/112. Urine 15 ml/h, dry tongue, flat neck veins, clear chest. Next?"
+    options:
+      - label: "500 ml crystalloid and reassess; keep titrating to target"
+        grade: best
+        consequence: "His urine output picks up to 50 ml/h; BP holds at 180/110."
+        teaching: "Many with malignant hypertension are volume depleted; careful fluid helps the kidneys."
+        effects: { minutes: 60, setVitals: { sbp: 180, dbp: 110 } }
+        next: days
+      - label: "Furosemide 40 mg IV to get the urine flowing again"
+        grade: harmful
+        consequence: "Output rises briefly, then falls; creatinine 4.0 by morning."
+        teaching: "Diuretics only for genuine overload; here they worsen the hypovolaemia."
+        effects: { minutes: 60, patient: -20 }
+        next: days
+      - label: "Ramipril 2.5 mg now to block the renin drive behind the BP"
+        grade: suboptimal
+        consequence: "BP drops to 150/90 within the hour and creatinine rises. Your senior stops it for now."
+        teaching: "RAAS block helps once volume is restored; in a dry patient it causes sudden falls."
+        effects: { minutes: 60, setVitals: { sbp: 150, dbp: 90 }, patient: -10 }
+        next: days
+      - label: "Watch the urine: low output is expected while the BP comes down"
+        grade: suboptimal
+        consequence: "Output stays low until your senior gives fluid two hours later."
+        teaching: "Low output with a dry tongue and flat veins is hypovolaemia: treat it."
+        effects: { minutes: 120, patient: -5 }
+        next: days
+
+  days:
+    type: multiselect
+    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    prompt: "Day 3: BP 160/100 on oral drugs, platelets 140,000, creatinine 2.6. Choose up to 3."
+    max: 3
+    options:
+      - id: raas
+        label: "Start a low-dose ACE inhibitor, now he is not dry, with potassium and creatinine checks"
+        grade: best
+        consequence: "Started at a low dose; creatinine steady."
+        teaching: "Low-dose RAAS block breaks the high-renin cycle once volume is replete."
+        missedEffects: { patient: -5 }
+      - id: causes
+        label: "Kidney ultrasound and urine microscopy to look for the cause"
+        grade: best
+        consequence: "Small, echogenic kidneys and red cell casts: chronic glomerulonephritis."
+        teaching: "A secondary cause is found in 20–40%, mostly kidney disease."
+        missedEffects: { patient: -5 }
+      - id: adamts
+        label: "Follow up the ADAMTS13 sent before treatment"
+        grade: acceptable
+        consequence: "45%: not TTP."
+        teaching: "Recovery of platelets with BP control plus normal ADAMTS13 confirms hypertensive TMA."
+      - id: eskd
+        label: "Tell him he will need dialysis for life"
+        grade: suboptimal
+        consequence: "Your senior corrects it: recovery can take weeks to months."
+        teaching: "Avoid labelling end-stage disease early; dialysis may be temporary."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three weeks later · Renal clinic"
+        bubbles:
+          - { who: patient, text: "My vision is clearing. Creatinine is 2.0 and still falling." }
+    summary: "You found the microangiopathy at the bedside, brought MAP down slowly with labetalol, refilled a dry patient instead of draining him, and started RAAS block when it was safe."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Three weeks later · Renal ward"
+    summary: "He survived, but too fast a fall, a reflex diuretic or delays cost kidney function. The debrief shows where."
+
+debrief:
+  diagnosis: "Malignant hypertension (acute hypertensive microangiopathy) with thrombotic microangiopathy and acute kidney injury, from chronic glomerulonephritis."
+  keyPoints:
+    - "Fundoscopy and a blood smear: the two cheapest, highest-yield tests."
+    - "MAP down 20–25% over several hours with labetalol or nicardipine, with a floor."
+    - "He is often dry: no reflex diuretic; careful fluid; RAAS block once replete."
+    - "Hypertensive TMA improves with BP control; send ADAMTS13 to exclude TTP."
+    - "Kidneys may recover over weeks to months: don't label end-stage disease early."
+  pitfalls:
+    - "Dropping to normal in the first hour."
+    - "Furosemide in a volume-depleted patient."
+    - "Prolonged nitroprusside with kidney failure."
+  unlocks: [malignant-hypertension, hypertensive-emergency, nicardipine, nitroprusside]
+  refs: [esc-he-2019, esc-htn-2024, aha-acc-bp-2025]
+  check: { source: [esc-he-2019, esc-htn-2024], verified: false }

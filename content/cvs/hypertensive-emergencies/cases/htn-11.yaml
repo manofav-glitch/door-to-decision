@@ -1,0 +1,167 @@
+# htn-11 — DRAFT for the content owner's review.
+# Hidden truth: NSTE-ACS with severe hypertension (lateral ST depression with aVR elevation on a background
+# of LVH; troponin rising). GTN infusion plus a beta-blocker (oral early; IV only when hypertensive without
+# HF, shock or bradycardia); SBP below 140; no hydralazine or DHP without beta-blockade; never lysis in NSTE-ACS.
+# Sources: owner's HTN note (ACS with severe hypertension); ESC ACS 2023; ESC Council 2019.
+
+id: cvs-htn-11
+title: "63M, crushing chest pain for an hour"
+difficulty: 2
+minutes: 8
+patient: { age: 63, sex: M, weightKg: 78 }
+initial:
+  clock: "06:20"
+  vitals: { hr: 102, sbp: 210, dbp: 120, rr: 20, spo2: 96, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [door-to-ecg]
+check: { source: [esc-acs-2023, esc-he-2019], verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Crushing pain in the centre of my chest for an hour, into my left arm. Sweating. I take BP tablets, sometimes." }
+          - { who: nurse, text: "210 over 120 in both arms, pulse 102. ECG done at 4 minutes." }
+    next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [esc-acs-2023, hancock-2009], verified: false }
+    onEnter: { milestone: ecg }
+    image: ecg/htn-11-nste.svg
+    alt: "12-lead ECG. Sinus rhythm about 102 per minute. Tall voltages in the left chest leads. ST depression about 1.5 mm in I, aVL and V4 to V6, slight ST elevation in aVR. No ST elevation elsewhere."
+    prompt: "Ongoing pain. What does the ECG show?"
+    options:
+      - label: "NSTE-ACS: new lateral ST depression and aVR elevation, on top of LVH"
+        grade: best
+        consequence: "No old ECG to compare; the pain says this is new."
+        teaching: "ST depression with ongoing ischaemic pain is ACS until proved otherwise, even with LVH."
+        effects: { minutes: 2 }
+        next: bp
+      - label: "LVH with strain only: repeat the ECG in an hour when the pain settles"
+        grade: suboptimal
+        consequence: "Your senior points out the pain and the aVR elevation, and treats it as ACS."
+        teaching: "Strain doesn't explain ongoing ischaemic pain; treat as ACS and compare later."
+        effects: { minutes: 20, patient: -10 }
+        next: bp
+      - label: "Posterior STEMI: ST depression in V4–V6 is a mirror of posterior elevation"
+        grade: suboptimal
+        consequence: "Your senior points out that posterior MI shows in V1–V3, not V4–V6."
+        teaching: "Posterior MI: horizontal ST depression with tall R waves in V1–V3."
+        effects: { minutes: 10, patient: -5 }
+        next: bp
+      - label: "Demand ischaemia from the BP: treat the BP and skip the ACS drugs"
+        grade: suboptimal
+        consequence: "Your senior starts ACS treatment as well."
+        teaching: "Severe BP can cause demand ischaemia, but ongoing pain with ST depression needs ACS care too."
+        effects: { minutes: 10, patient: -10 }
+        next: bp
+
+  bp:
+    type: choice
+    check: { source: [esc-he-2019, esc-acs-2023], verified: false }
+    prompt: "Pain 8 out of 10, BP 210/120, HR 102, chest clear, no heart failure. Your BP plan?"
+    options:
+      - label: "GTN infusion to pain relief and SBP below 140, plus oral metoprolol"
+        grade: best
+        consequence: "In 20 minutes: pain 2 out of 10, BP 146/88, HR 84."
+        teaching: "Nitrates lower afterload and relieve ischaemia; a beta-blocker lowers demand."
+        effects: { minutes: 20, setVitals: { sbp: 146, dbp: 88, hr: 84 } }
+        next: antithrombotic
+      - label: "Metoprolol 5 mg IV, as he has no heart failure, then a GTN infusion"
+        grade: acceptable
+        consequence: "In 20 minutes: pain 3 out of 10, BP 150/90, HR 78."
+        teaching: "IV beta-blockade is reasonable when hypertensive without heart failure, shock or bradycardia."
+        effects: { minutes: 20, setVitals: { sbp: 150, dbp: 90, hr: 78 } }
+        next: antithrombotic
+      - label: "Hydralazine 10 mg IV: it lowers BP fast without depressing the heart"
+        grade: harmful
+        consequence: "HR 128 and the pain gets worse; the ST depression deepens."
+        teaching: "Reflex tachycardia raises myocardial oxygen demand: avoid in ACS."
+        effects: { minutes: 20, setVitals: { hr: 128, sbp: 172, dbp: 100 }, patient: -20 }
+        next: antithrombotic
+      - label: "Oral amlodipine plus nifedipine retard to bring BP down over hours"
+        grade: suboptimal
+        consequence: "Pain continues; HR rises to 112. Your senior starts GTN."
+        teaching: "A dihydropyridine without beta-blockade causes reflex tachycardia; and ischaemia needs minutes."
+        effects: { minutes: 30, setVitals: { hr: 112, sbp: 186, dbp: 106 }, patient: -10 }
+        next: antithrombotic
+
+  antithrombotic:
+    type: choice
+    check: { source: esc-acs-2023, verified: false }
+    prompt: "BP 146/88, pain settling. Troponin raised. Next?"
+    options:
+      - label: "Aspirin, a P2Y12 inhibitor, fondaparinux; angiography within 24 hours"
+        grade: best
+        consequence: "Angiography the same afternoon: a tight circumflex lesion, stented."
+        teaching: "High-risk NSTE-ACS (troponin rise, dynamic ST change): early invasive within 24 hours."
+        effects: { minutes: 30 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Aspirin, clopidogrel and enoxaparin; angiography within 72 hours"
+        grade: acceptable
+        consequence: "Stable; angiography on day 2."
+        teaching: "Acceptable, but high-risk features favour angiography within 24 hours."
+        effects: { minutes: 30 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Thrombolysis now that his BP is below 180/110"
+        grade: harmful
+        consequence: "Your senior stops it: thrombolysis has no place in NSTE-ACS."
+        teaching: "Fibrinolysis doesn't help NSTE-ACS and adds bleeding."
+        effects: { minutes: 30, patient: -25 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Aspirin alone until his BP is fully normal, then add heparin and clopidogrel"
+        grade: suboptimal
+        consequence: "Your senior completes the antithrombotic treatment now."
+        teaching: "BP under 180/110 doesn't need to be normal before standard ACS treatment."
+        effects: { minutes: 30, patient: -10 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Three days later · Cardiology ward"
+        bubbles:
+          - { who: patient, text: "One stent. I'll take the BP tablets every day now." }
+    summary: "You recognised ACS behind the hypertension, used GTN and a beta-blocker to bring SBP below 140, and sent him for early angiography."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · CCU"
+    summary: "He recovered, but a reflex tachycardia, thrombolysis or delayed ACS treatment cost heart muscle. The debrief shows where."
+
+debrief:
+  diagnosis: "NSTE-ACS with severe hypertension."
+  keyPoints:
+    - "Ongoing ischaemic pain with ST depression is ACS, even with LVH."
+    - "GTN infusion plus a beta-blocker (oral early; IV if hypertensive without HF, shock or bradycardia)."
+    - "Target SBP below 140."
+    - "High-risk NSTE-ACS: angiography within 24 hours."
+  pitfalls:
+    - "Hydralazine or a dihydropyridine without beta-blockade."
+    - "Thrombolysis in NSTE-ACS."
+  unlocks: [nste-acs-strategy, nitrates, metoprolol, hypertensive-emergency]
+  refs: [esc-acs-2023, esc-he-2019]
+  check: { source: [esc-acs-2023, esc-he-2019], verified: false }

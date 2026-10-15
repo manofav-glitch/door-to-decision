@@ -1,0 +1,190 @@
+# htn-13 — DRAFT for the content owner's review.
+# Hidden truth: autonomic dysreflexia in T4 complete spinal cord injury, triggered by a blocked catheter.
+# Sit up, loosen clothing, BP every 2–5 minutes; find the trigger (catheter first); if SBP stays ≥150,
+# a fast short-acting drug (GTN paste; IR nifedipine bite-and-swallow is the accepted exception) before
+# checking the bowel with lidocaine gel; don't lie flat; no IV drugs before the trigger is found.
+# Sources: owner's HTN note (autonomic dysreflexia); PVA Consortium 2021.
+
+id: cvs-htn-13
+title: "30M with a spinal injury, pounding headache, flushed face"
+difficulty: 2
+minutes: 8
+patient: { age: 30, sex: M, weightKg: 66 }
+initial:
+  clock: "15:10"
+  rhythm: ecg/htn-13-brady.svg
+  vitals: { hr: 48, sbp: 210, dbp: 110, rr: 18, spo2: 97, gcs: 15, temp: 36.7 }
+  flags: []
+check: { source: pva-ad-2021, verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:pain, relative, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: patient, text: "Spinal injury at T4, two years ago. Pounding headache, my face is burning, my nose is blocked. My BP is usually 100." }
+          - { who: nurse, text: "210 over 110, pulse 48. Flushed and sweaty above the chest, pale and cool below. Indwelling catheter; the bag is nearly empty." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: pva-ad-2021, verified: false }
+    prompt: "Lying on the trolley, BP 210/110, HR 48. First?"
+    options:
+      - label: "Sit him up, legs down, loosen clothes and straps; BP every 2–5 minutes"
+        grade: best
+        consequence: "BP 196/104 sitting up."
+        teaching: "Sitting up pools blood in the legs and lowers BP; tight straps can be a trigger."
+        effects: { minutes: 3, setVitals: { sbp: 196, dbp: 104, hr: 52 } }
+        next: trigger
+      - label: "Keep him flat and raise his legs for the slow pulse, then recheck the BP"
+        grade: harmful
+        consequence: "BP 224/118 and his headache is worse."
+        teaching: "Lying flat raises BP further in autonomic dysreflexia."
+        effects: { minutes: 3, setVitals: { sbp: 224, dbp: 118 }, patient: -20 }
+        next: trigger
+      - label: "Atropine 600 micrograms IV for the bradycardia, then reassess the BP"
+        grade: suboptimal
+        consequence: "HR 72, BP unchanged. Your senior sits him up."
+        teaching: "The slow pulse is a reflex to the high BP; treat the cause."
+        effects: { minutes: 5, setVitals: { hr: 72 }, patient: -10 }
+        next: trigger
+      - label: "Labetalol 20 mg IV now, then look for the cause once the BP is down"
+        grade: harmful
+        consequence: "BP falls to 150/80, HR 40; when the trigger is removed later he drops to 80/50."
+        teaching: "Long-acting IV drugs before the trigger is removed cause a crash afterwards."
+        effects: { minutes: 10, setVitals: { sbp: 150, dbp: 80, hr: 40 }, patient: -20 }
+        next: trigger
+
+  trigger:
+    type: choice
+    check: { source: pva-ad-2021, verified: false }
+    prompt: "Sitting up, BP 196/104. Next?"
+    options:
+      - label: "Check the catheter for a kink or block; flush or change it and drain"
+        grade: best
+        consequence: "Blocked with debris. A new catheter drains 900 ml."
+        teaching: "The bladder is the commonest trigger: start there."
+        effects: { minutes: 10, setVitals: { sbp: 164, dbp: 94, hr: 60 } }
+        next: still-high
+      - label: "Bladder scan first, then decide whether to change the catheter"
+        grade: acceptable
+        consequence: "900 ml in the bladder; the catheter is changed 10 minutes later."
+        teaching: "Reasonable, but a near-empty bag with a full bladder says change it now."
+        effects: { minutes: 20, setVitals: { sbp: 164, dbp: 94, hr: 60 } }
+        next: still-high
+      - label: "Rectal examination for impacted stool before touching the catheter at all"
+        grade: suboptimal
+        consequence: "BP rises to 220 during the exam. Your senior changes the catheter."
+        teaching: "Bladder first; check the bowel with lidocaine gel, after BP is controlled."
+        effects: { minutes: 15, setVitals: { sbp: 164, dbp: 94, hr: 60 }, patient: -10 }
+        next: still-high
+      - label: "CT head for the headache before looking for any trigger"
+        grade: harmful
+        consequence: "In the scanner his BP reaches 230; the catheter is still blocked."
+        teaching: "The headache is from the BP; find the trigger first."
+        effects: { minutes: 40, setVitals: { sbp: 164, dbp: 94, hr: 60 }, patient: -20 }
+        next: still-high
+
+  still-high:
+    type: choice
+    check: { source: pva-ad-2021, verified: false }
+    prompt: "Five minutes after draining: BP 164/94, headache still there. Next?"
+    options:
+      - label: "GTN paste above the injury, then check the bowel with lidocaine gel"
+        grade: best
+        consequence: "BP 128/80 at 15 minutes; a small amount of stool removed gently."
+        teaching: "SBP still 150 or more: a fast, short-acting drug before checking the bowel."
+        effects: { minutes: 20, setVitals: { sbp: 128, dbp: 80, hr: 66 } }
+        next: after
+      - label: "Nifedipine 10 mg immediate-release, bite and swallow, then check the bowel"
+        grade: acceptable
+        consequence: "BP 122/76 at 15 minutes."
+        teaching: "The one accepted use of bitten nifedipine; GTN paste can be wiped off if BP falls too far."
+        effects: { minutes: 20, setVitals: { sbp: 122, dbp: 76, hr: 70 } }
+        next: after
+      - label: "Manual disimpaction now, without lidocaine, to remove the next trigger"
+        grade: suboptimal
+        consequence: "BP rises to 190 during it."
+        teaching: "Use lidocaine gel and wait a few minutes; treat the BP first if it's 150 or more."
+        effects: { minutes: 20, setVitals: { sbp: 136, dbp: 84 }, patient: -10 }
+        next: after
+      - label: "Lie him down to rest now that the bladder is empty"
+        grade: suboptimal
+        consequence: "BP climbs to 180 lying flat; your senior sits him up."
+        teaching: "Stay upright until the episode is over."
+        effects: { minutes: 20, setVitals: { sbp: 140, dbp: 88 }, patient: -10 }
+        next: after
+
+  after:
+    type: multiselect
+    check: { source: pva-ad-2021, verified: false }
+    prompt: "BP 128/80, headache gone. Before he leaves. Choose up to 3."
+    max: 3
+    options:
+      - id: wipe
+        label: "Wipe off the GTN paste if his BP falls towards his usual 100"
+        grade: best
+        consequence: "Wiped off at 112 systolic."
+        teaching: "GTN paste is easy to stop: that's why it's chosen."
+        missedEffects: { patient: -5 }
+      - id: watch
+        label: "Watch him for at least 2 hours: the episode can recur"
+        grade: best
+        consequence: "No recurrence."
+        teaching: "Monitor BP for 2 hours after an episode."
+        missedEffects: { patient: -5 }
+      - id: card
+        label: "Teach him and his carer the steps, and give a wallet card"
+        grade: acceptable
+        consequence: "He already has one; updated."
+        teaching: "Patients often know more than the ED; listen to them."
+      - id: sildenafil
+        label: "Fine to use his sildenafil tonight"
+        grade: harmful
+        consequence: "Your senior corrects it: not within 24 hours of GTN."
+        teaching: "A PDE5 inhibitor with a nitrate causes severe hypotension."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Two hours later · Resus"
+        bubbles:
+          - { who: patient, text: "That's the fastest anyone has ever sorted it. Usually they lie me flat." }
+    summary: "You sat him up, found the blocked catheter, used a short-acting drug for the BP that stayed high, then checked the bowel safely."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "That evening · HDU"
+    summary: "He recovered, but lying flat, delays in finding the trigger or long-acting IV drugs made it harder. The debrief shows where."
+
+debrief:
+  diagnosis: "Autonomic dysreflexia (T4 complete spinal cord injury) from a blocked urinary catheter."
+  keyPoints:
+    - "Cord injury at T6 or above with headache, flushing and high BP: autonomic dysreflexia."
+    - "Sit up, loosen clothing, BP every 2–5 minutes."
+    - "Find the trigger: catheter first, then the bowel with lidocaine gel."
+    - "SBP still 150 or more: GTN paste (or bitten IR nifedipine), short-acting and easily stopped."
+    - "Their normal BP may be 90–110: 150 is already high."
+  pitfalls:
+    - "Lying flat."
+    - "Long-acting IV drugs before the trigger is removed."
+    - "A PDE5 inhibitor within 24 hours of GTN."
+  unlocks: [autonomic-dysreflexia, nitrates, nifedipine]
+  refs: [pva-ad-2021]
+  check: { source: pva-ad-2021, verified: false }

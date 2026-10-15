@@ -1,0 +1,18 @@
+id: nifedipine
+title: "Nifedipine (oral, immediate-release)"
+summary: "Swallowed immediate-release nifedipine is a first-line drug for severe hypertension in pregnancy, ideal where IV access or pumps are lacking. Never give it sublingually or bitten for other hypertensive emergencies."
+doses:
+  - id: pregnancy
+    label: "Severe hypertension in pregnancy"
+    route: By mouth, swallowed
+    text: "10 mg; if still severe after 20 minutes, 20 mg; after another 20 minutes, 20 mg; then switch to labetalol"
+    rule: { unit: mg, fixed: 10 }
+    check: { source: [acog-767-2019, isshp-2021], verified: false }
+sections:
+  - heading: Never sublingual
+    body: "Sublingual or bitten capsules give a precipitous, unpredictable fall in BP; strokes, MIs and blindness have followed. The one accepted exception is autonomic dysreflexia that persists after the trigger is removed."
+  - heading: Cautions
+    body: "Reflex tachycardia; avoid in ACS and dissection without beta-blockade. With magnesium, watch for hypotension."
+india: "Cheap and stocked everywhere; Indian trials show it works as well as IV labetalol in pregnancy."
+refs: [acog-767-2019, isshp-2021, esc-he-2019]
+check: { source: [acog-767-2019, isshp-2021, esc-he-2019], verified: false }

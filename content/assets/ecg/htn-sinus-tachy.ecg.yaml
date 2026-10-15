@@ -1,0 +1,6 @@
+# Hypertensive emergencies: shared monitor strip, sinus tachycardia ~138/min.
+title: "Rhythm strip, lead II: sinus tachycardia"
+layout: strip
+rhythm: { kind: sinus, rate: 138 }
+rhythmLead: II
+check: { source: mccord-cocaine-2008, verified: false, todo: "Check it reads as sinus tachycardia." }

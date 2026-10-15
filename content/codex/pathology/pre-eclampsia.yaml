@@ -1,0 +1,18 @@
+id: pre-eclampsia
+title: "Severe pre-eclampsia and eclampsia"
+summary: "After 20 weeks or up to 6 weeks postpartum. The brain is injured at pressures far below 180/120: treat severe-range BP fast and give magnesium."
+sections:
+  - heading: Severe range
+    body: "SBP 160 or more and/or DBP 110 or more, confirmed over 15 minutes: first treatment within 30–60 minutes. (ACOG, ISSHP and FOGSI use 160/110; the 2018 ESC used 170/110.)"
+  - heading: Drugs
+    body: "IV labetalol 20 → 40 → 80 mg every 10 minutes, or oral immediate-release nifedipine 10 → 20 → 20 mg every 20 minutes, or IV hydralazine. Target 140–150/90–100; avoid sudden falls (fetal distress)."
+  - heading: Magnesium
+    body: "For fits and to prevent them; it is not an antihypertensive. Pritchard regimen (no pump needed): 4 g IV over 15–20 minutes plus 5 g IM in each buttock, then 5 g IM 4-hourly."
+  - heading: Magnesium safety
+    body: "Before each dose: knee jerks present, breathing 16 or more a minute, urine 100 ml or more in 4 hours. Antidote: calcium gluconate 1 g IV."
+  - heading: Never
+    body: "ACE inhibitors, ARBs, sublingual nifedipine; diazepam instead of magnesium."
+  - heading: Definitive
+    body: "Delivery, once the mother is stable. Give magnesium and the first BP dose before any transfer."
+refs: [acog-767-2019, isshp-2021, who-pe-2011]
+check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false }

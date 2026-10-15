@@ -1,0 +1,230 @@
+# htn-15 — DRAFT for the content owner's review.
+# Hidden truth: Takayasu arteritis with left subclavian stenosis (falsely low left-arm BP) and renal
+# artery narrowing causing renovascular hypertension; no acute organ damage. Four-limb BP, treat the
+# highest reliable reading; oral drugs (amlodipine), RAAS blockers only cautiously after renal imaging;
+# CT/MR angiography; rheumatology.
+# Sources: owner's HTN note (Takayasu and renovascular disease); EULAR 2018/2020; ESC Council 2019.
+
+id: cvs-htn-15
+title: "24F, dizzy spells and an aching left arm"
+difficulty: 3
+minutes: 8
+patient: { age: 24, sex: F, weightKg: 48 }
+initial:
+  clock: "12:30"
+  vitals: { hr: 88, sbp: 110, dbp: 70, rr: 16, spo2: 98, gcs: 15, temp: 37.2 }
+  flags: []
+check: { source: [eular-lvv-2020, esc-he-2019], verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Dizzy spells and headaches for months. My left arm aches when I comb my hair. I've lost weight and I'm always tired." }
+          - { who: nurse, text: "BP 110 over 70 in the left arm, pulse 88. Looks well. Triage category green." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: [eular-lvv-2020, esc-he-2019], verified: false }
+    prompt: "Normal BP in the left arm, headaches, arm pain on use. Next?"
+    options:
+      - label: "BP in both arms and both legs, and feel every pulse"
+        grade: best
+        consequence: "Right arm 182/110, legs 190/112 and 194/114. Left radial pulse absent; bruits over the left subclavian and abdomen."
+        teaching: "Arm pain on use and a low reading in one arm: measure all four limbs."
+        effects: { minutes: 10 }
+        next: findings
+      - label: "Lying and standing BP in the left arm for a postural drop"
+        grade: suboptimal
+        consequence: "No postural drop. Your senior measures the other arm: 182/110."
+        teaching: "Dizziness plus arm claudication points to the arteries, not posture."
+        effects: { minutes: 20, patient: -5 }
+        next: findings
+      - label: "CT head for the headaches and dizziness, as the BP is normal"
+        grade: suboptimal
+        consequence: "CT normal. Your senior measures the right arm: 182/110."
+        teaching: "One arm's normal reading doesn't mean normal BP."
+        effects: { minutes: 60, patient: -10 }
+        next: findings
+      - label: "Repeat on the left arm with a smaller cuff, as she is thin"
+        grade: suboptimal
+        consequence: "108/68 again. Your senior checks the right arm: 182/110."
+        teaching: "The cuff isn't the problem; the artery is."
+        effects: { minutes: 10, patient: -5 }
+        next: findings
+
+  findings:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine, doctor]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: narrator, text: "Fundi: arteriolar narrowing, no haemorrhages or swelling. Neuro normal, chest clear. Urine bland." }
+          - { who: narrator, text: "Creatinine 1.3 mg/dL, the same as 3 months ago. ESR 64, CRP 30. Hb 10.4." }
+    next: name
+
+  name:
+    type: choice
+    check: { source: eular-lvv-2020, verified: false }
+    prompt: "Most likely diagnosis?"
+    options:
+      - label: "Takayasu arteritis, with renal artery narrowing driving the BP"
+        grade: best
+        consequence: "Your senior agrees: young woman, absent pulse, bruits, raised ESR."
+        teaching: "Large-vessel vasculitis of young women, common in India."
+        effects: { minutes: 5 }
+        next: emergency
+      - label: "Coarctation of the aorta, with a weak left arm from the narrowing"
+        grade: suboptimal
+        consequence: "Your senior points out the legs read higher than the right arm."
+        teaching: "In coarctation, the legs read lower than the arms."
+        effects: { minutes: 5, patient: -5 }
+        next: emergency
+      - label: "Fibromuscular dysplasia of the renal arteries in a young woman"
+        grade: suboptimal
+        consequence: "It would explain the BP, but not the absent left pulse and raised ESR."
+        teaching: "Look for one diagnosis that explains everything."
+        effects: { minutes: 5, patient: -5 }
+        next: emergency
+      - label: "Subclavian steal from atheroma, with dizziness on using the arm"
+        grade: suboptimal
+        consequence: "Unlikely at 24 without risk factors; the ESR and renal bruit point to vasculitis."
+        teaching: "Atheroma is rare at this age; think vasculitis."
+        effects: { minutes: 5, patient: -5 }
+        next: emergency
+
+  emergency:
+    type: choice
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    prompt: "Highest reliable BP 194/114. Is this a hypertensive emergency?"
+    options:
+      - label: "No acute organ damage: oral treatment and control over days"
+        grade: best
+        consequence: "Your senior agrees: severe but chronic."
+        teaching: "The organ, not the number: the creatinine is stable and there is no acute damage."
+        effects: { minutes: 5 }
+        next: drug
+      - label: "Yes: a creatinine of 1.3 is kidney injury; start IV labetalol"
+        grade: suboptimal
+        consequence: "Your senior points out it's unchanged from 3 months ago."
+        teaching: "Compare with a baseline before calling it acute."
+        effects: { minutes: 30, patient: -10 }
+        next: drug
+      - label: "No: her left arm is 110/70, so she doesn't need BP treatment"
+        grade: harmful
+        consequence: "Your senior writes: right arm and legs only."
+        teaching: "Treat the highest reliable reading; the narrowed arm under-reads."
+        effects: { minutes: 5, patient: -20 }
+        next: drug
+      - label: "Yes: BP above 180/110 in a young woman is always an emergency"
+        grade: suboptimal
+        consequence: "Your senior reminds you the number alone doesn't decide it."
+        teaching: "Severe hypertension without acute damage is treated orally."
+        effects: { minutes: 10, patient: -5 }
+        next: drug
+
+  drug:
+    type: choice
+    check: { source: [eular-lvv-2020, esc-he-2019], verified: false }
+    prompt: "Which oral drug to start?"
+    options:
+      - label: "Amlodipine 5 mg; an ACE inhibitor only after renal imaging"
+        grade: best
+        consequence: "BP 168/100 at a week, creatinine steady."
+        teaching: "Calcium-channel blockers are safe with renal artery stenosis."
+        effects: { minutes: 10 }
+        next: plan
+      - label: "Ramipril 10 mg daily: it protects the kidneys"
+        grade: harmful
+        consequence: "A week later her creatinine is 2.6. Ramipril is stopped."
+        teaching: "With bilateral renal artery narrowing, ACE inhibitors and ARBs can cause AKI."
+        effects: { minutes: 10, patient: -20 }
+        next: plan
+      - label: "Low-dose ramipril with creatinine and potassium checked in a week"
+        grade: suboptimal
+        consequence: "Creatinine rises to 1.8; it is stopped."
+        teaching: "Image the renal arteries first; RAAS blockers only with care if one kidney is spared."
+        effects: { minutes: 10, patient: -10 }
+        next: plan
+      - label: "Prednisolone alone: treating the arteritis will bring the BP down"
+        grade: suboptimal
+        consequence: "Steroids raise BP; the stenoses won't reverse quickly."
+        teaching: "Treat the BP and the inflammation."
+        effects: { minutes: 10, patient: -10 }
+        next: plan
+
+  plan:
+    type: multiselect
+    check: { source: eular-lvv-2020, verified: false }
+    prompt: "Before she goes. Choose up to 4."
+    max: 4
+    options:
+      - id: imaging
+        label: "CT or MR angiography of the aorta and its branches"
+        grade: best
+        consequence: "Booked for this week."
+        teaching: "Maps the stenoses, including the renal arteries."
+        missedEffects: { patient: -5 }
+      - id: rheum
+        label: "Rheumatology for steroids and a steroid-sparing drug"
+        grade: best
+        consequence: "Seen in clinic within the week."
+        teaching: "Treat the vasculitis to stop progression."
+        missedEffects: { patient: -5 }
+      - id: arm
+        label: "Write in her notes: measure BP on the right arm or the legs"
+        grade: best
+        consequence: "Added in red on the front sheet."
+        teaching: "So the next reading isn't falsely reassuring."
+        missedEffects: { patient: -5 }
+      - id: ok-esr
+        label: "If the ESR is normal at follow-up, the disease is inactive"
+        grade: suboptimal
+        consequence: "Your senior corrects it: ESR and CRP can be normal with active disease."
+        teaching: "Imaging and symptoms matter more than markers."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: triage-desk
+        actors: [patient:relieved, doctor]
+        caption: "A month later · Rheumatology clinic"
+        bubbles:
+          - { who: patient, text: "My right arm reads 146 over 90 now, and the arm ache is less." }
+    summary: "You didn't trust one arm, measured four limbs, recognised Takayasu arteritis, and chose a drug that's safe for narrowed renal arteries."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Two weeks later · Medical ward"
+    summary: "She was diagnosed in the end, but trusting the low arm, an ACE inhibitor or treating the number cost her. The debrief shows where."
+
+debrief:
+  diagnosis: "Takayasu arteritis with left subclavian stenosis and renovascular hypertension, without acute organ damage."
+  keyPoints:
+    - "Arm pain on use, absent pulse, bruits, young woman: Takayasu arteritis."
+    - "Measure four limbs; treat the highest reliable reading."
+    - "ACE inhibitors and ARBs can cause AKI with renal artery narrowing: image first."
+    - "Rheumatology for steroids and a steroid-sparing drug."
+  pitfalls:
+    - "Trusting a normal reading in the narrowed arm."
+    - "Confusing it with coarctation (legs lower than arms)."
+    - "Calling stable CKD acute kidney injury."
+  unlocks: [takayasu-arteritis, severe-hypertension]
+  refs: [eular-lvv-2020, esc-he-2019, aha-acc-bp-2025]
+  check: { source: [eular-lvv-2020, esc-he-2019], verified: false }

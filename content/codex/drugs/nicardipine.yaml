@@ -1,0 +1,19 @@
+id: nicardipine
+title: "Nicardipine (IV)"
+summary: "A titratable IV dihydropyridine calcium-channel blocker: an arteriolar dilator with no effect on heart rate or contractility. A first-line choice with labetalol for most hypertensive emergencies."
+doses:
+  - id: infusion
+    label: "Hypertensive emergency"
+    route: IV infusion
+    text: "Start at 5 mg/h; increase by 2.5 mg/h every 5–15 minutes; maximum 15 mg/h. Reduce once at target."
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+sections:
+  - heading: Best for
+    body: "Brain (encephalopathy, stroke, ICH, SAH), malignant hypertension and AKI. In CLUE it reached the target range within 30 minutes more often than labetalol, with no difference in outcomes."
+  - heading: Cautions
+    body: "Reflex tachycardia (add a beta-blocker first in dissection and ACS); severe aortic stenosis; phlebitis (change a peripheral site every 12 hours). The effect lasts longer after a long infusion."
+  - heading: Transplant patients
+    body: "It raises tacrolimus and ciclosporin levels: check drug levels."
+india: "Inconsistently stocked; labetalol boluses are the usual substitute."
+refs: [esc-he-2019, aha-acc-bp-2025]
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }

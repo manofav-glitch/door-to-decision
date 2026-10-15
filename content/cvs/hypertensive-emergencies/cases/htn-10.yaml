@@ -1,0 +1,199 @@
+# htn-10 — DRAFT for the content owner's review.
+# Hidden truth: post-streptococcal glomerulonephritis with hypertensive encephalopathy and fluid overload
+# in an 11-year-old. Use child percentiles; lower by ≤25% of the planned reduction in the first 8 hours;
+# furosemide helps (overload, unlike malignant hypertension); labetalol or nicardipine; C3, ASO.
+# Sources: owner's HTN note (children); AAP 2017.
+
+id: cvs-htn-10
+title: "11-year-old girl, puffy face and dark urine, then a fit"
+difficulty: 2
+minutes: 8
+patient: { age: 11, sex: F, weightKg: 34 }
+initial:
+  clock: "17:50"
+  vitals: { hr: 96, sbp: 170, dbp: 110, rr: 26, spo2: 94, gcs: 13, temp: 37.1 }
+  flags: []
+check: { source: aap-htn-2017, verified: false, todo: "Teaching composite; check the child BP numbers." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, relative, nurse]
+        caption: "{clock} · Paediatric triage"
+        bubbles:
+          - { who: relative, text: "Her face has been puffy for four days, and her urine is like cola. Headache since morning, then a fit at home for two minutes. She had a sore throat two weeks ago." }
+          - { who: nurse, text: "170 over 110 with a child cuff. Drowsy but answering. Legs swollen." }
+    next: recognise
+
+  recognise:
+    type: choice
+    check: { source: aap-htn-2017, verified: false }
+    prompt: "Is this BP an emergency in an 11-year-old?"
+    options:
+      - label: "Yes: far above her age centile, with a fit and drowsiness"
+        grade: best
+        consequence: "Her 95th centile is about 120/78; she is 50 mmHg above it with brain signs."
+        teaching: "Use age-, sex- and height-specific centiles in children."
+        effects: { minutes: 3 }
+        next: exam
+      - label: "Not by adult criteria: below 180/120, so treat it by mouth"
+        grade: harmful
+        consequence: "Your senior corrects you: adult thresholds miss emergencies in children."
+        teaching: "Children declare organ injury at much lower pressures than adults."
+        effects: { minutes: 10, patient: -20 }
+        next: exam
+      - label: "Probably, but confirm with ambulatory monitoring before IV drugs"
+        grade: suboptimal
+        consequence: "No time for that; your senior starts treatment."
+        teaching: "A fit with severe hypertension needs treatment now."
+        effects: { minutes: 15, patient: -10 }
+        next: exam
+      - label: "Only because of the fit: the BP itself is mildly raised for her size"
+        grade: suboptimal
+        consequence: "Your senior points out it's far above her centile."
+        teaching: "170/110 is very high for an 11-year-old."
+        effects: { minutes: 3, patient: -5 }
+        next: exam
+
+  exam:
+    type: story
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:worried, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: narrator, text: "Puffy eyes, pitting oedema to the knees, crackles at both bases, raised JVP, liver edge 3 cm. Weight 3 kg up on last month." }
+          - { who: narrator, text: "Urine: 3+ blood, 2+ protein. Creatinine 1.1 mg/dL, potassium 5.2. No more fits; GCS 13." }
+    next: target
+
+  target:
+    type: choice
+    check: { source: aap-htn-2017, verified: false }
+    prompt: "Your plan for her BP?"
+    options:
+      - label: "At most a quarter of the planned fall in 8 hours, rest over 1–2 days"
+        grade: best
+        consequence: "Written as numbers: 155/100 by 8 hours, 125/80 by 48 hours."
+        teaching: "Children: at most 25% of the planned reduction in the first 8 hours."
+        effects: { minutes: 3 }
+        next: drug
+      - label: "Down to her 95th centile, about 120/80, within the first hour or two"
+        grade: harmful
+        consequence: "Your senior rewrites it: too fast for a brain used to high pressure."
+        teaching: "Fast falls risk watershed ischaemia and blindness, in children too."
+        effects: { minutes: 3, patient: -20 }
+        next: drug
+      - label: "MAP down 20–25% in the first hour, as for adult encephalopathy"
+        grade: suboptimal
+        consequence: "Your senior slows it: the child rule is gentler."
+        teaching: "The paediatric rule spreads the fall over 8 hours, then 24–48."
+        effects: { minutes: 3, patient: -5 }
+        next: drug
+      - label: "Leave it: the BP will settle as the nephritis improves over a week"
+        grade: harmful
+        consequence: "She fits again an hour later."
+        teaching: "Encephalopathy needs the BP brought down now."
+        effects: { minutes: 60, patient: -20 }
+        next: drug
+
+  drug:
+    type: choice
+    check: { source: aap-htn-2017, verified: false }
+    prompt: "Which treatment first?"
+    options:
+      - label: "IV furosemide for the overload, with labetalol titrated to the plan"
+        grade: best
+        consequence: "She passes 600 ml in 2 hours; BP 156/100 by 8 hours; crackles fading."
+        teaching: "Here the hypertension is salt and water overload: the diuretic is the key drug."
+        effects: { minutes: 480, setVitals: { sbp: 156, dbp: 100, rr: 22, spo2: 97, gcs: 15 } }
+        next: tests
+      - label: "Nicardipine infusion titrated to the plan; furosemide once you see her urine output"
+        grade: acceptable
+        consequence: "BP comes down; the crackles persist until furosemide is given 4 hours later."
+        teaching: "Nicardipine is fine, but she is overloaded: give the diuretic early."
+        effects: { minutes: 480, setVitals: { sbp: 154, dbp: 98, rr: 24, spo2: 96, gcs: 15 } }
+        next: tests
+      - label: "Labetalol titrated to the plan; no diuretic, as high BP patients are often dry"
+        grade: suboptimal
+        consequence: "BP is hard to control and she needs more oxygen. Your senior gives furosemide."
+        teaching: "That rule is for malignant hypertension; glomerulonephritis is overloaded."
+        effects: { minutes: 480, setVitals: { sbp: 160, dbp: 104, spo2: 92 }, patient: -10 }
+        next: tests
+      - label: "Nifedipine capsule under the tongue, repeated if needed"
+        grade: harmful
+        consequence: "BP falls to 110/70 in 20 minutes and she becomes drowsy."
+        teaching: "Unpredictable falls; never sublingual nifedipine."
+        effects: { minutes: 480, setVitals: { sbp: 130, dbp: 84 }, patient: -25 }
+        next: tests
+
+  tests:
+    type: multiselect
+    check: { source: aap-htn-2017, verified: false }
+    prompt: "Which tests support post-streptococcal nephritis? Choose up to 3."
+    max: 3
+    options:
+      - id: c3
+        label: "Complement C3"
+        grade: best
+        consequence: "Low; it should recover within 8 weeks."
+        teaching: "Low C3 that recovers by 8 weeks fits post-streptococcal nephritis."
+        missedEffects: { patient: -5 }
+      - id: aso
+        label: "ASO or anti-DNase B titre"
+        grade: best
+        consequence: "ASO raised."
+        teaching: "Evidence of a recent streptococcal infection."
+        missedEffects: { patient: -5 }
+      - id: microscopy
+        label: "Urine microscopy for red cell casts"
+        grade: acceptable
+        consequence: "Red cell casts."
+        teaching: "Confirms glomerular bleeding."
+      - id: biopsy
+        label: "Kidney biopsy this week"
+        grade: suboptimal
+        consequence: "Not needed unless C3 stays low or kidney function worsens."
+        teaching: "Biopsy is for atypical or non-resolving cases."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Five days later · Children's ward"
+        bubbles:
+          - { who: patient, text: "My face isn't puffy any more, and my wee is normal colour." }
+    summary: "You used her centile, not adult numbers, brought BP down gently, and treated the overload with a diuretic."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "A week later · Paediatric HDU"
+    summary: "She recovered, but adult thresholds, a fast fall or withholding the diuretic made it harder. The debrief shows where."
+
+debrief:
+  diagnosis: "Post-streptococcal glomerulonephritis with hypertensive encephalopathy and fluid overload."
+  keyPoints:
+    - "Use age-, sex- and height-specific BP centiles in children."
+    - "Lower by at most 25% of the planned reduction in the first 8 hours, the rest over 24–48 hours."
+    - "Glomerulonephritis is overloaded: furosemide helps (the opposite of malignant hypertension)."
+    - "Labetalol or nicardipine; never sublingual nifedipine."
+    - "Low C3 and a raised ASO support the diagnosis."
+  pitfalls:
+    - "Adult thresholds that miss a child's emergency."
+    - "Dropping BP fast."
+    - "Withholding the diuretic."
+  unlocks: [post-strep-gn, furosemide, hypertensive-emergency]
+  refs: [aap-htn-2017]
+  check: { source: aap-htn-2017, verified: false }

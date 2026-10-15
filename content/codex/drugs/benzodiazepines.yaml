@@ -1,0 +1,17 @@
+id: benzodiazepines
+title: "Benzodiazepines (IV)"
+summary: "The first drug for sympathomimetic toxicity (cocaine, amphetamines, MDMA, cathinones): calming the brain lowers heart rate, BP and temperature. Also first for seizures before a second-line drug."
+doses:
+  - id: sympathomimetic
+    label: "Sympathomimetic agitation"
+    route: IV, repeated
+    text: "Diazepam 5–10 mg (or midazolam or lorazepam) every 5–10 minutes, titrated until calm"
+    check: { source: mccord-cocaine-2008, verified: false, todo: "Confirm the drug and dose you teach." }
+sections:
+  - heading: Why first
+    body: "The hypertension, tachycardia and fever are driven by the brain. Sedation treats all three; antihypertensives alone don't treat the agitation or heat."
+  - heading: Cautions
+    body: "Respiratory depression with large cumulative doses: watch the airway and have bag-valve-mask ready."
+india: "Diazepam and midazolam are stocked everywhere."
+refs: [mccord-cocaine-2008]
+check: { source: mccord-cocaine-2008, verified: false }

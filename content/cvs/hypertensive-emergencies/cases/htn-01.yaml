@@ -1,0 +1,255 @@
+# htn-01 — DRAFT for the content owner's review.
+# Hidden truth: severe asymptomatic hypertension (the old "urgency") after a week of missed tablets.
+# Confirm the reading, look for acute organ damage (none: LVH and mild retinal narrowing are chronic),
+# restart oral treatment, review within a week. No IV drugs, no sublingual nifedipine, no ED BP target.
+# Sources: owner's HTN note (severe asymptomatic hypertension; ACEP policy); AHA/ACC 2025; ESC 2024.
+
+id: cvs-htn-01
+title: "52M, BP 220/130 at the pharmacy, mild headache"
+difficulty: 1
+minutes: 8
+patient: { age: 52, sex: M, weightKg: 84 }
+initial:
+  clock: "11:20"
+  vitals: { hr: 84, sbp: 222, dbp: 128, rr: 16, spo2: 98, gcs: 15, temp: 36.8 }
+  flags: []
+check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false, todo: "Teaching composite; check the readings and the story." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "The chemist checked my BP and sent me straight here. My tablets ran out a week ago. Just a dull headache at the back, like I get." }
+          - { who: nurse, text: "222 over 128 with the standard cuff. He is a big man. No chest pain, no breathlessness, no weakness." }
+    next: first-step
+
+  first-step:
+    type: choice
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    prompt: "222/128, a mild headache. Your first step?"
+    options:
+      - label: "Large cuff after 5 minutes' rest, both arms; paracetamol for the headache"
+        grade: best
+        consequence: "With the right cuff after rest: 204/122 in both arms. The headache eases."
+        teaching: "A small cuff on a large arm over-reads. Confirm the number and treat pain before labelling anything."
+        effects: { minutes: 15, setVitals: { sbp: 204, dbp: 122, hr: 80 } }
+        next: look
+      - label: "Labetalol 20 mg IV now and repeat the BP in 10 minutes to see the response"
+        grade: harmful
+        consequence: "His BP drops to 158/94 and he feels light-headed. Your senior stops the boluses."
+        teaching: "IV boluses for a number, with no organ injury, cause falls that harm and bring no benefit."
+        effects: { minutes: 15, setVitals: { sbp: 158, dbp: 94, hr: 66 }, patient: -20 }
+        next: look
+      - label: "Nifedipine 10 mg capsule under the tongue, then recheck the BP in 20 minutes"
+        grade: harmful
+        consequence: "BP falls to 140/84 in 15 minutes; he is pale and dizzy. Your senior lies him down and gives fluid."
+        teaching: "Sublingual nifedipine gives sudden, unpredictable falls; strokes and MIs have followed. Never use it."
+        effects: { minutes: 25, setVitals: { sbp: 140, dbp: 84, hr: 104 }, patient: -25 }
+        next: look
+      - label: "Amlodipine 10 mg by mouth now, then repeat his BP in an hour before deciding"
+        grade: suboptimal
+        consequence: "Harmless, but you treated before confirming the number or looking for organ damage."
+        teaching: "Confirm the reading and look for acute organ injury first; the drug decision follows."
+        effects: { minutes: 15, patient: -5 }
+        next: look
+
+  look:
+    type: multiselect
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    prompt: "204/122 after rest. Which findings would make this a hypertensive emergency? Choose up to 5."
+    max: 5
+    options:
+      - id: retina
+        label: "Flame haemorrhages, cotton-wool spots or papilloedema on fundoscopy"
+        grade: best
+        consequence: "You look: only mildly narrowed arterioles."
+        teaching: "Advanced retinopathy marks malignant hypertension; fundoscopy is the fastest bedside test."
+        missedEffects: { patient: -5 }
+      - id: neuro
+        label: "New confusion, a focal deficit, a seizure or loss of vision"
+        grade: best
+        consequence: "Neurological examination is normal."
+        teaching: "Encephalopathy, stroke and PRES are acute brain injury."
+        missedEffects: { patient: -5 }
+      - id: kidney
+        label: "A new rise in creatinine with blood and protein in the urine"
+        grade: best
+        consequence: "Urine dip: trace protein, no blood."
+        teaching: "Acute kidney injury and an active sediment are acute organ damage."
+        missedEffects: { patient: -5 }
+      - id: lungs
+        label: "Breathlessness with crackles, or chest pain with ECG changes"
+        grade: best
+        consequence: "Chest clear; no chest pain."
+        teaching: "Pulmonary oedema and ACS are cardiac organ damage."
+        missedEffects: { patient: -5 }
+      - id: number
+        label: "A diastolic pressure above 120 on two careful readings"
+        grade: suboptimal
+        consequence: "The number alone doesn't decide it."
+        teaching: "The organ, not the number: 230/130 without organ injury is a clinic problem."
+      - id: headache
+        label: "His dull occipital headache, similar to his usual ones"
+        grade: suboptimal
+        consequence: "It settled with paracetamol."
+        teaching: "Isolated headache, nosebleed or dizziness is not acute organ damage."
+    next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: [hancock-2009, esc-htn-2024], verified: false }
+    image: ecg/htn-01-lvh.svg
+    alt: "12-lead ECG. Sinus rhythm about 84 per minute. Very tall R waves in V5 and V6 and aVL, deep S waves in V1 and V2. Down-sloping ST depression with T inversion in I, aVL, V5 and V6. No ST elevation."
+    prompt: "No chest pain. The triage ECG: what is it, and what does it change?"
+    options:
+      - label: "LVH with strain: long-standing pressure load, not acute damage"
+        grade: best
+        consequence: "His ECG from two years ago looks the same."
+        teaching: "LVH is chronic organ damage: it shows the BP has been high for years, not that today is an emergency."
+        effects: { minutes: 5 }
+        next: tests
+      - label: "Lateral ST depression: NSTE-ACS, so start IV GTN and the ACS pathway"
+        grade: suboptimal
+        consequence: "Your senior finds the old ECG, identical, and stops the GTN."
+        teaching: "Strain follows the tall voltages and is stable; ischaemia is new, dynamic and comes with symptoms."
+        effects: { minutes: 30, patient: -10 }
+        next: tests
+      - label: "LVH with strain, but send a troponin and repeat the ECG to be safe"
+        grade: acceptable
+        consequence: "Troponin normal, repeat ECG unchanged; he waits two more hours."
+        teaching: "Comparing with an old ECG answers the question faster."
+        effects: { minutes: 90 }
+        next: tests
+      - label: "High voltages only, normal for a man of his build: no strain pattern"
+        grade: suboptimal
+        consequence: "Your senior points out the lateral ST–T changes."
+        teaching: "Strain is down-sloping ST depression with asymmetric T inversion opposite the tall QRS."
+        effects: { minutes: 5, patient: -5 }
+        next: tests
+
+  tests:
+    type: choice
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    prompt: "Fundi, nerves, chest and urine show no acute damage. Which blood tests?"
+    options:
+      - label: "Creatinine and potassium: no recent results, and he restarts telmisartan"
+        grade: best
+        consequence: "Creatinine 1.1 mg/dL, potassium 4.3."
+        teaching: "Targeted tests that change the plan; a creatinine is reasonable when follow-up is uncertain."
+        effects: { minutes: 40 }
+        next: plan
+      - label: "Troponin, BNP, full blood count, liver tests and a CT head to rule out damage"
+        grade: suboptimal
+        consequence: "All normal, three hours later; the CT was not needed."
+        teaching: "Don't order a broad panel just because the BP is high; test for what the history and examination suggest."
+        effects: { minutes: 180, patient: -5 }
+        next: plan
+      - label: "No blood tests in the ED: his GP can check them at the review next week"
+        grade: acceptable
+        consequence: "Reasonable for a reliable patient with a booked review."
+        teaching: "Routine tests aren't required in truly asymptomatic patients when follow-up is reliable."
+        effects: { minutes: 5 }
+        next: plan
+
+  plan:
+    type: choice
+    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false }
+    prompt: "An hour later BP 196/118, headache gone. Your plan?"
+    options:
+      - label: "Restart amlodipine 10 mg and telmisartan 40 mg; GP review within a week"
+        grade: best
+        consequence: "He takes his first doses in the ED and goes home with a review booked."
+        teaching: "Restart or step up long-acting oral drugs; control comes over days to weeks."
+        effects: { minutes: 15 }
+        next: home
+      - label: "Keep him until the BP is below 160/100, adding an oral dose every hour"
+        grade: suboptimal
+        consequence: "By evening he is at 150/90 and dizzy on standing."
+        teaching: "There is no BP target to reach before discharge; chasing one causes falls."
+        effects: { minutes: 300, patient: -10 }
+        next: home
+      - label: "Admit for a labetalol infusion to reach 140/90 by tomorrow morning"
+        grade: harmful
+        consequence: "Overnight he drops to 110/70 and feels faint; the bed was not needed."
+        teaching: "Severe hypertension without organ damage needs no admission or IV drugs."
+        effects: { minutes: 600, patient: -20 }
+        next: home
+      - label: "Restart both tablets and add chlorthalidone 12.5 mg; GP review within a week"
+        grade: acceptable
+        consequence: "Fine, though the missed tablets alone explain this reading."
+        teaching: "Adding a third drug is reasonable if BP was poorly controlled before; here adherence was the problem."
+        effects: { minutes: 15 }
+        next: home
+
+  home:
+    type: multiselect
+    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false }
+    prompt: "Before he goes home. Choose up to 3."
+    max: 3
+    options:
+      - id: return
+        label: "Come back at once with chest pain, breathlessness, weakness or a change in vision"
+        grade: best
+        consequence: "Written on his discharge sheet."
+        teaching: "Safety-netting for the organ symptoms that would make it an emergency."
+        missedEffects: { patient: -5 }
+      - id: supply
+        label: "Why the tablets ran out: arrange a 3-month supply from the government clinic"
+        grade: best
+        consequence: "The free supply is set up."
+        teaching: "Non-adherence and cost are the commonest triggers; fix the cause."
+        missedEffects: { patient: -5 }
+      - id: home-bp
+        label: "A home BP diary to bring to the review"
+        grade: acceptable
+        consequence: "He has a machine at home."
+        teaching: "Home readings guide the step-up."
+      - id: extra
+        label: "Take an extra amlodipine whenever a home reading is above 180"
+        grade: suboptimal
+        consequence: "Your senior removes it: doubling up causes falls."
+        teaching: "Asymptomatic high readings need a review, not extra doses at home."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: triage-desk
+        actors: [patient:relieved, doctor]
+        caption: "A week later · GP clinic"
+        bubbles:
+          - { who: patient, text: "158 over 96 today, and I haven't missed a tablet." }
+    summary: "You confirmed the reading, found no acute organ damage, ignored the chronic changes, and restarted his tablets with a review. No IV drugs, no admission."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Later that day · Observation ward"
+    summary: "He was never in danger from the BP, but treating the number caused falls, delays or an admission he didn't need. The debrief shows where."
+
+debrief:
+  diagnosis: "Severe hypertension without acute organ damage (formerly 'hypertensive urgency'), after a week of missed tablets."
+  keyPoints:
+    - "Confirm the reading: right cuff size, 5 minutes' rest, both arms; treat pain first."
+    - "Look for acute organ damage: brain, eyes, heart and lungs, kidneys, pregnancy."
+    - "LVH, old CKD and mild retinal narrowing are chronic; they don't make it an emergency."
+    - "Restart or step up oral drugs and review within a week; there is no ED target."
+  pitfalls:
+    - "IV boluses or sublingual nifedipine for a number."
+    - "Calling LVH strain an acute coronary syndrome."
+    - "A broad panel of tests or an admission without a reason."
+  unlocks: [severe-hypertension, hypertensive-emergency, lvh, nifedipine]
+  refs: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019, hancock-2009]
+  check: { source: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019], verified: false }

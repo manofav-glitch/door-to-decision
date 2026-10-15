@@ -1,0 +1,16 @@
+id: sympathomimetic-toxicity
+title: "Sympathomimetic toxicity"
+summary: "Cocaine, amphetamines, MDMA or cathinones: agitation, sweating, tachycardia, hypertension and fever. Sedation and cooling come before antihypertensives."
+sections:
+  - heading: First
+    body: "IV benzodiazepines titrated to calm; active cooling if hot; check glucose. Restraint without sedation worsens heat and acidosis."
+  - heading: If BP stays high
+    body: "Phentolamine, GTN or nicardipine."
+  - heading: Beta-blockers
+    body: "Pure beta-blockers (metoprolol, propranolol) are avoided: the fear is unopposed alpha. Labetalol or carvedilol once sedated is debated and reasonable to some."
+  - heading: Chest pain
+    body: "Treat as possible ACS too: benzodiazepines and nitrates first, aspirin; check for dissection."
+  - heading: Complications
+    body: "Hyperthermia, rhabdomyolysis, hyponatraemia (MDMA), ACS, dissection, stroke, seizures."
+refs: [mccord-cocaine-2008, esc-he-2019]
+check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false }

@@ -1,0 +1,233 @@
+# htn-03 — DRAFT for the content owner's review.
+# Hidden truth: hypertensive encephalopathy / PRES driven by tacrolimus after a kidney transplant.
+# Stop the seizure (benzodiazepine, then levetiracetam; avoid phenytoin, which lowers tacrolimus levels);
+# MAP down 20–25% in the first hour with labetalol (nicardipine raises tacrolimus levels); tacrolimus
+# level and adjustment with the transplant team; MRI FLAIR; no improvement means rethink.
+# Sources: owner's HTN note (encephalopathy and PRES; transplant); ESC Council 2019; AHA/ACC 2025.
+
+id: cvs-htn-03
+title: "41F, kidney transplant, confused and can't see"
+difficulty: 2
+minutes: 10
+patient: { age: 41, sex: F, weightKg: 58 }
+initial:
+  clock: "16:40"
+  vitals: { hr: 106, sbp: 208, dbp: 122, rr: 20, spo2: 95, gcs: 12, temp: 37.4 }
+  flags: []
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false, todo: "Teaching composite; check the drugs and timings." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [patient-supine:worried, relative, paramedic]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: relative, text: "Kidney transplant six months ago. Headache and vomiting since yesterday. Today she said she couldn't see the TV, then she had a fit at home." }
+          - { who: paramedic, text: "On tacrolimus, mycophenolate and prednisolone. BP 208 over 122, sugar 112." }
+    next: seizure
+
+  seizure:
+    type: choice
+    check: { source: [esc-he-2019], verified: false }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse]
+        caption: "{clock} · Resus"
+        sfx: "Generalised fit, 3 minutes so far"
+    prompt: "She fits again in resus. First?"
+    options:
+      - label: "Lorazepam 4 mg IV, levetiracetam if she fits again; check glucose"
+        grade: best
+        consequence: "The fit stops in a minute. Glucose 108."
+        teaching: "Benzodiazepine first, then levetiracetam, which doesn't interact with tacrolimus."
+        effects: { minutes: 10 }
+        next: ct
+      - label: "Diazepam 10 mg IV, then a phenytoin loading dose to prevent more fits"
+        grade: suboptimal
+        consequence: "The fit stops; your senior swaps phenytoin for levetiracetam."
+        teaching: "Phenytoin induces liver enzymes and lowers tacrolimus levels, risking rejection."
+        effects: { minutes: 10, patient: -5 }
+        next: ct
+      - label: "Magnesium sulphate 4 g IV over 15 minutes, as for an eclamptic fit"
+        grade: suboptimal
+        consequence: "She fits on; your senior gives lorazepam. Pregnancy test: negative."
+        teaching: "Magnesium is for eclampsia; outside pregnancy a benzodiazepine stops the fit."
+        effects: { minutes: 15, patient: -10 }
+        next: ct
+      - label: "Labetalol 20 mg IV first, because the BP is what's causing the fits"
+        grade: harmful
+        consequence: "She fits for 8 more minutes and desaturates before lorazepam is given."
+        teaching: "Stop the seizure first; BP control follows in minutes, not instead."
+        effects: { minutes: 15, spo2: -8, patient: -20 }
+        next: ct
+
+  ct:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: narrator, text: "GCS 13 after the fit, no focal weakness, pupils equal. She says the room is dark; her pupils react to light." }
+          - { who: narrator, text: "CT head: no bleed; subtle low density in both occipital lobes. Creatinine 1.4 mg/dL, as at her last clinic." }
+    next: diagnosis
+
+  diagnosis:
+    type: choice
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    prompt: "Most likely diagnosis?"
+    options:
+      - label: "PRES: posterior vasogenic oedema from the BP and tacrolimus"
+        grade: best
+        consequence: "Your senior agrees: treat the BP, review the tacrolimus, MRI when stable."
+        teaching: "Headache, seizures and cortical blindness with posterior changes, on a calcineurin inhibitor: PRES."
+        effects: { minutes: 5 }
+        next: bp-target
+      - label: "Bilateral occipital infarcts from a top-of-basilar stroke"
+        grade: suboptimal
+        consequence: "Your senior points out the global picture, the fits and the drug; the CT angiogram is normal."
+        teaching: "PRES mimics posterior stroke; a basilar occlusion would need permissive BP and reperfusion."
+        effects: { minutes: 30, patient: -5 }
+        next: bp-target
+      - label: "CNS infection on immunosuppression: lumbar puncture and antivirals"
+        grade: suboptimal
+        consequence: "Reasonable to consider, but the BP is left untreated for an hour."
+        teaching: "Consider infection in the immunosuppressed, but don't let it delay BP control."
+        effects: { minutes: 60, patient: -10 }
+        next: bp-target
+      - label: "Tacrolimus toxicity alone; the BP is just a reaction to the fit"
+        grade: suboptimal
+        consequence: "Her BP stays above 200 an hour after the fit. Your senior treats it."
+        teaching: "Post-ictal BP settles quickly; persistent severe BP with brain signs is the problem."
+        effects: { minutes: 30, patient: -10 }
+        next: bp-target
+
+  bp-target:
+    type: choice
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    prompt: "BP 208/122, MAP about 150. Your BP plan?"
+    options:
+      - label: "Labetalol boluses to bring MAP down 20–25% in the first hour"
+        grade: best
+        consequence: "MAP 116 at 1 hour; she is more alert."
+        teaching: "Encephalopathy: MAP down 20–25% in the first hour, then towards 160/100 over 2–6 hours."
+        effects: { minutes: 60, setVitals: { hr: 88, sbp: 164, dbp: 92 } }
+        next: tacrolimus
+      - label: "Nicardipine infusion to bring MAP down 20–25% in the first hour"
+        grade: acceptable
+        consequence: "MAP 118 at 1 hour. The transplant team asks for a tacrolimus level tomorrow."
+        teaching: "Right target, but nicardipine raises tacrolimus levels; labetalol avoids the interaction."
+        effects: { minutes: 60, setVitals: { hr: 102, sbp: 166, dbp: 94 } }
+        next: tacrolimus
+      - label: "Bring her to 130/80 within the hour: PRES reverses faster at normal BP"
+        grade: harmful
+        consequence: "At 128/76 she becomes drowsier. Your senior lets the BP rise again."
+        teaching: "Too far, too fast risks watershed ischaemia in a brain used to high pressure."
+        effects: { minutes: 60, setVitals: { sbp: 128, dbp: 76 }, patient: -20 }
+        next: tacrolimus
+      - label: "Treat only if above 220/120, to keep the brain perfused"
+        grade: suboptimal
+        consequence: "She fits again an hour later. Your senior starts labetalol."
+        teaching: "Permissive BP is for ischaemic stroke; PRES needs the pressure brought down."
+        effects: { minutes: 60, patient: -15 }
+        next: tacrolimus
+
+  tacrolimus:
+    type: choice
+    check: { source: [esc-he-2019], verified: false, todo: "Confirm with your transplant colleagues." }
+    prompt: "What about her transplant drugs?"
+    options:
+      - label: "Tacrolimus level, and ask the transplant team to reduce or switch it"
+        grade: best
+        consequence: "Level 18 (target 6–10). The team lowers the dose."
+        teaching: "PRES from a calcineurin inhibitor: reduce or switch the drug alongside BP control."
+        effects: { minutes: 30 }
+        next: later
+      - label: "Hold tonight's dose and discuss with the transplant team in the morning"
+        grade: acceptable
+        consequence: "A sensible holding step; the level, sent the next day, is high."
+        teaching: "Earlier contact with the transplant team gets a level and a plan sooner."
+        effects: { minutes: 30 }
+        next: later
+      - label: "Stop all immunosuppression until she has recovered from the PRES"
+        grade: harmful
+        consequence: "The transplant team restarts it the next day, worried about rejection."
+        teaching: "Stopping everything risks losing the kidney; adjust the culprit drug."
+        effects: { minutes: 30, patient: -20 }
+        next: later
+      - label: "Carry on unchanged: this is from the BP, not the drug"
+        grade: suboptimal
+        consequence: "The transplant team finds a high level the next day and lowers the dose."
+        teaching: "Calcineurin inhibitors cause both the hypertension and the endothelial injury."
+        effects: { minutes: 30, patient: -10 }
+        next: later
+
+  later:
+    type: choice
+    check: { source: [esc-he-2019], verified: false }
+    prompt: "Six hours on: BP 158/94, no more fits, alert, vision coming back. MRI in the morning?"
+    options:
+      - label: "Yes, MRI with FLAIR to confirm; it changes little if she keeps improving"
+        grade: best
+        consequence: "Posterior white-matter oedema, no infarct or bleed."
+        teaching: "MRI confirms PRES; improvement within hours of BP control supports the diagnosis."
+        effects: { minutes: 600 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "No: with her vision back, imaging adds nothing and only delays discharge"
+        grade: suboptimal
+        consequence: "Your senior wants it confirmed before calling it PRES."
+        teaching: "Confirm PRES and exclude infarction or bleeding, which change the plan."
+        effects: { minutes: 30, patient: -5 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Yes, but only if she isn't fully better by tomorrow evening"
+        grade: acceptable
+        consequence: "She is better; the MRI is done the next day and confirms PRES."
+        teaching: "No improvement means rethink: stroke, venous thrombosis, encephalitis, non-convulsive status."
+        effects: { minutes: 600 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Five days later · Transplant ward"
+        bubbles:
+          - { who: patient, text: "I can read again. They changed my tablets and my kidney is fine." }
+    summary: "You stopped the fits, brought MAP down a quarter in the first hour, picked the drug that doesn't upset tacrolimus, and got the culprit drug adjusted."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "A week later · Transplant ward"
+    summary: "She recovered, but delays, too fast a fall or a dangerous change to her transplant drugs cost her. The debrief shows where."
+
+debrief:
+  diagnosis: "Hypertensive encephalopathy with PRES, driven by tacrolimus after a kidney transplant."
+  keyPoints:
+    - "Seizures: benzodiazepine, then levetiracetam (no tacrolimus interaction)."
+    - "MAP down 20–25% in the first hour, then towards 160/100 over 2–6 hours."
+    - "Calcineurin inhibitors cause PRES: get a level and adjust with the transplant team."
+    - "Nicardipine and diltiazem raise tacrolimus levels."
+    - "Expect improvement within hours; if not, rethink the diagnosis."
+  pitfalls:
+    - "Treating it as a stroke with permissive BP, or dropping BP to normal."
+    - "Stopping all immunosuppression."
+    - "Phenytoin, which lowers tacrolimus levels."
+  unlocks: [pres, hypertensive-emergency, nicardipine]
+  refs: [esc-he-2019, aha-acc-bp-2025]
+  check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }

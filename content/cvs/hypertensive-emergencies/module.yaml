@@ -1,0 +1,7 @@
+id: hypertensive-emergencies
+title: Hypertensive Emergencies
+blurb: "The organ, not the number: find the injured organ, then pick the drug, the target and the clock."
+# Answers are shown in a shuffled order (CONTENT_GUIDE §5b): write every option so it could be right.
+shuffleOptions: true
+# Case files in play order (content/cvs/hypertensive-emergencies/cases/<name>.yaml)
+cases: [htn-01, htn-02, htn-03, htn-04, htn-05, htn-06, htn-07, htn-08, htn-09, htn-10, htn-11, htn-12, htn-13, htn-14, htn-15]

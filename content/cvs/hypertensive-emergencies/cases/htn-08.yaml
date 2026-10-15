@@ -1,0 +1,222 @@
+# htn-08 — DRAFT for the content owner's review.
+# Hidden truth: phaeochromocytoma crisis set off by IV metoclopramide given for vomiting.
+# Recognise the catecholamine surge; alpha-blockade first (phentolamine 1–5 mg boluses; nicardipine if
+# not stocked; magnesium adjunct); no beta-blocker first (labetalol is mostly beta); no steroids;
+# beta-blocker only after alpha-blockade, for tachyarrhythmia; plasma metanephrines; oral alpha-blockade.
+# Sources: owner's HTN note (catecholaminergic states); Endocrine Society 2014; ESC Council 2019.
+
+id: cvs-htn-08
+title: "35F, vomiting, then a pounding headache in the ED"
+difficulty: 3
+minutes: 10
+patient: { age: 35, sex: F, weightKg: 55 }
+initial:
+  clock: "10:45"
+  vitals: { hr: 96, sbp: 164, dbp: 98, rr: 18, spo2: 98, gcs: 15, temp: 37.1 }
+  flags: []
+check: { source: [lenders-pheo-2014, esc-he-2019], verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:worried, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Vomiting since last night. For months I get spells of headache, sweating and my heart racing; the doctor said it was anxiety." }
+          - { who: nurse, text: "164 over 98. The night doctor charted metoclopramide 10 mg IV for the vomiting. Giving it now." }
+    next: crisis
+
+  crisis:
+    type: story
+    onEnter: { minutes: 15, setVitals: { hr: 134, sbp: 252, dbp: 142, rr: 24 }, rhythm: ecg/htn-sinus-tachy.svg }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: patient, text: "My head is bursting. My heart is pounding. I'm soaked." }
+          - { who: nurse, text: "252 over 142, pulse 134. Pale, drenched in sweat. Fifteen minutes after the metoclopramide." }
+    next: think
+
+  think:
+    type: choice
+    check: { source: [lenders-pheo-2014], verified: false }
+    prompt: "What is happening?"
+    options:
+      - label: "A phaeochromocytoma surge, set off by the metoclopramide"
+        grade: best
+        consequence: "Your senior agrees: the spells fit, and metoclopramide is a known trigger."
+        teaching: "Headache, sweating and palpitations in spells: think phaeochromocytoma."
+        effects: { minutes: 2 }
+        next: drug
+      - label: "Anaphylaxis to metoclopramide: IM adrenaline 0.5 mg into the thigh now"
+        grade: harmful
+        consequence: "BP 290/160 and she has chest pain. Your senior stops more adrenaline."
+        teaching: "No wheeze, no rash, no low BP: this is not anaphylaxis, and adrenaline feeds the crisis."
+        effects: { minutes: 5, setVitals: { sbp: 280, dbp: 156, hr: 148 }, patient: -25 }
+        next: drug
+      - label: "Thyroid storm: propranolol 1 mg IV and carbimazole by mouth now"
+        grade: harmful
+        consequence: "BP climbs to 270/150. Your senior stops the propranolol."
+        teaching: "Beta-blockade first in catecholamine excess leaves alpha constriction unopposed."
+        effects: { minutes: 5, setVitals: { sbp: 270, dbp: 150 }, patient: -20 }
+        next: drug
+      - label: "Sympathomimetic drug use: ask her about cocaine and amphetamines"
+        grade: acceptable
+        consequence: "She denies any; the story of spells and the trigger point to a tumour."
+        teaching: "A fair differential; treatment is similar (alpha-blockade or benzodiazepines), but the trigger fits a tumour."
+        effects: { minutes: 3 }
+        next: drug
+
+  drug:
+    type: choice
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+    prompt: "BP 252/142, HR 134. First drug?"
+    options:
+      - label: "Phentolamine IV boluses, repeated every 5–15 minutes to effect"
+        grade: best
+        consequence: "Pharmacy has two ampoules."
+        teaching: "Alpha-blockade first."
+        effects: { minutes: 3 }
+        next: dose
+      - label: "Labetalol 20 mg IV, since it blocks both alpha and beta receptors"
+        grade: suboptimal
+        consequence: "BP barely moves while HR falls; your senior switches to phentolamine."
+        teaching: "Labetalol is mostly a beta-blocker (about 1:7); it can make catecholamine crises worse."
+        effects: { minutes: 15, setVitals: { hr: 112 }, patient: -10 }
+        next: dose
+      - label: "Metoprolol 5 mg IV for the heart rate, then a vasodilator"
+        grade: harmful
+        consequence: "BP rises to 280/160 and she develops pulmonary oedema."
+        teaching: "Never a beta-blocker first: unopposed alpha vasoconstriction."
+        effects: { minutes: 10, setVitals: { sbp: 280, dbp: 160, spo2: 90 }, patient: -25 }
+        next: dose
+      - label: "Nicardipine infusion from 5 mg/h, titrated up every 5 minutes"
+        grade: acceptable
+        consequence: "BP falls over 30 minutes; your senior adds phentolamine when it arrives."
+        teaching: "Nicardipine or nitroprusside are the alternatives when phentolamine isn't stocked."
+        effects: { minutes: 30, setVitals: { sbp: 196, dbp: 110 } }
+        next: dose
+
+  dose:
+    type: dose
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+    prompt: "Phentolamine IV bolus, in mg?"
+    drug: phentolamine
+    dose: crisis
+    tolerancePct: 0
+    correct:
+      consequence: "Two boluses over 10 minutes: BP 178/102, HR 118."
+      teaching: "1–5 mg boluses, repeated to effect."
+      effects: { minutes: 10, setVitals: { sbp: 178, dbp: 102, hr: 118, rr: 20 } }
+    under:
+      consequence: "Little effect; several more doses are needed."
+      teaching: "Start at 1–5 mg."
+      effects: { minutes: 20, setVitals: { sbp: 196, dbp: 110, hr: 124 }, patient: -5 }
+    over:
+      consequence: "BP drops to 96/60 and HR 150; she needs fluid."
+      teaching: "Large doses overshoot and cause tachyarrhythmias."
+      effects: { minutes: 15, setVitals: { sbp: 96, dbp: 60, hr: 150 }, patient: -15 }
+    next: heart-rate
+
+  heart-rate:
+    type: choice
+    check: { source: [lenders-pheo-2014], verified: false }
+    prompt: "BP 178/102, sinus rhythm 118, headache easing. Next?"
+    options:
+      - label: "More phentolamine as needed, magnesium 2 g IV; no beta-blocker yet"
+        grade: best
+        consequence: "BP 150/90, HR 104 over the next hour."
+        teaching: "Sinus tachycardia settles as alpha-blockade takes hold; magnesium is a useful adjunct."
+        effects: { minutes: 60, setVitals: { sbp: 150, dbp: 90, hr: 104 } }
+        next: tests
+      - label: "Start oral doxazosin now; a beta-blocker later only if she stays tachycardic"
+        grade: acceptable
+        consequence: "Started; she still needs two more phentolamine boluses that hour."
+        teaching: "Oral alpha-blockade follows; a beta-blocker only after alpha-blockade, for tachyarrhythmia."
+        effects: { minutes: 60, setVitals: { sbp: 156, dbp: 94, hr: 106 } }
+        next: tests
+      - label: "Esmolol infusion now that she is alpha-blocked, to slow the heart rate"
+        grade: suboptimal
+        consequence: "HR falls, but BP creeps up; your senior stops it."
+        teaching: "After alpha-blockade a beta-blocker is allowed, but only for a tachyarrhythmia, not sinus 118."
+        effects: { minutes: 60, setVitals: { sbp: 172, dbp: 100, hr: 92 }, patient: -5 }
+        next: tests
+      - label: "Hydrocortisone 200 mg IV in case this is an adrenal crisis"
+        grade: harmful
+        consequence: "An hour later her BP surges again."
+        teaching: "High-dose steroids can trigger a phaeochromocytoma crisis."
+        effects: { minutes: 60, setVitals: { sbp: 214, dbp: 124, hr: 126 }, patient: -20 }
+        next: tests
+
+  tests:
+    type: multiselect
+    check: { source: [lenders-pheo-2014], verified: false }
+    prompt: "Stable on the ward. Choose up to 3."
+    max: 3
+    options:
+      - id: metanephrines
+        label: "Plasma free metanephrines"
+        grade: best
+        consequence: "Normetanephrine eight times the upper limit."
+        teaching: "The first test; urine fractionated metanephrines if plasma isn't available."
+        missedEffects: { patient: -5 }
+      - id: allergy
+        label: "Record metoclopramide, glucagon and steroids as drugs to avoid"
+        grade: best
+        consequence: "Added to her notes and her discharge letter."
+        teaching: "Known triggers: write them down so it doesn't happen again."
+        missedEffects: { patient: -5 }
+      - id: ct
+        label: "CT of the adrenals once the biochemistry confirms it"
+        grade: acceptable
+        consequence: "A 4 cm right adrenal mass."
+        teaching: "Image after biochemical confirmation."
+      - id: biopsy
+        label: "CT-guided biopsy of any adrenal mass found"
+        grade: harmful
+        consequence: "Your senior cancels it."
+        teaching: "Biopsy of a phaeochromocytoma can set off a crisis."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "Two months later · Surgical ward"
+        bubbles:
+          - { who: patient, text: "Two weeks of tablets first, then they took it out. No more spells." }
+    summary: "You recognised the catecholamine surge and its trigger, blocked alpha before beta, avoided steroids, and set up the diagnosis safely."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "A week later · ICU"
+    summary: "She survived, but a beta-blocker first, adrenaline, steroids or a biopsy made the crisis worse. The debrief shows where."
+
+debrief:
+  diagnosis: "Phaeochromocytoma crisis triggered by IV metoclopramide."
+  keyPoints:
+    - "Spells of headache, sweating and palpitations: think phaeochromocytoma."
+    - "Alpha-blockade first: phentolamine 1–5 mg IV boluses; nicardipine or nitroprusside if not stocked."
+    - "Magnesium as an adjunct; then oral alpha-blockade."
+    - "Beta-blocker only after alpha-blockade, and only for tachyarrhythmia."
+    - "Triggers: metoclopramide, glucagon, high-dose steroids, biopsy."
+  pitfalls:
+    - "Beta-blocker first, including labetalol (mostly beta)."
+    - "Calling it anaphylaxis and giving adrenaline."
+    - "Biopsy of an adrenal mass before excluding phaeochromocytoma."
+  unlocks: [phaeochromocytoma-crisis, phentolamine, prazosin]
+  refs: [lenders-pheo-2014, esc-he-2019]
+  check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }

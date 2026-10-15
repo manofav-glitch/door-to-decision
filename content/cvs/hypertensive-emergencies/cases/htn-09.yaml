@@ -1,0 +1,216 @@
+# htn-09 — DRAFT for the content owner's review.
+# Hidden truth: Indian red scorpion (Mesobuthus tamulus) envenomation in a 6-year-old: autonomic storm
+# with hypertension and cold peripheries, later myocarditis with pulmonary oedema.
+# Prazosin 30 micrograms/kg by mouth, repeated 3-hourly until perfusion recovers; antivenom with it;
+# pulmonary oedema: sit up, oxygen, GTN, dobutamine if pump failure. Avoid atropine, nifedipine, fluid boluses.
+# Sources: owner's HTN note (scorpion envenomation); Bawaskar BMJ 2011.
+
+id: cvs-htn-09
+title: "6-year-old boy, scorpion sting an hour ago"
+difficulty: 2
+minutes: 8
+patient: { age: 6, sex: M, weightKg: 20 }
+initial:
+  clock: "20:30"
+  vitals: { hr: 142, sbp: 150, dbp: 104, rr: 32, spo2: 95, gcs: 15, temp: 36.8 }
+  flags: []
+check: { source: bawaskar-2011, verified: false, todo: "Teaching composite; child vitals and doses." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative, nurse]
+        caption: "{clock} · Rural hospital"
+        bubbles:
+          - { who: relative, text: "A red scorpion stung his foot an hour ago, fetching wood. He's vomited three times and he's dripping with sweat." }
+          - { who: nurse, text: "Cold hands and feet, pulse 142, BP 150 over 104. He has a painful erection." }
+    next: severity
+
+  severity:
+    type: choice
+    check: { source: bawaskar-2011, verified: false }
+    prompt: "Sweating, vomiting, cold limbs, priapism, BP 150/104. What is going on?"
+    options:
+      - label: "Systemic envenomation: a venom-driven autonomic storm; prazosin now"
+        grade: best
+        consequence: "Prazosin is in the drug cupboard."
+        teaching: "Sweating, cold limbs, priapism and high BP: the venom has set off an alpha-driven storm."
+        effects: { minutes: 3 }
+        next: dose
+      - label: "A painful local sting: paracetamol, a lidocaine block, observe 6 hours"
+        grade: harmful
+        consequence: "Three hours later he is breathless and grey. Your senior gives prazosin."
+        teaching: "Systemic signs mean envenomation, whatever the local pain."
+        effects: { minutes: 180, spo2: -6, patient: -25 }
+        next: dose
+      - label: "A cholinergic toxidrome: atropine to dry the sweat and secretions"
+        grade: harmful
+        consequence: "His heart rate climbs to 180 and his BP rises further."
+        teaching: "Atropine worsens the storm in scorpion stings; it is not organophosphate poisoning."
+        effects: { minutes: 10, setVitals: { hr: 180, sbp: 166 }, patient: -20 }
+        next: dose
+      - label: "Anaphylaxis to the sting: IM adrenaline 0.2 mg"
+        grade: harmful
+        consequence: "BP 180/120, pulse 170. Your senior stops it."
+        teaching: "No rash, wheeze or low BP: adrenaline only adds to the catecholamine storm."
+        effects: { minutes: 10, setVitals: { hr: 170, sbp: 180, dbp: 120 }, patient: -20 }
+        next: dose
+
+  dose:
+    type: dose
+    check: { source: bawaskar-2011, verified: false }
+    prompt: "Prazosin by mouth for a 20 kg child, in micrograms?"
+    drug: prazosin
+    dose: scorpion-child
+    tolerancePct: 10
+    correct:
+      consequence: "600 micrograms, crushed in water. You plan the next dose in 3 hours."
+      teaching: "30 micrograms/kg, repeated every 3 hours until the limbs are warm."
+      effects: { minutes: 5 }
+    under:
+      consequence: "Little effect after an hour; your senior gives the full dose."
+      teaching: "The dose is 30 micrograms/kg."
+      effects: { minutes: 60, patient: -10 }
+    over:
+      consequence: "An hour later his BP is 76/40; he needs fluid and to lie flat."
+      teaching: "Prazosin causes first-dose hypotension; 30 micrograms/kg."
+      effects: { minutes: 60, setVitals: { sbp: 76, dbp: 40 }, patient: -15 }
+    next: antivenom
+
+  antivenom:
+    type: choice
+    check: { source: bawaskar-2011, verified: false }
+    prompt: "The hospital has scorpion antivenom. Give it?"
+    options:
+      - label: "Yes, with the prazosin, and adrenaline drawn up for a reaction"
+        grade: best
+        consequence: "Given over 30 minutes; no reaction."
+        teaching: "Antivenom plus prazosin speeds recovery compared with prazosin alone."
+        effects: { minutes: 30 }
+        next: oedema
+      - label: "Only if he isn't better after the second dose of prazosin"
+        grade: suboptimal
+        consequence: "Recovery is slower; antivenom is given at 4 hours."
+        teaching: "Give it early, with prazosin."
+        effects: { minutes: 30, patient: -5 }
+        next: oedema
+      - label: "No: the adult dose is too much for a 20 kg child"
+        grade: suboptimal
+        consequence: "Your senior gives it: the dose isn't reduced for children."
+        teaching: "Antivenom neutralises venom; the amount of venom, not the child's size, sets the dose."
+        effects: { minutes: 30, patient: -10 }
+        next: oedema
+      - label: "Yes, and stop the prazosin, as antivenom alone neutralises the venom"
+        grade: harmful
+        consequence: "His limbs stay cold and his BP climbs. Your senior restarts prazosin."
+        teaching: "Antivenom doesn't replace prazosin; venom already bound has set off the storm."
+        effects: { minutes: 30, patient: -20 }
+        next: oedema
+
+  oedema:
+    type: choice
+    check: { source: bawaskar-2011, verified: false }
+    onEnter: { setVitals: { hr: 128, sbp: 122, dbp: 80, rr: 44, spo2: 88 } }
+    panels:
+      - scene: resus-bay
+        actors: [patient-supine:alarmed, relative, nurse]
+        caption: "{clock} · Resus"
+        bubbles:
+          - { who: nurse, text: "Hands warmer, but he's breathing fast, crackles at both bases, sats 88%. Frothy cough." }
+    prompt: "Three hours on: pulmonary oedema. Next?"
+    options:
+      - label: "Sit up, oxygen, GTN; echo, and dobutamine if the pump is weak"
+        grade: best
+        consequence: "Echo: poor squeeze. On dobutamine and GTN his sats reach 96%."
+        teaching: "Venom myocarditis: support the pump and offload it."
+        effects: { minutes: 60, setVitals: { hr: 118, sbp: 112, dbp: 72, rr: 30, spo2: 96 } }
+        next: home
+      - label: "Furosemide 1 mg/kg IV and restrict his fluids for the next day"
+        grade: suboptimal
+        consequence: "A little better, but he stays at 90%; your senior adds GTN and dobutamine."
+        teaching: "A diuretic may help a little, but the pump failure needs support."
+        effects: { minutes: 60, setVitals: { rr: 38, spo2: 91 }, patient: -10 }
+        next: home
+      - label: "A 20 ml/kg fluid bolus: he vomited a lot and is probably dry"
+        grade: harmful
+        consequence: "His sats fall to 80% and he needs ventilation."
+        teaching: "Pulmonary oedema from myocarditis: fluid makes it worse."
+        effects: { minutes: 60, spo2: -8, patient: -25 }
+        next: home
+      - label: "Nifedipine by mouth to offload the heart and lower the BP"
+        grade: harmful
+        consequence: "His heart rate climbs and his BP drops; he gets worse."
+        teaching: "Nifedipine causes reflex tachycardia and may worsen the myocarditis: avoid it."
+        effects: { minutes: 60, setVitals: { hr: 150, sbp: 90 }, patient: -20 }
+        next: home
+
+  home:
+    type: multiselect
+    check: { source: bawaskar-2011, verified: false }
+    prompt: "Next morning: warm, settled, off dobutamine. Choose up to 3."
+    max: 3
+    options:
+      - id: observe
+        label: "Keep him until his limbs are warm and he is off support for 24 hours"
+        grade: best
+        consequence: "Discharged on day 3."
+        teaching: "Myocarditis can recur in the first day."
+        missedEffects: { patient: -5 }
+      - id: teach
+        label: "Tell the family: next time, come straight to the nearest hospital for prazosin"
+        grade: best
+        consequence: "The father writes it down."
+        teaching: "The first dose of prazosin should not wait for referral."
+        missedEffects: { patient: -5 }
+      - id: echo
+        label: "Repeat echo before discharge"
+        grade: acceptable
+        consequence: "Function nearly normal."
+        teaching: "Venom myocarditis usually recovers."
+      - id: tie
+        label: "Next time, tie a tight band above the sting"
+        grade: harmful
+        consequence: "Your senior removes it from the advice."
+        teaching: "Tourniquets and cutting the wound do harm."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Three days later · Children's ward"
+        bubbles:
+          - { who: relative, text: "He's eating and running about. We'll keep the wood pile away from the house." }
+    summary: "You recognised envenomation, gave prazosin by weight with antivenom, and supported his heart through the pulmonary oedema."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "A week later · Paediatric ICU"
+    summary: "He survived, but missed envenomation, atropine or adrenaline, a wrong dose or fluid on a failing heart made it harder. The debrief shows where."
+
+debrief:
+  diagnosis: "Indian red scorpion envenomation with an autonomic storm, then venom myocarditis with pulmonary oedema."
+  keyPoints:
+    - "Sweating, vomiting, cold limbs, priapism and high BP: systemic envenomation."
+    - "Prazosin 30 micrograms/kg by mouth, every 3 hours until the limbs are warm."
+    - "Antivenom with prazosin, early; dose not reduced for children."
+    - "Pulmonary oedema: sit up, oxygen, GTN, dobutamine for a weak pump."
+  pitfalls:
+    - "Atropine, adrenaline or nifedipine."
+    - "Fluid boluses in pulmonary oedema."
+    - "Sending home because the local pain has settled."
+  unlocks: [scorpion-envenomation, prazosin, scorpion-antivenom]
+  refs: [bawaskar-2011]
+  check: { source: bawaskar-2011, verified: false }

@@ -1,0 +1,13 @@
+id: scorpion-antivenom
+title: "Scorpion antivenom"
+summary: "Antivenom against the Indian red scorpion (Mesobuthus tamulus) neutralises circulating venom. Given with prazosin, patients recovered faster and needed less prazosin than with prazosin alone."
+sections:
+  - heading: When
+    body: "Systemic envenomation: sweating, vomiting, cold limbs, hypertension, priapism, tachycardia or bradycardia. Give it early; it doesn't replace prazosin."
+  - heading: Dose
+    body: "Follow the product leaflet; the dose isn't reduced for children."
+  - heading: Watch for
+    body: "Allergic reactions: have adrenaline drawn up."
+india: "Made in India; not stocked in every rural hospital, so prazosin comes first and must not wait."
+refs: [bawaskar-2011]
+check: { source: bawaskar-2011, verified: false, todo: "Confirm the number of vials you teach." }

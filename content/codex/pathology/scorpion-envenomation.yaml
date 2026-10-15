@@ -1,0 +1,16 @@
+id: scorpion-envenomation
+title: "Scorpion envenomation (Indian red scorpion)"
+summary: "Mesobuthus tamulus venom sets off an autonomic storm: sweating, vomiting, cold limbs, hypertension, priapism, then myocarditis and pulmonary oedema. Children are most at risk."
+sections:
+  - heading: Signs of severity
+    body: "Profuse sweating, cold peripheries, tachycardia or bradycardia, hypertension, priapism, breathlessness, crackles, low BP later."
+  - heading: Prazosin
+    body: "30 micrograms/kg by mouth (adults about 500 micrograms), repeated every 3 hours until the limbs are warm. Start in the first hospital; don't wait for referral."
+  - heading: Antivenom
+    body: "Where available, with prazosin: faster recovery than prazosin alone."
+  - heading: Pulmonary oedema
+    body: "Sit up, oxygen, GTN; dobutamine for poor pump function; ventilation if needed."
+  - heading: Avoid
+    body: "Atropine (worsens the storm), nifedipine (reflex tachycardia, may worsen the myocarditis), and discharge because the local pain has settled."
+refs: [bawaskar-2011]
+check: { source: bawaskar-2011, verified: false }

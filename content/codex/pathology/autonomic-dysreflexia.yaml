@@ -1,0 +1,14 @@
+id: autonomic-dysreflexia
+title: "Autonomic dysreflexia"
+summary: "In spinal cord injury at T6 or above, a trigger below the injury (often the bladder or bowel) sets off uncontrolled reflex vasoconstriction: pounding headache, flushing above the injury, high BP, often a slow pulse."
+sections:
+  - heading: First
+    body: "Sit up, legs down; loosen clothing and straps; check BP every 2–5 minutes. Find the trigger: catheterise, or flush or change a blocked catheter; then check the bowel (with lidocaine gel)."
+  - heading: Drugs
+    body: "If SBP stays 150 or more after these steps: GTN paste (wiped off when BP falls; not after a PDE5 inhibitor) or immediate-release nifedipine bite-and-swallow."
+  - heading: Baseline
+    body: "Normal BP in high cord injury is often 90–110 systolic: 150 may already be severe for them."
+  - heading: Avoid
+    body: "Lying flat, and IV drugs before finding the trigger: once it is removed, BP crashes."
+refs: [pva-ad-2021]
+check: { source: pva-ad-2021, verified: false }

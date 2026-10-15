@@ -3,6 +3,8 @@
 Status: APPROVED by the owner 2026-10-15: the 10 cases plus extras (all five, as htn-11…15; the owner
 may drop any), the note's "practical resolution" where guidelines disagree, in Cardiovascular. First unit
 written to the harder-option rules (CONTENT_GUIDE §5b) with `shuffleOptions: true`.
+BUILT 2026-10-15: htn-01…15, 22 new Codex cards (plus doses added to labetalol and magnesium), 5 ECG
+drawings, 4 time targets; all drafted `verified: false` for the owner's review.
 
 Source: the owner's note `notes/htn.pdf` ("Hypertensive Urgency vs Emergency — Drug Choice by
 End-Organ"; 2025 AHA/ACC high BP, 2024 ESC elevated BP and hypertension, 2019 ESC Council position

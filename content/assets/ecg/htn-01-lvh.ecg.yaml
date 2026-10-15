@@ -1,0 +1,15 @@
+# htn-01: severe asymptomatic hypertension. Sinus ~84/min; LVH voltages with lateral strain
+# (chronic hypertension-mediated organ damage, not acute). No ST elevation.
+title: "12-lead ECG at triage"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 84 }
+rhythmLead: II
+leads:
+  I: { r: 1.2, s: 0.1, st: -0.08, t: -0.15 }
+  aVL: { r: 1.4, s: 0.1, st: -0.08, t: -0.2 }
+  V1: { r: 0.15, s: 2.4, t: 0.25 }
+  V2: { r: 0.25, s: 2.8, t: 0.35 }
+  V3: { r: 0.6, s: 1.9 }
+  V5: { r: 2.7, s: 0.2, st: -0.12, t: -0.25 }
+  V6: { r: 2.3, s: 0.1, st: -0.12, t: -0.25 }
+check: { source: [hancock-2009, esc-htn-2024], verified: false, todo: "Check it reads as LVH with lateral strain." }

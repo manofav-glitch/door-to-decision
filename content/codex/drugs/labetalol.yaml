@@ -11,6 +11,29 @@ doses:
       verified: true
       reviewedOn: 2026-09-30
       todo: "Confirm dose and your local protocol; esmolol is the short-acting alternative."
+  - id: htn-emergency
+    label: "Hypertensive emergency (general)"
+    route: "IV bolus, then repeated boluses or infusion"
+    text: "20 mg over 2 minutes, then 20–80 mg every 10 minutes to a total of 300 mg, or an infusion of 0.5–2 mg/min"
+    rule: { unit: mg, fixed: 20 }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+  - id: stroke-lysis
+    label: "Ischaemic stroke, BP above 185/110 before thrombolysis"
+    route: IV over 1–2 minutes
+    text: "10–20 mg, may be repeated once; then an infusion or nicardipine if BP stays above 185/110"
+    rule: { unit: mg, fixed: { min: 10, max: 20 } }
+    check: { source: aha-asa-ais-2026, verified: false }
+  - id: pregnancy
+    label: "Severe hypertension in pregnancy"
+    route: IV over 2 minutes
+    text: "20 mg; if still severe after 10 minutes, 40 mg; after another 10 minutes, 80 mg; then switch to hydralazine or nifedipine"
+    rule: { unit: mg, fixed: 20 }
+    check: { source: acog-767-2019, verified: false }
+  - id: esmolol
+    label: "Esmolol (aortic dissection, when short action matters)"
+    route: "IV loading dose, then infusion"
+    text: "500 micrograms/kg over 1 minute, then 50–300 micrograms/kg/min"
+    check: { source: [esc-he-2019, esc-aortic-2024], verified: false }
 sections:
   - heading: Order matters
     body: "Beta-blocker first, then a vasodilator if BP is still high: a vasodilator alone causes a reflex tachycardia."

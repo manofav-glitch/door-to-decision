@@ -1,0 +1,14 @@
+id: lvh
+title: "Left ventricular hypertrophy with strain"
+summary: "Tall voltages from a thick left ventricle, often with lateral ST depression and T inversion ('strain'). A sign of long-standing pressure load: chronic organ damage, not an acute event."
+sections:
+  - heading: Voltage
+    body: "Common criteria: S in V1 plus R in V5 or V6 of 35 mm or more (Sokolow–Lyon); R in aVL plus S in V3 over 28 mm in men or 20 mm in women (Cornell). Young, thin patients can exceed these normally."
+  - heading: Strain
+    body: "Down-sloping ST depression with asymmetric T inversion in I, aVL, V5 and V6, opposite to the tall QRS."
+  - heading: Strain or ischaemia?
+    body: "Compare with an old ECG. Strain follows the voltage and is stable; new, dynamic or symmetrical changes with symptoms, or a troponin rise, need an ACS work-up."
+  - heading: In severe hypertension
+    body: "LVH shows the BP has been high for a long time. It doesn't make today's visit an emergency."
+refs: [hancock-2009, esc-htn-2024]
+check: { source: [hancock-2009, esc-htn-2024], verified: false }

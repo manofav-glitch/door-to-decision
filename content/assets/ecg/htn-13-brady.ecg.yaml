@@ -1,0 +1,6 @@
+# htn-13: autonomic dysreflexia. Monitor strip: sinus bradycardia ~48/min.
+title: "Rhythm strip, lead II: sinus bradycardia"
+layout: strip
+rhythm: { kind: sinus, rate: 48 }
+rhythmLead: II
+check: { source: pva-ad-2021, verified: false, todo: "Check it reads as sinus bradycardia." }

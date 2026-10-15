@@ -1,0 +1,23 @@
+id: prazosin
+title: "Prazosin (oral)"
+summary: "An oral alpha-1 blocker. In Indian red scorpion stings it reverses the alpha-driven autonomic storm (hypertension, cold limbs, pulmonary oedema) and has cut deaths sharply."
+doses:
+  - id: scorpion-child
+    label: "Scorpion sting, child"
+    route: By mouth (crushed tablet)
+    text: "30 micrograms/kg, repeated every 3 hours until the limbs are warm and perfusion recovers"
+    rule: { unit: micrograms, perKg: 30 }
+    check: { source: bawaskar-2011, verified: false, todo: "Confirm 30 micrograms/kg and the 3-hourly repeat." }
+  - id: scorpion-adult
+    label: "Scorpion sting, adult"
+    route: By mouth
+    text: "About 500 micrograms, repeated every 3 hours until perfusion recovers"
+    check: { source: bawaskar-2011, verified: false }
+sections:
+  - heading: Cautions
+    body: "First-dose hypotension, especially if dehydrated from vomiting and sweating: keep the patient lying down and check BP before each dose."
+  - heading: Other uses
+    body: "Oral alpha-blockade after a phaeochromocytoma crisis or when phentolamine is not stocked."
+india: "Cheap and widely stocked; give the first dose before referral."
+refs: [bawaskar-2011, lenders-pheo-2014]
+check: { source: [bawaskar-2011, lenders-pheo-2014], verified: false }

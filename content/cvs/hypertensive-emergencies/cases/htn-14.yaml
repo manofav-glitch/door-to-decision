@@ -1,0 +1,190 @@
+# htn-14 — DRAFT for the content owner's review.
+# Hidden truth: aneurysmal subarachnoid haemorrhage with neurogenic ECG changes (deep T inversion, long QT).
+# CT first; don't treat the ECG as ACS (no antiplatelets or heparin); before securing, avoid extreme BP:
+# working target SBP below 160 with titratable labetalol or nicardipine, plus analgesia and antiemetic;
+# nimodipine; early securing. Tranexamic acid doesn't improve outcome.
+# Sources: owner's HTN note (SAH); AHA/ASA SAH 2023.
+
+id: cvs-htn-14
+title: "48F, sudden worst-ever headache while lifting a bucket"
+difficulty: 3
+minutes: 8
+patient: { age: 48, sex: F, weightKg: 60 }
+initial:
+  clock: "08:15"
+  vitals: { hr: 64, sbp: 200, dbp: 110, rr: 18, spo2: 98, gcs: 15, temp: 37.0 }
+  flags: []
+check: { source: aha-asa-sah-2023, verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "I was lifting a bucket of water and it was like being hit on the back of the head. Worst headache of my life. I've vomited twice." }
+          - { who: nurse, text: "200 over 110, pulse 64. Neck is stiff. Alert, no weakness. Three hours ago." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: aha-asa-sah-2023, verified: false }
+    prompt: "Thunderclap headache 3 hours ago, stiff neck, BP 200/110. First?"
+    options:
+      - label: "Non-contrast CT head now, with analgesia and an antiemetic"
+        grade: best
+        consequence: "CT at 20 minutes: blood in the basal cisterns."
+        teaching: "CT within 6 hours of a thunderclap headache is very sensitive for SAH."
+        effects: { minutes: 20 }
+        next: ecg-1
+      - label: "Labetalol IV first: severe BP with headache is hypertensive encephalopathy"
+        grade: suboptimal
+        consequence: "Your senior sends her to CT: a thunderclap headache is a bleed until proved otherwise."
+        teaching: "Encephalopathy builds over hours with confusion; a sudden worst-ever headache is SAH."
+        effects: { minutes: 30, patient: -10 }
+        next: ecg-1
+      - label: "Lumbar puncture first, as a CT can miss a small bleed"
+        grade: suboptimal
+        consequence: "Your senior stops it: CT first, LP only if CT is normal."
+        teaching: "CT first; LP after a normal CT, ideally 6–12 hours after onset."
+        effects: { minutes: 30, patient: -10 }
+        next: ecg-1
+      - label: "Migraine treatment and observe; CT if no better in 2 hours"
+        grade: harmful
+        consequence: "Two hours later she is drowsy. CT shows a large bleed."
+        teaching: "A first, sudden, worst-ever headache is never assumed to be migraine."
+        effects: { minutes: 120, gcs: -2, patient: -25 }
+        next: ecg-1
+
+  ecg-1:
+    type: ecg
+    check: { source: aha-asa-sah-2023, verified: false }
+    image: ecg/htn-14-neuro.svg
+    alt: "12-lead ECG. Sinus rhythm about 64 per minute. Deep, broad, symmetrical T wave inversion in I, aVL and V2 to V6. Long QT interval, about 520 ms. No ST elevation."
+    prompt: "While the neurosurgeons are called, the ECG. What does it show, and what do you do?"
+    options:
+      - label: "Deep T inversion and a long QT from the bleed: no antiplatelets or heparin"
+        grade: best
+        consequence: "Troponin is mildly raised; echo later shows mild apical hypokinesia."
+        teaching: "SAH causes deep T inversion, a long QT and troponin rises; treat the brain, not the ECG."
+        effects: { minutes: 5 }
+        next: bp
+      - label: "Wellens pattern: aspirin and heparin and an urgent cardiology review"
+        grade: harmful
+        consequence: "Your senior stops the heparin as it is being drawn up."
+        teaching: "Antithrombotics with a ruptured aneurysm risk a catastrophic re-bleed."
+        effects: { minutes: 10, patient: -25 }
+        next: bp
+      - label: "Myocardial ischaemia can't be excluded: troponin and echo, no antithrombotics"
+        grade: acceptable
+        consequence: "Reasonable; the echo and troponin fit neurogenic stunning."
+        teaching: "Investigate, but don't give antithrombotics; the brain is the cause."
+        effects: { minutes: 10 }
+        next: bp
+      - label: "Hypokalaemia: long QT with T inversion; replace potassium and repeat"
+        grade: suboptimal
+        consequence: "Potassium 4.1. The pattern stays."
+        teaching: "Low potassium flattens T waves and adds U waves; deep symmetrical inversion here is neurogenic."
+        effects: { minutes: 15, patient: -5 }
+        next: bp
+
+  bp:
+    type: choice
+    check: { source: aha-asa-sah-2023, verified: false, todo: "The guideline sets no firm number; SBP below 160 is a common working target." }
+    prompt: "BP 196/108, pain 6 out of 10 after morphine. Aneurysm not yet secured. BP plan?"
+    options:
+      - label: "Labetalol or nicardipine to SBP below 160, plus analgesia and antiemetic"
+        grade: best
+        consequence: "SBP 150 at 30 minutes, steady."
+        teaching: "Avoid extreme BP before securing; titratable drugs and analgesia."
+        effects: { minutes: 30, setVitals: { sbp: 150, dbp: 90 } }
+        next: transfer
+      - label: "SBP 140 (range 130–150) within the hour, as for intracerebral haemorrhage"
+        grade: acceptable
+        consequence: "Some units use this; your senior is happy at 140–160."
+        teaching: "No firm guideline number in SAH; below 160 is the common working target."
+        effects: { minutes: 30, setVitals: { sbp: 142, dbp: 86 } }
+        next: transfer
+      - label: "Nitroprusside infusion to bring SBP to 120 quickly"
+        grade: harmful
+        consequence: "She becomes drowsy at 118 systolic. Your senior stops it."
+        teaching: "Nitroprusside raises ICP; low BP risks brain ischaemia."
+        effects: { minutes: 30, setVitals: { sbp: 118, dbp: 70 }, gcs: -2, patient: -20 }
+        next: transfer
+      - label: "Leave it: high BP keeps the brain perfused after a bleed"
+        grade: harmful
+        consequence: "At 40 minutes her headache suddenly worsens and she vomits: a re-bleed."
+        teaching: "Extreme BP before securing risks re-bleeding."
+        effects: { minutes: 40, gcs: -3, patient: -25 }
+        next: transfer
+
+  transfer:
+    type: multiselect
+    check: { source: aha-asa-sah-2023, verified: false }
+    prompt: "Before transfer to neurosurgery. Choose up to 3."
+    max: 3
+    options:
+      - id: nimodipine
+        label: "Nimodipine 60 mg by mouth every 4 hours"
+        grade: best
+        consequence: "First dose given."
+        teaching: "Nimodipine improves outcome after SAH."
+        missedEffects: { patient: -5 }
+      - id: secure
+        label: "Early securing of the aneurysm, coiling or clipping"
+        grade: best
+        consequence: "Coiling planned for this afternoon."
+        teaching: "Securing early is the best protection against re-bleeding."
+        missedEffects: { patient: -5 }
+      - id: txa
+        label: "Tranexamic acid for 72 hours to stop a re-bleed"
+        grade: suboptimal
+        consequence: "Not given: it doesn't improve outcome."
+        teaching: "Tranexamic acid cut re-bleeding but not poor outcome (ULTRA)."
+      - id: head-up
+        label: "Head up 30 degrees, regular analgesia and an antiemetic"
+        grade: acceptable
+        consequence: "Done."
+        teaching: "Pain and vomiting push BP and ICP up."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Ten days later · Neurosurgery ward"
+        bubbles:
+          - { who: patient, text: "They coiled it the same day. The headache has almost gone." }
+    summary: "You scanned first, read the ECG as the brain talking, kept BP below 160 without dropping it too far, and got the aneurysm secured early."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "Three weeks later · Neuro ICU"
+    summary: "She survived, but a delayed scan, antithrombotics for the ECG or a re-bleed cost her. The debrief shows where."
+
+debrief:
+  diagnosis: "Aneurysmal subarachnoid haemorrhage with neurogenic ECG changes."
+  keyPoints:
+    - "Thunderclap headache: CT first; LP only if CT is normal."
+    - "Deep T inversion, long QT and troponin rises happen in SAH: no antithrombotics."
+    - "Before securing: avoid extreme BP; SBP below 160 with labetalol or nicardipine, plus analgesia."
+    - "Nimodipine; secure the aneurysm early."
+  pitfalls:
+    - "Calling it migraine or hypertensive encephalopathy."
+    - "Heparin or aspirin for the ECG."
+    - "Nitroprusside or permissive BP."
+  unlocks: [subarachnoid-haemorrhage, hypertensive-emergency, nicardipine]
+  refs: [aha-asa-sah-2023]
+  check: { source: aha-asa-sah-2023, verified: false }

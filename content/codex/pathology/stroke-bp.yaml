@@ -1,0 +1,18 @@
+id: stroke-bp
+title: "Blood pressure in acute stroke"
+summary: "Ischaemic stroke wants pressure to perfuse the penumbra; haemorrhage wants a smooth, early fall to limit growth. Imaging decides which."
+sections:
+  - heading: Ischaemic, no reperfusion
+    body: "Treat only at 220/120 or above, and then lower by about 15% over 24 hours. Starting antihypertensives earlier doesn't help (CATIS, SCAST)."
+  - heading: Thrombolysis
+    body: "Below 185/110 before the bolus (labetalol 10–20 mg or nicardipine), then below 180/105 for 24 hours. Pushing to 130–140 cut bleeding but didn't improve function (ENCHANTED)."
+  - heading: Thrombectomy
+    body: "180/105 or less during and for 24 hours after. Driving SBP below 140 after successful reperfusion is harmful."
+  - heading: Intracerebral haemorrhage
+    body: "SBP 150–220: aim for 140 (range 130–150), reached within an hour, smoothly. Avoid below 130 and falls of more than 70 mmHg in an hour."
+  - heading: INTERACT3 bundle
+    body: "SBP below 140, glucose control, treating fever and reversing warfarin, all within an hour, improved outcomes, including in low-resource hospitals."
+  - heading: Avoid
+    body: "Nitroprusside (raises ICP), sublingual nifedipine, and lowering BP before the scan (INTERACT4: harm in ischaemic stroke)."
+refs: [aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023]
+check: { source: [aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023], verified: false }

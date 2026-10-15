@@ -1,0 +1,14 @@
+id: takayasu-arteritis
+title: "Takayasu arteritis"
+summary: "Large-vessel vasculitis of young women, common in India: narrowed aortic branches cause absent pulses, arm claudication, bruits and renovascular hypertension."
+sections:
+  - heading: Measure four limbs
+    body: "An arm with a narrowed subclavian reads low. Measure both arms and both legs and treat the highest reliable reading."
+  - heading: Kidneys
+    body: "Renal artery stenosis drives the hypertension. ACE inhibitors and ARBs can cause AKI with bilateral stenosis or a single kidney: start low and check creatinine."
+  - heading: Diagnosis
+    body: "CT or MR angiography; ESR and CRP may be normal despite active disease."
+  - heading: Treatment
+    body: "Glucocorticoids with a steroid-sparing drug, through rheumatology; revascularisation for critical stenoses."
+refs: [eular-lvv-2020, esc-he-2019]
+check: { source: [eular-lvv-2020, esc-he-2019], verified: false }

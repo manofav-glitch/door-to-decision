@@ -1,0 +1,17 @@
+# htn-11: NSTE-ACS with severe hypertension. Sinus ~102/min; LVH voltage plus new ST depression
+# ~1.5 mm in I, aVL, V4–V6 with slight ST elevation in aVR. No ST elevation elsewhere.
+title: "12-lead ECG: ST depression with high voltages"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 102 }
+rhythmLead: II
+leads:
+  I: { r: 1.1, st: -0.15, t: 0.05 }
+  aVL: { r: 1.2, st: -0.12, t: -0.05 }
+  aVR: { st: 0.08 }
+  II: { st: -0.08 }
+  V1: { r: 0.15, s: 2.2 }
+  V2: { r: 0.25, s: 2.6 }
+  V4: { r: 1.6, s: 0.4, st: -0.15, t: 0.1 }
+  V5: { r: 2.4, s: 0.2, st: -0.18, t: -0.1 }
+  V6: { r: 2.0, s: 0.1, st: -0.15, t: -0.1 }
+check: { source: [esc-acs-2023, hancock-2009], verified: false, todo: "Check: lateral ST depression, aVR slightly up, no ST elevation." }

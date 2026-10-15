@@ -1,0 +1,18 @@
+id: pres
+title: "Hypertensive encephalopathy and PRES"
+summary: "Very high BP overwhelms brain autoregulation, causing vasogenic oedema, mostly at the back of the brain: headache, confusion, seizures and cortical blindness."
+sections:
+  - heading: Triggers
+    body: "Malignant hypertension, eclampsia, calcineurin inhibitors (tacrolimus, ciclosporin), VEGF inhibitors, sepsis, autoimmune disease."
+  - heading: BP
+    body: "MAP down 20–25% in the first hour with labetalol or nicardipine, then towards 160/100 over 2–6 hours."
+  - heading: Seizures
+    body: "Benzodiazepine, then levetiracetam; magnesium if pregnant or postpartum."
+  - heading: Imaging
+    body: "CT is often normal; MRI FLAIR shows posterior white-matter oedema. If MRI isn't available, treat on clinical grounds."
+  - heading: Not improving?
+    body: "Expect improvement within hours of BP control. If not, rethink: stroke, cerebral venous thrombosis, encephalitis, non-convulsive status."
+  - heading: Not a stroke
+    body: "Encephalopathy is global. A dominant focal deficit is a stroke until imaging says otherwise, and aggressive lowering would harm it."
+refs: [esc-he-2019, aha-acc-bp-2025]
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }

@@ -1,0 +1,14 @@
+id: subarachnoid-haemorrhage
+title: "Aneurysmal subarachnoid haemorrhage"
+summary: "Sudden, worst-ever headache from a ruptured aneurysm. The danger in the first hours is re-bleeding; avoid extreme BP until the aneurysm is secured."
+sections:
+  - heading: Diagnosis
+    body: "CT within 6 hours of onset is very sensitive; later, a normal CT needs a lumbar puncture or CT angiography."
+  - heading: BP before securing
+    body: "No firm number in the guideline; a common working target is SBP below 160, with titratable labetalol or nicardipine. Treat pain and nausea, which drive BP up."
+  - heading: Also
+    body: "Nimodipine by mouth, reversal of anticoagulants, early neurosurgery or neurointervention. After securing, BP is allowed higher."
+  - heading: The ECG
+    body: "Deep T inversion, a long QT and even troponin rises occur (neurogenic stunning). Don't give antiplatelets or anticoagulants for an ECG that is following the brain."
+refs: [aha-asa-sah-2023]
+check: { source: aha-asa-sah-2023, verified: false }

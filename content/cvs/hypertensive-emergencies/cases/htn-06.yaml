@@ -1,0 +1,262 @@
+# htn-06 — DRAFT for the content owner's review.
+# Hidden truth: severe pre-eclampsia progressing to eclampsia at 34 weeks.
+# Magnesium (Pritchard: 4 g IV + 5 g IM each buttock) for the fit; severe-range BP (160/110 confirmed over
+# 15 min) treated within 30–60 min: IV labetalol 20 → 40 → 80 mg every 10 min (or oral IR nifedipine
+# 10 → 20 → 20 mg every 20 min once alert); target 140–150/90–100; magnesium checks; deliver once stable.
+# Sources: owner's HTN note (pregnancy; practical resolution 160/110); ACOG CO 767; ISSHP 2021; WHO 2011.
+
+id: cvs-htn-06
+title: "27F, 34 weeks pregnant, headache and blurred vision"
+difficulty: 2
+minutes: 10
+patient: { age: 27, sex: F, weightKg: 64 }
+initial:
+  clock: "02:10"
+  vitals: { hr: 98, sbp: 172, dbp: 114, rr: 18, spo2: 98, gcs: 15, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [severe-bp-to-drug]
+check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false, todo: "Teaching composite; check the protocol timings." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    onEnter: { milestone: severe-bp }
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, relative, nurse]
+        caption: "{clock} · Labour room triage"
+        bubbles:
+          - { who: patient, text: "Second baby, 34 weeks. Bad headache since evening, my eyes are blurry, and pain here under my ribs." }
+          - { who: nurse, text: "172 over 114, and 168 over 112 on repeat 15 minutes later. Urine 3+ protein. Brisk knee jerks." }
+          - { who: nurse, text: "She's fitting!" }
+    next: fit
+
+  fit:
+    type: choice
+    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    prompt: "A generalised fit, a minute so far. First?"
+    options:
+      - label: "Left lateral, airway and oxygen; magnesium sulphate loading dose now"
+        grade: best
+        consequence: "The fit stops as the IV dose runs in."
+        teaching: "Magnesium treats and prevents eclamptic fits better than diazepam or phenytoin."
+        effects: { minutes: 3 }
+        next: mg-dose
+      - label: "Left lateral, airway and oxygen; diazepam 10 mg IV, magnesium if it recurs"
+        grade: suboptimal
+        consequence: "The fit stops; your senior starts magnesium straight away anyway."
+        teaching: "Diazepam is not a substitute: magnesium prevents recurrence and lowers maternal death."
+        effects: { minutes: 5, patient: -10 }
+        next: mg-dose
+      - label: "Left lateral, airway and oxygen; phenytoin 20 mg/kg IV as for any first fit"
+        grade: harmful
+        consequence: "She fits again during the infusion. Your senior gives magnesium."
+        teaching: "In eclampsia, phenytoin lets more fits through than magnesium."
+        effects: { minutes: 10, patient: -20 }
+        next: mg-dose
+      - label: "Left lateral, airway and oxygen; magnesium 4 g IV then 1 g an hour by pump"
+        grade: acceptable
+        consequence: "Also correct (Zuspan); the only pump is on the ward, so it takes 20 minutes."
+        teaching: "Pritchard needs no pump and carries on during transfer; Zuspan is fine where pumps exist."
+        effects: { minutes: 3 }
+        next: mg-dose
+
+  mg-dose:
+    type: dose
+    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    prompt: "Magnesium sulphate, the IV part of the Pritchard loading dose (g, given over 15–20 minutes)?"
+    drug: magnesium-sulphate
+    dose: pritchard
+    tolerancePct: 0
+    correct:
+      consequence: "4 g IV over 15 minutes, plus 5 g deep IM into each buttock."
+      teaching: "Pritchard: 4 g IV plus 10 g IM, then 5 g IM every 4 hours."
+      effects: { minutes: 5 }
+    under:
+      consequence: "Too little: your senior tops it up to 4 g."
+      teaching: "The IV part of the loading dose is 4 g."
+      effects: { minutes: 8, patient: -10 }
+    over:
+      consequence: "Her breathing slows and her knee jerks disappear. Calcium gluconate is given."
+      teaching: "Too much magnesium causes areflexia and respiratory depression; the IV part is 4 g."
+      effects: { minutes: 10, rr: -8, patient: -15 }
+    next: bp
+
+  bp:
+    type: choice
+    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    prompt: "Fit over, drowsy but rousable. BP 174/116. Next?"
+    options:
+      - label: "Labetalol 20 mg IV; recheck in 10 minutes, 40 mg if still 160/110"
+        grade: best
+        consequence: "20 mg, then 40 mg: BP 156/104 at 20 minutes."
+        teaching: "Treat severe-range BP within 30–60 minutes to prevent maternal stroke."
+        effects: { minutes: 20, milestone: bp-drug, setVitals: { sbp: 156, dbp: 104, hr: 90 } }
+        next: target
+      - label: "Nifedipine 10 mg immediate-release by mouth, swallowed; recheck in 20 minutes"
+        grade: acceptable
+        consequence: "Your senior waits until she is fully awake to swallow, then gives it; BP 158/104."
+        teaching: "Oral nifedipine works as well as IV labetalol; after a fit, wait until she can swallow safely."
+        effects: { minutes: 35, milestone: bp-drug, setVitals: { sbp: 158, dbp: 104, hr: 100 } }
+        next: target
+      - label: "Magnesium is running and will bring the BP down; recheck in an hour"
+        grade: harmful
+        consequence: "An hour later she is 178/118. Your senior gives labetalol."
+        teaching: "Magnesium prevents fits; it is not an antihypertensive."
+        effects: { minutes: 75, milestone: bp-drug, setVitals: { sbp: 160, dbp: 106 }, patient: -20 }
+        next: target
+      - label: "Nifedipine 10 mg capsule bitten and held under the tongue"
+        grade: harmful
+        consequence: "BP 120/70 in 15 minutes; the fetal heart rate drops to 90."
+        teaching: "Sublingual nifedipine causes sudden falls that starve the placenta: swallowed only."
+        effects: { minutes: 20, milestone: bp-drug, setVitals: { sbp: 120, dbp: 70 }, patient: -25 }
+        next: target
+
+  target:
+    type: choice
+    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    prompt: "What now?"
+    options:
+      - label: "Aim for 140–150/90–100; no more boluses, BP every 15 minutes"
+        grade: best
+        consequence: "She settles at 148/98; the fetal heart rate is reassuring."
+        teaching: "Below 160/110, without sudden falls that would harm the baby."
+        effects: { minutes: 30, setVitals: { sbp: 148, dbp: 98 } }
+        next: mg-checks
+      - label: "Labetalol 80 mg now, as the protocol's next step, then recheck"
+        grade: suboptimal
+        consequence: "BP 128/78; the fetal heart rate slows for a few minutes."
+        teaching: "Escalate only while BP is still 160/110 or more."
+        effects: { minutes: 30, setVitals: { sbp: 128, dbp: 78 }, patient: -10 }
+        next: mg-checks
+      - label: "Bring her below 130/80 to protect her brain from another fit"
+        grade: harmful
+        consequence: "At 118/70 the CTG shows late decelerations. Your senior stops the drugs."
+        teaching: "Magnesium protects the brain; a big BP fall starves the placenta."
+        effects: { minutes: 30, setVitals: { sbp: 118, dbp: 70 }, patient: -20 }
+        next: mg-checks
+      - label: "Anything below 160/110 is fine; BP checks every hour from now"
+        grade: suboptimal
+        consequence: "At the next check she is 170/112 again."
+        teaching: "BP every 15 minutes until stable; severe-range readings can return quickly."
+        effects: { minutes: 60, patient: -5 }
+        next: mg-checks
+
+  mg-checks:
+    type: multiselect
+    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    prompt: "Before each 4-hourly IM magnesium dose, what do you check? Choose up to 4."
+    max: 4
+    options:
+      - id: reflexes
+        label: "Knee jerks are present"
+        grade: best
+        consequence: "Present."
+        teaching: "Lost reflexes are the first sign of magnesium toxicity."
+        missedEffects: { patient: -5 }
+      - id: rr
+        label: "Breathing 16 or more a minute"
+        grade: best
+        consequence: "18 a minute."
+        teaching: "Respiratory depression follows lost reflexes."
+        missedEffects: { patient: -5 }
+      - id: urine
+        label: "Urine 100 ml or more over the last 4 hours"
+        grade: best
+        consequence: "140 ml."
+        teaching: "Magnesium is cleared by the kidneys; low output lets it build up."
+        missedEffects: { patient: -5 }
+      - id: calcium
+        label: "Calcium gluconate 1 g ready at the bedside"
+        grade: acceptable
+        consequence: "Drawn up and labelled."
+        teaching: "The antidote should be ready, though it isn't a check before each dose."
+      - id: level
+        label: "A serum magnesium level before every dose"
+        grade: suboptimal
+        consequence: "Not needed when reflexes, breathing and urine are checked."
+        teaching: "Clinical checks are enough; levels help when kidneys fail."
+      - id: hold-bp
+        label: "Hold the dose if BP falls below 140/90"
+        grade: suboptimal
+        consequence: "Magnesium isn't stopped for BP."
+        teaching: "Magnesium is for fits, not BP."
+    next: deliver
+
+  deliver:
+    type: choice
+    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    prompt: "Two hours later: stable, alert, BP 146/96. Fetal heart reassuring. Platelets 110,000, ALT 68. Plan?"
+    options:
+      - label: "Deliver once she is stable: induction or caesarean today"
+        grade: best
+        consequence: "A healthy baby girl by caesarean that morning."
+        teaching: "Eclampsia: stabilise (magnesium, BP), then deliver; delivery is the cure."
+        effects: { minutes: 240 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Steroids for the baby's lungs and continue the pregnancy towards 37 weeks"
+        grade: harmful
+        consequence: "She fits again two days later. Your senior arranges delivery."
+        teaching: "After eclampsia, the pregnancy is not continued: deliver once stable."
+        effects: { minutes: 240, patient: -25 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Steroids for the baby's lungs, without delaying delivery today"
+        grade: acceptable
+        consequence: "A first dose given; delivery goes ahead the same morning."
+        teaching: "Steroids are fine if they don't delay delivery."
+        effects: { minutes: 240 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Refer to the medical college; restart magnesium and BP drugs there"
+        grade: harmful
+        consequence: "She fits in the ambulance."
+        teaching: "Give the magnesium and BP doses before referral; fits during transfer are an avoidable death."
+        effects: { minutes: 240, patient: -25 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Two days later · Postnatal ward"
+        bubbles:
+          - { who: patient, text: "My headache's gone and she's feeding. They say to check my BP for six weeks." }
+    summary: "You gave magnesium for the fit, treated severe-range BP within the hour without overshooting, checked the magnesium safely and delivered once she was stable."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "A week later · Obstetric HDU"
+    summary: "Mother and baby survived, but the wrong anticonvulsant, delayed BP control, an overshoot or a delay in delivery put them at risk. The debrief shows where."
+
+debrief:
+  diagnosis: "Severe pre-eclampsia progressing to eclampsia at 34 weeks."
+  keyPoints:
+    - "Magnesium for the fit and to prevent more: Pritchard 4 g IV plus 5 g IM in each buttock."
+    - "Severe-range BP (160/110 over 15 minutes): treat within 30–60 minutes."
+    - "IV labetalol 20 → 40 → 80 mg every 10 minutes, or oral IR nifedipine 10 → 20 → 20 mg every 20 minutes."
+    - "Target 140–150/90–100; avoid sudden falls (fetal distress)."
+    - "Before each magnesium dose: knee jerks, breathing 16 or more, urine 100 ml in 4 hours."
+    - "Deliver once stable; give magnesium and BP doses before any transfer."
+  pitfalls:
+    - "Magnesium as the antihypertensive, or diazepam instead of magnesium."
+    - "Sublingual nifedipine; ACE inhibitors and ARBs."
+    - "Continuing the pregnancy after eclampsia."
+  unlocks: [pre-eclampsia, magnesium-sulphate, labetalol, nifedipine, hydralazine]
+  refs: [acog-767-2019, isshp-2021, who-pe-2011]
+  check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false }

@@ -327,3 +327,89 @@
 - id: who-thiamine-1999
   citation: "World Health Organization. Thiamine deficiency and its prevention and control in major emergencies. Geneva: WHO; 1999 (WHO/NHD/99.13)."
   year: 1999
+
+# ---- Hypertensive Emergencies module (drafted 2026-10-15) ----
+- id: aha-acc-bp-2025
+  citation: "Jones DW, et al. 2025 AHA/ACC/AANP/AAPA/ABC/ACCP/ACPM/AGS/AMA/ASPC/NMA/PCNA/SGIM Guideline for the Prevention, Detection, Evaluation and Management of High Blood Pressure in Adults. Hypertension. 2025;82(10):e212–e316."
+  year: 2025
+  url: https://doi.org/10.1161/HYP.0000000000000249
+
+- id: esc-he-2019
+  citation: "van den Born BJH, Lip GYH, Brguljan-Hitij J, et al. ESC Council on hypertension position document on the management of hypertensive emergencies. Eur Heart J Cardiovasc Pharmacother. 2019;5(1):37–46."
+  year: 2019
+  url: https://doi.org/10.1093/ehjcvp/pvy032
+
+- id: aha-asa-ais-2026
+  citation: "Prabhakaran S, Gonzalez NR, Zachrison KS, et al. 2026 Guideline for the Early Management of Patients With Acute Ischemic Stroke: a guideline from the American Heart Association/American Stroke Association. Stroke. 2026;57."
+  year: 2026
+  url: https://doi.org/10.1161/STR.0000000000000513
+
+- id: eso-bp-2025
+  citation: "Sandset EC, et al. 2025 update to European Stroke Organisation (ESO) guideline on blood pressure management in acute ischaemic stroke and intracerebral haemorrhage. Eur Stroke J. 2026;11(5):aakag004."
+  year: 2026
+  url: https://doi.org/10.1093/esj/aakag004
+
+- id: aha-asa-ich-2022
+  citation: "Greenberg SM, Ziai WC, Cordonnier C, et al. 2022 Guideline for the Management of Patients With Spontaneous Intracerebral Hemorrhage: a guideline from the American Heart Association/American Stroke Association. Stroke. 2022;53(7):e282–e361."
+  year: 2022
+  url: https://doi.org/10.1161/STR.0000000000000407
+
+- id: interact3-2023
+  citation: "Ma L, Hu X, Song L, et al. The third Intensive Care Bundle with Blood Pressure Reduction in Acute Cerebral Haemorrhage Trial (INTERACT3): an international, stepped wedge cluster randomised controlled trial. Lancet. 2023;402(10395):27–40."
+  year: 2023
+  url: https://doi.org/10.1016/S0140-6736(23)00806-1
+
+- id: aha-asa-sah-2023
+  citation: "Hoh BL, Ko NU, Amin-Hanjani S, et al. 2023 Guideline for the Management of Patients With Aneurysmal Subarachnoid Hemorrhage: a guideline from the American Heart Association/American Stroke Association. Stroke. 2023;54(7):e314–e370."
+  year: 2023
+  url: https://doi.org/10.1161/STR.0000000000000436
+
+- id: acog-767-2019
+  citation: "American College of Obstetricians and Gynecologists. Emergent therapy for acute-onset, severe hypertension during pregnancy and the postpartum period. ACOG Committee Opinion No. 767. Obstet Gynecol. 2019;133(2):e174–e180."
+  year: 2019
+  url: https://doi.org/10.1097/AOG.0000000000003075
+
+- id: isshp-2021
+  citation: "Magee LA, Brown MA, Hall DR, et al. The 2021 International Society for the Study of Hypertension in Pregnancy classification, diagnosis & management recommendations for international practice. Pregnancy Hypertens. 2022;27:148–169."
+  year: 2022
+  url: https://doi.org/10.1016/j.preghy.2021.09.008
+
+- id: lenders-pheo-2014
+  citation: "Lenders JWM, Duh QY, Eisenhofer G, et al. Pheochromocytoma and paraganglioma: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2014;99(6):1915–1942."
+  year: 2014
+  url: https://doi.org/10.1210/jc.2014-1498
+
+- id: mccord-cocaine-2008
+  citation: "McCord J, Jneid H, Hollander JE, et al. Management of cocaine-associated chest pain and myocardial infarction: a scientific statement from the American Heart Association. Circulation. 2008;117(14):1897–1907."
+  year: 2008
+  url: https://doi.org/10.1161/CIRCULATIONAHA.107.188950
+
+- id: bawaskar-2011
+  citation: "Bawaskar HS, Bawaskar PH. Efficacy and safety of scorpion antivenom plus prazosin compared with prazosin alone for venomous scorpion (Mesobuthus tamulus) sting: randomised open label clinical trial. BMJ. 2011;342:c7136."
+  year: 2011
+  url: https://doi.org/10.1136/bmj.c7136
+
+- id: pva-ad-2021
+  citation: "Krassioukov A, Linsenmeyer TA, Beck LA, et al. Evaluation and management of autonomic dysreflexia and other autonomic dysfunctions: preventing the highest immediate risk complications of spinal cord injury (Consortium for Spinal Cord Medicine). Top Spinal Cord Inj Rehabil. 2021;27(2):225–290."
+  year: 2021
+  url: https://doi.org/10.46292/sci2702-225
+
+- id: eular-lvv-2020
+  citation: "Hellmich B, Agueda A, Monti S, et al. 2018 Update of the EULAR recommendations for the management of large vessel vasculitis. Ann Rheum Dis. 2020;79(1):19–30."
+  year: 2020
+  url: https://doi.org/10.1136/annrheumdis-2019-215672
+
+- id: aap-htn-2017
+  citation: "Flynn JT, Kaelber DC, Baker-Smith CM, et al. Clinical practice guideline for screening and management of high blood pressure in children and adolescents. Pediatrics. 2017;140(3):e20171904."
+  year: 2017
+  url: https://doi.org/10.1542/peds.2017-1904
+
+- id: who-pe-2011
+  citation: "World Health Organization. WHO recommendations for prevention and treatment of pre-eclampsia and eclampsia. Geneva: WHO; 2011."
+  year: 2011
+  url: https://www.who.int/publications/i/item/9789241548335
+
+- id: hancock-2009
+  citation: "Hancock EW, Deal BJ, Mirvis DM, et al. AHA/ACCF/HRS recommendations for the standardization and interpretation of the electrocardiogram: part V: electrocardiogram changes associated with cardiac chamber hypertrophy. Circulation. 2009;119(10):e251–e261."
+  year: 2009
+  url: https://doi.org/10.1161/CIRCULATIONAHA.108.191097

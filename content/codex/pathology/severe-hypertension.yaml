@@ -1,0 +1,16 @@
+id: severe-hypertension
+title: "Severe hypertension without organ damage"
+summary: "BP above 180/120 with no new organ injury: the old 'hypertensive urgency'. It is a clinic problem, not an emergency. Oral treatment and review within a week; no IV drugs, no rush to a number."
+sections:
+  - heading: Confirm the number
+    body: "Correct cuff size, 5 minutes' rest, repeat. Treat pain, anxiety, a full bladder, hypoxia or withdrawal first: many readings settle."
+  - heading: Look for organ damage
+    body: "Neurological symptoms or signs, visual change, chest pain, breathlessness, fundoscopy (flame haemorrhages, cotton-wool spots, papilloedema), urine for blood and protein, and pregnancy. A creatinine is reasonable if follow-up is unreliable."
+  - heading: Not acute damage
+    body: "LVH on the ECG, long-standing CKD, old proteinuria or mild arteriolar narrowing in the fundus are chronic changes: they don't make it an emergency."
+  - heading: Treatment
+    body: "Restart missed tablets, or start or step up a long-acting oral drug (amlodipine, an ACE inhibitor or ARB, chlorthalidone). There is no BP target before discharge; control comes over days to weeks."
+  - heading: Harm from treating the number
+    body: "IV boluses and sublingual nifedipine for asymptomatic readings are linked with stroke, MI and AKI, without benefit."
+refs: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019]
+check: { source: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019], verified: false }

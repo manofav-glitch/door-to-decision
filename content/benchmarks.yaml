@@ -24,6 +24,34 @@ timeTargets:
     targetMin: 10
     check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-09-30 }
 
+  - id: severe-bp-to-drug
+    label: "Severe-range BP in pregnancy to the first antihypertensive dose"
+    from: severe-bp
+    to: bp-drug
+    targetMin: 60
+    check: { source: acog-767-2019, verified: false, todo: "ACOG: treat within 30–60 minutes of confirmed severe-range BP." }
+
+  - id: dissection-bp-target
+    label: "First IV drug to heart-rate and BP targets (aortic dissection)"
+    from: bp-drug
+    to: bp-target
+    targetMin: 20
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+
+  - id: ich-bp-target
+    label: "First IV drug to target systolic BP (intracerebral haemorrhage)"
+    from: bp-drug
+    to: bp-target
+    targetMin: 60
+    check: { source: [aha-asa-ich-2022, interact3-2023], verified: false }
+
+  - id: door-to-needle
+    label: "Arrival to thrombolytic bolus (ischaemic stroke)"
+    from: door
+    to: lysis
+    targetMin: 60
+    check: { source: aha-asa-ais-2026, verified: false }
+
 vitalLimits:
   # A value below `low` or above `high` shows in red.
   check:

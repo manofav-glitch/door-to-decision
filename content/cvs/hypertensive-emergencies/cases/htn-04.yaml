@@ -1,0 +1,258 @@
+# htn-04 — DRAFT for the content owner's review.
+# Hidden truth: acute ischaemic stroke (left MCA, no large-vessel occlusion) in a thrombolysis candidate.
+# No BP lowering before the scan; below 185/110 before the bolus with labetalol 10–20 mg; below 180/105
+# for 24 h after; not lower (ENCHANTED). Teaching branch: no reperfusion → permissive, treat only ≥220/120.
+# Sources: owner's HTN note (AIS); AHA/ASA 2026; ESO 2025.
+
+id: cvs-htn-04
+title: "68M, sudden right-sided weakness 90 minutes ago"
+difficulty: 2
+minutes: 10
+patient: { age: 68, sex: M, weightKg: 70 }
+initial:
+  clock: "09:30"
+  vitals: { hr: 88, sbp: 210, dbp: 115, rr: 18, spo2: 96, gcs: 14, temp: 36.9 }
+  flags: []
+timeTargets:
+  default: [door-to-needle]
+check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false, todo: "Teaching composite; check timings and eligibility." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [patient-supine:worried, relative, paramedic]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: relative, text: "He was fine at 8 o'clock having tea. Then his cup fell and his words came out wrong." }
+          - { who: paramedic, text: "Right arm and face weak, speech muddled. BP 210 over 115. Sugar 126." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    prompt: "Right face and arm weak, aphasic, onset 90 minutes ago. BP 210/115. First?"
+    options:
+      - label: "Stroke alert and straight to CT; leave the BP alone until the scan"
+        grade: best
+        consequence: "In the scanner 12 minutes after arrival."
+        teaching: "Image first: lowering BP before you know bleed from clot can harm an ischaemic stroke."
+        effects: { minutes: 12 }
+        next: ct
+      - label: "Labetalol 20 mg IV now to get below 185/110 before he reaches CT"
+        grade: suboptimal
+        consequence: "BP 176/98 by the scan, but CT was delayed 10 minutes."
+        teaching: "Pre-scan lowering helped bleeds but harmed ischaemic strokes (INTERACT4); image first."
+        effects: { minutes: 22, setVitals: { sbp: 176, dbp: 98 }, patient: -10 }
+        next: ct
+      - label: "ECG, full bloods and a chest X-ray first, then CT once results are back"
+        grade: suboptimal
+        consequence: "He reaches CT 45 minutes after arrival."
+        teaching: "Only glucose must come before CT; other tests mustn't delay imaging or thrombolysis."
+        effects: { minutes: 45, patient: -10 }
+        next: ct
+      - label: "Nifedipine 10 mg by mouth for the BP, then CT"
+        grade: harmful
+        consequence: "His BP falls to 150/84 and his weakness worsens. CT is delayed."
+        teaching: "An uncontrolled fall can extend the infarct; and he may not swallow safely."
+        effects: { minutes: 25, setVitals: { sbp: 150, dbp: 84 }, patient: -20 }
+        next: ct
+
+  ct:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: narrator, text: "CT head: no bleed, no large established infarct. CT angiogram: no large-vessel occlusion. NIHSS 9." }
+          - { who: senior, text: "He's eligible for thrombolysis, no contraindications on the checklist. BP now 204 over 112." }
+    next: before-lysis
+
+  before-lysis:
+    type: choice
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    prompt: "Eligible for thrombolysis. BP 204/112. Before the bolus?"
+    options:
+      - label: "Labetalol IV, recheck in 10 minutes, aiming for below 185/110"
+        grade: best
+        consequence: "Pharmacy hands you labetalol."
+        teaching: "Below 185/110 before the bolus, with a short-acting drug, without delaying treatment."
+        effects: { minutes: 3 }
+        next: dose
+      - label: "Thrombolyse now: BP only matters in stroke above 220/120"
+        grade: harmful
+        consequence: "Your senior stops you: above 185/110, the bleeding risk rises."
+        teaching: "220/120 is the threshold without reperfusion; thrombolysis needs below 185/110."
+        effects: { minutes: 5, patient: -20 }
+        next: dose
+      - label: "Nicardipine infusion, aiming for 140/90 before giving the bolus"
+        grade: suboptimal
+        consequence: "It takes 40 minutes to reach 150/88; the bolus is late."
+        teaching: "Lower is not better: ENCHANTED found no functional benefit, and the delay costs brain."
+        effects: { minutes: 40, patient: -10 }
+        next: dose
+      - label: "Abandon thrombolysis: BP above 185/110 is a contraindication"
+        grade: harmful
+        consequence: "Your senior overrules: BP that comes down with treatment is not a contraindication."
+        teaching: "Treat the BP and give the thrombolytic; refuse only if it can't be brought below 185/110."
+        effects: { minutes: 10, patient: -25 }
+        next: dose
+
+  dose:
+    type: dose
+    check: { source: aha-asa-ais-2026, verified: false }
+    prompt: "Labetalol IV over 1–2 minutes before thrombolysis, in mg?"
+    drug: labetalol
+    dose: stroke-lysis
+    tolerancePct: 0
+    correct:
+      consequence: "10 minutes later: BP 178/100."
+      teaching: "10–20 mg over 1–2 minutes, repeated once if needed."
+      effects: { minutes: 10, setVitals: { sbp: 178, dbp: 100, hr: 80 } }
+    under:
+      consequence: "BP barely moves; a second dose is needed."
+      teaching: "10–20 mg is the starting dose; smaller doses delay the bolus."
+      effects: { minutes: 20, setVitals: { sbp: 186, dbp: 108 }, patient: -5 }
+    over:
+      consequence: "BP falls to 146/80; his speech worsens briefly."
+      teaching: "A big dose overshoots: aim just below 185/110, not normal."
+      effects: { minutes: 10, setVitals: { sbp: 146, dbp: 80, hr: 66 }, patient: -10 }
+    next: lysis
+
+  lysis:
+    type: choice
+    check: { source: [aha-asa-ais-2026], verified: false }
+    prompt: "BP now below 185/110. Next?"
+    options:
+      - label: "Tenecteplase 0.25 mg/kg bolus now; BP every 15 minutes, below 180/105"
+        grade: best
+        consequence: "Bolus given 42 minutes after he arrived."
+        teaching: "A single bolus; then keep BP below 180/105 for 24 hours with close checks."
+        effects: { minutes: 3, milestone: lysis }
+        next: after
+      - label: "Alteplase 0.9 mg/kg, 10% as a bolus; BP every 15 minutes, below 180/105"
+        grade: acceptable
+        consequence: "Started 44 minutes after arrival; the hour-long infusion needs a pump."
+        teaching: "Both are acceptable; tenecteplase is a single bolus and simpler."
+        effects: { minutes: 5, milestone: lysis }
+        next: after
+      - label: "Wait 30 minutes to make sure the BP stays below 185/110"
+        grade: suboptimal
+        consequence: "It does; the bolus goes in 30 minutes later."
+        teaching: "Every minute of delay loses brain; recheck and treat, don't wait."
+        effects: { minutes: 33, milestone: lysis, patient: -10 }
+        next: after
+      - label: "Another labetalol dose first, to reach 160/90 for extra safety"
+        grade: suboptimal
+        consequence: "BP 152/84; the bolus is 15 minutes later."
+        teaching: "Below 185/110 is enough; lower targets add delay without benefit."
+        effects: { minutes: 18, milestone: lysis, setVitals: { sbp: 152, dbp: 84 }, patient: -5 }
+        next: after
+
+  after:
+    type: choice
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    prompt: "40 minutes after the bolus: BP 192/108 on two readings. Speech improving."
+    options:
+      - label: "Labetalol 10 mg IV again; an infusion if it stays above 180/105"
+        grade: best
+        consequence: "BP 172/98 and steady."
+        teaching: "Keep below 180/105 for 24 hours after thrombolysis."
+        effects: { minutes: 15, setVitals: { sbp: 172, dbp: 98 } }
+        next: teaching
+      - label: "Leave it: up to 220/120 is acceptable now the clot is treated"
+        grade: harmful
+        consequence: "At 6 hours he has a headache and vomits; repeat CT shows a small bleed."
+        teaching: "After thrombolysis, BP above 180/105 raises the risk of bleeding."
+        effects: { minutes: 15, patient: -25 }
+        next: teaching
+      - label: "Nicardipine infusion to bring SBP to 130–140 for the next 24 hours"
+        grade: suboptimal
+        consequence: "Fewer bleeds in trials, but no better recovery; your senior aims for below 180/105."
+        teaching: "Intensive lowering after thrombolysis (ENCHANTED) is not recommended."
+        effects: { minutes: 15, setVitals: { sbp: 136, dbp: 80 }, patient: -5 }
+        next: teaching
+      - label: "Recheck in 5 minutes, then labetalol if still above 180/105"
+        grade: acceptable
+        consequence: "Still 190/106; labetalol brings it to 174/98."
+        teaching: "A quick recheck is reasonable; treat promptly if it persists."
+        effects: { minutes: 20, setVitals: { sbp: 174, dbp: 98 } }
+        next: teaching
+
+  teaching:
+    type: choice
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    prompt: "Your senior asks: same stroke, but arriving 30 hours after onset, no reperfusion therapy, BP 204/112. What then?"
+    options:
+      - label: "Leave it unless 220/120 or more; restart tablets after a few days"
+        grade: best
+        consequence: "Right: the penumbra needs the pressure."
+        teaching: "Without reperfusion, treat only at 220/120 or above; earlier lowering doesn't help (CATIS, SCAST)."
+        effects: { minutes: 2 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Lower it by 15% over the first 24 hours with labetalol"
+        grade: suboptimal
+        consequence: "That's the plan only above 220/120."
+        teaching: "The 15% fall over 24 hours applies when BP is 220/120 or more."
+        effects: { minutes: 2, patient: -5 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Below 185/110 with labetalol, the same as before thrombolysis"
+        grade: suboptimal
+        consequence: "That threshold is only for reperfusion therapy."
+        teaching: "185/110 is a thrombolysis threshold; without it, permissive BP up to 220/120."
+        effects: { minutes: 2, patient: -5 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Restart ramipril and amlodipine today to reach 140/90 within a day"
+        grade: suboptimal
+        consequence: "Early restarting in the first 2–3 days doesn't improve outcome."
+        teaching: "Restart oral drugs once neurologically stable, usually after 48–72 hours."
+        effects: { minutes: 2, patient: -5 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Three days later · Stroke unit"
+        bubbles:
+          - { who: patient, text: "My words are back. My hand is still a bit clumsy." }
+    summary: "You scanned before treating the number, brought him just under 185/110, thrombolysed within the hour, and kept him below 180/105 without overdoing it."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "A week later · Stroke unit"
+    summary: "He improved, but delays, an overshoot or uncontrolled BP after thrombolysis cost him. The debrief shows where."
+
+debrief:
+  diagnosis: "Acute ischaemic stroke (left hemisphere, no large-vessel occlusion), thrombolysed."
+  keyPoints:
+    - "Scan first: don't lower BP before you know bleed from clot."
+    - "Thrombolysis: below 185/110 before the bolus (labetalol 10–20 mg), below 180/105 for 24 hours."
+    - "Lower isn't better: SBP 130–140 after thrombolysis didn't improve recovery."
+    - "No reperfusion: treat only at 220/120 or above, lowering about 15% over 24 hours."
+    - "After thrombectomy: 180/105 or less; below 140 after successful reperfusion is harmful."
+  pitfalls:
+    - "Abandoning thrombolysis for BP that would come down with treatment."
+    - "Permissive BP after thrombolysis."
+    - "Oral nifedipine or aggressive targets that delay the bolus."
+  unlocks: [stroke-bp, hypertensive-emergency, labetalol]
+  refs: [aha-asa-ais-2026, eso-bp-2025]
+  check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }

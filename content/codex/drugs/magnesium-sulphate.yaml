@@ -8,6 +8,12 @@ doses:
     text: "2 g (8 mmol), may be repeated"
     rule: { unit: g, fixed: 2 }
     check: { source: [rcuk-2025, drew-2010], verified: true, reviewedOn: 2026-10-13 }
+  - id: pritchard
+    label: "Eclampsia and severe pre-eclampsia: Pritchard loading dose (IV part)"
+    route: "IV over 15–20 minutes, plus IM"
+    text: "4 g IV over 15–20 minutes, plus 5 g deep IM into each buttock; then 5 g IM every 4 hours into alternate buttocks, for 24 hours after delivery or the last fit"
+    rule: { unit: g, fixed: 4 }
+    check: { source: [who-pe-2011, isshp-2021], verified: false }
 sections:
   - heading: With it
     body: "Raise potassium to 4.5–5 mmol/L; stop QT-prolonging drugs; increase the heart rate (pacing, or isoprenaline in acquired long QT)."

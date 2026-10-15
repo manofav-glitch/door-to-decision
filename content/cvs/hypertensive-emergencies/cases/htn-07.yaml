@@ -1,0 +1,238 @@
+# htn-07 — DRAFT for the content owner's review.
+# Hidden truth: uncomplicated type B aortic dissection. Anti-impulse first (esmolol or labetalol to HR ≤60),
+# then a vasodilator to SBP 100–120 within 20 minutes; opioid analgesia; arterial line; medical unless
+# complicated (malperfusion, rupture, refractory pain or BP → TEVAR). ADD-RS 1 here (pain only), so the
+# D-dimer route is acceptable but slower.
+# Sources: owner's HTN note (acute aortic syndrome); ESC aortic 2024; ESC Council 2019.
+
+id: cvs-htn-07
+title: "58M, sudden tearing pain between the shoulder blades"
+difficulty: 2
+minutes: 10
+patient: { age: 58, sex: M, weightKg: 74 }
+initial:
+  clock: "14:05"
+  vitals: { hr: 104, sbp: 200, dbp: 110, rr: 20, spo2: 97, gcs: 15, temp: 36.8 }
+  flags: []
+timeTargets:
+  default: [dissection-bp-target]
+check: { source: [esc-aortic-2024, esc-he-2019], verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: triage-desk
+        actors: [patient:pain, nurse]
+        caption: "{clock} · Triage"
+        bubbles:
+          - { who: patient, text: "Lifting a sack, and suddenly a tearing pain between my shoulder blades. Worst pain of my life. It's going down my back." }
+          - { who: nurse, text: "198 over 108 right arm, 202 over 112 left. Pulses all present. Smoker, on no tablets." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: [esc-aortic-2024], verified: false }
+    prompt: "Abrupt tearing back pain, BP equal in both arms, pulses present. First?"
+    options:
+      - label: "ECG, IV access, morphine, and a CT aortogram now, before any blood results"
+        grade: best
+        consequence: "ECG: sinus tachycardia, LVH, no ST elevation. CT in 20 minutes."
+        teaching: "Abrupt, severe tearing pain is a high-risk feature: image the aorta."
+        effects: { minutes: 25, milestone: ecg }
+        next: ct
+      - label: "ECG, IV access, morphine, and a D-dimer; CT aortogram only if it's raised"
+        grade: acceptable
+        consequence: "D-dimer 2,400; CT 40 minutes later than it could have been."
+        teaching: "With ADD-RS 1 a negative D-dimer can rule out dissection, but here suspicion is high."
+        effects: { minutes: 60, milestone: ecg }
+        next: ct
+      - label: "ECG, aspirin 300 mg and the ACS pathway; CT if the troponin is normal"
+        grade: harmful
+        consequence: "Your senior stops the ticagrelor before it's given and sends him to CT."
+        teaching: "Antiplatelets in dissection worsen bleeding; think aorta before ACS with tearing back pain."
+        effects: { minutes: 45, milestone: ecg, patient: -20 }
+        next: ct
+      - label: "ECG, morphine and a chest X-ray for a wide mediastinum before deciding"
+        grade: suboptimal
+        consequence: "X-ray looks normal; your senior sends him to CT anyway."
+        teaching: "A normal chest X-ray does not exclude dissection."
+        effects: { minutes: 45, milestone: ecg, patient: -5 }
+        next: ct
+
+  ct:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine:pain, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: narrator, text: "Dissection starting beyond the left subclavian artery, down to the renal arteries. Ascending aorta normal. Both kidneys and legs perfused, no leak." }
+          - { who: senior, text: "Uncomplicated type B. Pain 6 out of 10 after morphine. HR 102, BP 196 over 108." }
+    next: order
+
+  order:
+    type: choice
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+    prompt: "Which first?"
+    options:
+      - label: "Esmolol 500 micrograms/kg, then infusion, to heart rate 60 or less"
+        grade: best
+        consequence: "HR 62 at 10 minutes; BP 158/92."
+        teaching: "Anti-impulse first: lower heart rate and the force of each beat on the wall."
+        effects: { minutes: 10, milestone: bp-drug, setVitals: { hr: 62, sbp: 158, dbp: 92 } }
+        next: target
+      - label: "Labetalol 20 mg IV every 10 minutes to heart rate 60 or less"
+        grade: best
+        consequence: "HR 64 at 10 minutes; BP 154/90."
+        teaching: "Labetalol is equally first-line and is in every Indian ED."
+        effects: { minutes: 10, milestone: bp-drug, setVitals: { hr: 64, sbp: 154, dbp: 90 } }
+        next: target
+      - label: "Nicardipine infusion first, to bring SBP to 120 within 20 minutes"
+        grade: harmful
+        consequence: "BP falls but HR climbs to 124 and the pain returns."
+        teaching: "A vasodilator alone causes reflex tachycardia, increasing the force on the flap."
+        effects: { minutes: 10, milestone: bp-drug, setVitals: { hr: 124, sbp: 150, dbp: 86 }, patient: -20 }
+        next: target
+      - label: "Hydralazine 10 mg IV now, then add a beta-blocker if the heart rate rises"
+        grade: harmful
+        consequence: "HR 128, pain worse. Your senior starts esmolol."
+        teaching: "Hydralazine causes reflex tachycardia: avoid it in dissection."
+        effects: { minutes: 15, milestone: bp-drug, setVitals: { hr: 128, sbp: 168, dbp: 96 }, patient: -20 }
+        next: target
+
+  target:
+    type: choice
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+    prompt: "Heart rate at target; BP still above 150. Next?"
+    options:
+      - label: "Add a nicardipine infusion to bring SBP to 100–120 within minutes"
+        grade: best
+        consequence: "SBP 116, HR 60, pain 2 out of 10."
+        teaching: "Once the heart is slowed, a vasodilator finishes the job: SBP 100–120 within 20 minutes."
+        effects: { minutes: 8, milestone: bp-target, setVitals: { hr: 60, sbp: 116, dbp: 70 } }
+        next: care
+      - label: "Add a GTN infusion, titrated to SBP 100–120"
+        grade: acceptable
+        consequence: "SBP 118 at 12 minutes; he has a headache."
+        teaching: "GTN or nitroprusside are alternatives once beta-blocked."
+        effects: { minutes: 12, milestone: bp-target, setVitals: { hr: 62, sbp: 118, dbp: 72 } }
+        next: care
+      - label: "Leave SBP at 150: the heart rate is controlled and his kidneys need the pressure"
+        grade: suboptimal
+        consequence: "His pain returns an hour later. Your senior adds a vasodilator."
+        teaching: "Both targets matter: heart rate 60 or less and SBP 100–120."
+        effects: { minutes: 30, patient: -10 }
+        next: care
+      - label: "More beta-blocker until SBP is 120, even if heart rate falls to 45"
+        grade: suboptimal
+        consequence: "HR 44, BP 128/74; he is clammy. Your senior reduces the infusion."
+        teaching: "Use a vasodilator for the remaining BP rather than pushing into bradycardia."
+        effects: { minutes: 20, milestone: bp-target, setVitals: { hr: 44, sbp: 128, dbp: 74 }, patient: -10 }
+        next: care
+
+  care:
+    type: multiselect
+    check: { source: [esc-aortic-2024], verified: false }
+    prompt: "Ongoing care. Choose up to 3."
+    max: 3
+    options:
+      - id: art-line
+        label: "Arterial line and an ICU or HDU bed"
+        grade: best
+        consequence: "In ICU within the hour."
+        teaching: "Continuous BP for titrated infusions in dissection."
+        missedEffects: { patient: -5 }
+      - id: malperfusion
+        label: "Watch for malperfusion: urine output, leg pulses, abdominal pain, lactate"
+        grade: best
+        consequence: "Hourly checks charted."
+        teaching: "Malperfusion turns uncomplicated into complicated."
+        missedEffects: { patient: -5 }
+      - id: oral
+        label: "Switch to an oral beta-blocker once stable for 24 hours"
+        grade: acceptable
+        consequence: "Planned for day 2."
+        teaching: "Esmolol cost drives early switch to oral metoprolol."
+      - id: tevar-all
+        label: "TEVAR tomorrow: all type B dissections need stenting"
+        grade: suboptimal
+        consequence: "The vascular team plans medical treatment for now."
+        teaching: "Uncomplicated type B is treated medically, with close imaging."
+    next: complication
+
+  complication:
+    type: choice
+    check: { source: [esc-aortic-2024], verified: false }
+    prompt: "Day 2: pain returns, BP hard to control, creatinine rising, left leg cold."
+    options:
+      - label: "Complicated type B: urgent vascular team for TEVAR"
+        grade: best
+        consequence: "Stented that afternoon; the leg pinks up."
+        teaching: "Malperfusion, refractory pain or BP, or rupture: TEVAR."
+        effects: { minutes: 120 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Repeat CT aortogram now, with the vascular team alerted"
+        grade: acceptable
+        consequence: "CT shows the false lumen compressing the left iliac; TEVAR follows."
+        teaching: "Imaging is reasonable if it doesn't delay the vascular team."
+        effects: { minutes: 150 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Increase the esmolol and nicardipine and reassess in 6 hours"
+        grade: harmful
+        consequence: "By evening the leg is mottled and he needs a fasciotomy."
+        teaching: "Malperfusion won't respond to more drugs: it needs a procedure."
+        effects: { minutes: 360, patient: -25 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+      - label: "Repeat CT in the morning if the pain persists overnight"
+        grade: harmful
+        consequence: "Overnight his kidneys fail and the leg is lost."
+        teaching: "Malperfusion is an emergency."
+        effects: { minutes: 600, patient: -25 }
+        next:
+          - { if: { meter: patient, below: 70 }, to: end-fair }
+          - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, doctor]
+        caption: "A week later · Vascular ward"
+        bubbles:
+          - { who: patient, text: "Walking again. I've stopped smoking and I'm on three BP tablets." }
+    summary: "You imaged the aorta first, slowed the heart before dilating, hit both targets within 20 minutes, and recognised malperfusion as a reason for TEVAR."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, doctor]
+        caption: "Two weeks later · Vascular ward"
+    summary: "He survived, but antiplatelets, a vasodilator before a beta-blocker or a missed malperfusion cost him. The debrief shows where."
+
+debrief:
+  diagnosis: "Acute type B aortic dissection, uncomplicated at first, then complicated by malperfusion."
+  keyPoints:
+    - "Tearing pain: think aorta before ACS; image with a CT aortogram."
+    - "Anti-impulse first: esmolol or labetalol to heart rate 60 or less."
+    - "Then a vasodilator to SBP 100–120 within 20 minutes."
+    - "Opioid analgesia; arterial line; watch for malperfusion."
+    - "Uncomplicated type B: medical. Complicated: TEVAR."
+  pitfalls:
+    - "Vasodilator before beta-blocker; hydralazine."
+    - "Antiplatelets on the ACS pathway."
+    - "Treating malperfusion with more drugs."
+  unlocks: [aortic-dissection, labetalol, nicardipine, hypertensive-emergency]
+  refs: [esc-aortic-2024, esc-he-2019]
+  check: { source: [esc-aortic-2024, esc-he-2019], verified: false }

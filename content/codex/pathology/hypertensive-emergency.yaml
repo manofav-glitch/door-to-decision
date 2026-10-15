@@ -1,0 +1,20 @@
+id: hypertensive-emergency
+title: "Hypertensive emergency: the framework"
+summary: "Severe BP plus new organ injury. The organ, not the number, sets the drug, the target and the clock."
+sections:
+  - heading: Minutes
+    body: "Aortic dissection (HR 60 or less, then SBP 100–120 within 20 minutes), SCAPE, severe pre-eclampsia and eclampsia, ICH, phaeochromocytoma crisis."
+  - heading: Hours
+    body: "Malignant hypertension, encephalopathy, AKI: lower MAP by 20–25% (in the first hour for encephalopathy, over several hours otherwise), then towards 160/100 over 2–6 hours."
+  - heading: Permissive
+    body: "Ischaemic stroke: treat only above 220/120 if not reperfused, or above 185/110 before thrombolysis."
+  - heading: Write the target
+    body: "A number, a time and a floor: 'MAP 105–115 by 60 minutes, not below 100', not 'lower the BP'."
+  - heading: Drugs
+    body: "Short-acting, titratable IV drugs with close monitoring: labetalol (boluses where pumps are scarce) or nicardipine for most; an arterial line for nitroprusside, dissection and ICH."
+  - heading: Never
+    body: "Sublingual nifedipine, oral clonidine loading, a reflex diuretic in a dry patient, or a vasodilator before a beta-blocker in dissection."
+  - heading: Why not too fast
+    body: "In chronic hypertension, brain and kidney autoregulation is reset upwards; the lower limit sits about 20–25% below the usual MAP. Falling faster or further causes watershed stroke, MI, AKI and blindness."
+refs: [esc-he-2019, aha-acc-bp-2025, esc-htn-2024]
+check: { source: [esc-he-2019, aha-acc-bp-2025, esc-htn-2024], verified: false }

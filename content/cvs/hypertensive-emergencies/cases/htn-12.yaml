@@ -1,0 +1,194 @@
+# htn-12 — DRAFT for the content owner's review.
+# Hidden truth: sympathomimetic (MDMA/amphetamine) toxicity with agitation, hyperthermia, hypertension and
+# chest pain. Benzodiazepines titrated to calm, then active cooling; if BP stays high, GTN, phentolamine or
+# nicardipine; no pure beta-blockers; check CK, sodium, ECG and troponin.
+# Sources: owner's HTN note (sympathomimetics); AHA cocaine statement 2008; ESC Council 2019.
+
+id: cvs-htn-12
+title: "26M, agitated and sweating after a party"
+difficulty: 2
+minutes: 8
+patient: { age: 26, sex: M, weightKg: 70 }
+initial:
+  clock: "02:40"
+  rhythm: ecg/htn-sinus-tachy.svg
+  vitals: { hr: 140, sbp: 200, dbp: 120, rr: 26, spo2: 97, gcs: 14, temp: 38.9 }
+  flags: []
+check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false, todo: "Teaching composite." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [patient:alarmed, relative, paramedic]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: relative, text: "He took some pills at the party, 'MD' they said. Now he won't stop moving and he's soaked." }
+          - { who: paramedic, text: "Pulse 140, BP 200 over 120, temp 38.9. He's pulling at everything and says his chest is tight." }
+    next: first
+
+  first:
+    type: choice
+    check: { source: mccord-cocaine-2008, verified: false }
+    prompt: "Agitated, sweating, fighting the staff. First?"
+    options:
+      - label: "Diazepam 10 mg IV every 5–10 minutes until calm; check glucose"
+        grade: best
+        consequence: "Calm after 30 mg. HR 118, BP 176/104, temp 39.2. Glucose 96."
+        teaching: "Sedation treats the agitation, heart rate, BP and heat production together."
+        effects: { minutes: 20, setVitals: { hr: 118, sbp: 176, dbp: 104, temp: 39.2 } }
+        next: cool
+      - label: "Haloperidol 10 mg IM as the main sedative, then reassess in 20 minutes"
+        grade: suboptimal
+        consequence: "Partly calmer, but his temperature climbs to 39.8. Your senior gives diazepam."
+        teaching: "Antipsychotics impair heat loss, lower the seizure threshold and lengthen QT; benzodiazepines first."
+        effects: { minutes: 25, setVitals: { hr: 128, sbp: 186, dbp: 110, temp: 39.8 }, patient: -10 }
+        next: cool
+      - label: "Four staff hold him down on the trolley until the drug wears off"
+        grade: harmful
+        consequence: "He struggles harder; temperature 40.3, potassium rising. Your senior sedates him."
+        teaching: "Restraint without sedation worsens heat, acidosis and rhabdomyolysis."
+        effects: { minutes: 25, setVitals: { hr: 150, temp: 40.3 }, patient: -25 }
+        next: cool
+      - label: "Metoprolol 5 mg IV to slow the heart rate and bring the BP down"
+        grade: harmful
+        consequence: "BP rises to 214/130 and his chest tightness worsens."
+        teaching: "Pure beta-blockers leave alpha constriction unopposed."
+        effects: { minutes: 15, setVitals: { sbp: 214, dbp: 130 }, patient: -20 }
+        next: cool
+
+  cool:
+    type: choice
+    check: { source: mccord-cocaine-2008, verified: false }
+    prompt: "Calm now. Temperature 39.2 and rising. Next?"
+    options:
+      - label: "Undress, tepid-water spray under fans; temperature every 15 minutes"
+        grade: best
+        consequence: "38.1 in 40 minutes."
+        teaching: "Evaporative cooling works fast; antipyretics don't, as this isn't a fever."
+        effects: { minutes: 40, setVitals: { temp: 38.1, hr: 108 } }
+        next: bp
+      - label: "Ice packs to the groin and armpits, plus cold IV fluids by pressure bag"
+        grade: acceptable
+        consequence: "38.4 in 40 minutes."
+        teaching: "Also effective; combine with evaporation for speed."
+        effects: { minutes: 40, setVitals: { temp: 38.4, hr: 110 } }
+        next: bp
+      - label: "Paracetamol 1 g IV for the temperature, and a cooler room"
+        grade: suboptimal
+        consequence: "His temperature keeps rising to 39.7. Your senior starts cooling."
+        teaching: "Drug-induced heat isn't a reset thermostat: paracetamol doesn't help."
+        effects: { minutes: 40, setVitals: { temp: 39.7 }, patient: -10 }
+        next: bp
+      - label: "Dantrolene 1 mg/kg IV to stop his muscles making heat"
+        grade: suboptimal
+        consequence: "No clear effect; your senior starts physical cooling."
+        teaching: "Dantrolene has no proven role here; cool physically."
+        effects: { minutes: 40, setVitals: { temp: 39.4 }, patient: -5 }
+        next: bp
+
+  bp:
+    type: choice
+    check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false }
+    prompt: "Calm and cooler. BP still 180/112, chest still tight. ECG: sinus 108, no ST change."
+    options:
+      - label: "GTN sublingual then infusion, aspirin, serial ECGs and troponin"
+        grade: best
+        consequence: "Chest pain gone, BP 150/92."
+        teaching: "Benzodiazepines and nitrates first for sympathomimetic chest pain; treat as possible ACS."
+        effects: { minutes: 30, setVitals: { sbp: 150, dbp: 92, hr: 100 } }
+        next: checks
+      - label: "Phentolamine 1–5 mg IV boluses, repeated every 5–15 minutes to effect"
+        grade: acceptable
+        consequence: "BP 152/94; the chest tightness eases more slowly."
+        teaching: "Phentolamine is an option for persistent sympathomimetic hypertension."
+        effects: { minutes: 30, setVitals: { sbp: 152, dbp: 94, hr: 104 } }
+        next: checks
+      - label: "Propranolol 1 mg IV for the BP and heart rate together"
+        grade: harmful
+        consequence: "BP 206/128 and the chest pain worsens."
+        teaching: "Pure beta-blockers are avoided in sympathomimetic toxicity."
+        effects: { minutes: 30, setVitals: { sbp: 206, dbp: 128 }, patient: -20 }
+        next: checks
+      - label: "More diazepam: he's calm, but it will bring the BP down further"
+        grade: suboptimal
+        consequence: "He becomes very drowsy; BP 170/104."
+        teaching: "Once calm, more sedation risks the airway; treat persistent BP directly."
+        effects: { minutes: 30, setVitals: { sbp: 170, dbp: 104 }, patient: -5 }
+        next: checks
+
+  checks:
+    type: multiselect
+    check: { source: mccord-cocaine-2008, verified: false }
+    prompt: "Which complications do you check for? Choose up to 4."
+    max: 4
+    options:
+      - id: ck
+        label: "CK and kidney function for rhabdomyolysis"
+        grade: best
+        consequence: "CK 8,400; creatinine normal. IV fluids started."
+        teaching: "Agitation and heat break down muscle."
+        missedEffects: { patient: -5 }
+      - id: sodium
+        label: "Sodium: MDMA can cause severe hyponatraemia"
+        grade: best
+        consequence: "Sodium 131."
+        teaching: "MDMA causes ADH release and drinking lots of water."
+        missedEffects: { patient: -5 }
+      - id: troponin
+        label: "Serial ECGs and troponin"
+        grade: best
+        consequence: "Troponin normal twice."
+        teaching: "Sympathomimetics cause ACS, spasm and dissection."
+        missedEffects: { patient: -5 }
+      - id: screen
+        label: "A urine drug screen to confirm what he took"
+        grade: suboptimal
+        consequence: "It doesn't change treatment."
+        teaching: "Treatment follows the toxidrome, not the screen."
+      - id: ct
+        label: "CT head for every agitated drug user"
+        grade: suboptimal
+        consequence: "Not needed: no focal signs or head injury."
+        teaching: "Image if there are focal signs, injury or a persistent low GCS."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Next morning · Observation ward"
+        bubbles:
+          - { who: patient, text: "I don't remember much. My muscles ache, but my chest is fine." }
+    summary: "You sedated before anything else, cooled him fast, used nitrates rather than beta-blockers, and looked for the complications."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "Two days later · ICU"
+    summary: "He survived, but restraint without sedation, a beta-blocker or slow cooling made it worse. The debrief shows where."
+
+debrief:
+  diagnosis: "Sympathomimetic (MDMA) toxicity with agitation, hyperthermia, hypertension and chest pain."
+  keyPoints:
+    - "Benzodiazepines titrated to calm come first."
+    - "Active cooling; paracetamol doesn't work for drug-induced heat."
+    - "Persistent BP or chest pain: GTN, phentolamine or nicardipine; aspirin and serial ECGs."
+    - "Avoid pure beta-blockers; check CK, sodium and troponin."
+  pitfalls:
+    - "Restraint without sedation."
+    - "Metoprolol or propranolol."
+    - "Haloperidol as the main sedative."
+  unlocks: [sympathomimetic-toxicity, benzodiazepines, phentolamine, nitrates]
+  refs: [mccord-cocaine-2008, esc-he-2019]
+  check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false }

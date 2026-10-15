@@ -1,0 +1,14 @@
+id: phaeochromocytoma-crisis
+title: "Phaeochromocytoma crisis"
+summary: "A catecholamine surge from a tumour: headache, sweating and palpitations, with severe, swinging BP. Alpha-blockade first; a beta-blocker first makes it worse."
+sections:
+  - heading: Triggers
+    body: "Metoclopramide, glucagon, high-dose steroids, anaesthesia, contrast, tumour handling, some antidepressants."
+  - heading: Treatment
+    body: "Phentolamine 1–5 mg IV boluses; nicardipine or nitroprusside if not stocked; magnesium as an adjunct; SBP below 140 in the first hour. Then oral alpha-blockade (doxazosin, prazosin or phenoxybenzamine)."
+  - heading: Beta-blockers
+    body: "Only after alpha-blockade, and only for tachyarrhythmia."
+  - heading: Diagnosis
+    body: "Plasma free metanephrines (or urinary fractionated metanephrines), then imaging."
+refs: [lenders-pheo-2014, esc-he-2019]
+check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }

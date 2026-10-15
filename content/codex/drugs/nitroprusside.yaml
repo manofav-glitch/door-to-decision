@@ -1,0 +1,17 @@
+id: nitroprusside
+title: "Sodium nitroprusside (IV)"
+summary: "A powerful arterial and venous dilator acting in seconds. Kept for refractory cases and monitored beds: it needs an arterial line, protection from light and a watch for cyanide."
+doses:
+  - id: infusion
+    label: "Refractory hypertensive emergency"
+    route: IV infusion
+    text: "Start at 0.25–0.3 micrograms/kg/min and titrate; keep to 2 micrograms/kg/min or less where possible"
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+sections:
+  - heading: Avoid
+    body: "Intracerebral haemorrhage and raised ICP (it dilates cerebral vessels); prolonged use in kidney or liver failure (thiocyanate builds up); pregnancy except briefly in extremis; ACS (coronary steal)."
+  - heading: Cyanide toxicity
+    body: "Rising lactate, metabolic acidosis, high venous oxygen saturation, needing ever more drug. Stop it and give hydroxocobalamin 5 g IV."
+india: "Stocked in most Indian EDs; use it only with an arterial line in a monitored bed."
+refs: [esc-he-2019, aha-acc-bp-2025]
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }

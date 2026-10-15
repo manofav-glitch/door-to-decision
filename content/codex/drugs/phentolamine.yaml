@@ -1,0 +1,20 @@
+id: phentolamine
+title: "Phentolamine (IV)"
+summary: "A short-acting non-selective alpha-blocker: the first drug for a phaeochromocytoma crisis and other catecholamine-driven hypertension (MAOI–tyramine, severe sympathomimetic toxicity)."
+doses:
+  - id: crisis
+    label: "Catecholamine crisis"
+    route: IV bolus
+    text: "1–5 mg IV, repeated every 5–15 minutes to effect"
+    rule: { unit: mg, fixed: { min: 1, max: 5 } }
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+sections:
+  - heading: Order
+    body: "Alpha-blockade first. A beta-blocker is added only afterwards, and only for a tachyarrhythmia: given first, it removes beta-2 vasodilatation and leaves alpha vasoconstriction unopposed."
+  - heading: Cautions
+    body: "Tachycardia and arrhythmias; angina. The effect wears off in 10–30 minutes, so repeat doses or switch to an infusion of another drug."
+  - heading: If it isn't stocked
+    body: "Nicardipine or nitroprusside IV, magnesium as an adjunct, oral prazosin or doxazosin; benzodiazepines in sympathomimetic toxicity."
+india: "Inconsistently stocked in Indian EDs."
+refs: [lenders-pheo-2014, esc-he-2019]
+check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }

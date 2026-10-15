@@ -1,0 +1,16 @@
+# htn-14: subarachnoid haemorrhage. Sinus ~64/min; deep, broad, symmetrical T inversion in V2–V6,
+# I and aVL with a long QT (neurogenic T waves). No ST elevation.
+title: "12-lead ECG in resus"
+layout: 12-lead
+rhythm: { kind: sinus, rate: 64 }
+rhythmLead: II
+qt: 520
+leads:
+  I: { t: -0.35 }
+  aVL: { t: -0.3 }
+  V2: { r: 0.3, s: 1.0, t: -0.6 }
+  V3: { r: 0.6, s: 0.8, t: -0.8 }
+  V4: { r: 1.0, s: 0.4, t: -0.8 }
+  V5: { r: 1.2, t: -0.6 }
+  V6: { r: 1.0, t: -0.45 }
+check: { source: aha-asa-sah-2023, verified: false, todo: "Check it reads as deep T inversion with a long QT, not an ACS pattern." }

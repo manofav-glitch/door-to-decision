@@ -1,0 +1,235 @@
+# htn-05 — DRAFT for the content owner's review.
+# Hidden truth: spontaneous intracerebral haemorrhage (right basal ganglia, ~15 ml) on warfarin, INR 3.1.
+# SBP to 140 (range 130–150) within an hour, smoothly (no falls of >70 in an hour, nothing below 130);
+# labetalol or nicardipine, not nitroprusside; reverse warfarin now (PCC + vitamin K); the INTERACT3
+# bundle (glucose, fever, BP, reversal within an hour).
+# Sources: owner's HTN note (ICH); AHA/ASA ICH 2022; INTERACT3; ESO 2025.
+
+id: cvs-htn-05
+title: "60F on warfarin, sudden headache and left weakness"
+difficulty: 2
+minutes: 10
+patient: { age: 60, sex: F, weightKg: 62 }
+initial:
+  clock: "19:15"
+  vitals: { hr: 92, sbp: 222, dbp: 118, rr: 18, spo2: 96, gcs: 14, temp: 37.4 }
+  flags: []
+timeTargets:
+  default: [ich-bp-target]
+check: { source: [aha-asa-ich-2022, interact3-2023], verified: false, todo: "Teaching composite; check the INR and reversal doses." }
+
+start: arrival
+
+nodes:
+  arrival:
+    type: story
+    panels:
+      - scene: ambulance-bay
+        actors: [patient-supine:pain, relative, paramedic]
+        caption: "{clock} · Ambulance bay"
+        bubbles:
+          - { who: relative, text: "She has an irregular heartbeat and takes warfarin. An hour ago a sudden headache, vomiting, then her left side went weak." }
+          - { who: paramedic, text: "BP 222 over 118. Left arm and leg weak, speech clear." }
+    next: scan
+
+  scan:
+    type: story
+    panels:
+      - scene: ct-scanner
+        actors: [patient-supine, doctor]
+        caption: "{clock} · CT"
+        bubbles:
+          - { who: narrator, text: "CT: right basal ganglia haemorrhage, about 15 ml, no blood in the ventricles. INR 3.1. Glucose 248 mg/dL." }
+    next: target
+
+  target:
+    type: choice
+    check: { source: [aha-asa-ich-2022, eso-bp-2025], verified: false }
+    prompt: "Small-to-moderate bleed, BP 222/118. Your BP target?"
+    options:
+      - label: "SBP 140 (range 130–150), reached within an hour and kept steady"
+        grade: best
+        consequence: "Written on the chart with 15-minute BP checks."
+        teaching: "Early, smooth lowering to 140 limits haematoma growth; avoid below 130."
+        effects: { minutes: 3 }
+        next: drug
+      - label: "SBP below 120 as fast as possible, to stop the bleed growing"
+        grade: harmful
+        consequence: "Your senior stops you: below 130 and big, fast falls harm brain and kidneys."
+        teaching: "ATACH-2: 110–139 was no better, with more kidney harm; falls over 70 in an hour do worse."
+        effects: { minutes: 3, patient: -20 }
+        next: drug
+      - label: "SBP below 180 over the next few hours, to protect brain perfusion"
+        grade: suboptimal
+        consequence: "Your senior aims lower: 140 is safe and may limit growth."
+        teaching: "INTERACT2 and the guidelines support 140 in mild to moderate bleeds."
+        effects: { minutes: 3, patient: -10 }
+        next: drug
+      - label: "Treat only above 220/120, as for any acute stroke"
+        grade: suboptimal
+        consequence: "The haematoma is the target; your senior starts treatment."
+        teaching: "Permissive BP is for ischaemic stroke without reperfusion, not haemorrhage."
+        effects: { minutes: 3, patient: -10 }
+        next: drug
+
+  drug:
+    type: choice
+    check: { source: [aha-asa-ich-2022, esc-he-2019], verified: false }
+    prompt: "Which drug?"
+    options:
+      - label: "Labetalol 20 mg IV, repeated every 10 minutes, then an infusion"
+        grade: best
+        consequence: "BP 186/102 at 10 minutes and falling smoothly."
+        teaching: "Labetalol or nicardipine: titratable, and they don't raise ICP."
+        effects: { minutes: 10, milestone: bp-drug, setVitals: { sbp: 186, dbp: 102, hr: 84 } }
+        next: reverse
+      - label: "Nicardipine infusion from 5 mg/h, up 2.5 mg/h every 5–15 minutes"
+        grade: acceptable
+        consequence: "Pharmacy finds it in 15 minutes; BP falls smoothly after that."
+        teaching: "Equally first-line; use whichever is stocked and familiar."
+        effects: { minutes: 20, milestone: bp-drug, setVitals: { sbp: 190, dbp: 104 } }
+        next: reverse
+      - label: "Nitroprusside infusion with an arterial line, titrated every few minutes"
+        grade: harmful
+        consequence: "BP falls but she becomes drowsier; your senior switches to labetalol."
+        teaching: "Nitroprusside dilates cerebral vessels and raises ICP: avoid it in ICH."
+        effects: { minutes: 15, milestone: bp-drug, setVitals: { sbp: 170, dbp: 96 }, gcs: -2, patient: -20 }
+        next: reverse
+      - label: "Nifedipine 10 mg sublingual, repeated after 30 minutes if needed"
+        grade: harmful
+        consequence: "BP drops from 222 to 128 in 20 minutes; she becomes drowsy."
+        teaching: "Falls of more than 70 mmHg in an hour do worse; sublingual nifedipine is never used."
+        effects: { minutes: 20, milestone: bp-drug, setVitals: { sbp: 128, dbp: 70 }, gcs: -2, patient: -25 }
+        next: reverse
+
+  reverse:
+    type: choice
+    check: { source: [aha-asa-ich-2022, interact3-2023], verified: false, todo: "Confirm the PCC dosing you teach." }
+    prompt: "INR 3.1. Reversal?"
+    options:
+      - label: "Four-factor PCC dosed by INR and weight, plus vitamin K 10 mg IV, now"
+        grade: best
+        consequence: "INR 1.3 at 30 minutes."
+        teaching: "PCC corrects the INR in minutes; vitamin K keeps it corrected."
+        effects: { minutes: 15 }
+        next: titrate
+      - label: "Fresh frozen plasma 15 ml/kg plus vitamin K 10 mg IV, as no PCC is stocked"
+        grade: acceptable
+        consequence: "The plasma takes an hour to thaw and run; INR 1.6 at 2 hours."
+        teaching: "Plasma is slower and a big volume; use it when PCC isn't available."
+        effects: { minutes: 15 }
+        next: titrate
+      - label: "Vitamin K 10 mg IV alone, and recheck the INR in 6 hours"
+        grade: suboptimal
+        consequence: "INR still 2.4 at 6 hours; the haematoma has grown."
+        teaching: "Vitamin K takes hours; reversal is needed within the hour."
+        effects: { minutes: 15, patient: -15 }
+        next: titrate
+      - label: "Hold the warfarin and recheck the INR in the morning"
+        grade: harmful
+        consequence: "By morning the bleed has doubled and she is drowsy."
+        teaching: "Warfarin-associated ICH is an emergency reversal."
+        effects: { minutes: 15, gcs: -2, patient: -25 }
+        next: titrate
+
+  titrate:
+    type: choice
+    check: { source: [aha-asa-ich-2022, interact3-2023], verified: false }
+    prompt: "45 minutes after the first labetalol: BP 146/84."
+    options:
+      - label: "In range: hold at 130–150 with small doses, BP every 15 minutes"
+        grade: best
+        consequence: "SBP holds between 138 and 148 overnight."
+        teaching: "Smooth and sustained: variability itself is linked with worse outcomes."
+        effects: { minutes: 15, milestone: bp-target }
+        next: bundle
+      - label: "Another 40 mg of labetalol now, to bring her nearer to 120 systolic"
+        grade: harmful
+        consequence: "BP 118/66; her urine output falls. Your senior stops the boluses."
+        teaching: "Below 130 is potentially harmful, with more kidney injury."
+        effects: { minutes: 15, setVitals: { sbp: 118, dbp: 66 }, patient: -20 }
+        next: bundle
+      - label: "Stop all BP drugs now that she is below 150"
+        grade: suboptimal
+        consequence: "Two hours later she is back at 188/104."
+        teaching: "Keep her in range with an infusion or regular doses; swings are harmful."
+        effects: { minutes: 15, milestone: bp-target, patient: -10 }
+        next: bundle
+
+  bundle:
+    type: multiselect
+    check: { source: [interact3-2023, aha-asa-ich-2022], verified: false }
+    prompt: "Glucose 248 mg/dL, temperature 38.2. The rest of the first hour: choose up to 4."
+    max: 4
+    options:
+      - id: glucose
+        label: "Insulin for the glucose, aiming for about 140–180 mg/dL"
+        grade: best
+        consequence: "Glucose 172 at 2 hours."
+        teaching: "Glucose control is part of the INTERACT3 bundle."
+        missedEffects: { patient: -5 }
+      - id: fever
+        label: "Paracetamol and cooling for the temperature"
+        grade: best
+        consequence: "37.3 an hour later."
+        teaching: "Fever control is part of the bundle."
+        missedEffects: { patient: -5 }
+      - id: neurosurg
+        label: "Neurosurgical opinion, and a repeat CT if she worsens"
+        grade: best
+        consequence: "Conservative plan agreed."
+        teaching: "Small deep bleeds are usually managed medically; deterioration needs a repeat scan."
+        missedEffects: { patient: -5 }
+      - id: head-up
+        label: "Head of the bed up 30 degrees and a swallow screen before food"
+        grade: acceptable
+        consequence: "Done."
+        teaching: "Sensible basic care."
+      - id: seizure
+        label: "Levetiracetam to prevent seizures"
+        grade: suboptimal
+        consequence: "Not given: routine seizure prophylaxis doesn't help."
+        teaching: "Treat seizures if they happen; don't give prophylaxis."
+      - id: platelets
+        label: "A platelet transfusion to help the clot"
+        grade: suboptimal
+        consequence: "Not given: she isn't on an antiplatelet and her count is normal."
+        teaching: "Platelet transfusion in ICH on antiplatelets was harmful (PATCH)."
+    next:
+      - { if: { meter: patient, below: 70 }, to: end-fair }
+      - { to: end-good }
+
+  end-good:
+    type: ending
+    outcome: good
+    panels:
+      - scene: ward
+        actors: [patient:relieved, relative]
+        caption: "Five days later · Stroke unit"
+        bubbles:
+          - { who: patient, text: "My leg is getting stronger. They say the bleed didn't grow." }
+    summary: "You brought SBP to 140 within the hour, smoothly, reversed the warfarin at once, and delivered the whole bundle: glucose, fever and BP."
+
+  end-fair:
+    type: ending
+    outcome: fair
+    panels:
+      - scene: ward
+        actors: [patient:worried, relative]
+        caption: "Two weeks later · Stroke unit"
+    summary: "She survived, but slow reversal, the wrong drug or a large, fast fall let the bleed or the kidneys suffer. The debrief shows where."
+
+debrief:
+  diagnosis: "Spontaneous intracerebral haemorrhage (right basal ganglia, about 15 ml) on warfarin, INR 3.1."
+  keyPoints:
+    - "SBP 150–220: aim for 140 (130–150) within an hour, smoothly; avoid below 130."
+    - "Labetalol or nicardipine; avoid nitroprusside and sublingual nifedipine."
+    - "Reverse warfarin now: four-factor PCC plus vitamin K."
+    - "INTERACT3 bundle: BP, glucose, fever and reversal within an hour."
+  pitfalls:
+    - "Falls of more than 70 mmHg in an hour, or below 130."
+    - "Permissive BP as in ischaemic stroke."
+    - "Vitamin K alone, or waiting for the morning INR."
+  unlocks: [stroke-bp, hypertensive-emergency, warfarin, nitroprusside]
+  refs: [aha-asa-ich-2022, interact3-2023, eso-bp-2025]
+  check: { source: [aha-asa-ich-2022, interact3-2023], verified: false }
