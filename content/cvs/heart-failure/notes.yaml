@@ -1,0 +1,287 @@
+# Heart Failure unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Written in our own words from the owner's heart failure note (git-ignored notes/hf.pdf, ESC 2026),
+# the SCAPE section of notes/htn.pdf, and the verified cases and Codex cards. Doses match the cards;
+# if a card changes, change the notes too. Style: short bullets; "Label: text" shows the label in bold.
+title: "Heart Failure: unit notes"
+intro: "Everything from the 12 Heart Failure cases in one place: warm or cold, wet or dry, find the trigger, decongest by response, and send them home on the four pillars."
+sections:
+  - heading: "The first ten minutes"
+    check: { source: [esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "Question 1, perfusion: warm or cold?"
+          - "Question 2, congestion: wet or dry?"
+          - "Question 3, the trigger: what tipped them over?"
+          - "Terms (ESC 2026): HFrEF is an ejection fraction under 50%; HFpEF is 50% or more; 'decompensated HF' replaces 'acute HF'."
+      - table:
+          head: ["", "Wet (congested)", "Dry"]
+          rows:
+            - ["Warm", "The usual ED patient: diuretic; vasodilator if the BP is high", "Look for another diagnosis"]
+            - ["Cold", "The one that kills: inotrope, pressor if needed, then diuresis", "Low output: careful volume, reassess"]
+      - points:
+          - "Cold: cool or mottled skin, narrow pulse pressure, confusion, little urine, a rising lactate. It can happen with a normal BP."
+          - "Wet: orthopnoea, raised JVP, crackles or B-lines, oedema, a big liver."
+      - table:
+          head: ["CHAMPIT", "Trigger"]
+          rows:
+            - ["C", "Acute coronary syndrome"]
+            - ["H", "Hypertensive emergency"]
+            - ["A", "Arrhythmia (AF especially)"]
+            - ["M", "Acute mechanical cause (valve, septum)"]
+            - ["P", "Pulmonary embolism"]
+            - ["I", "Infection"]
+            - ["T", "Tamponade"]
+      - points:
+          - "Also: NSAIDs, steroids, verapamil or diltiazem, alcohol, missed tablets, salt, anaemia, thyroid, kidney injury."
+          - "No obvious trigger: think disease progression and advanced heart failure."
+      - cards: [decompensated-hf]
+
+  - heading: "Is it heart failure?"
+    check: { source: [esc-hf-2026, januzzi-2006], verified: false }
+    blocks:
+      - points:
+          - "Rule out: BNP under 100 pg/mL or NT-proBNP under 300 pg/mL makes it very unlikely."
+          - "BNP over 500 pg/mL: strongly supports it."
+      - table:
+          head: ["Age", "NT-proBNP rules in above"]
+          rows:
+            - ["Under 50", "450 pg/mL"]
+            - ["50–75", "900 pg/mL"]
+            - ["Over 75", "1800 pg/mL"]
+      - points:
+          - "Falsely high: older age, AF, kidney disease, PE, sepsis."
+          - "Falsely low: obesity, very early flash pulmonary oedema, constriction."
+          - "Lung ultrasound: 3 or more B-lines per zone in 2 or more zones on each side; a smooth pleura and an even spread point to a cardiac cause."
+          - "Chest X-ray: less sensitive; a clear film doesn't exclude heart failure."
+          - "ECG: look for ischaemia, AF, LVH, LBBB, RV strain, low voltage; a completely normal ECG makes HFrEF less likely."
+          - "Always: troponin, kidney function, electrolytes, blood count, thyroid, and an echocardiogram."
+      - points:
+          - "Elderly: confusion, falls and loss of function can be the 'breathlessness' of heart failure."
+      - cards: [hf-diagnosis]
+
+  - heading: "SCAPE: hypertensive pulmonary oedema"
+    check: { source: [esc-htn-2024, esc-hf-2026, threecpo-2008], verified: false }
+    blocks:
+      - points:
+          - "What: sudden severe breathlessness with a very high BP; fluid redistributed into the lungs, not gained."
+          - "Sit up: never lay them flat."
+          - "CPAP or NIV: at once (5–10 cmH₂O); don't wait for a blood gas."
+          - "Nitrate first: 400–800 micrograms sublingual every 3–5 minutes while the infusion is prepared."
+          - "Then the infusion: start about 100 micrograms/min and escalate fast to 300–400 micrograms/min; wean as the BP falls."
+          - "Furosemide: secondary, only for real fluid overload."
+      - ecg: ecg/hf-01-lvh.svg
+        alt: "12-lead ECG. Sinus tachycardia about 124 per minute. Tall R waves in V5–V6 and deep S waves in V1–V2, with down-sloping ST depression and T inversion in I, aVL, V5 and V6. No ST elevation."
+        caption: "LVH with strain in long-standing hypertension: not an NSTEMI."
+      - warn: "No routine morphine (more intubation), no new beta-blocker during the episode, and don't rely on a big furosemide dose alone."
+      - cards: [scape, niv-cpap, nitrates]
+
+  - heading: "Decongestion by response"
+    check: { source: [esc-hf-2026, dose-ahf-2011, advor-2022], verified: false }
+    blocks:
+      - points:
+          - "Not on a loop diuretic: furosemide 20–40 mg IV."
+          - "Already on one: IV furosemide at 1–2.5 × the total daily oral dose."
+      - points:
+          - "At 2 hours: spot urine sodium under 50–70 mmol/L is a poor response."
+          - "Over 6 hours: urine output under 100–150 ml/h is a poor response."
+          - "Poor response: double the loop dose; judge today, not tomorrow."
+      - points:
+          - "Still poor, add: acetazolamide 500 mg IV once daily (ADVOR), a thiazide (hydrochlorothiazide 25–100 mg or metolazone 2.5–10 mg), or a higher-dose MRA."
+          - "Watch: potassium, sodium, magnesium, creatinine."
+          - "Truly refractory: ultrafiltration is rescue, not first line."
+      - points:
+          - "Creatinine rises, but congestion improving and perfusion good: carry on; it's usually harmless."
+          - "Stop and reassess: only with low BP, poor perfusion or real dehydration."
+          - "Endpoint: euvolaemia (JVP, oedema, lungs, orthopnoea), not 'feels better' or weight alone."
+      - warn: "Don't give fluid for a poor urine output in a congested patient, and don't stop diuretics or the pillars for a creatinine rise."
+      - cards: [furosemide, acetazolamide]
+
+  - heading: "Cold and wet: cardiogenic shock"
+    check: { source: [esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "Recognise it: hypoperfusion, not just hypotension; lactate, skin, urine, mental state."
+          - "Low output: dobutamine 2–20 µg/kg/min."
+          - "Low pressure: noradrenaline (first-line pressor), to a mean arterial pressure of about 65."
+          - "Then: cautious diuresis once perfused."
+          - "Shock team: call early; transfer for mechanical support matters more than the device chosen."
+          - "Balloon pump: not routine; it still helps as a bridge in mechanical complications."
+      - ecg: ecg/hf-03-lbbb.svg
+        alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Broad QRS about 150 ms with a left bundle branch block pattern and T waves opposite to the QRS."
+        caption: "Sinus tachycardia with LBBB in dilated cardiomyopathy: P waves before every QRS, so not VT."
+      - warn: "No nitrates, no fluid boluses with wet lungs, no new beta-blocker or ACE inhibitor while on support, and adrenaline is not the first pressor."
+      - cards: [cardiogenic-shock, dobutamine, noradrenaline]
+
+  - heading: "HFpEF and AF"
+    check: { source: [esc-hf-2026, esc-af-2024], verified: false }
+    blocks:
+      - ecg: ecg/hf-04-af.svg
+        alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 132 per minute with no P waves; slight ST depression in V5–V6."
+        caption: "New fast AF: a common trigger, especially in HFpEF."
+      - points:
+          - "Rate control in heart failure: beta-blocker first."
+          - "Diltiazem or verapamil: only once the echo shows a preserved ejection fraction."
+          - "Amiodarone: it cardioverts; dangerous in AF over 24 hours (or unknown) without anticoagulation."
+          - "Anticoagulate by CHA₂DS₂-VA: heart failure scores 1 at any ejection fraction."
+          - "HFpEF drugs: SGLT2 inhibitor and MRA, plus BP, AF, weight, diabetes and kidney disease."
+      - warn: "Nebulised beta-agonists for 'COPD' speed up AF; and aspirin is not a substitute for anticoagulation in the elderly."
+      - cards: [hf-diagnosis, cha2ds2-va, sglt2-inhibitors, spironolactone]
+
+  - heading: "Mechanical complications after MI"
+    check: { source: [esc-acs-2023, esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "Sudden pulmonary oedema or shock days after an MI with a new murmur: echo now."
+          - "Papillary muscle rupture: often after an inferior MI; acute severe mitral regurgitation."
+          - "The murmur: may be soft, because pressures equalise fast."
+          - "Bridge: NIV, afterload reduction if BP allows, inotrope, intra-aortic balloon pump."
+          - "Definitive: emergency surgery, usually with revascularisation."
+      - ecg: ecg/hf-05-inferior.svg
+        alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Q waves in II, III and aVF with slight residual ST elevation and T wave inversion."
+        caption: "A two-day-old inferior MI: the ECG doesn't explain the collapse, the valve does."
+      - warn: "Not a new STEMI, so no lysis; no fluid for the low BP; don't slow the compensating tachycardia."
+      - cards: [mechanical-complications-mi]
+
+  - heading: "Peripartum cardiomyopathy"
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "What: ejection fraction under 45% late in pregnancy or in the months after delivery, no other cause."
+          - "Don't call it: anaemia, anxiety or 'weakness after delivery'."
+          - "Exclude: PE and pre-eclampsia."
+          - "Still pregnant: no ACE inhibitor, ARB, ARNI, MRA, ivabradine or SGLT2 inhibitor; hydralazine with a nitrate and a beta-1-selective blocker."
+          - "After delivery, breastfeeding: furosemide, enalapril, metoprolol."
+          - "Anticoagulate: ejection fraction under 30%, and always with bromocriptine."
+          - "Bromocriptine: an add-on, still debated; it stops lactation."
+          - "Future pregnancy: high relapse risk if the heart hasn't recovered; counsel early."
+      - cards: [peripartum-cardiomyopathy, bromocriptine]
+
+  - heading: "Severe aortic stenosis"
+    check: { source: [esc-valve-2025, esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "Clues: breathless, angina or faints on exertion; slow-rising pulse; ejection systolic murmur; quiet second sound; LVH."
+          - "Fixed output: avoid big drops in preload and afterload."
+          - "Treat: gentle diuresis; nitrates only cautiously; no fluid boluses for the faints."
+          - "Definitive: TAVI or surgery; syncope means admit and monitor."
+      - ecg: ecg/hf-07-lvh.svg
+        alt: "12-lead ECG. Sinus rhythm about 76 per minute. Very tall R waves in V5–V6 and deep S waves in V1–V2, with down-sloping ST depression and T inversion laterally."
+        caption: "LVH with strain from a pressure-loaded ventricle."
+      - warn: "SCAPE-dose nitrate in severe aortic stenosis can cause collapse."
+      - cards: [aortic-stenosis-hf]
+
+  - heading: "Right heart failure"
+    check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }
+    blocks:
+      - points:
+          - "Signs: raised JVP, big tender liver, ascites, oedema, often clear lungs."
+          - "Causes: PE, RV infarction, pulmonary hypertension, chronic lung disease (cor pulmonale), constriction."
+          - "Fix what raises pulmonary pressure: hypoxia, hypercapnia, acidosis, infection."
+          - "Oxygen in chronic hypercapnia: target 88–92%; NIV for a high CO₂."
+          - "The rules invert: cautious diuresis, no aggressive nitrates, noradrenaline early, inotrope only with a pressor, keep sinus rhythm."
+      - ecg: ecg/hf-08-cor-pulmonale.svg
+        alt: "12-lead ECG. Sinus tachycardia about 108 per minute. Tall peaked P waves in II, III and aVF; right axis deviation; dominant R wave in V1 with T inversion in V1–V3."
+        caption: "Right heart strain: P pulmonale, right axis, dominant R in V1."
+      - warn: "Intubation can tip a failing right ventricle into arrest: NIV first, pressor ready."
+      - cards: [right-heart-failure]
+
+  - heading: "High-output failure and myocarditis"
+    check: { source: [who-thiamine-1999, esc-myopericarditis-2025], verified: false }
+    blocks:
+      - points:
+          - "High output: warm hands, bounding pulse, wide pulse pressure, lactic acidosis."
+          - "Causes: thiamine deficiency (wet beriberi), anaemia, thyrotoxicosis, AV fistula, sepsis."
+          - "Wet beriberi: alcohol, polished rice, malnutrition, long-term diuretics; often neuropathy."
+          - "Treat: high-dose IV thiamine before glucose; the response is often dramatic."
+      - warn: "Glucose before thiamine can precipitate Wernicke's; pressors and diuretics alone don't fix high output."
+      - points:
+          - "Myocarditis: young, recent viral illness, chest pain or breathlessness, high troponin, weak ventricle."
+          - "ECG: tachycardia, low voltage, diffuse ST changes; it can mimic STEMI or pericarditis."
+          - "Unstable VT: immediate synchronised shock."
+          - "Shock: inotrope plus pressor and early transfer for mechanical support; recovery is often good."
+          - "No NSAIDs with heart failure; no sport for 3–6 months."
+      - ecg: ecg/hf-12-myocarditis.svg
+        alt: "12-lead ECG. Sinus tachycardia about 118 per minute. Low QRS voltages, mild diffuse ST elevation without a territory."
+        caption: "Myocarditis: no single territory, and a globally weak heart on echo."
+      - cards: [wet-beriberi, thiamine, myocarditis]
+
+  - heading: "Potassium and the pillars"
+    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: false }
+    blocks:
+      - ecg: ecg/hf-09-hyperk.svg
+        alt: "12-lead ECG. Sinus rhythm about 64 per minute. Long PR, slightly wide QRS, tall narrow peaked T waves."
+        caption: "Hyperkalaemia on ACE inhibitor plus MRA during diarrhoea."
+      - points:
+          - "ECG changes: IV calcium, then insulin 10 units with 25 g glucose and salbutamol."
+          - "MRA: stop above 5.5 mmol/L; restart with potassium checks at 1 and 4 weeks."
+          - "Acute illness with kidney injury: pause RAAS blocker, MRA, SGLT2 inhibitor and diuretic, then restart."
+          - "Kidney disease: the commonest wrong reason to stop the pillars for good."
+          - "Potassium binders: help keep the MRA and RAAS blocker going."
+          - "Sick-day rules: in writing, for every patient."
+      - warn: "Never insulin without glucose, and never flood a weak heart: small fluid boluses with reassessment."
+      - cards: [spironolactone, hyperkalaemia-treatment]
+
+  - heading: "The four pillars and the way home"
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    blocks:
+      - table:
+          head: ["Pillar", "Start", "Target"]
+          rows:
+            - ["ARNI (or ACE inhibitor)", "Sacubitril–valsartan 24/26 mg twice daily (enalapril 2.5 mg twice daily; ramipril 1.25 mg daily)", "97/103 mg twice daily (enalapril 10–20 mg twice daily; ramipril 10 mg)"]
+            - ["Beta-blocker", "Bisoprolol 1.25 mg; carvedilol 3.125 mg twice daily; metoprolol succinate 12.5–25 mg", "Bisoprolol 10 mg; carvedilol 25–50 mg twice daily; metoprolol succinate 200 mg"]
+            - ["MRA", "Spironolactone or eplerenone 25 mg", "50 mg"]
+            - ["SGLT2 inhibitor", "Dapagliflozin or empagliflozin 10 mg", "No titration"]
+      - points:
+          - "All four: start together, early and low; increase every 1–2 weeks (STRONG-HF)."
+          - "ARNI switch: stop the ACE inhibitor 36 hours before."
+          - "Unaffordable ARNI: generic ACE inhibitor plus MRA plus SGLT2 inhibitor captures most of the benefit."
+          - "Beta-blocker: don't start during decompensation; don't stop unless hypoperfused."
+          - "Ready to go home: no residual congestion, stable kidneys and potassium, trigger treated, pillars started."
+          - "After discharge: review within 1–2 weeks, daily weights, salt advice, no NSAIDs, rehabilitation."
+          - "ICD: only after 3 months of optimal treatment."
+          - "For life: stopping the pillars after recovery brings relapse."
+      - cards: [hf-four-pillars, sacubitril-valsartan, hf-beta-blockers, spironolactone, sglt2-inhibitors]
+
+  - heading: "Heart failure in India"
+    check: { source: [esc-hf-2026], verified: false, todo: "From the owner's note (NHFR and Trivandrum registries); check the figures you want taught." }
+    blocks:
+      - points:
+          - "Younger: patients about a decade younger than in European cohorts."
+          - "Causes: ischaemic in about 72%; also rheumatic valve disease, peripartum cardiomyopathy, anaemia, thyrotoxicosis, TB constriction, cor pulmonale."
+          - "The treatment gap: only about half of eligible patients get full treatment; closing it saves more lives than any new drug."
+          - "Echo before reflex drugs: vasodilators harm tight mitral stenosis; aggressive offloading harms constriction and tamponade."
+          - "Affordable: generic ACE inhibitors, beta-blockers, spironolactone, furosemide and now SGLT2 inhibitors."
+
+  - heading: "Drugs at a glance"
+    check: { source: [esc-hf-2026, esc-htn-2024, advor-2022], verified: false }
+    blocks:
+      - table:
+          head: ["Drug", "Use here", "Dose", "Beware"]
+          rows:
+            - ["Furosemide IV", "Congestion", "20–40 mg if naive; 1–2.5 × home daily dose", "Dose by urine response"]
+            - ["Acetazolamide", "Added to the loop", "500 mg IV once daily", ""]
+            - ["GTN", "SCAPE", "400–800 µg SL every 3–5 min; infusion to 300–400 µg/min", "Low BP, aortic stenosis, RV infarction"]
+            - ["Dobutamine", "Low output", "2–20 µg/kg/min", "Arrhythmia; not for warm patients"]
+            - ["Noradrenaline", "Cardiogenic shock", "From 0.05 µg/kg/min to MAP about 65", ""]
+            - ["Thiamine", "Wet beriberi", "100–500 mg IV, two to three times a day", "Before glucose"]
+            - ["Bromocriptine", "Peripartum cardiomyopathy", "2.5 mg twice daily for 2 weeks, then daily for 6", "Only with anticoagulation; stops lactation"]
+
+  - heading: "Traps from the cases"
+    check: { source: [esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "Lying an oedematous patient flat."
+          - "Morphine or furosemide alone for SCAPE."
+          - "Waiting for tomorrow's weight to judge the diuretic."
+          - "Stopping diuresis or the pillars for a creatinine rise."
+          - "Fluid for a congested patient's low BP or poor urine."
+          - "Nitrates in a cold, hypotensive patient or in aortic stenosis."
+          - "Calling HFpEF 'just COPD' because the chest X-ray is clear."
+          - "Diuretics and a ward bed for papillary muscle rupture."
+          - "'Postpartum anaemia' for peripartum cardiomyopathy."
+          - "Treating the right heart like the left."
+          - "Glucose before thiamine."
+          - "Thrombolysis for myocarditis."
+          - "Discharge on diuretics alone, or one new drug a month."
+
+refs: [esc-hf-2026, esc-htn-2024, threecpo-2008, dose-ahf-2011, advor-2022, strong-hf-2022, januzzi-2006, esc-af-2024, esc-acs-2023, hfa-ppcm-2019, esc-valve-2025, hfa-rv-2016, esc-ph-2022, who-thiamine-1999, esc-myopericarditis-2025, ukka-hyperk-2023]
