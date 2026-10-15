@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: hf-05/01-arrival
         actors: [paramedic:alarmed, patient-supine:alarmed]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: esc-acs-2023, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-05/02-ecg
         actors: [patient-supine:alarmed, nurse]
         caption: "{clock} · Resus"
     image: ecg/hf-05-inferior.svg
@@ -81,6 +83,7 @@ nodes:
     type: story
     panels:
       - scene: ultrasound
+        art: hf-05/03-echo
         actors: [patient-supine:alarmed, senior:worried]
         caption: "{clock} · Bedside echo"
         bubbles:
@@ -149,6 +152,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-05/04-end-good
         actors: [patient:relieved, doctor]
         caption: "Ten days later · Cardiothoracic ward"
         bubbles:
@@ -160,6 +164,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-05/05-end-fair
         actors: [patient:worried, doctor]
         caption: "Three weeks later · Cardiothoracic ICU"
     summary: "He survived surgery, but a missed murmur, fluid or the wrong drugs made him much sicker on the way. The debrief shows where."
