@@ -10,7 +10,7 @@ STYLE: exactly like the uploaded image: muted retro storybook illustration, flat
 
 STAFF (same people as the uploaded image): THE ED DOCTOR, young man, curly black hair, glasses, white coat over navy scrubs. THE NURSE, woman, low bun, teal scrubs.
 
-NEW PEOPLE (different from anyone in earlier images): THE PATIENT, 34-year-old Indian man, thin and pale, hollow cheeks from weight loss, short untidy black hair, light stubble; squinting slightly as if his vision is blurred; a faded orange T-shirt and dark track pants in panel 1; a pale blue hospital gown in panels 2, 3 and 4. He looks clearly in his early thirties. HIS ELDER BROTHER, about 40, a plain white shirt, a thin moustache, carrying a plastic folder of old papers.
+NEW PEOPLE (different from anyone in earlier images): THE PATIENT, 34-year-old Indian man, thin and pale, hollow cheeks from weight loss, short untidy black hair, light stubble; squinting slightly as if his vision is blurred; a faded orange T-shirt and dark track pants in panels 1 and 3; a pale blue hospital gown in panels 2 and 4. He looks clearly in his early thirties. HIS ELDER BROTHER, about 40, a plain white shirt, a thin moustache, carrying a plastic folder of old papers.
 
 Keep people in the left-to-right order given in each panel.
 

@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-02/01-arrival
         actors: [patient:worried, relative]
         caption: "{clock} · Triage"
         bubbles:
@@ -65,6 +66,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: htn-02/02-results
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -229,6 +231,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-02/03-end-good
         actors: [patient:relieved, doctor]
         caption: "Three weeks later · Renal clinic"
         bubbles:
@@ -240,6 +243,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-02/04-end-fair
         actors: [patient:worried, doctor]
         caption: "Three weeks later · Renal ward"
     summary: "He survived, but too fast a fall, a reflex diuretic or delays cost kidney function. The debrief shows where."
