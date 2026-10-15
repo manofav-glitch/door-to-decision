@@ -27,6 +27,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-07/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -57,6 +58,7 @@ nodes:
     check: { source: esc-valve-2025, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-07/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/hf-07-lvh.svg
@@ -137,6 +139,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-07/03-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Six weeks later · Cardiology clinic"
         bubbles:
@@ -148,6 +151,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-07/04-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Two weeks later · Medical ward"
     summary: "He reached the valve team, but a collapse in the ED or a delayed diagnosis made it harder. The debrief shows where."
