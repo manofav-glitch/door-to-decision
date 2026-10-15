@@ -13,4 +13,4 @@ leads:
   V3: { q: 0, r: 0.2, s: 1.6, st: 0.15, t: 0.4 }
   V5: { q: 0, r: 1.1, rp: 1.0, s: 0, st: -0.1, t: -0.35 }
   V6: { q: 0, r: 1.0, rp: 0.9, s: 0, st: -0.1, t: -0.35 }
-check: { source: esc-hf-2026, verified: false, todo: "Check it reads as sinus tachycardia with LBBB." }
+check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15, todo: "Check it reads as sinus tachycardia with LBBB." }

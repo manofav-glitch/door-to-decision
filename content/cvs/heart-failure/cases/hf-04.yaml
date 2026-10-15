@@ -1,4 +1,4 @@
-# hf-04 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-04 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: HFpEF (EF 60%) decompensated by new fast AF, in an 81-year-old with hypertension and
 # mild COPD. Is it really heart failure? NT-proBNP by age (AF raises it), lung ultrasound B-lines
 # (chest X-ray only mildly abnormal). Rate control (beta-blocker; diltiazem only once EF is known to
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-hf-2026, esc-af-2024]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the vitals and NT-proBNP value."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Pulse fast and irregular, a few wheezes and fine crackles at both bases, ankles puffy. First move?"
     options:
       - label: "Monitor, 12-lead ECG, bloods including NT-proBNP, troponin, kidney function and thyroid, and a bedside lung and heart ultrasound"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-af-2024, esc-hf-2026], verified: false }
+    check: { source: [esc-af-2024, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-04/02-ecg
@@ -82,7 +83,7 @@ nodes:
 
   is-it-hf:
     type: choice
-    check: { source: [esc-hf-2026, januzzi-2006], verified: false }
+    check: { source: [esc-hf-2026, januzzi-2006], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ultrasound
         art: hf-04/03-ultrasound
@@ -107,7 +108,7 @@ nodes:
 
   rate:
     type: choice
-    check: { source: [esc-af-2024, esc-hf-2026], verified: false }
+    check: { source: [esc-af-2024, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "AF at 130–145, BP 148/86, congested. Treatment?"
     options:
       - label: "IV furosemide for the congestion, plus cautious IV metoprolol for rate; diltiazem only once the echo confirms a preserved ejection fraction"
@@ -131,7 +132,7 @@ nodes:
 
   anticoag:
     type: calculator
-    check: { source: esc-af-2024, verified: false, todo: "Answers: heart failure yes, hypertension yes, age 81 → 2. Total 4." }
+    check: { source: esc-af-2024, verified: true, reviewedOn: 2026-10-15, todo: "Answers: heart failure yes, hypertension yes, age 81 → 2. Total 4." }
     prompt: "Work out her CHA₂DS₂-VA score."
     score: cha2ds2-va
     answers:
@@ -154,7 +155,7 @@ nodes:
 
   plan:
     type: multiselect
-    check: { source: [esc-hf-2026, esc-af-2024], verified: false }
+    check: { source: [esc-hf-2026, esc-af-2024], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Echo: ejection fraction 60%, thick walls (HFpEF). Before she goes to the ward. Choose up to 3."
     max: 3
     options:
@@ -220,4 +221,4 @@ debrief:
     - "Aspirin instead of anticoagulation in the elderly."
   unlocks: [hf-diagnosis, decompensated-hf, cha2ds2-va, metoprolol, diltiazem, sglt2-inhibitors, spironolactone]
   refs: [esc-hf-2026, esc-af-2024, januzzi-2006]
-  check: { source: [esc-hf-2026, esc-af-2024], verified: false }
+  check: { source: [esc-hf-2026, esc-af-2024], verified: true, reviewedOn: 2026-10-15 }

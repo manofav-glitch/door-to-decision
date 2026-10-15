@@ -1,4 +1,4 @@
-# hf-12 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-12 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: acute viral myocarditis turning fulminant in a 24-year-old: chest pain and breathlessness
 # a week after a flu-like illness, high troponin, diffuse ST elevation and low voltage, runs of VT,
 # then shock. Not an ACS (no lysis). Treat the VT, support the circulation, transfer early to a centre
@@ -19,7 +19,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-myopericarditis-2025
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Drafted from guidelines (not in the owner's note); check the presentation and timeline."
 
 start: arrival
@@ -39,7 +40,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-myopericarditis-2025, verified: false }
+    check: { source: esc-myopericarditis-2025, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Pulse 118, BP 104/68, soft S3, fine crackles at the bases. First move?"
     options:
       - label: "Resus bay, monitor, 12-lead ECG, troponin, bloods, bedside echo"
@@ -57,7 +58,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-myopericarditis-2025, verified: false }
+    check: { source: esc-myopericarditis-2025, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-12/02-ecg
@@ -82,7 +83,7 @@ nodes:
 
   storm:
     type: choice
-    check: { source: [esc-myopericarditis-2025, esc-va-2022, erc-als-2025], verified: false }
+    check: { source: [esc-myopericarditis-2025, esc-va-2022, erc-als-2025], verified: true, reviewedOn: 2026-10-15 }
     onEnter: { minutes: 40, setVitals: { hr: 182, sbp: 78, dbp: 50, gcs: 14 }, rhythm: ecg/hf-12-vt.svg }
     panels:
       - scene: monitor
@@ -110,7 +111,7 @@ nodes:
 
   support:
     type: choice
-    check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: false }
+    check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Sinus rhythm, BP 88/58, cool hands, lactate 4. Next?"
     options:
       - label: "Dobutamine and noradrenaline, and call the regional centre now for transfer: he may need mechanical circulatory support"
@@ -128,7 +129,7 @@ nodes:
 
   avoid:
     type: multiselect
-    check: { source: esc-myopericarditis-2025, verified: false }
+    check: { source: esc-myopericarditis-2025, verified: true, reviewedOn: 2026-10-15 }
     prompt: "While waiting for the retrieval team. Choose up to 3."
     max: 3
     options:
@@ -195,4 +196,4 @@ debrief:
     - "Waiting till morning to escalate."
   unlocks: [myocarditis, decompensated-hf, synchronised-cardioversion, dobutamine, noradrenaline]
   refs: [esc-myopericarditis-2025, esc-hf-2026, esc-va-2022]
-  check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: false }
+  check: { source: [esc-myopericarditis-2025, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }

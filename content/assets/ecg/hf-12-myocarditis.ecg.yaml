@@ -15,4 +15,4 @@ leads:
   V4: { r: 0.6, s: 0.3, st: 0.12 }
   V5: { r: 0.6, st: 0.12 }
   V6: { r: 0.5, st: 0.1 }
-check: { source: [esc-myopericarditis-2025], verified: false, todo: "Check it reads as myocarditis (tachycardia, low voltage, diffuse ST elevation)." }
+check: { source: [esc-myopericarditis-2025], verified: true, reviewedOn: 2026-10-15, todo: "Check it reads as myocarditis (tachycardia, low voltage, diffuse ST elevation)." }

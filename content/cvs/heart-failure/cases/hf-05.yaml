@@ -1,4 +1,4 @@
-# hf-05 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-05 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: posteromedial papillary muscle rupture two days after an inferior MI (treated late,
 # no PCI) → acute severe mitral regurgitation with flash pulmonary oedema, heading for shock.
 # Bedside echo → NIV, afterload reduction while the BP allows, inotrope, intra-aortic balloon pump as a
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-acs-2023, esc-hf-2026]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the timeline and vitals."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: [esc-hf-2026, esc-acs-2023], verified: false }
+    check: { source: [esc-hf-2026, esc-acs-2023], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Crackles everywhere. You hear a loud murmur at the apex, through to the armpit. First move?"
     options:
       - label: "Resus bay, sit up, oxygen and CPAP, ECG, and a bedside echo now because of the new murmur"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-05/02-ecg
@@ -92,7 +93,7 @@ nodes:
 
   bridge:
     type: choice
-    check: { source: [esc-hf-2026, esc-acs-2023], verified: false }
+    check: { source: [esc-hf-2026, esc-acs-2023], verified: true, reviewedOn: 2026-10-15 }
     prompt: "BP 92/58, sats 89% on CPAP. How do you get him to surgery alive?"
     options:
       - label: "Keep NIV, small doses of nitrate only while the BP holds to reduce afterload, start an inotrope if he cools, and ask for an intra-aortic balloon pump as a bridge while you call the cardiac surgeons"
@@ -116,7 +117,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-10-15 }
     prompt: "While theatre is prepared. Choose up to 3."
     max: 3
     options:
@@ -182,4 +183,4 @@ debrief:
     - "Slowing the compensatory tachycardia."
   unlocks: [mechanical-complications-mi, decompensated-hf, niv-cpap]
   refs: [esc-acs-2023, esc-hf-2026]
-  check: { source: [esc-acs-2023, esc-hf-2026], verified: false }
+  check: { source: [esc-acs-2023, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }

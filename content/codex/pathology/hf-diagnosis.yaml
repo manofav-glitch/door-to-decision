@@ -13,4 +13,4 @@ sections:
   - heading: Always
     body: "ECG, troponin, kidney function, electrolytes, blood count, thyroid, and an echocardiogram."
 refs: [esc-hf-2026, januzzi-2006]
-check: { source: [esc-hf-2026, januzzi-2006], verified: false }
+check: { source: [esc-hf-2026, januzzi-2006], verified: true, reviewedOn: 2026-10-15 }

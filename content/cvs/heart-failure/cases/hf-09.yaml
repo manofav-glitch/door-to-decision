@@ -1,4 +1,4 @@
-# hf-09 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-09 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: hyperkalaemia (K 6.4) with ECG changes in a patient on ramipril, spironolactone and
 # dapagliflozin for HFrEF, after a week of diarrhoea (dehydration, AKI: creatinine 1.4 → 2.3).
 # Treat the potassium (protect, shift); hold the MRA (and ACE inhibitor while dehydrated with AKI),
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [ukka-hyperk-2023, esc-hf-2026]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the potassium, creatinine and drug list."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: ukka-hyperk-2023, verified: false }
+    check: { source: ukka-hyperk-2023, verified: true, reviewedOn: 2026-10-15 }
     prompt: "First move?"
     options:
       - label: "Monitor, 12-lead ECG, and a blood gas for potassium, plus kidney function"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: ukka-hyperk-2023, verified: false }
+    check: { source: ukka-hyperk-2023, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-09/02-ecg
@@ -81,7 +82,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: ukka-hyperk-2023, verified: false }
+    check: { source: ukka-hyperk-2023, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Potassium 6.4 with ECG changes. First treatment?"
     options:
       - label: "IV calcium to protect the heart, then insulin 10 units with 25 g glucose and nebulised salbutamol"
@@ -105,7 +106,7 @@ nodes:
 
   drugs:
     type: choice
-    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: false }
+    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-15 }
     prompt: "What about his heart failure tablets?"
     options:
       - label: "Hold spironolactone (potassium over 5.5) and ramipril while he is dehydrated with kidney injury; hold dapagliflozin while unwell; keep bisoprolol; plan to restart each one as he recovers"
@@ -123,7 +124,7 @@ nodes:
 
   fluids:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Dry tongue, BP 104/62, no oedema, lungs clear, ejection fraction 35%. Fluids?"
     options:
       - label: "Cautious IV fluid in small boluses (250 ml), reassessing JVP, lungs and urine output after each"
@@ -147,7 +148,7 @@ nodes:
 
   home-plan:
     type: multiselect
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Potassium 4.8, creatinine 1.5, eating again. Before home. Choose up to 3."
     max: 3
     options:
@@ -213,4 +214,4 @@ debrief:
     - "Withholding fluid from a genuinely dehydrated patient, or flooding a weak heart."
   unlocks: [hyperkalaemia, hyperkalaemia-treatment, spironolactone, hf-four-pillars, sglt2-inhibitors]
   refs: [ukka-hyperk-2023, esc-hf-2026]
-  check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: false }
+  check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }

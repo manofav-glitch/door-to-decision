@@ -6,12 +6,12 @@ doses:
     label: "HFrEF, start → target"
     route: Oral
     text: "Spironolactone 25 mg once daily → 50 mg; eplerenone 25 mg → 50 mg"
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
   - id: natriuretic
     label: "Extra diuresis in resistant congestion"
     route: Oral
     text: "Spironolactone 50–100 mg"
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
 sections:
   - heading: Monitor
     body: "Potassium and creatinine at 1 and 4 weeks after starting or increasing. Stop if potassium is above 5.5 mmol/L; a potassium binder can allow it to continue."
@@ -20,4 +20,4 @@ sections:
   - heading: Kidney disease
     body: "Needs potassium checks, not avoidance."
 refs: [esc-hf-2026]
-check: { source: esc-hf-2026, verified: false }
+check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }

@@ -12,4 +12,4 @@ leads:
   V3: { t: 1.1, tw: 0.65 }
   V4: { t: 1.0, tw: 0.65 }
   V5: { t: 0.8, tw: 0.7 }
-check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: false, todo: "Check it reads as moderate hyperkalaemia (peaked T, long PR)." }
+check: { source: [ukka-hyperk-2023, esc-hf-2026], verified: true, reviewedOn: 2026-10-15, todo: "Check it reads as moderate hyperkalaemia (peaked T, long PR)." }

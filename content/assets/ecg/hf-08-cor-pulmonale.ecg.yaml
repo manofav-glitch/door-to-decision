@@ -12,4 +12,4 @@ leads:
   V1: { r: 0.9, s: 0.3, t: -0.3 }
   V2: { r: 0.8, s: 0.6, t: -0.3 }
   V3: { r: 0.7, s: 0.8, t: -0.2 }
-check: { source: [esc-ph-2022, hfa-rv-2016], verified: false, todo: "Check it reads as right heart strain with P pulmonale and right axis." }
+check: { source: [esc-ph-2022, hfa-rv-2016], verified: true, reviewedOn: 2026-10-15, todo: "Check it reads as right heart strain with P pulmonale and right axis." }

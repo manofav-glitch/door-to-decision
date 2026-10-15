@@ -1,4 +1,4 @@
-# hf-03 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-03 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: cardiogenic shock (cold–wet, SCAI C) in known non-ischaemic dilated cardiomyopathy
 # (EF 15%, LBBB), after weeks of decline and stopping his tablets. No ACS. Dobutamine for output,
 # noradrenaline for pressure, then cautious diuresis; early call to a shock team / transfer.
@@ -17,7 +17,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-hf-2026
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the haemodynamics fit SCAI stage C."
 
 start: arrival
@@ -37,7 +38,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Cool, mottled knees, pulse pressure 18 mmHg, crackles to mid-zones, JVP raised. First move?"
     options:
       - label: "Resus bay, monitor, ECG, lactate and blood gas, IV access, catheter for hourly urine, and call your senior"
@@ -55,7 +56,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-03/02-ecg
@@ -80,7 +81,7 @@ nodes:
 
   support:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Cold, wet, BP 82/64, lactate 5. Which drugs?"
     options:
       - label: "Dobutamine for the low output, with noradrenaline to hold the mean pressure at about 65"
@@ -104,7 +105,7 @@ nodes:
 
   diuresis:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Now warmer, BP 98/66, still crackles. Next?"
     options:
       - label: "IV furosemide now that he is perfused, watching BP and urine output; keep checking lactate"
@@ -122,7 +123,7 @@ nodes:
 
   escalate:
     type: multiselect
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "What else tonight? Choose up to 3."
     max: 3
     options:
@@ -187,4 +188,4 @@ debrief:
     - "Adrenaline as the first pressor."
   unlocks: [decompensated-hf, cardiogenic-shock, dobutamine, noradrenaline, furosemide]
   refs: [esc-hf-2026]
-  check: { source: esc-hf-2026, verified: false }
+  check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }

@@ -9,4 +9,4 @@ sections:
   - heading: Treat
     body: "High-dose IV thiamine before glucose; standard support for congestion. Diuretics alone don't fix it."
 refs: [who-thiamine-1999, esc-hf-2026]
-check: { source: who-thiamine-1999, verified: false }
+check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }

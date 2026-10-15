@@ -8,4 +8,4 @@ leads:
   II: { q: 0.35, r: 0.5, st: 0.08, t: -0.2 }
   III: { q: 0.45, r: 0.3, st: 0.1, t: -0.25 }
   aVF: { q: 0.4, r: 0.4, st: 0.08, t: -0.2 }
-check: { source: [esc-acs-2023, esc-hf-2026], verified: false, todo: "Check it reads as recent inferior MI with Q waves, sinus tachycardia." }
+check: { source: [esc-acs-2023, esc-hf-2026], verified: true, reviewedOn: 2026-10-15, todo: "Check it reads as recent inferior MI with Q waves, sinus tachycardia." }

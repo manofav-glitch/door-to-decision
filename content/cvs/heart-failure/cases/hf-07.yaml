@@ -1,4 +1,4 @@
-# hf-07 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-07 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: severe calcific aortic stenosis with decompensated heart failure and exertional
 # syncope in a 79-year-old. Careful diuresis; nitrate only in small cautious doses (fixed outflow
 # obstruction); no big fluid boluses; valve team for TAVI or surgery.
@@ -17,7 +17,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-valve-2025, esc-hf-2026]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the examination findings."
 
 start: arrival
@@ -37,7 +38,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-valve-2025, verified: false }
+    check: { source: esc-valve-2025, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Slow-rising, small-volume pulse, a harsh ejection systolic murmur to the neck, quiet second sound, crackles at the bases. First move?"
     options:
       - label: "Monitor, 12-lead ECG, bloods, and a bedside echo for the valve"
@@ -55,7 +56,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-valve-2025, verified: false }
+    check: { source: esc-valve-2025, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-07/02-ecg
@@ -80,7 +81,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: [esc-valve-2025, esc-hf-2026, esc-htn-2024], verified: false }
+    check: { source: [esc-valve-2025, esc-hf-2026, esc-htn-2024], verified: true, reviewedOn: 2026-10-15 }
     prompt: "BP 118/82, crackles, sats 91%. Treatment?"
     options:
       - label: "Sit up, oxygen, gentle IV furosemide, and only very cautious nitrate if needed, watching the BP closely"
@@ -104,7 +105,7 @@ nodes:
 
   plan:
     type: multiselect
-    check: { source: [esc-valve-2025, esc-hf-2026], verified: false }
+    check: { source: [esc-valve-2025, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Echo confirms severe aortic stenosis with a normal ejection fraction. Plan? Choose up to 3."
     max: 3
     options:
@@ -169,4 +170,4 @@ debrief:
     - "'Murmur, old age'."
   unlocks: [aortic-stenosis-hf, nitrates, furosemide]
   refs: [esc-valve-2025, esc-hf-2026]
-  check: { source: [esc-valve-2025, esc-hf-2026], verified: false }
+  check: { source: [esc-valve-2025, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }

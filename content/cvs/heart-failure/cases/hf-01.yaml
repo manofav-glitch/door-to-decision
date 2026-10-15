@@ -1,4 +1,4 @@
-# hf-01 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-01 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: SCAPE (sympathetic crashing acute pulmonary oedema) in a 66-year-old with poorly
 # controlled hypertension and LVH; preserved ejection fraction. Redistribution, not fluid gain:
 # NIV + high-dose nitrate first, furosemide secondary. No morphine, no new beta-blocker.
@@ -17,7 +17,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [esc-htn-2024, esc-hf-2026]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the vitals fit SCAPE."
 
 start: arrival
@@ -37,7 +38,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: [esc-hf-2026, threecpo-2008], verified: false }
+    check: { source: [esc-hf-2026, threecpo-2008], verified: true, reviewedOn: 2026-10-15 }
     prompt: "He is sitting bolt upright, sweating, frothy sputum. First move?"
     options:
       - label: "Sit him up, oxygen, monitor and 12-lead ECG, and CPAP straight away"
@@ -61,7 +62,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-htn-2024, esc-hf-2026], verified: false }
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-01/02-ecg
@@ -86,7 +87,7 @@ nodes:
 
   vasodilator:
     type: choice
-    check: { source: [esc-htn-2024, esc-hf-2026], verified: false }
+    check: { source: [esc-htn-2024, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "On CPAP, BP 208/116, sats 90%. The main treatment now?"
     options:
       - label: "High-dose nitrate: sublingual doses every 3–5 minutes while a GTN infusion is prepared, then escalate the infusion fast"
@@ -110,7 +111,7 @@ nodes:
 
   gtn-dose:
     type: dose
-    check: { source: [esc-htn-2024], verified: false, todo: "High-dose sublingual GTN for SCAPE: confirm the dose you teach." }
+    check: { source: [esc-htn-2024], verified: true, reviewedOn: 2026-10-15, todo: "High-dose sublingual GTN for SCAPE: confirm the dose you teach." }
     prompt: "Sublingual GTN for SCAPE, each dose in micrograms?"
     drug: nitrates
     dose: scape-sl
@@ -131,7 +132,7 @@ nodes:
 
   diuretic:
     type: choice
-    check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: resus-bay
         art: hf-01/03-better
@@ -162,7 +163,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
+    check: { source: [esc-hf-2026, esc-htn-2024], verified: true, reviewedOn: 2026-10-15 }
     prompt: "He's off CPAP, BP 150/88. Before he goes to the ward. Choose up to 3."
     max: 3
     options:
@@ -228,4 +229,4 @@ debrief:
     - "Calling LVH strain an NSTEMI and delaying treatment."
   unlocks: [scape, niv-cpap, nitrates, decompensated-hf, furosemide]
   refs: [esc-hf-2026, esc-htn-2024, threecpo-2008]
-  check: { source: [esc-hf-2026, esc-htn-2024], verified: false }
+  check: { source: [esc-hf-2026, esc-htn-2024], verified: true, reviewedOn: 2026-10-15 }

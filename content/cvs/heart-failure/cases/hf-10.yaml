@@ -1,4 +1,4 @@
-# hf-10 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-10 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: day 4 after admission for de novo ischaemic HFrEF (EF 30%); weight down 5 kg but
 # residual congestion (JVP up, B-lines, ankle oedema). Finish decongestion; start all four pillars
 # before discharge at low doses (generic ACE inhibitor if ARNI unaffordable), daily weights, review in
@@ -16,7 +16,8 @@ initial:
   flags: []
 check:
   source: [esc-hf-2026, strong-hf-2022]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the drug doses and residual congestion findings."
 
 start: rounds
@@ -36,7 +37,7 @@ nodes:
 
   dry-yet:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "JVP 5 cm above the angle, mild ankle oedema, 2–3 B-lines in a few zones on ultrasound, orthopnoea gone. Is he ready?"
     options:
       - label: "Not yet: residual congestion. Another 1–2 days of IV diuresis while starting the pillars"
@@ -54,7 +55,7 @@ nodes:
 
   pillars:
     type: choice
-    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Euvolaemic, BP 112/70, potassium 4.3, creatinine stable. Which drugs before he goes?"
     options:
       - label: "Start all four at low doses now: ramipril (or sacubitril–valsartan if affordable), bisoprolol, spironolactone, dapagliflozin; plus his furosemide"
@@ -78,7 +79,7 @@ nodes:
 
   education:
     type: multiselect
-    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Discharge plan. Choose up to 4."
     max: 4
     options:
@@ -150,4 +151,4 @@ debrief:
     - "Leaving the pillars to someone else."
   unlocks: [hf-four-pillars, sacubitril-valsartan, hf-beta-blockers, spironolactone, sglt2-inhibitors]
   refs: [esc-hf-2026, strong-hf-2022]
-  check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+  check: { source: [esc-hf-2026, strong-hf-2022], verified: true, reviewedOn: 2026-10-15 }

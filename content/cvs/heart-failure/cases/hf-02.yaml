@@ -1,4 +1,4 @@
-# hf-02 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-02 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: warm–wet decompensation of chronic ischaemic HFrEF (EF 30%), triggered by an NSAID
 # (diclofenac for knee pain) and extra salt. On furosemide 40 mg/day, ramipril, bisoprolol,
 # spironolactone. Poor first natriuretic response → double the dose + acetazolamide (ADVOR).
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: esc-hf-2026
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the drug history and vitals."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Known heart failure, ejection fraction 30% last year. First move?"
     options:
       - label: "Monitor, 12-lead ECG, bloods (kidney function, electrolytes, troponin, NT-proBNP), and a warm/cold, wet/dry assessment"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-02/02-ecg
@@ -81,7 +82,7 @@ nodes:
 
   diuretic-dose:
     type: dose
-    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: true, reviewedOn: 2026-10-15 }
     prompt: "She takes furosemide 40 mg a day by mouth. First IV furosemide dose, in mg?"
     drug: furosemide
     dose: home-40
@@ -102,7 +103,7 @@ nodes:
 
   response:
     type: choice
-    check: { source: [esc-hf-2026, advor-2022], verified: false }
+    check: { source: [esc-hf-2026, advor-2022], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: resus-bay
         art: hf-02/03-response
@@ -133,7 +134,7 @@ nodes:
 
   acetazolamide:
     type: dose
-    check: { source: [advor-2022, esc-hf-2026], verified: false }
+    check: { source: [advor-2022, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Acetazolamide dose, in mg IV?"
     drug: acetazolamide
     dose: ahf
@@ -153,7 +154,7 @@ nodes:
 
   day-2:
     type: choice
-    check: { source: esc-hf-2026, verified: false }
+    check: { source: esc-hf-2026, verified: true, reviewedOn: 2026-10-15 }
     onEnter: { minutes: 1200, setVitals: { hr: 84, sbp: 118, dbp: 70, rr: 18, spo2: 96 } }
     panels:
       - scene: ward
@@ -186,7 +187,7 @@ nodes:
 
   discharge:
     type: multiselect
-    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Day 4: no oedema, JVP normal. Plan for home. Choose up to 4."
     max: 4
     options:
@@ -259,4 +260,4 @@ debrief:
     - "Fluid for a poor urine output in a congested patient."
   unlocks: [decompensated-hf, furosemide, acetazolamide, hf-four-pillars, sglt2-inhibitors, hf-diagnosis]
   refs: [esc-hf-2026, dose-ahf-2011, advor-2022, strong-hf-2022]
-  check: { source: [esc-hf-2026, advor-2022], verified: false }
+  check: { source: [esc-hf-2026, advor-2022], verified: true, reviewedOn: 2026-10-15 }

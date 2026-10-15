@@ -1,4 +1,4 @@
-# hf-08 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-08 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: decompensated right heart failure (cor pulmonale) from chronic lung disease (post-TB
 # fibrosis and COPD), triggered by a chest infection with hypoxia and hypercapnia. Clear lung fields,
 # big liver, ascites. Principles invert: correct hypoxia/hypercapnia/acidosis, cautious diuresis,
@@ -18,7 +18,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: [hfa-rv-2016, esc-ph-2022]
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Teaching composite; check the gas values and vitals."
 
 start: arrival
@@ -38,7 +39,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: hfa-rv-2016, verified: false }
+    check: { source: hfa-rv-2016, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Lips blue, JVP to the ear, big tender liver, ascites, leg oedema; crackles only at the right base. First move?"
     options:
       - label: "Resus bay, controlled oxygen to sats 88–92%, blood gas, ECG, sputum and blood cultures, bedside echo"
@@ -56,7 +57,7 @@ nodes:
 
   ecg-1:
     type: ecg
-    check: { source: [esc-ph-2022, hfa-rv-2016], verified: false }
+    check: { source: [esc-ph-2022, hfa-rv-2016], verified: true, reviewedOn: 2026-10-15 }
     panels:
       - scene: ecg-machine
         art: hf-08/02-ecg
@@ -81,7 +82,7 @@ nodes:
 
   support:
     type: choice
-    check: { source: [hfa-rv-2016, esc-hf-2026], verified: false }
+    check: { source: [hfa-rv-2016, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     prompt: "pH 7.29, CO₂ 68, BP 98/66, swollen everywhere. Next?"
     options:
       - label: "Bilevel NIV for the hypercapnia, antibiotics for the chest infection, gentle IV furosemide, and noradrenaline early if the BP falls"
@@ -105,7 +106,7 @@ nodes:
 
   more:
     type: multiselect
-    check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }
+    check: { source: [hfa-rv-2016, esc-ph-2022], verified: true, reviewedOn: 2026-10-15 }
     prompt: "Stabilising. What else? Choose up to 3."
     max: 3
     options:
@@ -170,4 +171,4 @@ debrief:
     - "Calling the ascites liver disease."
   unlocks: [right-heart-failure, niv-cpap, noradrenaline, furosemide]
   refs: [hfa-rv-2016, esc-ph-2022, esc-hf-2026]
-  check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }
+  check: { source: [hfa-rv-2016, esc-ph-2022], verified: true, reviewedOn: 2026-10-15 }

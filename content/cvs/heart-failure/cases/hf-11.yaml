@@ -1,4 +1,4 @@
-# hf-11 — DRAFT. Every clinical item stays `verified: false` until the content owner reviews it.
+# hf-11 — DRAFT. Verified by the content owner on 2026-10-15.
 # Hidden truth: wet beriberi (high-output heart failure from thiamine deficiency) in a heavy drinker
 # living on polished rice. Warm peripheries, bounding pulse, wide pulse pressure, congestion, lactic
 # acidosis. IV thiamine before glucose → dramatic response. Diuretics alone and vasopressors miss it.
@@ -17,7 +17,8 @@ timeTargets:
   default: [door-to-ecg]
 check:
   source: who-thiamine-1999
-  verified: false
+  verified: true
+  reviewedOn: 2026-10-15
   todo: "Drafted from general sources (not in the owner's note); check the presentation and lactate."
 
 start: arrival
@@ -37,7 +38,7 @@ nodes:
 
   first-move:
     type: choice
-    check: { source: who-thiamine-1999, verified: false }
+    check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Warm, flushed hands, bounding pulse, BP 128/44, raised JVP, crackles, oedema, reduced ankle reflexes. First move?"
     options:
       - label: "Monitor, ECG, blood gas with lactate, glucose, bloods, bedside echo, and note the warm peripheries with a wide pulse pressure"
@@ -55,7 +56,7 @@ nodes:
 
   cause:
     type: choice
-    check: { source: who-thiamine-1999, verified: false }
+    check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }
     prompt: "High-output heart failure with lactic acidosis in a malnourished drinker. What's the most likely cause?"
     options:
       - label: "Wet beriberi: thiamine deficiency"
@@ -73,7 +74,7 @@ nodes:
 
   treat:
     type: choice
-    check: { source: who-thiamine-1999, verified: false }
+    check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }
     prompt: "Treatment?"
     options:
       - label: "High-dose IV thiamine now, before any glucose; then cautious furosemide for the congestion"
@@ -103,7 +104,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: who-thiamine-1999, verified: false }
+    check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }
     prompt: "He's improving. Before the ward. Choose up to 3."
     max: 3
     options:
@@ -168,4 +169,4 @@ debrief:
     - "A pressor for the low diastolic pressure."
   unlocks: [wet-beriberi, thiamine, decompensated-hf]
   refs: [who-thiamine-1999, esc-hf-2026]
-  check: { source: who-thiamine-1999, verified: false }
+  check: { source: who-thiamine-1999, verified: true, reviewedOn: 2026-10-15 }

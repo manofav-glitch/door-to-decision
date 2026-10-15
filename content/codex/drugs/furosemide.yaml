@@ -7,13 +7,13 @@ doses:
     route: IV bolus
     text: "20–40 mg"
     rule: { unit: mg, fixed: { min: 20, max: 40 } }
-    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: true, reviewedOn: 2026-10-15 }
   - id: home-40
     label: "Decompensated HF, on furosemide 40 mg a day by mouth"
     route: IV bolus
     text: "1–2.5 × the total daily oral dose: 40–100 mg"
     rule: { unit: mg, fixed: { min: 40, max: 100 } }
-    check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+    check: { source: [esc-hf-2026, dose-ahf-2011], verified: true, reviewedOn: 2026-10-15 }
 sections:
   - heading: Is it working?
     body: "Spot urine sodium at 2 hours: under 50–70 mmol/L is a poor response. Urine output over the first 6 hours: under 100–150 ml/h is a poor response. Either way, double the dose."
@@ -26,4 +26,4 @@ sections:
   - heading: Endpoint
     body: "Euvolaemia (JVP, oedema, lungs, orthopnoea), not 'feels better'."
 refs: [esc-hf-2026, dose-ahf-2011]
-check: { source: [esc-hf-2026, dose-ahf-2011], verified: false }
+check: { source: [esc-hf-2026, dose-ahf-2011], verified: true, reviewedOn: 2026-10-15 }
