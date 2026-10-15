@@ -26,6 +26,7 @@ nodes:
     type: story
     panels:
       - scene: ward
+        art: hf-10/01-rounds
         actors: [patient:relieved, doctor]
         caption: "{clock} · Medical ward, day 4"
         bubbles:
@@ -118,6 +119,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-10/02-end-good
         actors: [patient:relieved, doctor]
         caption: "Three months later · Heart failure clinic"
         bubbles:
@@ -129,6 +131,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-10/03-end-fair
         actors: [patient:worried, doctor]
         caption: "Three weeks later · Emergency department"
     summary: "He was readmitted: residual congestion, slow sequencing or a thin plan let the next decompensation in. The debrief shows where."

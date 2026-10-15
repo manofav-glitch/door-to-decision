@@ -9,11 +9,16 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const LIGHT = 215; // every channel at least this → cream paper
-const GUTTER = 0.85; // share of light pixels that makes a row/column a gutter
+// share of light pixels that makes a row/column a gutter; lower it with --gutter=0.45 when a sheet's
+// gutters come out darker (a crop then shows a cream strip and border line at its edge)
+const gutterArg = process.argv.find((a) => a.startsWith('--gutter='));
+const GUTTER = gutterArg ? Number(gutterArg.slice('--gutter='.length)) : 0.85;
 const MIN_PANEL = 60; // px; shorter runs are borders or noise
 const INSET = 5; // px trimmed inside each panel to drop its dark border
 
-const [sheet, folder, colsArg, namesArg, caseFile] = process.argv.slice(2);
+const [sheet, folder, colsArg, namesArg, caseFile] = process.argv
+  .slice(2)
+  .filter((a) => !a.startsWith('--'));
 if (!sheet || !folder || !colsArg || !namesArg) {
   console.error('Usage: node scripts/cut-sheet.ts <sheet> <folder> <cols> <names> [case.yaml]');
   process.exit(1);
