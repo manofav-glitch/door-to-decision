@@ -28,6 +28,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-06/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -58,6 +59,7 @@ nodes:
     check: { source: hfa-ppcm-2019, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-06/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/hf-06-sinus-tachy.svg
@@ -82,6 +84,7 @@ nodes:
     check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
     panels:
       - scene: ultrasound
+        art: hf-06/03-echo
         actors: [patient-supine:worried, doctor]
         caption: "{clock} · Bedside echo"
         bubbles:
@@ -156,6 +159,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-06/04-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Six months later · Heart failure clinic"
         bubbles:
@@ -167,6 +171,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-06/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Three weeks later · Cardiology ward"
     summary: "She is improving, but a delayed diagnosis or the wrong treatment made her journey harder. The debrief shows where."
