@@ -27,6 +27,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-03/01-arrival
         actors: [patient:worried, relative:alarmed]
         caption: "{clock} · Triage"
         bubbles:
@@ -57,6 +58,7 @@ nodes:
     check: { source: esc-hf-2026, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-03/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
     image: ecg/hf-03-lbbb.svg
@@ -155,6 +157,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-03/03-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Two weeks later · Cardiology ward, tertiary centre"
         bubbles:
@@ -166,6 +169,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-03/04-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Two weeks later · ICU"
     summary: "He survived, but fluids, vasodilators or the wrong drugs deepened his shock. The debrief shows where."
