@@ -27,6 +27,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-11/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -137,6 +138,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-11/02-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Five days later · Medical ward"
         bubbles:
@@ -148,6 +150,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-11/03-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Ten days later · Medical ward"
     summary: "He recovered once he got thiamine, but glucose first, pressors or diuretics alone made him sicker. The debrief shows where."
