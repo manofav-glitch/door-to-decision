@@ -224,3 +224,9 @@
   madeBy: Content owner
   date: 2026-10-15
   note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.
+
+- folder: hf-12
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/hf-12-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-15
+  note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.

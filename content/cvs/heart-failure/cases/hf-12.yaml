@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-12/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: esc-myopericarditis-2025, verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-12/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
     image: ecg/hf-12-myocarditis.svg
@@ -87,6 +89,7 @@ nodes:
         caption: "{clock} · 40 minutes later"
         sfx: "ALARM"
       - scene: resus-bay
+        art: hf-12/03-vt
         actors: [patient-supine:alarmed, nurse:alarmed]
         bubbles:
           - { who: nurse, text: "Broad and fast, 180! BP 78 over 50, he's going grey." }
@@ -161,6 +164,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-12/04-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Six weeks later · Cardiology clinic"
         bubbles:
@@ -172,6 +176,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-12/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Six weeks later · Cardiology ward, tertiary centre"
     summary: "He survived, but a delayed diagnosis, the wrong drug or a late transfer brought him much closer to death. The debrief shows where."
