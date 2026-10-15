@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: htn-03/01-arrival
         actors: [patient-supine:worried, relative, paramedic]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -35,6 +36,7 @@ nodes:
     check: { source: [esc-he-2019], verified: false }
     panels:
       - scene: resus-bay
+        art: htn-03/02-seizure
         actors: [patient-supine:alarmed, nurse]
         caption: "{clock} · Resus"
         sfx: "Generalised fit, 3 minutes so far"
@@ -69,6 +71,7 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: htn-03/03-ct
         actors: [patient-supine, doctor]
         caption: "{clock} · CT"
         bubbles:
@@ -201,6 +204,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-03/04-end-good
         actors: [patient:relieved, relative]
         caption: "Five days later · Transplant ward"
         bubbles:
@@ -212,6 +216,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-03/05-end-fair
         actors: [patient:worried, relative]
         caption: "A week later · Transplant ward"
     summary: "She recovered, but delays, too fast a fall or a dangerous change to her transplant drugs cost her. The debrief shows where."
