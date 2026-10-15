@@ -29,6 +29,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: hf-04/01-arrival
         actors: [patient:worried, relative:worried]
         caption: "{clock} · Triage"
         bubbles:
@@ -59,6 +60,7 @@ nodes:
     check: { source: [esc-af-2024, esc-hf-2026], verified: false }
     panels:
       - scene: ecg-machine
+        art: hf-04/02-ecg
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Majors"
     image: ecg/hf-04-af.svg
@@ -83,6 +85,7 @@ nodes:
     check: { source: [esc-hf-2026, januzzi-2006], verified: false }
     panels:
       - scene: ultrasound
+        art: hf-04/03-ultrasound
         actors: [patient-supine, doctor]
         caption: "{clock} · Bedside ultrasound and results"
         bubbles:
@@ -186,6 +189,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: hf-04/04-end-good
         actors: [patient:relieved, relative:relieved]
         caption: "Five days later · Medical ward"
         bubbles:
@@ -197,6 +201,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: hf-04/05-end-fair
         actors: [patient:worried, relative:worried]
         caption: "Ten days later · Medical ward"
     summary: "She recovered slowly: a missed diagnosis or the wrong rate-control drug cost her days. The debrief shows where."
