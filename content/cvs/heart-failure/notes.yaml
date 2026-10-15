@@ -1,4 +1,4 @@
-# Heart Failure unit notes — DRAFT. Every section stays `verified: false` until the content owner reviews it.
+# Heart Failure unit notes — verified by the content owner on 2026-10-15.
 # Written in our own words from the owner's heart failure note (git-ignored notes/hf.pdf, ESC 2026),
 # the SCAPE section of notes/htn.pdf, and the verified cases and Codex cards. Doses match the cards;
 # if a card changes, change the notes too. Style: short bullets; "Label: text" shows the label in bold.
@@ -6,7 +6,7 @@ title: "Heart Failure: unit notes"
 intro: "Everything from the 12 Heart Failure cases in one place: warm or cold, wet or dry, find the trigger, decongest by response, and send them home on the four pillars."
 sections:
   - heading: "The first ten minutes"
-    check: { source: [esc-hf-2026], verified: false }
+    check: { source: [esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Question 1, perfusion: warm or cold?"
@@ -37,7 +37,7 @@ sections:
       - cards: [decompensated-hf]
 
   - heading: "Is it heart failure?"
-    check: { source: [esc-hf-2026, januzzi-2006], verified: false }
+    check: { source: [esc-hf-2026, januzzi-2006], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Rule out: BNP under 100 pg/mL or NT-proBNP under 300 pg/mL makes it very unlikely."
@@ -60,7 +60,7 @@ sections:
       - cards: [hf-diagnosis]
 
   - heading: "SCAPE: hypertensive pulmonary oedema"
-    check: { source: [esc-htn-2024, esc-hf-2026, threecpo-2008], verified: false }
+    check: { source: [esc-htn-2024, esc-hf-2026, threecpo-2008], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "What: sudden severe breathlessness with a very high BP; fluid redistributed into the lungs, not gained."
@@ -76,7 +76,7 @@ sections:
       - cards: [scape, niv-cpap, nitrates]
 
   - heading: "Decongestion by response"
-    check: { source: [esc-hf-2026, dose-ahf-2011, advor-2022], verified: false }
+    check: { source: [esc-hf-2026, dose-ahf-2011, advor-2022], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Not on a loop diuretic: furosemide 20–40 mg IV."
@@ -97,7 +97,7 @@ sections:
       - cards: [furosemide, acetazolamide]
 
   - heading: "Cold and wet: cardiogenic shock"
-    check: { source: [esc-hf-2026], verified: false }
+    check: { source: [esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Recognise it: hypoperfusion, not just hypotension; lactate, skin, urine, mental state."
@@ -113,7 +113,7 @@ sections:
       - cards: [cardiogenic-shock, dobutamine, noradrenaline]
 
   - heading: "HFpEF and AF"
-    check: { source: [esc-hf-2026, esc-af-2024], verified: false }
+    check: { source: [esc-hf-2026, esc-af-2024], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - ecg: ecg/hf-04-af.svg
         alt: "12-lead ECG. Irregularly irregular narrow-complex rhythm at about 132 per minute with no P waves; slight ST depression in V5–V6."
@@ -128,7 +128,7 @@ sections:
       - cards: [hf-diagnosis, cha2ds2-va, sglt2-inhibitors, spironolactone]
 
   - heading: "Mechanical complications after MI"
-    check: { source: [esc-acs-2023, esc-hf-2026], verified: false }
+    check: { source: [esc-acs-2023, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Sudden pulmonary oedema or shock days after an MI with a new murmur: echo now."
@@ -143,7 +143,7 @@ sections:
       - cards: [mechanical-complications-mi]
 
   - heading: "Peripartum cardiomyopathy"
-    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: false }
+    check: { source: [hfa-ppcm-2019, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "What: ejection fraction under 45% late in pregnancy or in the months after delivery, no other cause."
@@ -157,7 +157,7 @@ sections:
       - cards: [peripartum-cardiomyopathy, bromocriptine]
 
   - heading: "Severe aortic stenosis"
-    check: { source: [esc-valve-2025, esc-hf-2026], verified: false }
+    check: { source: [esc-valve-2025, esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Clues: breathless, angina or faints on exertion; slow-rising pulse; ejection systolic murmur; quiet second sound; LVH."
@@ -171,7 +171,7 @@ sections:
       - cards: [aortic-stenosis-hf]
 
   - heading: "Right heart failure"
-    check: { source: [hfa-rv-2016, esc-ph-2022], verified: false }
+    check: { source: [hfa-rv-2016, esc-ph-2022], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Signs: raised JVP, big tender liver, ascites, oedema, often clear lungs."
@@ -186,7 +186,7 @@ sections:
       - cards: [right-heart-failure]
 
   - heading: "High-output failure and myocarditis"
-    check: { source: [who-thiamine-1999, esc-myopericarditis-2025], verified: false }
+    check: { source: [who-thiamine-1999, esc-myopericarditis-2025], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "High output: warm hands, bounding pulse, wide pulse pressure, lactic acidosis."
@@ -206,7 +206,7 @@ sections:
       - cards: [wet-beriberi, thiamine, myocarditis]
 
   - heading: "Potassium and the pillars"
-    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: false }
+    check: { source: [esc-hf-2026, ukka-hyperk-2023], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - ecg: ecg/hf-09-hyperk.svg
         alt: "12-lead ECG. Sinus rhythm about 64 per minute. Long PR, slightly wide QRS, tall narrow peaked T waves."
@@ -222,7 +222,7 @@ sections:
       - cards: [spironolactone, hyperkalaemia-treatment]
 
   - heading: "The four pillars and the way home"
-    check: { source: [esc-hf-2026, strong-hf-2022], verified: false }
+    check: { source: [esc-hf-2026, strong-hf-2022], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - table:
           head: ["Pillar", "Start", "Target"]
@@ -243,7 +243,7 @@ sections:
       - cards: [hf-four-pillars, sacubitril-valsartan, hf-beta-blockers, spironolactone, sglt2-inhibitors]
 
   - heading: "Heart failure in India"
-    check: { source: [esc-hf-2026], verified: false, todo: "From the owner's note (NHFR and Trivandrum registries); check the figures you want taught." }
+    check: { source: [esc-hf-2026], verified: true, reviewedOn: 2026-10-15, todo: "From the owner's note (NHFR and Trivandrum registries); check the figures you want taught." }
     blocks:
       - points:
           - "Younger: patients about a decade younger than in European cohorts."
@@ -253,7 +253,7 @@ sections:
           - "Affordable: generic ACE inhibitors, beta-blockers, spironolactone, furosemide and now SGLT2 inhibitors."
 
   - heading: "Drugs at a glance"
-    check: { source: [esc-hf-2026, esc-htn-2024, advor-2022], verified: false }
+    check: { source: [esc-hf-2026, esc-htn-2024, advor-2022], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - table:
           head: ["Drug", "Use here", "Dose", "Beware"]
@@ -267,7 +267,7 @@ sections:
             - ["Bromocriptine", "Peripartum cardiomyopathy", "2.5 mg twice daily for 2 weeks, then daily for 6", "Only with anticoagulation; stops lactation"]
 
   - heading: "Traps from the cases"
-    check: { source: [esc-hf-2026], verified: false }
+    check: { source: [esc-hf-2026], verified: true, reviewedOn: 2026-10-15 }
     blocks:
       - points:
           - "Lying an oedematous patient flat."
