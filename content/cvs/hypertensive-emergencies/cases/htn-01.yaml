@@ -22,6 +22,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-01/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -105,6 +106,7 @@ nodes:
     type: ecg
     panels:
       - scene: ecg-machine
+        art: htn-01/02-ecg
         actors: [patient-supine, nurse]
         caption: "{clock} · Triage"
     check: { source: [hancock-2009, esc-htn-2024], verified: false }
@@ -228,6 +230,7 @@ nodes:
     outcome: good
     panels:
       - scene: triage-desk
+        art: htn-01/03-end-good
         actors: [patient:relieved, doctor]
         caption: "A week later · GP clinic"
         bubbles:
@@ -239,6 +242,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-01/04-end-fair
         actors: [patient:worried, doctor]
         caption: "Later that day · Observation ward"
     summary: "He was never in danger from the BP, but treating the number caused falls, delays or an admission he didn't need. The debrief shows where."
