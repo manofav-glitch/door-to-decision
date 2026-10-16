@@ -26,6 +26,7 @@ nodes:
     onEnter: { milestone: severe-bp }
     panels:
       - scene: triage-desk
+        art: htn-06/01-arrival
         actors: [patient:pain, relative, nurse]
         caption: "{clock} · Labour room triage"
         bubbles:
@@ -38,6 +39,7 @@ nodes:
     type: choice
     panels:
       - scene: resus-bay
+        art: htn-06/02-fit
         actors: [patient-supine:alarmed, nurse, relative]
         caption: "{clock} · Labour room"
         sfx: "Generalised fit"
@@ -234,6 +236,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-06/03-end-good
         actors: [patient:relieved, relative]
         caption: "Two days later · Postnatal ward"
         bubbles:
@@ -245,6 +248,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-06/04-end-fair
         actors: [patient:worried, relative]
         caption: "A week later · Obstetric HDU"
     summary: "Mother and baby survived, but the wrong anticonvulsant, delayed BP control, an overshoot or a delay in delivery put them at risk. The debrief shows where."
