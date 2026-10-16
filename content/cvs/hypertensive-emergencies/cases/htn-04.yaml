@@ -24,6 +24,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: htn-04/01-arrival
         actors: [patient-supine:worried, relative, paramedic]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -65,6 +66,7 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: htn-04/02-ct
         actors: [patient-supine, doctor]
         caption: "{clock} · CT"
         bubbles:
@@ -226,6 +228,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-04/03-end-good
         actors: [patient:relieved, relative]
         caption: "Three days later · Stroke unit"
         bubbles:
@@ -237,6 +240,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-04/04-end-fair
         actors: [patient:worried, relative]
         caption: "A week later · Stroke unit"
     summary: "He improved, but delays, an overshoot or uncontrolled BP after thrombolysis cost him. The debrief shows where."
