@@ -25,6 +25,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: htn-05/01-arrival
         actors: [patient-supine:pain, relative, paramedic]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -36,6 +37,7 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: htn-05/02-scan
         actors: [patient-supine, doctor]
         caption: "{clock} · CT"
         bubbles:
@@ -204,6 +206,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-05/03-end-good
         actors: [patient:relieved, relative]
         caption: "Five days later · Stroke unit"
         bubbles:
@@ -215,6 +218,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-05/04-end-fair
         actors: [patient:worried, relative]
         caption: "Two weeks later · Stroke unit"
     summary: "She survived, but slow reversal, the wrong drug or a large, fast fall let the bleed or the kidneys suffer. The debrief shows where."
