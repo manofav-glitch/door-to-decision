@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-09/01-arrival
         actors: [patient:pain, relative, nurse]
         caption: "{clock} · Rural hospital"
         bubbles:
@@ -117,6 +118,7 @@ nodes:
     onEnter: { setVitals: { hr: 128, sbp: 122, dbp: 80, rr: 44, spo2: 88 } }
     panels:
       - scene: resus-bay
+        art: htn-09/02-oedema
         actors: [patient-supine:alarmed, relative, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -185,6 +187,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-09/03-end-good
         actors: [patient:relieved, relative]
         caption: "Three days later · Children's ward"
         bubbles:
@@ -196,6 +199,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-09/04-end-fair
         actors: [patient:worried, relative]
         caption: "A week later · Paediatric ICU"
     summary: "He survived, but missed envenomation, atropine or adrenaline, a wrong dose or fluid on a failing heart made it harder. The debrief shows where."
