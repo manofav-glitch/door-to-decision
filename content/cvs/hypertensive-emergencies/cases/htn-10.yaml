@@ -22,6 +22,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-10/01-arrival
         actors: [patient:worried, relative, nurse]
         caption: "{clock} · Paediatric triage"
         bubbles:
@@ -63,6 +64,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: htn-10/02-exam
         actors: [patient-supine:worried, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -167,6 +169,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-10/03-end-good
         actors: [patient:relieved, relative]
         caption: "Five days later · Children's ward"
         bubbles:
@@ -178,6 +181,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-10/04-end-fair
         actors: [patient:worried, relative]
         caption: "A week later · Paediatric HDU"
     summary: "She recovered, but adult thresholds, a fast fall or withholding the diuretic made it harder. The debrief shows where."
