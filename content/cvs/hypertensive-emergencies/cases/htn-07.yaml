@@ -25,6 +25,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-07/01-arrival
         actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -66,6 +67,7 @@ nodes:
     type: story
     panels:
       - scene: ct-scanner
+        art: htn-07/02-ct
         actors: [patient-supine:pain, doctor]
         caption: "{clock} · CT"
         bubbles:
@@ -206,6 +208,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-07/03-end-good
         actors: [patient:relieved, doctor]
         caption: "A week later · Vascular ward"
         bubbles:
@@ -217,6 +220,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-07/04-end-fair
         actors: [patient:worried, doctor]
         caption: "Two weeks later · Vascular ward"
     summary: "He survived, but antiplatelets, a vasodilator before a beta-blocker or a missed malperfusion cost him. The debrief shows where."
