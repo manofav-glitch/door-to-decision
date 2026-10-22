@@ -24,6 +24,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-11/01-arrival
         actors: [patient:pain, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -35,6 +36,7 @@ nodes:
     type: ecg
     panels:
       - scene: ecg-machine
+        art: htn-11/02-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus"
     check: { source: [esc-acs-2023, hancock-2009], verified: false }
@@ -141,6 +143,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-11/03-end-good
         actors: [patient:relieved, doctor]
         caption: "Three days later · Cardiology ward"
         bubbles:
@@ -152,6 +155,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-11/04-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · CCU"
     summary: "He recovered, but a reflex tachycardia, thrombolysis or delayed ACS treatment cost heart muscle. The debrief shows where."
