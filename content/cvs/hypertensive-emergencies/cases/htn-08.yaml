@@ -35,6 +35,7 @@ nodes:
     onEnter: { minutes: 15, setVitals: { hr: 134, sbp: 252, dbp: 142, rr: 24 }, rhythm: ecg/htn-sinus-tachy.svg }
     panels:
       - scene: resus-bay
+        art: htn-08/02-crisis
         actors: [patient-supine:alarmed, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -201,6 +202,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-08/04-end-fair
         actors: [patient:worried, doctor]
         caption: "A week later · ICU"
     summary: "She survived, but a beta-blocker first, adrenaline, steroids or a biopsy made the crisis worse. The debrief shows where."
