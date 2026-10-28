@@ -296,3 +296,9 @@
   madeBy: Content owner
   date: 2026-10-22
   note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.
+
+- folder: htn-12
+  madeWith: ChatGPT image generation (OpenAI), from the prompt in docs/art/htn-12-prompts.md and docs/art/cast-reference.png
+  madeBy: Content owner
+  date: 2026-10-28
+  note: Cut from a 1024 × 1536 px sheet, enlarged and sharpened.

@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: ambulance-bay
+        art: htn-12/01-arrival
         actors: [patient:alarmed, relative, paramedic]
         caption: "{clock} · Ambulance bay"
         bubbles:
@@ -64,6 +65,7 @@ nodes:
     type: choice
     panels:
       - scene: resus-bay
+        art: htn-12/02-cool
         actors: [patient-supine, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -169,6 +171,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-12/03-end-good
         actors: [patient:relieved, relative]
         caption: "Next morning · Observation ward"
         bubbles:
@@ -180,6 +183,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-12/04-end-fair
         actors: [patient:worried, relative]
         caption: "Two days later · ICU"
     summary: "He survived, but restraint without sedation, a beta-blocker or slow cooling made it worse. The debrief shows where."
