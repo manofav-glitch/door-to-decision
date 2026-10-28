@@ -24,6 +24,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: htn-13/01-arrival
         actors: [patient-supine:pain, relative, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -95,6 +96,7 @@ nodes:
     type: choice
     panels:
       - scene: resus-bay
+        art: htn-13/02-still-high
         actors: [patient:pain, nurse]
         caption: "{clock} · Resus"
         bubbles:
@@ -164,6 +166,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-13/03-end-good
         actors: [patient:relieved, relative]
         caption: "Two hours later · Resus"
         bubbles:
@@ -175,6 +178,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-13/04-end-fair
         actors: [patient:worried, relative]
         caption: "That evening · HDU"
     summary: "He recovered, but lying flat, delays in finding the trigger or long-acting IV drugs made it harder. The debrief shows where."
