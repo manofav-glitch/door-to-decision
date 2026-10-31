@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-08/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -191,6 +192,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-08/03-end-good
         actors: [patient:relieved, doctor]
         caption: "Two months later · Surgical ward"
         bubbles:
