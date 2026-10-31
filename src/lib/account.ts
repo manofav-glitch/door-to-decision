@@ -14,10 +14,14 @@ const config = {
   appId: env.VITE_FIREBASE_APP_ID as string | undefined,
 };
 
-/** true when the build has a Firebase project to sign in to */
-export const accountsEnabled = Boolean(
-  config.apiKey && config.authDomain && config.projectId && config.appId,
-);
+const hasConfig = Boolean(config.apiKey && config.authDomain && config.projectId && config.appId);
+
+/**
+ * true when sign-in is shown: always in local dev; on the live site only once VITE_ACCOUNTS_LIVE=true
+ * (set when paid unlocking works, so nobody meets a sign-in that does nothing yet).
+ */
+export const accountsEnabled =
+  hasConfig && (import.meta.env.DEV || import.meta.env.VITE_ACCOUNTS_LIVE === 'true');
 
 export interface Account {
   uid: string;
