@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-15/01-arrival
         actors: [patient:worried, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -64,6 +65,7 @@ nodes:
     type: story
     panels:
       - scene: resus-bay
+        art: htn-15/02-findings
         actors: [patient-supine, doctor]
         caption: "{clock} · Resus"
         bubbles:
@@ -199,6 +201,7 @@ nodes:
     outcome: good
     panels:
       - scene: triage-desk
+        art: htn-15/03-end-good
         actors: [patient:relieved, doctor]
         caption: "A month later · Rheumatology clinic"
         bubbles:
@@ -210,6 +213,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-15/04-end-fair
         actors: [patient:worried, doctor]
         caption: "Two weeks later · Medical ward"
     summary: "She was diagnosed in the end, but trusting the low arm, an ACE inhibitor or treating the number cost her. The debrief shows where."
