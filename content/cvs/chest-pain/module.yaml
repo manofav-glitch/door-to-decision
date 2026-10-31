@@ -1,6 +1,8 @@
 id: chest-pain
 title: Chest Pain
 blurb: "Heavy, tight, tearing or stabbing: sort the time-critical causes from the rest."
+# Free unit: playable without the paid unlock (docs/plans/paid-access-plan.md)
+free: true
 settings:
   - id: pci-capable
     label: PCI-capable centre

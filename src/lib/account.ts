@@ -35,13 +35,33 @@ interface AccountState {
   status: 'off' | 'loading' | 'ready';
   user: Account | null;
   error: string | null;
+  /** end of the paid year (ms since 1970), or null if never paid; remembered on the device for offline use */
+  paidUntil: number | null;
+}
+
+const PAID_KEY = 'd2d.paidUntil';
+
+function savedPaidUntil(): number | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(PAID_KEY) ?? 'null') as { until?: number } | null;
+    return typeof v?.until === 'number' ? v.until : null;
+  } catch {
+    return null;
+  }
 }
 
 export const useAccount = create<AccountState>()(() => ({
   status: accountsEnabled ? 'loading' : 'off',
   user: null,
   error: null,
+  paidUntil: accountsEnabled ? savedPaidUntil() : null,
 }));
+
+/** true while the paid year is running */
+export const isPaid = (paidUntil: number | null, now = Date.now()) =>
+  paidUntil !== null && paidUntil > now;
+
+export const firestoreDocs = `https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/(default)/documents`;
 
 let authPromise: Promise<Auth> | null = null;
 
@@ -57,6 +77,11 @@ function getAuthOnce(): Promise<Auth> {
         status: 'ready',
         user: u && { uid: u.uid, name: u.displayName, email: u.email, photo: u.photoURL },
       });
+      if (u) void refreshPaid();
+      else {
+        useAccount.setState({ paidUntil: null });
+        localStorage.removeItem(PAID_KEY);
+      }
     });
     return auth;
   })();
@@ -115,4 +140,37 @@ export async function signOut() {
   const auth = await getAuthOnce();
   const { signOut: out } = await import('firebase/auth');
   await out(auth);
+}
+
+/** The signed-in user's Firebase ID token (for Firestore requests), or null if signed out. */
+export async function idToken(): Promise<string | null> {
+  if (!accountsEnabled) return null;
+  const auth = await getAuthOnce();
+  await auth.authStateReady();
+  return auth.currentUser ? auth.currentUser.getIdToken() : null;
+}
+
+/** Read entitlements/{uid} (written only by the payment Worker) and remember the end of the paid year. */
+export async function refreshPaid() {
+  const token = await idToken();
+  const uid = useAccount.getState().user?.uid;
+  if (!token || !uid) return;
+  try {
+    const res = await fetch(`${firestoreDocs}/entitlements/${uid}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 404) {
+      useAccount.setState({ paidUntil: null });
+      localStorage.removeItem(PAID_KEY);
+      return;
+    }
+    if (!res.ok) return; // keep what we had (e.g. offline)
+    const doc = (await res.json()) as { fields?: { expiresAt?: { timestampValue?: string } } };
+    const ts = doc.fields?.expiresAt?.timestampValue;
+    const until = ts ? Date.parse(ts) : null;
+    useAccount.setState({ paidUntil: until });
+    localStorage.setItem(PAID_KEY, JSON.stringify({ uid, until }));
+  } catch {
+    // offline: keep the remembered value
+  }
 }

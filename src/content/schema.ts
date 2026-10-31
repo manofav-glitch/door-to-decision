@@ -385,6 +385,7 @@ export const ModuleFile = z.strictObject({
     .default([]),
   cases: z.array(z.string()).min(1), // case file names in play order, e.g. cp-01
   shuffleOptions: z.boolean().default(false), // show answers in a shuffled order (units from 2026-10-15)
+  free: z.boolean().default(false), // playable without the paid unlock (docs/plans/paid-access-plan.md)
 });
 
 // content/<system>/<module>/notes.yaml: the unit's revision notes, unlocked by playing its cases.

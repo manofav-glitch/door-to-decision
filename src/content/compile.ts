@@ -335,6 +335,7 @@ export function compileContent(root: string): Compiled {
         id: mod.data.id,
         title: mod.data.title,
         blurb: mod.data.blurb,
+        free: mod.data.free,
         cases: summaries,
         ...(notesSummary && { notes: notesSummary }),
       });

@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import { index, useNotes, type LoadedNotes } from '../content/client';
 import type { CompiledNoteBlock, ModuleSummary } from '../content/types';
 import { NotesCard } from '../components/NotesCard';
+import { UnlockPanel } from '../components/UnlockPanel';
+import { useLocked } from '../lib/access';
 import { EcgFigure } from '../components/player/EcgFigure';
 import { BackLink, Loading, NotFound, UnverifiedBadge } from '../components/ui';
 import { NOTES_STARS, splitLabel, useUnitNotes } from '../lib/notes';
@@ -18,7 +20,15 @@ export function Notes() {
 function NotesGate({ systemId, mod }: { systemId: string; mod: ModuleSummary }) {
   const { key, access } = useUnitNotes(systemId, mod);
   const back = <BackLink to={`/s/${systemId}/${mod.id}`}>{mod.title}</BackLink>;
+  const paidLocked = useLocked(mod.free);
   if (access.state === 'none') return <NotFound what="Notes" />;
+  if (paidLocked)
+    return (
+      <main className="max-w-3xl">
+        {back}
+        <UnlockPanel />
+      </main>
+    );
   if (access.state === 'locked')
     return (
       <main className="max-w-3xl">

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { caseLoaders, index, loadCodex, notesLoaders } from 'virtual:content';
 import type { CaseSummary, CodexEntry, CompiledCase, CompiledNotes } from './types';
+import { isPaid, useAccount } from '../lib/account';
 
 export { index };
 
@@ -59,9 +60,16 @@ export function useNotes(key: string): Loadable<LoadedNotes> {
   });
 }
 
-let codexCache: Promise<CodexEntry[]> | undefined;
+// cached per account and paid state, so unlocking (or signing out) brings in (or drops) the paid cards
+const codexCache = new Map<string, Promise<CodexEntry[]>>();
 export function useCodex(): Loadable<CodexEntry[]> {
-  return useLoad('codex', () => (codexCache ??= loadCodex().then((m) => m.default)));
+  const uid = useAccount((s) => s.user?.uid ?? '');
+  const paid = useAccount((s) => isPaid(s.paidUntil));
+  const key = `codex:${uid}:${paid}`;
+  return useLoad(key, () => {
+    if (!codexCache.has(key)) codexCache.set(key, loadCodex().then((m) => m.default));
+    return codexCache.get(key)!;
+  });
 }
 
 export const isPlayable = (c: Pick<CaseSummary, 'draft'>, showDrafts: boolean) => !c.draft || showDrafts;

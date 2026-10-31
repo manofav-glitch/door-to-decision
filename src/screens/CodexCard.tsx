@@ -3,6 +3,8 @@ import { useCodex } from '../content/client';
 import { Link } from 'react-router-dom';
 import { Loading, NotFound, UnverifiedBadge } from '../components/ui';
 import { ScoreCalculator } from '../components/ScoreParts';
+import { UnlockPanel } from '../components/UnlockPanel';
+import { useCodexLocked } from '../lib/access';
 import { useProgress } from '../store/progress';
 import { kindLabel } from './Codex';
 
@@ -11,8 +13,22 @@ export function CodexCard() {
   const navigate = useNavigate();
   const codex = useCodex();
   const unlocked = useProgress((s) => s.unlocked);
+  const loadedIds = codex.status === 'ready' ? new Set(codex.value.map((c) => c.id)) : undefined;
+  const locked = useCodexLocked(cardId ?? '', loadedIds);
   if (codex.status === 'loading') return <Loading />;
   const card = codex.status === 'ready' ? codex.value.find((c) => c.id === cardId) : undefined;
+  if (locked)
+    return (
+      <main className="max-w-2xl">
+        <button
+          className="mb-3 inline-flex min-h-11 items-center text-grey-1 hover:underline"
+          onClick={() => navigate(-1)}
+        >
+          ← Back
+        </button>
+        <UnlockPanel />
+      </main>
+    );
   if (!card) return <NotFound what="Card" />;
 
   return (

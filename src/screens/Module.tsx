@@ -1,6 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { index, isPlayable } from '../content/client';
 import { NotesCard } from '../components/NotesCard';
+import { UnlockPanel } from '../components/UnlockPanel';
+import { useLocked } from '../lib/access';
 import { BackLink, Difficulty, NotFound, Stars, UnverifiedBadge } from '../components/ui';
 import { useProgress } from '../store/progress';
 import { useSettings } from '../store/settings';
@@ -8,10 +10,23 @@ import { useSettings } from '../store/settings';
 export function Module() {
   const { systemId, moduleId } = useParams();
   const showDrafts = useSettings((s) => s.showDrafts);
-  const { bestStars, active } = useProgress();
   const system = index.systems.find((s) => s.id === systemId);
   const mod = system?.modules.find((m) => m.id === moduleId);
   if (!system || !mod) return <NotFound what="Module" />;
+  return <ModuleBody system={system} mod={mod} showDrafts={showDrafts} />;
+}
+
+function ModuleBody({
+  system,
+  mod,
+  showDrafts,
+}: {
+  system: (typeof index.systems)[number];
+  mod: (typeof index.systems)[number]['modules'][number];
+  showDrafts: boolean;
+}) {
+  const { bestStars, active } = useProgress();
+  const locked = useLocked(mod.free);
   const cases = mod.cases.filter((c) => isPlayable(c, showDrafts));
   const hidden = mod.cases.length - cases.length;
 
@@ -20,6 +35,7 @@ export function Module() {
       <BackLink to={`/s/${system.id}`}>{system.name}</BackLink>
       <h1 className="mb-1 text-2xl font-bold">{mod.title}</h1>
       {mod.blurb && <p className="mb-6 text-grey-1">{mod.blurb}</p>}
+      {locked && <UnlockPanel />}
       <ul className="flex flex-col gap-3">
         {cases.map((c, i) => (
           <li key={c.id}>
@@ -37,6 +53,7 @@ export function Module() {
                   <span>~{c.minutes} min</span>
                   {active[c.id] && <span className="font-semibold text-ink">In progress</span>}
                   {c.draft && <UnverifiedBadge />}
+                  {locked && <span aria-label="Locked">🔒 Locked</span>}
                 </span>
               </span>
               <Stars n={bestStars[c.id] ?? 0} />
@@ -44,7 +61,7 @@ export function Module() {
           </li>
         ))}
       </ul>
-      <NotesCard systemId={system.id} mod={mod} />
+      {!locked && <NotesCard systemId={system.id} mod={mod} />}
       {hidden > 0 && (
         <p className="panel mt-6 border-dashed p-4 text-grey-1">
           {hidden} draft case{hidden === 1 ? ' is' : 's are'} hidden because{' '}

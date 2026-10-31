@@ -81,6 +81,8 @@ export interface ModuleSummary {
   id: string;
   title: string;
   blurb?: string;
+  /** playable without the paid unlock */
+  free: boolean;
   cases: CaseSummary[];
   /** the unit's revision notes, if it has any (the full text loads separately) */
   notes?: { title: string; headings: string[]; draft: boolean };

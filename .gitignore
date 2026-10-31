@@ -11,3 +11,7 @@ content/assets/art/**/*.webp
 
 # owner's private source notes and research (may contain copyrighted material): never committed
 notes/
+
+# paid unit text for scripts/upload-paid.ts (written by split builds; never committed or deployed)
+paid-content/
+.secrets/

@@ -1,0 +1,29 @@
+rules_version = '2';
+// Firestore security rules for paid access (docs/plans/paid-access-plan.md).
+// Deployed with `node scripts/deploy-rules.ts`. The upload script and the payment Worker use a service
+// account, which bypasses these rules; browsers can only do what is allowed here.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function paidYearRunning() {
+      let path = /databases/$(database)/documents/entitlements/$(request.auth.uid);
+      return request.auth != null && exists(path) && get(path).data.expiresAt > request.time;
+    }
+
+    // Paid case text, unit notes and codex cards: readable while the paid year runs.
+    match /paid/{docId} {
+      allow get: if paidYearRunning();
+      allow list, write: if false;
+    }
+
+    // One record per paying user, written only by the payment Worker (or the owner's grant script).
+    match /entitlements/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

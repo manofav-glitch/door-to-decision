@@ -4,6 +4,8 @@ import { findCase, index, isPlayable, useCase } from '../content/client';
 import { BackLink, Difficulty, Loading, NotFound, UnverifiedBadge } from '../components/ui';
 import { replay } from '../engine/engine';
 import { OfflineArt } from '../components/OfflineArt';
+import { UnlockPanel } from '../components/UnlockPanel';
+import { useLocked } from '../lib/access';
 import { useProgress, type Mode } from '../store/progress';
 import { useSettings } from '../store/settings';
 
@@ -16,11 +18,20 @@ export function CaseSetup() {
   const { active, begin } = useProgress();
   const [setting, setSetting] = useState<string | null>(null);
   const [mode, setMode] = useState<Mode>('learn');
+  const locked = useLocked(found?.module.free ?? true);
 
   if (!found) return <NotFound what="Case" />;
   const { system, module, summary } = found;
   const back = <BackLink to={`/s/${system.id}/${module.id}`}>{module.title}</BackLink>;
 
+  if (locked)
+    return (
+      <main className="max-w-2xl">
+        {back}
+        <h1 className="mb-4 text-2xl font-bold">{summary.title}</h1>
+        <UnlockPanel />
+      </main>
+    );
   if (!isPlayable(summary, showDrafts))
     return (
       <main>
