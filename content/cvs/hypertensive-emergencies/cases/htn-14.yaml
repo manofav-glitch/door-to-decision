@@ -23,6 +23,7 @@ nodes:
     type: story
     panels:
       - scene: triage-desk
+        art: htn-14/01-arrival
         actors: [patient:pain, relative, nurse]
         caption: "{clock} · Triage"
         bubbles:
@@ -64,6 +65,7 @@ nodes:
     type: ecg
     panels:
       - scene: ecg-machine
+        art: htn-14/02-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus"
     check: { source: aha-asa-sah-2023, verified: false }
@@ -163,6 +165,7 @@ nodes:
     outcome: good
     panels:
       - scene: ward
+        art: htn-14/03-end-good
         actors: [patient:relieved, relative]
         caption: "Ten days later · Neurosurgery ward"
         bubbles:
@@ -174,6 +177,7 @@ nodes:
     outcome: fair
     panels:
       - scene: ward
+        art: htn-14/04-end-fair
         actors: [patient:worried, relative]
         caption: "Three weeks later · Neuro ICU"
     summary: "She survived, but a delayed scan, antithrombotics for the ECG or a re-bleed cost her. The debrief shows where."
