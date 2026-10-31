@@ -1,0 +1,245 @@
+# Hypertensive Emergencies unit notes — DRAFT for the content owner's review.
+# Written in our own words from the owner's note (git-ignored notes/htn.pdf, using its "practical resolution"
+# where guidelines disagree), and the verified htn-01…15 cases and Codex cards. Doses match the cards;
+# if a card changes, change the notes too. Style: short bullets; "Label: text" shows the label in bold.
+title: "Hypertensive Emergencies: unit notes"
+intro: "Everything from the 15 Hypertensive Emergencies cases in one place: find the injured organ, then pick the drug, the target and the clock."
+sections:
+  - heading: "The organ, not the number"
+    check: { source: [aha-acc-bp-2025, esc-he-2019, esc-htn-2024], verified: false }
+    blocks:
+      - points:
+          - "Severe hypertension: BP above 180/120 with no new organ injury. The old 'urgency'; oral treatment, review within a week."
+          - "Hypertensive emergency: severe BP plus new or worsening organ injury. Monitored bed, short-acting drugs, a staged target."
+          - "The threshold is a convention: eclampsia, children and anyone whose BP was normal until recently are injured at much lower pressures."
+          - "Pseudo-emergency: pain, anxiety, a full bladder, hypoxia, withdrawal or missed tablets. Treat the driver, not the number."
+      - table:
+          head: ["Tempo", "Conditions", "Aim"]
+          rows:
+            - ["Minutes", "Dissection, SCAPE, eclampsia, ICH, ACS, phaeo crisis", "Each condition's own target, fast"]
+            - ["Hours", "Malignant hypertension, encephalopathy, AKI", "MAP down 20–25%, then towards 160/100 over 2–6 hours"]
+            - ["Permissive", "Ischaemic stroke", "Treat only above 220/120 (185/110 before thrombolysis)"]
+            - ["Days", "Severe hypertension without organ damage", "Oral drugs, no ED target"]
+      - cards: [hypertensive-emergency, severe-hypertension]
+
+  - heading: "The first ten minutes"
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    blocks:
+      - points:
+          - "Confirm it: the right cuff size (a small cuff over-reads on a big arm), 5 minutes' rest, both arms."
+          - "Brain: confusion, seizure, focal deficit, visual loss, thunderclap headache."
+          - "Eyes: look at the fundi yourself. Flame haemorrhages, cotton-wool spots or papilloedema mean malignant hypertension."
+          - "Heart and lungs: chest pain, breathlessness, crackles; tearing back pain means the aorta."
+          - "Kidneys and blood: creatinine against a baseline, urine for blood and protein, a smear for schistocytes."
+          - "Pregnancy: over 20 weeks or up to 6 weeks after delivery changes every number."
+          - "Not acute damage: LVH, old CKD, old proteinuria, mild arteriolar narrowing."
+      - ecg: ecg/htn-01-lvh.svg
+        alt: "12-lead ECG. Sinus rhythm about 84 per minute. Very tall R waves in V5, V6 and aVL, deep S waves in V1 and V2. Down-sloping ST depression with T inversion in I, aVL, V5 and V6. No ST elevation."
+        caption: "LVH with strain: years of high pressure, not today's emergency. Compare with an old ECG."
+      - cards: [lvh]
+
+  - heading: "Write a target: a number, a time and a floor"
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    blocks:
+      - points:
+          - "MAP: diastolic plus a third of the pulse pressure. 240/140 gives a MAP of about 173."
+          - "Example: a 25% fall from MAP 173 lands near 130, roughly 180/105. Still high, and that is the point."
+          - "Why so cautious: in chronic hypertension, brain and kidney autoregulation is reset upwards; its lower limit sits about 20–25% below the usual MAP."
+          - "Too far, too fast: watershed stroke, MI, AKI, blindness, fetal distress."
+          - "Write it: 'MAP 130–140 over 4 hours, not below 125', never just 'lower the BP'."
+          - "Monitoring: an arterial line for nitroprusside, dissection, ICH, or any infusion changed more often than every 15 minutes."
+          - "Switch to oral drugs once the organ is stable (6–24 hours), overlapping with the infusion to avoid a rebound."
+
+  - heading: "The drugs"
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    blocks:
+      - points:
+          - "Labetalol: 20 mg IV over 2 min, then 20–80 mg every 10 min to 300 mg, or 0.5–2 mg/min. Most emergencies: brain, pregnancy, dissection. Avoid with bradycardia, heart block, asthma, decompensated HF, and as the first drug in phaeochromocytoma."
+          - "Nicardipine: 5 mg/h, up 2.5 mg/h every 5–15 min, max 15 mg/h. Brain, malignant hypertension, AKI. Not in dissection or ACS without a beta-blocker; care in severe AS."
+          - "Esmolol: 500 micrograms/kg, then 50–300 micrograms/kg/min. Dissection, ACS. Beta-blocker cautions; costly for long infusions."
+          - "GTN: SCAPE 400–800 micrograms SL, then 100–400 micrograms/min. SCAPE, ACS, autonomic dysreflexia (paste). Not after a PDE5 inhibitor in the last 24–48 h, or in RV infarction."
+          - "Phentolamine: 1–5 mg IV every 5–15 min. Phaeochromocytoma and other catecholamine states. Causes tachycardia and angina."
+          - "Nitroprusside: 0.25–0.3 micrograms/kg/min, keep to 2 or less. Refractory cases with an arterial line. Not in ICH or raised ICP, kidney failure or pregnancy."
+          - "Hydralazine: 5–10 mg IV. Pregnancy when labetalol or nifedipine don't suit. Not in ACS, dissection or tight mitral stenosis."
+      - points:
+          - "India: labetalol, GTN, nitroprusside, metoprolol, magnesium, oral nifedipine and prazosin are almost always stocked; nicardipine, IV hydralazine and phentolamine often aren't."
+          - "No pump: intermittent IV labetalol boluses are the practical default."
+          - "Nicardipine or labetalol: equally good; nicardipine reaches the target range a little more predictably (CLUE)."
+      - cards: [labetalol, nicardipine, phentolamine, nitroprusside, hydralazine, nifedipine]
+
+  - heading: "Never"
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    blocks:
+      - warn: "Sublingual or bitten nifedipine (the one exception is autonomic dysreflexia); oral clonidine loading; IV boluses for a number without organ damage; a reflex diuretic in a dry patient; a vasodilator before a beta-blocker in dissection; a beta-blocker before an alpha-blocker in catecholamine excess; ACE inhibitors or ARBs in pregnancy."
+
+  - heading: "Severe hypertension without organ damage"
+    check: { source: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019], verified: false }
+    blocks:
+      - points:
+          - "Rest and repeat: many readings settle with 30 minutes, analgesia and the right cuff."
+          - "Tests: only those that change the plan. A creatinine is reasonable if follow-up is unreliable."
+          - "Treat: restart missed tablets, or start or step up a long-acting drug (amlodipine, an ACE inhibitor or ARB, chlorthalidone)."
+          - "No ED target: control comes over days to weeks; review within a week."
+          - "Fix the cause: a free 3-month supply often beats a new drug."
+      - warn: "IV labetalol or sublingual nifedipine 'to bring it down' causes falls, strokes and AKI with no benefit."
+
+  - heading: "Malignant hypertension and TMA"
+    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    blocks:
+      - points:
+          - "What: extreme BP with acute small-vessel injury in the retina, blood (TMA) and kidney."
+          - "Cheapest tests: fundoscopy and a blood smear."
+          - "Target: MAP down 20–25% over several hours with labetalol or nicardipine."
+          - "Volume: most are dry from pressure natriuresis. No reflex furosemide; give careful fluid; keep a bolus ready."
+          - "RAAS block: a low-dose ACE inhibitor once volume is restored; check potassium and creatinine."
+          - "TMA or TTP: hypertensive TMA improves within days. Persistent low platelets or ADAMTS13 at 10% or less means TTP; send ADAMTS13 before plasma."
+          - "Kidneys: creatinine may rise first, then recover over weeks; dialysis may be temporary."
+          - "Causes: kidney disease in many (chronic GN is common in India); look for one."
+      - cards: [malignant-hypertension]
+
+  - heading: "Encephalopathy and PRES"
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    blocks:
+      - points:
+          - "Picture: headache, vomiting, confusion, seizures, cortical blindness; no dominant focal deficit."
+          - "Triggers: malignant hypertension, eclampsia, tacrolimus or ciclosporin, VEGF inhibitors, sepsis."
+          - "Target: MAP down 20–25% in the first hour, then towards 160/100 over 2–6 hours."
+          - "Seizures: benzodiazepine, then levetiracetam (magnesium if pregnant or postpartum)."
+          - "Transplant patients: get a drug level and adjust with the transplant team; don't stop all immunosuppression. Nicardipine and diltiazem raise tacrolimus levels; phenytoin lowers them."
+          - "Imaging: CT often normal; MRI FLAIR shows posterior oedema."
+          - "Not improving within hours: rethink (stroke, venous thrombosis, encephalitis, non-convulsive status)."
+      - cards: [pres]
+
+  - heading: "Ischaemic stroke"
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    blocks:
+      - points:
+          - "Scan first: lowering BP before imaging helped bleeds but harmed clots (INTERACT4)."
+      - table:
+          head: ["Situation", "Treat when", "Then keep"]
+          rows:
+            - ["No reperfusion", "220/120 or more", "About 15% lower over 24 h"]
+            - ["Before thrombolysis", "Above 185/110 (labetalol 10–20 mg IV)", "Below 185/110 for the bolus"]
+            - ["After thrombolysis", "Above 180/105", "Below 180/105 for 24 h"]
+            - ["After thrombectomy", "Above 180/105", "180/105 or less for 24 h; not below 140"]
+      - points:
+          - "Lower isn't better: 130–140 after thrombolysis cut bleeding but not disability (ENCHANTED); below 140 after successful thrombectomy is harmful."
+          - "Don't abandon thrombolysis for BP that comes down with treatment."
+          - "Restart tablets: once neurologically stable, usually after 48–72 hours."
+      - cards: [stroke-bp]
+
+  - heading: "Intracerebral haemorrhage"
+    check: { source: [aha-asa-ich-2022, interact3-2023, eso-bp-2025], verified: false }
+    blocks:
+      - points:
+          - "Target: SBP 150–220 down to 140 (range 130–150), reached within an hour, smoothly."
+          - "Too low: below 130, or a fall of more than 70 mmHg in an hour, is linked to worse outcomes and AKI."
+          - "Drugs: labetalol or nicardipine; avoid nitroprusside (raises ICP) and sublingual nifedipine."
+          - "Warfarin: four-factor PCC plus vitamin K 10 mg IV now; plasma if no PCC; vitamin K alone is too slow."
+          - "INTERACT3 bundle within the hour: BP, glucose (about 140–180 mg/dL), fever, and anticoagulant reversal."
+          - "Not routine: seizure prophylaxis; platelets for patients not on antiplatelets."
+      - cards: [stroke-bp, warfarin]
+
+  - heading: "Subarachnoid haemorrhage"
+    check: { source: [aha-asa-sah-2023], verified: false }
+    blocks:
+      - points:
+          - "Thunderclap headache: CT first; LP only if CT is normal."
+          - "BP before securing: avoid extremes; a working target of SBP below 160 with labetalol or nicardipine, plus analgesia and an antiemetic."
+          - "Then: nimodipine 60 mg every 4 hours by mouth, reverse anticoagulants, secure the aneurysm early."
+          - "Tranexamic acid: fewer re-bleeds but no better outcome (ULTRA)."
+      - ecg: ecg/htn-14-neuro.svg
+        alt: "12-lead ECG. Sinus rhythm about 64 per minute. Deep, broad, symmetrical T wave inversion in I, aVL and V2 to V6. Long QT. No ST elevation."
+        caption: "Neurogenic T waves after SAH: no aspirin or heparin for an ECG that is following the brain."
+      - cards: [subarachnoid-haemorrhage]
+
+  - heading: "Aortic dissection"
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+    blocks:
+      - points:
+          - "Think aorta: abrupt tearing chest or back pain, pulse or BP difference, a new murmur, neurology."
+          - "Anti-impulse first: esmolol or labetalol to heart rate 60 or less."
+          - "Then a vasodilator: nicardipine, GTN or nitroprusside to SBP 100–120 within 20 minutes."
+          - "Pain: IV opioid; pain drives the catecholamines."
+          - "Measure both arms: treat the higher reading."
+          - "Uncomplicated type B: medical. Malperfusion, rupture, refractory pain or BP: TEVAR. Type A: surgery."
+      - warn: "Never a vasodilator or hydralazine before the beta-blocker, and no antiplatelets until dissection is excluded."
+      - cards: [aortic-dissection]
+
+  - heading: "The heart: ACS and SCAPE"
+    check: { source: [esc-acs-2023, esc-he-2019, esc-hf-2026], verified: false }
+    blocks:
+      - points:
+          - "ACS with severe BP: GTN infusion plus a beta-blocker (oral early; IV if hypertensive without HF, shock or bradycardia); SBP below 140."
+          - "LVH doesn't explain ongoing pain: dynamic ST depression is ACS until proved otherwise."
+          - "No hydralazine or dihydropyridine without beta-blockade: reflex tachycardia."
+          - "NSTE-ACS is never thrombolysed; high-risk: angiography within 24 hours."
+          - "SCAPE: sit up, CPAP, high-dose GTN; diuretic only for real overload (see Heart Failure notes)."
+          - "Tight mitral stenosis: slow the rate; arteriolar dilators make it worse."
+      - ecg: ecg/htn-11-nste.svg
+        alt: "12-lead ECG. Sinus rhythm about 102 per minute. Tall voltages in the left chest leads. ST depression in I, aVL and V4 to V6, slight ST elevation in aVR. No ST elevation elsewhere."
+        caption: "New ST depression on top of LVH, with ongoing pain: treat as ACS."
+      - cards: [nste-acs-strategy, nitrates, scape]
+
+  - heading: "Pregnancy: pre-eclampsia and eclampsia"
+    check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false }
+    blocks:
+      - points:
+          - "Severe range: 160/110 or more, confirmed over 15 minutes. Treat within 30–60 minutes (ACOG, ISSHP, FOGSI; the 2018 ESC used 170/110)."
+          - "Target: 140–150/90–100; sudden falls starve the placenta."
+      - table:
+          head: ["Drug", "Steps", "Notes"]
+          rows:
+            - ["IV labetalol", "20 → 40 → 80 mg, every 10 min", "Then switch drug"]
+            - ["Oral IR nifedipine", "10 → 20 → 20 mg, every 20 min", "Swallowed, never sublingual; ideal without pumps"]
+            - ["IV hydralazine", "5–10 mg, then 10 mg at 20 min", "Then switch to labetalol"]
+      - points:
+          - "Magnesium for fits: Pritchard, 4 g IV over 15–20 minutes plus 5 g IM in each buttock, then 5 g IM every 4 hours."
+          - "Before each dose: knee jerks present, breathing 16 or more, urine 100 ml or more in 4 hours. Antidote: calcium gluconate 1 g IV."
+          - "Magnesium is not an antihypertensive; diazepam and phenytoin are not substitutes."
+          - "Deliver once stable; steroids only if they don't delay it."
+          - "Before any transfer: magnesium and the first BP dose."
+          - "Postpartum: eclampsia can come up to 6 weeks later, often without warning."
+      - cards: [pre-eclampsia, magnesium-sulphate, labetalol, nifedipine, hydralazine]
+
+  - heading: "Catecholamine crises"
+    check: { source: [lenders-pheo-2014, mccord-cocaine-2008, esc-he-2019], verified: false }
+    blocks:
+      - points:
+          - "Phaeochromocytoma: spells of headache, sweating and palpitations. Triggers: metoclopramide, glucagon, high-dose steroids, biopsy."
+          - "Alpha first: phentolamine 1–5 mg IV boluses; nicardipine or nitroprusside if not stocked; magnesium as an adjunct; then oral alpha-blockade."
+          - "Beta-blocker only after alpha-blockade, and only for tachyarrhythmia. Labetalol counts as a beta-blocker (about 1:7)."
+          - "Diagnosis: plasma free metanephrines, then imaging; never biopsy an adrenal mass first."
+          - "Sympathomimetics (cocaine, amphetamines, MDMA): benzodiazepines titrated to calm, then active cooling; then GTN, phentolamine or nicardipine."
+          - "Check: CK, sodium (MDMA), serial ECGs and troponin."
+      - warn: "No metoprolol or propranolol first, no adrenaline for a 'reaction', no restraint without sedation, no paracetamol for drug-induced heat."
+      - cards: [phaeochromocytoma-crisis, phentolamine, sympathomimetic-toxicity, benzodiazepines]
+
+  - heading: "Scorpion sting and autonomic dysreflexia"
+    check: { source: [bawaskar-2011, pva-ad-2021], verified: false }
+    blocks:
+      - points:
+          - "Scorpion (Indian red): sweating, vomiting, cold limbs, priapism, high BP; later myocarditis and pulmonary oedema."
+          - "Prazosin: 30 micrograms/kg by mouth (adults about 500 micrograms), every 3 hours until the limbs are warm. Give the first dose before referral."
+          - "Antivenom: with prazosin, early; not reduced for children."
+          - "Pulmonary oedema: sit up, oxygen, GTN, dobutamine for a weak pump. No fluid boluses, atropine or nifedipine."
+          - "Autonomic dysreflexia: cord injury at T6 or above, pounding headache, flushing above the injury, high BP, slow pulse."
+          - "Sit up, loosen, find the trigger: catheter first, then the bowel with lidocaine gel."
+          - "SBP still 150 or more: GTN paste (wipe off if BP falls) or bitten IR nifedipine, before checking the bowel."
+          - "Their normal SBP may be 90–110: 150 is already high."
+      - cards: [scorpion-envenomation, prazosin, scorpion-antivenom, autonomic-dysreflexia]
+
+  - heading: "Children, kidneys and arteries"
+    check: { source: [aap-htn-2017, eular-lvv-2020, esc-he-2019], verified: false }
+    blocks:
+      - points:
+          - "Children: use age-, sex- and height-specific centiles; adult thresholds miss emergencies."
+          - "Children's tempo: at most 25% of the planned fall in the first 8 hours, the rest over 24–48 hours."
+          - "Post-streptococcal GN: overloaded, so furosemide helps (the opposite of malignant hypertension). Low C3, raised ASO."
+          - "Takayasu: young woman, arm claudication, absent pulse, bruits. Measure four limbs and treat the highest reliable reading."
+          - "Renal artery narrowing: ACE inhibitors and ARBs can cause AKI; image first; amlodipine is safe."
+          - "Coarctation vs Takayasu: in coarctation the legs read lower than the arms."
+          - "Raised ICP with a slow pulse: may be a Cushing response; treat the ICP, not the BP."
+      - cards: [post-strep-gn, takayasu-arteritis]
+
+refs: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019, aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023, aha-asa-sah-2023, esc-aortic-2024, esc-acs-2023, esc-hf-2026, acog-767-2019, isshp-2021, who-pe-2011, lenders-pheo-2014, mccord-cocaine-2008, bawaskar-2011, pva-ad-2021, aap-htn-2017, eular-lvv-2020, hancock-2009]
