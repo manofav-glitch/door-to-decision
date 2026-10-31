@@ -1,3 +1,4 @@
+import { AccountPanel } from '../components/AccountPanel';
 import { DISCLAIMER } from '../components/Disclaimer';
 import { index } from '../content/client';
 import { OfflineArt } from '../components/OfflineArt';
@@ -37,6 +38,7 @@ export function Settings() {
   return (
     <main className="max-w-xl">
       <h1 className="mb-4 text-2xl font-bold">Settings &amp; About</h1>
+      <AccountPanel />
 
       <Row label="Theme">
         <select
