@@ -11,4 +11,4 @@ sections:
   - heading: Tests
     body: "Urine for blood, protein and casts; creatinine and potassium; C3 (low, recovers within 8 weeks); ASO or anti-DNase B."
 refs: [aap-htn-2017]
-check: { source: aap-htn-2017, verified: false }
+check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }

@@ -10,4 +10,4 @@ sections:
     body: "Allergic reactions: have adrenaline drawn up."
 india: "Made in India; not stocked in every rural hospital, so prazosin comes first and must not wait."
 refs: [bawaskar-2011]
-check: { source: bawaskar-2011, verified: false, todo: "Confirm the number of vials you teach." }
+check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31, todo: "Confirm the number of vials you teach." }

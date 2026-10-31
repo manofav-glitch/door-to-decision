@@ -1,4 +1,4 @@
-# htn-05 — DRAFT for the content owner's review.
+# htn-05 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: spontaneous intracerebral haemorrhage (right basal ganglia, ~15 ml) on warfarin, INR 3.1.
 # SBP to 140 (range 130–150) within an hour, smoothly (no falls of >70 in an hour, nothing below 130);
 # labetalol or nicardipine, not nitroprusside; reverse warfarin now (PCC + vitamin K); the INTERACT3
@@ -16,7 +16,7 @@ initial:
   flags: []
 timeTargets:
   default: [ich-bp-target]
-check: { source: [aha-asa-ich-2022, interact3-2023], verified: false, todo: "Teaching composite; check the INR and reversal doses." }
+check: { source: [aha-asa-ich-2022, interact3-2023], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the INR and reversal doses." }
 
 start: arrival
 
@@ -46,7 +46,7 @@ nodes:
 
   target:
     type: choice
-    check: { source: [aha-asa-ich-2022, eso-bp-2025], verified: false }
+    check: { source: [aha-asa-ich-2022, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Small-to-moderate bleed, BP 222/118. Your BP target?"
     options:
       - label: "SBP 140 (range 130–150), reached within an hour and kept steady"
@@ -76,7 +76,7 @@ nodes:
 
   drug:
     type: choice
-    check: { source: [aha-asa-ich-2022, esc-he-2019], verified: false }
+    check: { source: [aha-asa-ich-2022, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which drug?"
     options:
       - label: "Labetalol 20 mg IV, repeated every 10 minutes, then an infusion"
@@ -106,7 +106,7 @@ nodes:
 
   reverse:
     type: choice
-    check: { source: [aha-asa-ich-2022, interact3-2023], verified: false, todo: "Confirm the PCC dosing you teach." }
+    check: { source: [aha-asa-ich-2022, interact3-2023], verified: true, reviewedOn: 2026-10-31, todo: "Confirm the PCC dosing you teach." }
     prompt: "INR 3.1. Reversal?"
     options:
       - label: "Four-factor PCC dosed by INR and weight, plus vitamin K 10 mg IV, now"
@@ -136,7 +136,7 @@ nodes:
 
   titrate:
     type: choice
-    check: { source: [aha-asa-ich-2022, interact3-2023], verified: false }
+    check: { source: [aha-asa-ich-2022, interact3-2023], verified: true, reviewedOn: 2026-10-31 }
     prompt: "45 minutes after the first labetalol: BP 146/84."
     options:
       - label: "In range: hold at 130–150 with small doses, BP every 15 minutes"
@@ -160,7 +160,7 @@ nodes:
 
   bundle:
     type: multiselect
-    check: { source: [interact3-2023, aha-asa-ich-2022], verified: false }
+    check: { source: [interact3-2023, aha-asa-ich-2022], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Glucose 248 mg/dL, temperature 38.2. The rest of the first hour: choose up to 4."
     max: 4
     options:
@@ -236,4 +236,4 @@ debrief:
     - "Vitamin K alone, or waiting for the morning INR."
   unlocks: [stroke-bp, hypertensive-emergency, warfarin, nitroprusside]
   refs: [aha-asa-ich-2022, interact3-2023, eso-bp-2025]
-  check: { source: [aha-asa-ich-2022, interact3-2023], verified: false }
+  check: { source: [aha-asa-ich-2022, interact3-2023], verified: true, reviewedOn: 2026-10-31 }

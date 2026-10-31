@@ -1,4 +1,4 @@
-# htn-14 — DRAFT for the content owner's review.
+# htn-14 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: aneurysmal subarachnoid haemorrhage with neurogenic ECG changes (deep T inversion, long QT).
 # CT first; don't treat the ECG as ACS (no antiplatelets or heparin); before securing, avoid extreme BP:
 # working target SBP below 160 with titratable labetalol or nicardipine, plus analgesia and antiemetic;
@@ -14,7 +14,7 @@ initial:
   clock: "08:15"
   vitals: { hr: 64, sbp: 200, dbp: 110, rr: 18, spo2: 98, gcs: 15, temp: 37.0 }
   flags: []
-check: { source: aha-asa-sah-2023, verified: false, todo: "Teaching composite." }
+check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -33,7 +33,7 @@ nodes:
 
   first:
     type: choice
-    check: { source: aha-asa-sah-2023, verified: false }
+    check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Thunderclap headache 3 hours ago, stiff neck, BP 200/110. First?"
     options:
       - label: "Non-contrast CT head now, with analgesia and an antiemetic"
@@ -68,7 +68,7 @@ nodes:
         art: htn-14/02-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus"
-    check: { source: aha-asa-sah-2023, verified: false }
+    check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31 }
     image: ecg/htn-14-neuro.svg
     alt: "12-lead ECG. Sinus rhythm about 64 per minute. Deep, broad, symmetrical T wave inversion in I, aVL and V2 to V6. Long QT interval, about 520 ms. No ST elevation."
     prompt: "While the neurosurgeons are called, the ECG. What does it show, and what do you do?"
@@ -100,7 +100,7 @@ nodes:
 
   bp:
     type: choice
-    check: { source: aha-asa-sah-2023, verified: false, todo: "The guideline sets no firm number; SBP below 160 is a common working target." }
+    check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31, todo: "The guideline sets no firm number; SBP below 160 is a common working target." }
     prompt: "BP 196/108, pain 6 out of 10 after morphine. Aneurysm not yet secured. BP plan?"
     options:
       - label: "Labetalol or nicardipine to SBP below 160, plus analgesia and antiemetic"
@@ -130,7 +130,7 @@ nodes:
 
   transfer:
     type: multiselect
-    check: { source: aha-asa-sah-2023, verified: false }
+    check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Before transfer to neurosurgery. Choose up to 3."
     max: 3
     options:
@@ -195,4 +195,4 @@ debrief:
     - "Nitroprusside or permissive BP."
   unlocks: [subarachnoid-haemorrhage, hypertensive-emergency, nicardipine]
   refs: [aha-asa-sah-2023]
-  check: { source: aha-asa-sah-2023, verified: false }
+  check: { source: aha-asa-sah-2023, verified: true, reviewedOn: 2026-10-31 }

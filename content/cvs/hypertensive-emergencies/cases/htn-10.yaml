@@ -1,4 +1,4 @@
-# htn-10 — DRAFT for the content owner's review.
+# htn-10 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: post-streptococcal glomerulonephritis with hypertensive encephalopathy and fluid overload
 # in an 11-year-old. Use child percentiles; lower by ≤25% of the planned reduction in the first 8 hours;
 # furosemide helps (overload, unlike malignant hypertension); labetalol or nicardipine; C3, ASO.
@@ -13,7 +13,7 @@ initial:
   clock: "17:50"
   vitals: { hr: 96, sbp: 170, dbp: 110, rr: 26, spo2: 94, gcs: 13, temp: 37.1 }
   flags: []
-check: { source: aap-htn-2017, verified: false, todo: "Teaching composite; check the child BP numbers." }
+check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the child BP numbers." }
 
 start: arrival
 
@@ -32,7 +32,7 @@ nodes:
 
   recognise:
     type: choice
-    check: { source: aap-htn-2017, verified: false }
+    check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Is this BP an emergency in an 11-year-old?"
     options:
       - label: "Yes: far above her age centile, with a fit and drowsiness"
@@ -74,7 +74,7 @@ nodes:
 
   target:
     type: choice
-    check: { source: aap-htn-2017, verified: false }
+    check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Your plan for her BP?"
     options:
       - label: "At most a quarter of the planned fall in 8 hours, rest over 1–2 days"
@@ -104,7 +104,7 @@ nodes:
 
   drug:
     type: choice
-    check: { source: aap-htn-2017, verified: false }
+    check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which treatment first?"
     options:
       - label: "IV furosemide for the overload, with labetalol titrated to the plan"
@@ -134,7 +134,7 @@ nodes:
 
   tests:
     type: multiselect
-    check: { source: aap-htn-2017, verified: false }
+    check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which tests support post-streptococcal nephritis? Choose up to 3."
     max: 3
     options:
@@ -200,4 +200,4 @@ debrief:
     - "Withholding the diuretic."
   unlocks: [post-strep-gn, furosemide, hypertensive-emergency]
   refs: [aap-htn-2017]
-  check: { source: aap-htn-2017, verified: false }
+  check: { source: aap-htn-2017, verified: true, reviewedOn: 2026-10-31 }

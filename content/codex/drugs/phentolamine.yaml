@@ -7,7 +7,7 @@ doses:
     route: IV bolus
     text: "1–5 mg IV, repeated every 5–15 minutes to effect"
     rule: { unit: mg, fixed: { min: 1, max: 5 } }
-    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
 sections:
   - heading: Order
     body: "Alpha-blockade first. A beta-blocker is added only afterwards, and only for a tachyarrhythmia: given first, it removes beta-2 vasodilatation and leaves alpha vasoconstriction unopposed."
@@ -17,4 +17,4 @@ sections:
     body: "Nicardipine or nitroprusside IV, magnesium as an adjunct, oral prazosin or doxazosin; benzodiazepines in sympathomimetic toxicity."
 india: "Inconsistently stocked in Indian EDs."
 refs: [lenders-pheo-2014, esc-he-2019]
-check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }

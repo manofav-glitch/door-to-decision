@@ -1,4 +1,4 @@
-# htn-07 — DRAFT for the content owner's review.
+# htn-07 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: uncomplicated type B aortic dissection. Anti-impulse first (esmolol or labetalol to HR ≤60),
 # then a vasodilator to SBP 100–120 within 20 minutes; opioid analgesia; arterial line; medical unless
 # complicated (malperfusion, rupture, refractory pain or BP → TEVAR). ADD-RS 1 here (pain only), so the
@@ -16,7 +16,7 @@ initial:
   flags: []
 timeTargets:
   default: [dissection-bp-target]
-check: { source: [esc-aortic-2024, esc-he-2019], verified: false, todo: "Teaching composite." }
+check: { source: [esc-aortic-2024, esc-he-2019], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -35,7 +35,7 @@ nodes:
 
   first:
     type: choice
-    check: { source: [esc-aortic-2024], verified: false }
+    check: { source: [esc-aortic-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Abrupt tearing back pain, BP equal in both arms, pulses present. First?"
     options:
       - label: "ECG, IV access, morphine, and a CT aortogram now, before any blood results"
@@ -77,7 +77,7 @@ nodes:
 
   order:
     type: choice
-    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which first?"
     options:
       - label: "Esmolol 500 micrograms/kg, then infusion, to heart rate 60 or less"
@@ -107,7 +107,7 @@ nodes:
 
   target:
     type: choice
-    check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+    check: { source: [esc-aortic-2024, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Heart rate at target; BP still above 150. Next?"
     options:
       - label: "Add a nicardipine infusion to bring SBP to 100–120 within minutes"
@@ -137,7 +137,7 @@ nodes:
 
   care:
     type: multiselect
-    check: { source: [esc-aortic-2024], verified: false }
+    check: { source: [esc-aortic-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Ongoing care. Choose up to 3."
     max: 3
     options:
@@ -167,7 +167,7 @@ nodes:
 
   complication:
     type: choice
-    check: { source: [esc-aortic-2024], verified: false }
+    check: { source: [esc-aortic-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Day 2: pain returns, BP hard to control, creatinine rising, left leg cold."
     options:
       - label: "Complicated type B: urgent vascular team for TEVAR"
@@ -239,4 +239,4 @@ debrief:
     - "Treating malperfusion with more drugs."
   unlocks: [aortic-dissection, labetalol, nicardipine, hypertensive-emergency]
   refs: [esc-aortic-2024, esc-he-2019]
-  check: { source: [esc-aortic-2024, esc-he-2019], verified: false }
+  check: { source: [esc-aortic-2024, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }

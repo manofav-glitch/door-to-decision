@@ -1,4 +1,4 @@
-# htn-09 — DRAFT for the content owner's review.
+# htn-09 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: Indian red scorpion (Mesobuthus tamulus) envenomation in a 6-year-old: autonomic storm
 # with hypertension and cold peripheries, later myocarditis with pulmonary oedema.
 # Prazosin 30 micrograms/kg by mouth, repeated 3-hourly until perfusion recovers; antivenom with it;
@@ -14,7 +14,7 @@ initial:
   clock: "20:30"
   vitals: { hr: 142, sbp: 150, dbp: 104, rr: 32, spo2: 95, gcs: 15, temp: 36.8 }
   flags: []
-check: { source: bawaskar-2011, verified: false, todo: "Teaching composite; child vitals and doses." }
+check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; child vitals and doses." }
 
 start: arrival
 
@@ -33,7 +33,7 @@ nodes:
 
   severity:
     type: choice
-    check: { source: bawaskar-2011, verified: false }
+    check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Sweating, vomiting, cold limbs, priapism, BP 150/104. What is going on?"
     options:
       - label: "Systemic envenomation: a venom-driven autonomic storm; prazosin now"
@@ -63,7 +63,7 @@ nodes:
 
   dose:
     type: dose
-    check: { source: bawaskar-2011, verified: false }
+    check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Prazosin by mouth for a 20 kg child, in micrograms?"
     drug: prazosin
     dose: scorpion-child
@@ -84,7 +84,7 @@ nodes:
 
   antivenom:
     type: choice
-    check: { source: bawaskar-2011, verified: false }
+    check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }
     prompt: "The hospital has scorpion antivenom. Give it?"
     options:
       - label: "Yes, with the prazosin, and adrenaline drawn up for a reaction"
@@ -114,7 +114,7 @@ nodes:
 
   oedema:
     type: choice
-    check: { source: bawaskar-2011, verified: false }
+    check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }
     onEnter: { setVitals: { hr: 128, sbp: 122, dbp: 80, rr: 44, spo2: 88 } }
     panels:
       - scene: resus-bay
@@ -152,7 +152,7 @@ nodes:
 
   home:
     type: multiselect
-    check: { source: bawaskar-2011, verified: false }
+    check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Next morning: warm, settled, off dobutamine. Choose up to 3."
     max: 3
     options:
@@ -217,4 +217,4 @@ debrief:
     - "Sending home because the local pain has settled."
   unlocks: [scorpion-envenomation, prazosin, scorpion-antivenom]
   refs: [bawaskar-2011]
-  check: { source: bawaskar-2011, verified: false }
+  check: { source: bawaskar-2011, verified: true, reviewedOn: 2026-10-31 }

@@ -1,4 +1,4 @@
-# htn-08 — DRAFT for the content owner's review.
+# htn-08 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: phaeochromocytoma crisis set off by IV metoclopramide given for vomiting.
 # Recognise the catecholamine surge; alpha-blockade first (phentolamine 1–5 mg boluses; nicardipine if
 # not stocked; magnesium adjunct); no beta-blocker first (labetalol is mostly beta); no steroids;
@@ -14,7 +14,7 @@ initial:
   clock: "10:45"
   vitals: { hr: 96, sbp: 164, dbp: 98, rr: 18, spo2: 98, gcs: 15, temp: 37.1 }
   flags: []
-check: { source: [lenders-pheo-2014, esc-he-2019], verified: false, todo: "Teaching composite." }
+check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -46,7 +46,7 @@ nodes:
 
   think:
     type: choice
-    check: { source: [lenders-pheo-2014], verified: false }
+    check: { source: [lenders-pheo-2014], verified: true, reviewedOn: 2026-10-31 }
     prompt: "What is happening?"
     options:
       - label: "A phaeochromocytoma surge, set off by the metoclopramide"
@@ -76,7 +76,7 @@ nodes:
 
   drug:
     type: choice
-    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP 252/142, HR 134. First drug?"
     options:
       - label: "Phentolamine IV boluses, repeated every 5–15 minutes to effect"
@@ -106,7 +106,7 @@ nodes:
 
   dose:
     type: dose
-    check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+    check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Phentolamine IV bolus, in mg?"
     drug: phentolamine
     dose: crisis
@@ -127,7 +127,7 @@ nodes:
 
   heart-rate:
     type: choice
-    check: { source: [lenders-pheo-2014], verified: false }
+    check: { source: [lenders-pheo-2014], verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP 178/102, sinus rhythm 118, headache easing. Next?"
     options:
       - label: "More phentolamine as needed, magnesium 2 g IV; no beta-blocker yet"
@@ -157,7 +157,7 @@ nodes:
 
   tests:
     type: multiselect
-    check: { source: [lenders-pheo-2014], verified: false }
+    check: { source: [lenders-pheo-2014], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Stable on the ward. Choose up to 3."
     max: 3
     options:
@@ -223,4 +223,4 @@ debrief:
     - "Biopsy of an adrenal mass before excluding phaeochromocytoma."
   unlocks: [phaeochromocytoma-crisis, phentolamine, prazosin]
   refs: [lenders-pheo-2014, esc-he-2019]
-  check: { source: [lenders-pheo-2014, esc-he-2019], verified: false }
+  check: { source: [lenders-pheo-2014, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }

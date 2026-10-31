@@ -1,4 +1,4 @@
-# htn-12 — DRAFT for the content owner's review.
+# htn-12 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: sympathomimetic (MDMA/amphetamine) toxicity with agitation, hyperthermia, hypertension and
 # chest pain. Benzodiazepines titrated to calm, then active cooling; if BP stays high, GTN, phentolamine or
 # nicardipine; no pure beta-blockers; check CK, sodium, ECG and troponin.
@@ -14,7 +14,7 @@ initial:
   rhythm: ecg/htn-sinus-tachy.svg
   vitals: { hr: 140, sbp: 200, dbp: 120, rr: 26, spo2: 97, gcs: 14, temp: 38.9 }
   flags: []
-check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false, todo: "Teaching composite." }
+check: { source: [mccord-cocaine-2008, esc-he-2019], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -33,7 +33,7 @@ nodes:
 
   first:
     type: choice
-    check: { source: mccord-cocaine-2008, verified: false }
+    check: { source: mccord-cocaine-2008, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Agitated, sweating, fighting the staff. First?"
     options:
       - label: "Diazepam 10 mg IV every 5–10 minutes until calm; check glucose"
@@ -70,7 +70,7 @@ nodes:
         caption: "{clock} · Resus"
         bubbles:
           - { who: nurse, text: "Calm now, but he's burning up: 39.2 and climbing." }
-    check: { source: mccord-cocaine-2008, verified: false }
+    check: { source: mccord-cocaine-2008, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Calm now. Temperature 39.2 and rising. Next?"
     options:
       - label: "Undress, tepid-water spray under fans; temperature every 15 minutes"
@@ -100,7 +100,7 @@ nodes:
 
   bp:
     type: choice
-    check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false }
+    check: { source: [mccord-cocaine-2008, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Calm and cooler. BP still 180/112, chest still tight. ECG: sinus 108, no ST change."
     options:
       - label: "GTN sublingual then infusion, aspirin, serial ECGs and troponin"
@@ -130,7 +130,7 @@ nodes:
 
   checks:
     type: multiselect
-    check: { source: mccord-cocaine-2008, verified: false }
+    check: { source: mccord-cocaine-2008, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which complications do you check for? Choose up to 4."
     max: 4
     options:
@@ -201,4 +201,4 @@ debrief:
     - "Haloperidol as the main sedative."
   unlocks: [sympathomimetic-toxicity, benzodiazepines, phentolamine, nitrates]
   refs: [mccord-cocaine-2008, esc-he-2019]
-  check: { source: [mccord-cocaine-2008, esc-he-2019], verified: false }
+  check: { source: [mccord-cocaine-2008, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }

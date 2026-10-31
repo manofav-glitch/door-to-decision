@@ -1,4 +1,4 @@
-# htn-01 — DRAFT for the content owner's review.
+# htn-01 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: severe asymptomatic hypertension (the old "urgency") after a week of missed tablets.
 # Confirm the reading, look for acute organ damage (none: LVH and mild retinal narrowing are chronic),
 # restart oral treatment, review within a week. No IV drugs, no sublingual nifedipine, no ED BP target.
@@ -13,7 +13,7 @@ initial:
   clock: "11:20"
   vitals: { hr: 84, sbp: 222, dbp: 128, rr: 16, spo2: 98, gcs: 15, temp: 36.8 }
   flags: []
-check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false, todo: "Teaching composite; check the readings and the story." }
+check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the readings and the story." }
 
 start: arrival
 
@@ -32,7 +32,7 @@ nodes:
 
   first-step:
     type: choice
-    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "222/128, a mild headache. Your first step?"
     options:
       - label: "Large cuff after 5 minutes' rest, both arms; paracetamol for the headache"
@@ -62,7 +62,7 @@ nodes:
 
   look:
     type: multiselect
-    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "204/122 after rest. Which findings would make this a hypertensive emergency? Choose up to 5."
     max: 5
     options:
@@ -109,7 +109,7 @@ nodes:
         art: htn-01/02-ecg
         actors: [patient-supine, nurse]
         caption: "{clock} · Triage"
-    check: { source: [hancock-2009, esc-htn-2024], verified: false }
+    check: { source: [hancock-2009, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     image: ecg/htn-01-lvh.svg
     alt: "12-lead ECG. Sinus rhythm about 84 per minute. Very tall R waves in V5 and V6 and aVL, deep S waves in V1 and V2. Down-sloping ST depression with T inversion in I, aVL, V5 and V6. No ST elevation."
     prompt: "No chest pain. The triage ECG: what is it, and what does it change?"
@@ -141,7 +141,7 @@ nodes:
 
   tests:
     type: choice
-    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: false }
+    check: { source: [aha-acc-bp-2025, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Fundi, nerves, chest and urine show no acute damage. Which blood tests?"
     options:
       - label: "Creatinine and potassium: no recent results, and he restarts telmisartan"
@@ -165,7 +165,7 @@ nodes:
 
   plan:
     type: choice
-    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false }
+    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "An hour later BP 196/118, headache gone. Your plan?"
     options:
       - label: "Restart amlodipine 10 mg and telmisartan 40 mg; GP review within a week"
@@ -195,7 +195,7 @@ nodes:
 
   home:
     type: multiselect
-    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: false }
+    check: { source: [aha-acc-bp-2025, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Before he goes home. Choose up to 3."
     max: 3
     options:
@@ -260,4 +260,4 @@ debrief:
     - "A broad panel of tests or an admission without a reason."
   unlocks: [severe-hypertension, hypertensive-emergency, lvh, nifedipine]
   refs: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019, hancock-2009]
-  check: { source: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019], verified: false }
+  check: { source: [aha-acc-bp-2025, esc-htn-2024, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }

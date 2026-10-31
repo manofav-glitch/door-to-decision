@@ -1,4 +1,4 @@
-# htn-04 — DRAFT for the content owner's review.
+# htn-04 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: acute ischaemic stroke (left MCA, no large-vessel occlusion) in a thrombolysis candidate.
 # No BP lowering before the scan; below 185/110 before the bolus with labetalol 10–20 mg; below 180/105
 # for 24 h after; not lower (ENCHANTED). Teaching branch: no reperfusion → permissive, treat only ≥220/120.
@@ -15,7 +15,7 @@ initial:
   flags: []
 timeTargets:
   default: [door-to-needle]
-check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false, todo: "Teaching composite; check timings and eligibility." }
+check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check timings and eligibility." }
 
 start: arrival
 
@@ -34,7 +34,7 @@ nodes:
 
   first:
     type: choice
-    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Right face and arm weak, aphasic, onset 90 minutes ago. BP 210/115. First?"
     options:
       - label: "Stroke alert and straight to CT; leave the BP alone until the scan"
@@ -76,7 +76,7 @@ nodes:
 
   before-lysis:
     type: choice
-    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Eligible for thrombolysis. BP 204/112. Before the bolus?"
     options:
       - label: "Labetalol IV, recheck in 10 minutes, aiming for below 185/110"
@@ -106,7 +106,7 @@ nodes:
 
   dose:
     type: dose
-    check: { source: aha-asa-ais-2026, verified: false }
+    check: { source: aha-asa-ais-2026, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Labetalol IV over 1–2 minutes before thrombolysis, in mg?"
     drug: labetalol
     dose: stroke-lysis
@@ -127,7 +127,7 @@ nodes:
 
   lysis:
     type: choice
-    check: { source: [aha-asa-ais-2026], verified: false }
+    check: { source: [aha-asa-ais-2026], verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP now below 185/110. Next?"
     options:
       - label: "Tenecteplase 0.25 mg/kg bolus now; BP every 15 minutes, below 180/105"
@@ -157,7 +157,7 @@ nodes:
 
   after:
     type: choice
-    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "40 minutes after the bolus: BP 192/108 on two readings. Speech improving."
     options:
       - label: "Labetalol 10 mg IV again; an infusion if it stays above 180/105"
@@ -187,7 +187,7 @@ nodes:
 
   teaching:
     type: choice
-    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+    check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Your senior asks: same stroke, but arriving 30 hours after onset, no reperfusion therapy, BP 204/112. What then?"
     options:
       - label: "Leave it unless 220/120 or more; restart tablets after a few days"
@@ -259,4 +259,4 @@ debrief:
     - "Oral nifedipine or aggressive targets that delay the bolus."
   unlocks: [stroke-bp, hypertensive-emergency, labetalol]
   refs: [aha-asa-ais-2026, eso-bp-2025]
-  check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: false }
+  check: { source: [aha-asa-ais-2026, eso-bp-2025], verified: true, reviewedOn: 2026-10-31 }

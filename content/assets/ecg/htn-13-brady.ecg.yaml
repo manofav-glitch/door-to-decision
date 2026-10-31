@@ -3,4 +3,4 @@ title: "Rhythm strip, lead II: sinus bradycardia"
 layout: strip
 rhythm: { kind: sinus, rate: 48 }
 rhythmLead: II
-check: { source: pva-ad-2021, verified: false, todo: "Check it reads as sinus bradycardia." }
+check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31, todo: "Check it reads as sinus bradycardia." }

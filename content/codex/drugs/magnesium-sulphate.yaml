@@ -13,7 +13,7 @@ doses:
     route: "IV over 15–20 minutes, plus IM"
     text: "4 g IV over 15–20 minutes, plus 5 g deep IM into each buttock; then 5 g IM every 4 hours into alternate buttocks, for 24 hours after delivery or the last fit"
     rule: { unit: g, fixed: 4 }
-    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    check: { source: [who-pe-2011, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
 sections:
   - heading: With it
     body: "Raise potassium to 4.5–5 mmol/L; stop QT-prolonging drugs; increase the heart rate (pacing, or isoprenaline in acquired long QT)."

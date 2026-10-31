@@ -15,4 +15,4 @@ sections:
   - heading: Avoid
     body: "Nitroprusside (raises ICP), sublingual nifedipine, and lowering BP before the scan (INTERACT4: harm in ischaemic stroke)."
 refs: [aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023]
-check: { source: [aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023], verified: false }
+check: { source: [aha-asa-ais-2026, eso-bp-2025, aha-asa-ich-2022, interact3-2023], verified: true, reviewedOn: 2026-10-31 }

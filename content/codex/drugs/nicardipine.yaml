@@ -6,7 +6,7 @@ doses:
     label: "Hypertensive emergency"
     route: IV infusion
     text: "Start at 5 mg/h; increase by 2.5 mg/h every 5–15 minutes; maximum 15 mg/h. Reduce once at target."
-    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }
 sections:
   - heading: Best for
     body: "Brain (encephalopathy, stroke, ICH, SAH), malignant hypertension and AKI. In CLUE it reached the target range within 30 minutes more often than labetalol, with no difference in outcomes."
@@ -16,4 +16,4 @@ sections:
     body: "It raises tacrolimus and ciclosporin levels: check drug levels."
 india: "Inconsistently stocked; labetalol boluses are the usual substitute."
 refs: [esc-he-2019, aha-acc-bp-2025]
-check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }

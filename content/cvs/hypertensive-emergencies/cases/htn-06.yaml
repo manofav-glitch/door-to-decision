@@ -1,4 +1,4 @@
-# htn-06 — DRAFT for the content owner's review.
+# htn-06 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: severe pre-eclampsia progressing to eclampsia at 34 weeks.
 # Magnesium (Pritchard: 4 g IV + 5 g IM each buttock) for the fit; severe-range BP (160/110 confirmed over
 # 15 min) treated within 30–60 min: IV labetalol 20 → 40 → 80 mg every 10 min (or oral IR nifedipine
@@ -16,7 +16,7 @@ initial:
   flags: []
 timeTargets:
   default: [severe-bp-to-drug]
-check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false, todo: "Teaching composite; check the protocol timings." }
+check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the protocol timings." }
 
 start: arrival
 
@@ -43,7 +43,7 @@ nodes:
         actors: [patient-supine:alarmed, nurse, relative]
         caption: "{clock} · Labour room"
         sfx: "Generalised fit"
-    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    check: { source: [who-pe-2011, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "A generalised fit, a minute so far. First?"
     options:
       - label: "Left lateral, airway and oxygen; magnesium sulphate loading dose now"
@@ -73,7 +73,7 @@ nodes:
 
   mg-dose:
     type: dose
-    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    check: { source: [who-pe-2011, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Magnesium sulphate, the IV part of the Pritchard loading dose (g, given over 15–20 minutes)?"
     drug: magnesium-sulphate
     dose: pritchard
@@ -94,7 +94,7 @@ nodes:
 
   bp:
     type: choice
-    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    check: { source: [acog-767-2019, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Fit over, drowsy but rousable. BP 174/116. Next?"
     options:
       - label: "Labetalol 20 mg IV; recheck in 10 minutes, 40 mg if still 160/110"
@@ -124,7 +124,7 @@ nodes:
 
   target:
     type: choice
-    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    check: { source: [acog-767-2019, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "What now?"
     options:
       - label: "Aim for 140–150/90–100; no more boluses, BP every 15 minutes"
@@ -154,7 +154,7 @@ nodes:
 
   mg-checks:
     type: multiselect
-    check: { source: [who-pe-2011, isshp-2021], verified: false }
+    check: { source: [who-pe-2011, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Before each 4-hourly IM magnesium dose, what do you check? Choose up to 4."
     max: 4
     options:
@@ -195,7 +195,7 @@ nodes:
 
   deliver:
     type: choice
-    check: { source: [acog-767-2019, isshp-2021], verified: false }
+    check: { source: [acog-767-2019, isshp-2021], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Two hours later: stable, alert, BP 146/96. Fetal heart reassuring. Platelets 110,000, ALT 68. Plan?"
     options:
       - label: "Deliver once she is stable: induction or caesarean today"
@@ -268,4 +268,4 @@ debrief:
     - "Continuing the pregnancy after eclampsia."
   unlocks: [pre-eclampsia, magnesium-sulphate, labetalol, nifedipine, hydralazine]
   refs: [acog-767-2019, isshp-2021, who-pe-2011]
-  check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false }
+  check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: true, reviewedOn: 2026-10-31 }

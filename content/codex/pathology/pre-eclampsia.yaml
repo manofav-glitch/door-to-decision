@@ -15,4 +15,4 @@ sections:
   - heading: Definitive
     body: "Delivery, once the mother is stable. Give magnesium and the first BP dose before any transfer."
 refs: [acog-767-2019, isshp-2021, who-pe-2011]
-check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: false }
+check: { source: [acog-767-2019, isshp-2021, who-pe-2011], verified: true, reviewedOn: 2026-10-31 }

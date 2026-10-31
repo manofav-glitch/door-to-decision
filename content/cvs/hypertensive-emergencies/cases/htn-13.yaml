@@ -1,4 +1,4 @@
-# htn-13 — DRAFT for the content owner's review.
+# htn-13 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: autonomic dysreflexia in T4 complete spinal cord injury, triggered by a blocked catheter.
 # Sit up, loosen clothing, BP every 2–5 minutes; find the trigger (catheter first); if SBP stays ≥150,
 # a fast short-acting drug (GTN paste; IR nifedipine bite-and-swallow is the accepted exception) before
@@ -15,7 +15,7 @@ initial:
   rhythm: ecg/htn-13-brady.svg
   vitals: { hr: 48, sbp: 210, dbp: 110, rr: 18, spo2: 97, gcs: 15, temp: 36.7 }
   flags: []
-check: { source: pva-ad-2021, verified: false, todo: "Teaching composite." }
+check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -34,7 +34,7 @@ nodes:
 
   first:
     type: choice
-    check: { source: pva-ad-2021, verified: false }
+    check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Lying on the trolley, BP 210/110, HR 48. First?"
     options:
       - label: "Sit him up, legs down, loosen clothes and straps; BP every 2–5 minutes"
@@ -64,7 +64,7 @@ nodes:
 
   trigger:
     type: choice
-    check: { source: pva-ad-2021, verified: false }
+    check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Sitting up, BP 196/104. Next?"
     options:
       - label: "Check the catheter for a kink or block; flush or change it and drain"
@@ -101,7 +101,7 @@ nodes:
         caption: "{clock} · Resus"
         bubbles:
           - { who: patient, text: "That's better, but my head is still pounding." }
-    check: { source: pva-ad-2021, verified: false }
+    check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31 }
     prompt: "Five minutes after draining: BP 164/94, headache still there. Next?"
     options:
       - label: "GTN paste above the injury, then check the bowel with lidocaine gel"
@@ -131,7 +131,7 @@ nodes:
 
   after:
     type: multiselect
-    check: { source: pva-ad-2021, verified: false }
+    check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP 128/80, headache gone. Before he leaves. Choose up to 3."
     max: 3
     options:
@@ -197,4 +197,4 @@ debrief:
     - "A PDE5 inhibitor within 24 hours of GTN."
   unlocks: [autonomic-dysreflexia, nitrates, nifedipine]
   refs: [pva-ad-2021]
-  check: { source: pva-ad-2021, verified: false }
+  check: { source: pva-ad-2021, verified: true, reviewedOn: 2026-10-31 }

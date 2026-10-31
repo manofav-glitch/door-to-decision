@@ -1,4 +1,4 @@
-# htn-02 — DRAFT for the content owner's review.
+# htn-02 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: malignant hypertension (acute hypertensive microangiopathy) with TMA and AKI, from
 # undiagnosed chronic glomerulonephritis. Fundoscopy and smear make the diagnosis; MAP down 20–25% over
 # hours with labetalol (or nicardipine); he is dry (pressure natriuresis): no reflex furosemide;
@@ -14,7 +14,7 @@ initial:
   clock: "21:10"
   vitals: { hr: 96, sbp: 238, dbp: 142, rr: 18, spo2: 97, gcs: 15, temp: 37.0 }
   flags: []
-check: { source: [esc-he-2019, esc-htn-2024], verified: false, todo: "Teaching composite; check the blood results." }
+check: { source: [esc-he-2019, esc-htn-2024], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the blood results." }
 
 start: arrival
 
@@ -34,7 +34,7 @@ nodes:
 
   assess:
     type: choice
-    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    check: { source: [esc-he-2019, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "238/142, blurred vision, alert, no focal signs. What will tell you most, fastest?"
     options:
       - label: "Fundoscopy yourself, a blood smear, creatinine, urine dip and an ECG"
@@ -76,7 +76,7 @@ nodes:
 
   name:
     type: choice
-    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    check: { source: [esc-he-2019, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "What is this?"
     options:
       - label: "Malignant hypertension with thrombotic microangiopathy and kidney injury"
@@ -106,7 +106,7 @@ nodes:
 
   target:
     type: choice
-    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "MAP is about 174. Your target for the first few hours?"
     options:
       - label: "MAP down 20–25% over several hours, to about 130–140, never below 125"
@@ -136,7 +136,7 @@ nodes:
 
   drug:
     type: choice
-    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Which drug?"
     options:
       - label: "Labetalol 20 mg IV, then repeat boluses or an infusion to the target"
@@ -166,7 +166,7 @@ nodes:
 
   fluids:
     type: choice
-    check: { source: esc-he-2019, verified: false }
+    check: { source: esc-he-2019, verified: true, reviewedOn: 2026-10-31 }
     prompt: "At 4 hours: BP 186/112. Urine 15 ml/h, dry tongue, flat neck veins, clear chest. Next?"
     options:
       - label: "500 ml crystalloid and reassess; keep titrating to target"
@@ -196,7 +196,7 @@ nodes:
 
   days:
     type: multiselect
-    check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+    check: { source: [esc-he-2019, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Day 3: BP 160/100 on oral drugs, platelets 140,000, creatinine 2.6. Choose up to 3."
     max: 3
     options:
@@ -262,4 +262,4 @@ debrief:
     - "Prolonged nitroprusside with kidney failure."
   unlocks: [malignant-hypertension, hypertensive-emergency, nicardipine, nitroprusside]
   refs: [esc-he-2019, esc-htn-2024, aha-acc-bp-2025]
-  check: { source: [esc-he-2019, esc-htn-2024], verified: false }
+  check: { source: [esc-he-2019, esc-htn-2024], verified: true, reviewedOn: 2026-10-31 }

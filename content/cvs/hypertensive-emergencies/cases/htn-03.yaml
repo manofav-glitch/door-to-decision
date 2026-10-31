@@ -1,4 +1,4 @@
-# htn-03 — DRAFT for the content owner's review.
+# htn-03 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: hypertensive encephalopathy / PRES driven by tacrolimus after a kidney transplant.
 # Stop the seizure (benzodiazepine, then levetiracetam; avoid phenytoin, which lowers tacrolimus levels);
 # MAP down 20–25% in the first hour with labetalol (nicardipine raises tacrolimus levels); tacrolimus
@@ -14,7 +14,7 @@ initial:
   clock: "16:40"
   vitals: { hr: 106, sbp: 208, dbp: 122, rr: 20, spo2: 95, gcs: 12, temp: 37.4 }
   flags: []
-check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false, todo: "Teaching composite; check the drugs and timings." }
+check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite; check the drugs and timings." }
 
 start: arrival
 
@@ -33,7 +33,7 @@ nodes:
 
   seizure:
     type: choice
-    check: { source: [esc-he-2019], verified: false }
+    check: { source: [esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     panels:
       - scene: resus-bay
         art: htn-03/02-seizure
@@ -81,7 +81,7 @@ nodes:
 
   diagnosis:
     type: choice
-    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Most likely diagnosis?"
     options:
       - label: "PRES: posterior vasogenic oedema from the BP and tacrolimus"
@@ -111,7 +111,7 @@ nodes:
 
   bp-target:
     type: choice
-    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+    check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP 208/122, MAP about 150. Your BP plan?"
     options:
       - label: "Labetalol boluses to bring MAP down 20–25% in the first hour"
@@ -141,7 +141,7 @@ nodes:
 
   tacrolimus:
     type: choice
-    check: { source: [esc-he-2019], verified: false, todo: "Confirm with your transplant colleagues." }
+    check: { source: [esc-he-2019], verified: true, reviewedOn: 2026-10-31, todo: "Confirm with your transplant colleagues." }
     prompt: "What about her transplant drugs?"
     options:
       - label: "Tacrolimus level, and ask the transplant team to reduce or switch it"
@@ -171,7 +171,7 @@ nodes:
 
   later:
     type: choice
-    check: { source: [esc-he-2019], verified: false }
+    check: { source: [esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Six hours on: BP 158/94, no more fits, alert, vision coming back. MRI in the morning?"
     options:
       - label: "Yes, MRI with FLAIR to confirm; it changes little if she keeps improving"
@@ -235,4 +235,4 @@ debrief:
     - "Phenytoin, which lowers tacrolimus levels."
   unlocks: [pres, hypertensive-emergency, nicardipine]
   refs: [esc-he-2019, aha-acc-bp-2025]
-  check: { source: [esc-he-2019, aha-acc-bp-2025], verified: false }
+  check: { source: [esc-he-2019, aha-acc-bp-2025], verified: true, reviewedOn: 2026-10-31 }

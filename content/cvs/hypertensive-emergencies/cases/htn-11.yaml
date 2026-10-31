@@ -1,4 +1,4 @@
-# htn-11 — DRAFT for the content owner's review.
+# htn-11 — DRAFT. Verified by the content owner on 2026-10-31.
 # Hidden truth: NSTE-ACS with severe hypertension (lateral ST depression with aVR elevation on a background
 # of LVH; troponin rising). GTN infusion plus a beta-blocker (oral early; IV only when hypertensive without
 # HF, shock or bradycardia); SBP below 140; no hydralazine or DHP without beta-blockade; never lysis in NSTE-ACS.
@@ -15,7 +15,7 @@ initial:
   flags: []
 timeTargets:
   default: [door-to-ecg]
-check: { source: [esc-acs-2023, esc-he-2019], verified: false, todo: "Teaching composite." }
+check: { source: [esc-acs-2023, esc-he-2019], verified: true, reviewedOn: 2026-10-31, todo: "Teaching composite." }
 
 start: arrival
 
@@ -39,7 +39,7 @@ nodes:
         art: htn-11/02-ecg
         actors: [patient-supine:pain, nurse]
         caption: "{clock} · Resus"
-    check: { source: [esc-acs-2023, hancock-2009], verified: false }
+    check: { source: [esc-acs-2023, hancock-2009], verified: true, reviewedOn: 2026-10-31 }
     onEnter: { milestone: ecg }
     image: ecg/htn-11-nste.svg
     alt: "12-lead ECG. Sinus rhythm about 102 per minute. Tall voltages in the left chest leads. ST depression about 1.5 mm in I, aVL and V4 to V6, slight ST elevation in aVR. No ST elevation elsewhere."
@@ -72,7 +72,7 @@ nodes:
 
   bp:
     type: choice
-    check: { source: [esc-he-2019, esc-acs-2023], verified: false }
+    check: { source: [esc-he-2019, esc-acs-2023], verified: true, reviewedOn: 2026-10-31 }
     prompt: "Pain 8 out of 10, BP 210/120, HR 102, chest clear, no heart failure. Your BP plan?"
     options:
       - label: "GTN infusion to pain relief and SBP below 140, plus oral metoprolol"
@@ -102,7 +102,7 @@ nodes:
 
   antithrombotic:
     type: choice
-    check: { source: esc-acs-2023, verified: false }
+    check: { source: esc-acs-2023, verified: true, reviewedOn: 2026-10-31 }
     prompt: "BP 146/88, pain settling. Troponin raised. Next?"
     options:
       - label: "Aspirin, a P2Y12 inhibitor, fondaparinux; angiography within 24 hours"
@@ -172,4 +172,4 @@ debrief:
     - "Thrombolysis in NSTE-ACS."
   unlocks: [nste-acs-strategy, nitrates, metoprolol, hypertensive-emergency]
   refs: [esc-acs-2023, esc-he-2019]
-  check: { source: [esc-acs-2023, esc-he-2019], verified: false }
+  check: { source: [esc-acs-2023, esc-he-2019], verified: true, reviewedOn: 2026-10-31 }
