@@ -123,8 +123,17 @@ export function contentPlugin(root: string): Plugin {
               : `  ${j(key)}: () => Promise.all([import(${j(NOTES_ASSETS + key)}), fetchPaid(${j(paidDocId.notes(key))}, ${v})]).then(([m, d]) => ({ default: d, assets: m.assets })),`,
           )
           .join('\n');
+        // pictures only, without the text: lets "save for offline" find a paid case's pictures
+        // without fetching (or being refused) its text
+        const assetLoaders = Object.keys(c.cases)
+          .map(
+            (cid) =>
+              `  ${j(cid)}: () => import(${j((!free || free.cases.has(cid) ? CASE : CASE_ASSETS) + cid)}),`,
+          )
+          .join('\n');
         return [
           ...(free ? [`import { fetchPaid } from ${j(paidModule)};`] : []),
+          `export const caseAssetLoaders = {\n${assetLoaders}\n};`,
           `export const index = ${j(c.index)};`,
           `export const paidSplit = ${Boolean(free)};`,
           `export const caseLoaders = {\n${loaders}\n};`,

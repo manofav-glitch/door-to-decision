@@ -7,12 +7,15 @@ import { ScoreBreakdown } from '../components/ScoreParts';
 import { BackLink, GradeChip, Loading, NotFound, Stars, UnverifiedBadge } from '../components/ui';
 import { idealRun, replay, result, type LogEntry, type RunState } from '../engine/engine';
 import { useProgress, type SavedRun } from '../store/progress';
+import { useLocked } from '../lib/access';
 
 export function Debrief() {
   const { caseId = '' } = useParams();
-  const loaded = useCase(caseId);
+  const locked = useLocked(findCase(caseId)?.module.free ?? true);
+  const loaded = useCase(locked ? '' : caseId);
   const saved = useProgress((s) => s.finished[caseId]);
   if (!findCase(caseId)) return <NotFound what="Case" />;
+  if (locked) return <Navigate to={`/case/${caseId}`} replace />; // shows the unlock panel
   if (!saved) return <Navigate to={`/case/${caseId}`} replace />;
   if (loaded.status === 'loading') return <Loading />;
   if (loaded.status !== 'ready') return <NotFound what="Case" />;

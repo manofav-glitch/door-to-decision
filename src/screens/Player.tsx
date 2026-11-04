@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { findCase, isPlayable, useCase, type LoadedCase } from '../content/client';
+import { useLocked } from '../lib/access';
 import type { Node, Panel } from '../content/schema';
 import { EcgFigure } from '../components/player/EcgFigure';
 import { CalcForm } from '../components/ScoreParts';
@@ -39,14 +40,15 @@ import { useSettings } from '../store/settings';
 
 export function Player() {
   const { caseId = '' } = useParams();
-  const loaded = useCase(caseId);
+  const locked = useLocked(findCase(caseId)?.module.free ?? true);
+  const loaded = useCase(locked ? '' : caseId);
   // Read once: finishing the case removes it from `active`, and the player must stay mounted.
   const [saved] = useState(() => useProgress.getState().active[caseId]);
   const showDrafts = useSettings((s) => s.showDrafts);
   const found = findCase(caseId);
 
   if (!found) return <NotFound what="Case" />;
-  if (!saved || !isPlayable(found.summary, showDrafts))
+  if (locked || !saved || !isPlayable(found.summary, showDrafts))
     return <Navigate to={`/case/${caseId}`} replace />;
   if (loaded.status === 'loading') return <Loading />;
   if (loaded.status !== 'ready') return <NotFound what="Case" />;

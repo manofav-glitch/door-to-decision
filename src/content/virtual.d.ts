@@ -7,6 +7,8 @@ declare module 'virtual:content' {
     string,
     () => Promise<{ default: CompiledCase; assets: Record<string, string> }>
   >;
+  /** a case's picture URLs only (no Firestore fetch for paid cases) */
+  export const caseAssetLoaders: Record<string, () => Promise<{ assets: Record<string, string> }>>;
   export const notesLoaders: Record<
     string,
     () => Promise<{ default: import('./types').CompiledNotes; assets: Record<string, string> }>

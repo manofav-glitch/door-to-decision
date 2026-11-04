@@ -65,7 +65,16 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
 4. Policy pages; move hosting to Cloudflare Pages; repository private; old GitHub Pages address redirects.
 5. Razorpay live mode once KYC is approved.
 
-## 6. Decisions (2026-11-01)
+## 6. Progress
+
+- 2026-11-01: step 1 done (Google sign-in; owner signed in).
+- 2026-11-04: step 2 done. Rules deployed, paid content uploaded (`VITE_ACCOUNTS_LIVE=true npm run build &&
+  node scripts/upload-paid.ts`), owner granted a test year with scripts/grant.ts. Checked locally with the
+  switch on (`.env.development.local`): signed-out and unpaid visitors are refused by Firestore (403); the paid
+  account opens paid cases, notes and codex cards.
+- Whenever paid content changes after launch, run the split build and upload again (step 4 automates this).
+
+## 7. Decisions (2026-11-01)
 
 - Chest Pain free; everything else paid.
 - ₹356 buys one year (not lifetime).

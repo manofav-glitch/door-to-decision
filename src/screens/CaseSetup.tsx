@@ -12,13 +12,14 @@ import { useSettings } from '../store/settings';
 export function CaseSetup() {
   const { caseId = '' } = useParams();
   const found = findCase(caseId);
-  const loaded = useCase(caseId);
+  const lockedCase = useLocked(findCase(caseId)?.module.free ?? true);
+  const loaded = useCase(lockedCase ? '' : caseId); // locked: don't ask Firestore for text it will refuse
   const navigate = useNavigate();
   const showDrafts = useSettings((s) => s.showDrafts);
   const { active, begin } = useProgress();
   const [setting, setSetting] = useState<string | null>(null);
   const [mode, setMode] = useState<Mode>('learn');
-  const locked = useLocked(found?.module.free ?? true);
+  const locked = lockedCase;
 
   if (!found) return <NotFound what="Case" />;
   const { system, module, summary } = found;

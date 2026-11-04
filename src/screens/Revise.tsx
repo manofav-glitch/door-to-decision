@@ -8,6 +8,7 @@ import { ChoiceList, ContinueButton } from '../components/player/Sheet';
 import { GradeChip, Loading } from '../components/ui';
 import { startRun, visibleOptions } from '../engine/engine';
 import { shuffled } from '../lib/shuffle';
+import { useLocked } from '../lib/access';
 import { MASTERED_AFTER, reviseDeck, useProgress, type ReviseCard } from '../store/progress';
 
 export function Revise() {
@@ -116,11 +117,26 @@ export function Revise() {
 }
 
 function CardView({ card, onDone }: { card: ReviseCard; onDone: (correct: boolean) => void }) {
-  const loaded = useCase(card.caseId);
+  const locked = useLocked(findCase(card.caseId)?.module.free ?? true);
+  const loaded = useCase(locked ? '' : card.caseId);
   const revise = useProgress((s) => s.revise);
   const dropCard = useProgress((s) => s.dropCard);
   const [picked, setPicked] = useState<string | null>(null);
 
+  if (locked)
+    return (
+      <div className="panel p-4">
+        <p className="mb-3">This question is from a unit that needs the unlock.</p>
+        <div className="flex flex-wrap gap-2">
+          <Link to={`/case/${card.caseId}`} className="btn">
+            Unlock
+          </Link>
+          <button className="btn" onClick={() => onDone(false)}>
+            Skip
+          </button>
+        </div>
+      </div>
+    );
   if (loaded.status === 'loading') return <Loading />;
   const c = loaded.status === 'ready' ? loaded.value.data : undefined;
   const node = c?.nodes[card.nodeId];

@@ -3,7 +3,7 @@
 // load. These helpers fill the same cache ahead of time: a case's pictures when it is played, or every
 // case's from Settings.
 import { useCallback, useEffect, useState } from 'react';
-import { caseLoaders } from 'virtual:content';
+import { caseAssetLoaders } from 'virtual:content';
 
 export const ART_CACHE = 'd2d-art';
 
@@ -19,7 +19,7 @@ export function artUrlsOf(assets: Record<string, string>, base: string): string[
 async function artUrls(caseIds: string[]): Promise<string[]> {
   const lists = await Promise.all(
     caseIds.map(async (id) => {
-      const loader = caseLoaders[id];
+      const loader = caseAssetLoaders[id];
       return loader ? artUrlsOf((await loader()).assets, location.href) : [];
     }),
   );
