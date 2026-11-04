@@ -7,7 +7,7 @@
     "predev": "node scripts/art.ts",
     "dev": "vite",
     "prebuild": "node scripts/art.ts",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && tsc -p worker && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
@@ -17,7 +17,9 @@
     "ecg": "node scripts/draw-ecg.ts",
     "graph": "node scripts/graph.ts",
     "new-case": "node scripts/new-case.ts",
-    "art": "node scripts/art.ts"
+    "art": "node scripts/art.ts",
+    "worker:types": "wrangler types -c worker/wrangler.jsonc worker/worker-configuration.d.ts",
+    "worker:deploy": "wrangler deploy -c worker/wrangler.jsonc"
   },
   "dependencies": {
     "firebase": "^12.19.0",

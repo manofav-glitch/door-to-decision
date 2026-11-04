@@ -1,8 +1,9 @@
 # Paid access with Google sign-in — plan (zero-cost route)
 
-Status: APPROVED by the owner 2026-11-01 (Chest Pain free; ₹356 for one year of every unit; firebase and wrangler OK).
+Status: APPROVED by the owner 2026-11-01 (Chest Pain free; one year of every unit; firebase and wrangler OK).
+Price: ₹151 (owner, 2026-11-04; was ₹356). It lives only in `src/lib/price.ts`.
 
-Goal: people sign in with Google and pay ₹356 once to unlock the app. No Play Store for now (it needs a
+Goal: people sign in with Google and pay ₹151 to unlock the app. No Play Store for now (it needs a
 US$25 registration); Android users install the website from Chrome ("Add to Home screen"), which already
 works offline as a PWA. The owner pays nothing up front; Razorpay keeps a small share of each payment.
 
@@ -18,14 +19,14 @@ works offline as a PWA. The owner pays nothing up front; Razorpay keeps a small 
 | Sign-in | Firebase Authentication (Spark plan) | "Sign in with Google" |
 | Who has paid | Firestore (Spark plan) | One record per paying user: `entitlements/{uid}` with `expiresAt` |
 | Paid content | Firestore (Spark plan) | Each paid case, unit's notes and codex card stored as a document; security rules let only paid users read them |
-| Payment | Razorpay Payment Links | ₹356 on Razorpay's own page (no script loaded into our app, so the "no runtime CDNs" rule holds) |
+| Payment | Razorpay Payment Links | ₹151 on Razorpay's own page (no script loaded into our app, so the "no runtime CDNs" rule holds) |
 | Confirming payment | Cloudflare Worker (free, no card) | Creates the payment link for the signed-in user; receives Razorpay's "paid" webhook, checks its signature, and writes the entitlement |
 | Hosting | Cloudflare Pages (free) | Replaces GitHub Pages, because GitHub Pages can't serve a private repo on a free plan |
 | Repository | GitHub, made private | Content YAML and owner's notes no longer public |
 
 - **Free part:** the Chest Pain unit (11 cases, codex cards it unlocks) stays free and in the public bundle,
-  so people can try before paying. Everything else needs the ₹356 unlock.
-- **What ₹356 buys:** one year of every unit (including units added during that year), on any device signed in
+  so people can try before paying. Everything else needs the ₹151 unlock.
+- **What ₹151 buys:** one year of every unit (including units added during that year), on any device signed in
   with the same Google account. The entitlement stores `expiresAt`; renewing adds a year from the later of today or
   the current expiry. The app shows a renewal reminder in the last 14 days; after expiry, paid units lock again
   (progress on the device is kept).
@@ -37,7 +38,7 @@ works offline as a PWA. The owner pays nothing up front; Razorpay keeps a small 
 
 1. Build split: `compile` writes the free unit into the app bundle as now, and paid content to a separate output.
 2. Upload script: pushes paid content to Firestore on each deploy (service-account key kept as a secret, never in the repo).
-3. App: sign-in button, account screen, "Unlock all units — ₹356" button, locked-unit cards, paid content loader
+3. App: sign-in button, account screen, "Unlock all units — ₹151" button, locked-unit cards, paid content loader
    with offline cache.
 4. Cloudflare Worker: `POST /pay` (verifies the Firebase sign-in, creates a Razorpay payment link carrying the user id);
    `POST /razorpay-webhook` (verifies Razorpay's signature, records the entitlement in Firestore).
@@ -72,10 +73,28 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
   node scripts/upload-paid.ts`), owner granted a test year with scripts/grant.ts. Checked locally with the
   switch on (`.env.development.local`): signed-out and unpaid visitors are refused by Firestore (403); the paid
   account opens paid cases, notes and codex cards.
+- 2026-11-04: step 3 built. Worker in `worker/` (deployed as door-to-decision-pay on workers.dev), unlock button
+  and the "payment received" screen (`#/unlocked`); 8 Worker tests. Details below.
 - Whenever paid content changes after launch, run the split build and upload again (step 4 automates this).
+
+## 6a. How a payment works (step 3)
+
+1. Unlock button → `POST /pay` with the Firebase ID token. The Worker checks the token against Google's keys,
+   reuses the person's open payment page if it has 15+ minutes left (`pending/{uid}`), else creates a Razorpay
+   Payment Link for the price (2-hour expiry, `notes.uid`), recording `links/{plinkId}` → uid and amount.
+2. The app sends the person to Razorpay's page; Razorpay sends them back with `?razorpay_payment_link_status=…`,
+   which the app turns into `#/unlocked`. That screen re-reads the entitlement every 3 s until the year appears.
+3. Razorpay's `payment_link.paid` webhook → `POST /razorpay-webhook`. The Worker checks the HMAC signature, the
+   amount and currency, then in one Firestore transaction writes `payments/{plinkId}` (must not exist yet, so a
+   repeated webhook adds nothing), sets `entitlements/{uid}.expiresAt` to max(now, current) + 365 days, and
+   clears `pending/{uid}`. Any failure answers 500 so Razorpay retries (for up to 24 hours).
+4. Secrets (Cloudflare only, never in the repo): `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`,
+   `RAZORPAY_WEBHOOK_SECRET`, `FIREBASE_SERVICE_ACCOUNT`. Test-mode keys and webhook secret until step 5.
+5. If a webhook can't be matched to a person, it is logged and the owner grants by hand (`scripts/grant.ts`).
 
 ## 7. Decisions (2026-11-01)
 
 - Chest Pain free; everything else paid.
-- ₹356 buys one year (not lifetime).
+- ₹151 buys one year (not lifetime).
 - `firebase` and `wrangler` approved.
+- 2026-11-04: price lowered to ₹151.

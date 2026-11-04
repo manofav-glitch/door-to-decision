@@ -18,6 +18,7 @@ const Debrief = lazy(() => import('./screens/Debrief').then((m) => ({ default: m
 const Notes = lazy(() => import('./screens/Notes').then((m) => ({ default: m.Notes })));
 const Player = lazy(() => import('./screens/Player').then((m) => ({ default: m.Player })));
 const Revise = lazy(() => import('./screens/Revise').then((m) => ({ default: m.Revise })));
+const Unlocked = lazy(() => import('./screens/Unlocked').then((m) => ({ default: m.Unlocked })));
 
 export function App() {
   return (
@@ -39,6 +40,7 @@ export function App() {
                 <Route path="codex/:cardId" element={<CodexCard />} />
                 <Route path="revise" element={<Revise />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="unlocked" element={<Unlocked />} />
                 {import.meta.env.DEV && <Route path="dev/art" element={<ArtSheet />} />}
                 <Route path="*" element={<Home />} />
               </Route>

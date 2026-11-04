@@ -1,0 +1,27 @@
+// Payment Worker (docs/plans/paid-access-plan.md, step 3). Deploy with `npm run worker:deploy`.
+// Secrets are set with `npx wrangler secret put <NAME>` from this folder and never live in the repo.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "door-to-decision-pay",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-04",
+  "workers_dev": true,
+  "vars": {
+    "FIREBASE_PROJECT_ID": "door-to-decision",
+    // sites allowed to ask for a payment page (and to be sent back to after paying)
+    "ALLOWED_ORIGINS": "https://manofav-glitch.github.io,http://localhost:5180",
+  },
+  "secrets": {
+    "required": [
+      "RAZORPAY_KEY_ID",
+      "RAZORPAY_KEY_SECRET",
+      "RAZORPAY_WEBHOOK_SECRET",
+      "FIREBASE_SERVICE_ACCOUNT",
+    ],
+  },
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.1 },
+  },
+}

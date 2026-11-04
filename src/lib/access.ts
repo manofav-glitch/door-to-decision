@@ -4,7 +4,7 @@ import { paidSplit } from 'virtual:content';
 import { index } from '../content/client';
 import { isPaid, useAccount } from './account';
 
-export const PRICE = '₹356';
+export { PRICE } from './price';
 
 /** true if a unit with this `free` flag is locked for the current person */
 export function useLocked(free: boolean): boolean {

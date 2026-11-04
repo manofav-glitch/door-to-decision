@@ -9,3 +9,4 @@ test/fixtures
 CLAUDE.md
 docs/templates
 docs/graphs
+worker/worker-configuration.d.ts

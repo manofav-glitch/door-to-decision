@@ -1,8 +1,8 @@
-import { accountsEnabled, signIn, signOut, useAccount } from '../lib/account';
+import { accountsEnabled, isPaid, signIn, signOut, useAccount } from '../lib/account';
 
 /** Sign in with Google, or show who is signed in. Hidden when the build has no Firebase project. */
 export function AccountPanel() {
-  const { status, user, error } = useAccount();
+  const { status, user, error, paidUntil } = useAccount();
   if (!accountsEnabled) return null;
   return (
     <section aria-labelledby="account-heading" className="panel mb-6 p-4">
@@ -19,6 +19,11 @@ export function AccountPanel() {
           <button className="panel min-h-11 px-3" onClick={() => void signOut()}>
             Sign out
           </button>
+          {isPaid(paidUntil) && (
+            <p className="w-full text-sm text-grey-1">
+              All units unlocked until {new Date(paidUntil!).toLocaleDateString()}.
+            </p>
+          )}
         </div>
       ) : (
         <>
