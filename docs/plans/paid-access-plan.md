@@ -96,9 +96,23 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
    `RAZORPAY_WEBHOOK_SECRET`, `FIREBASE_SERVICE_ACCOUNT`. Test-mode keys and webhook secret until step 5.
 5. If a webhook can't be matched to a person, it is logged and the owner grants by hand (`scripts/grant.ts`).
 
+## 6b. Step 4 plan (owner OK 2026-11-05)
+
+- 4a. Policy pages as plain HTML in `public/legal/` (terms, privacy, refunds, delivery, contact), linked from
+  Settings and the unlock box. Operator shown as "Manav, India"; contact by email only (owner: no phone or
+  address on the pages; add the minimum only if Razorpay's review insists). Refunds: none once unlocked, except
+  failed or duplicate payments (5–7 working days to the original method). Reply promise: 3 working days.
+- 4b. Hosting on Cloudflare Pages (`*.pages.dev`), deployed from GitHub Actions; the paid-content upload runs
+  in the same workflow once the launch switch is on. New address added to Firebase authorized domains and the
+  Worker's `ALLOWED_ORIGINS`. Give Razorpay this address for KYC.
+- 4c. Repository private and renamed `door-to-decision-app`; a tiny public `door-to-decision` repo keeps the old
+  GitHub Pages address, forwarding visitors (and their on-device progress, via the URL fragment) to the new
+  site and retiring the old service worker. Deploys are then confirmed through Cloudflare, not the GitHub API.
+
 ## 7. Decisions (2026-11-01)
 
 - Chest Pain free; everything else paid.
 - ₹151 buys one year (not lifetime).
 - `firebase` and `wrangler` approved.
 - 2026-11-04: price lowered to ₹151.
+- 2026-11-05: refunds only for failed or duplicate payments; policy pages show name and email only.

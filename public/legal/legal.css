@@ -1,0 +1,71 @@
+/* Policy pages (docs/plans/paid-access-plan.md step 4): plain HTML so they open without the app. */
+:root {
+  --paper: #f6f3ea;
+  --ink: #1d1c18;
+  --grey: #5d5a52;
+  --line: #d8d3c4;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #171713;
+    --ink: #ece8dc;
+    --grey: #a9a497;
+    --line: #3a382f;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    17px/1.6 system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+nav a[aria-current] {
+  font-weight: 700;
+  text-decoration: none;
+}
+a {
+  color: inherit;
+}
+h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 24px 0 4px;
+}
+h2 {
+  font-size: 20px;
+  margin: 28px 0 4px;
+}
+.updated {
+  color: var(--grey);
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+li {
+  margin: 4px 0;
+}
+.note {
+  border: 2px solid var(--ink);
+  padding: 12px 16px;
+}

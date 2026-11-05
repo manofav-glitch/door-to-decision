@@ -1,4 +1,5 @@
 import { AccountPanel } from '../components/AccountPanel';
+import { PolicyLinks } from '../components/PolicyLinks';
 import { DISCLAIMER } from '../components/Disclaimer';
 import { index } from '../content/client';
 import { OfflineArt } from '../components/OfflineArt';
@@ -135,7 +136,8 @@ export function Settings() {
         Illustrations in some cases were made with AI (ChatGPT) by the content owner. ECGs, monitors
         and the other drawings are drawn in code.
       </p>
-      <p className="text-sm text-grey-1">Content version: {index.version}</p>
+      <p className="mb-2 text-sm text-grey-1">Content version: {index.version}</p>
+      <PolicyLinks />
     </main>
   );
 }

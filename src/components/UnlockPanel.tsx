@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PRICE } from '../lib/access';
 import { signIn, useAccount } from '../lib/account';
 import { payEnabled, startPayment } from '../lib/pay';
+import { policy } from './PolicyLinks';
 
 /** Shown on locked units, cases, notes and codex cards: sign in, then unlock (or renew) for a year. */
 export function UnlockPanel() {
@@ -50,9 +51,16 @@ export function UnlockPanel() {
                 : `Unlock for ${PRICE} a year`}
           </button>
           <p className="mt-2 text-sm text-grey-1">
-            {payEnabled
-              ? 'You pay on Razorpay’s secure page (UPI, card or netbanking), then come back here.'
-              : 'Payments open soon.'}
+            {payEnabled ? (
+              <>
+                You pay on Razorpay’s secure page (UPI, card or netbanking), then come back here. By
+                paying you agree to the <a href={policy('terms')}>terms</a>. No refunds once
+                unlocked, except failed or duplicate payments (
+                <a href={policy('refunds')}>refund policy</a>).
+              </>
+            ) : (
+              'Payments open soon.'
+            )}
           </p>
         </>
       )}

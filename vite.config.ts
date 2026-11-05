@@ -41,6 +41,7 @@ export default defineConfig({
         // case is played or saved for offline (src/lib/offline.ts uses the same cache name).
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
         navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/\/legal\//], // policy pages are plain HTML, not app screens
         runtimeCaching: [
           {
             urlPattern: /\.webp$/,
