@@ -75,6 +75,10 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
   account opens paid cases, notes and codex cards.
 - 2026-11-04: step 3 built. Worker in `worker/` (deployed as door-to-decision-pay on workers.dev), unlock button
   and the "payment received" screen (`#/unlocked`); 8 Worker tests. Details below.
+- 2026-11-05: step 3 tested end to end in Razorpay test mode. Owner's manual year removed, owner paid ₹151 with
+  a test payment in the local app; the webhook wrote `payments/{plinkId}` (15100 paise), extended the
+  entitlement to 2027-11-05 (source `razorpay`) and cleared `pending/{uid}`; the app showed "Everything is
+  unlocked". Test-mode keys and webhook secret are in the Worker; live ones replace them in step 5.
 - Whenever paid content changes after launch, run the split build and upload again (step 4 automates this).
 
 ## 6a. How a payment works (step 3)
