@@ -28,7 +28,7 @@ beforeAll(async () => {
   const pkcs8 = btoa(String.fromCharCode(...new Uint8Array(der)));
   env = {
     FIREBASE_PROJECT_ID: PROJECT,
-    ALLOWED_ORIGINS: 'https://manofav-glitch.github.io,http://localhost:5180',
+    ALLOWED_ORIGINS: 'https://app.door-to-decision.workers.dev,https://manofav-glitch.github.io,http://localhost:5180',
     RAZORPAY_KEY_ID: 'rzp_test_key',
     RAZORPAY_KEY_SECRET: 'key-secret',
     RAZORPAY_WEBHOOK_SECRET: 'webhook-secret',

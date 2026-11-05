@@ -75,6 +75,11 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
   account opens paid cases, notes and codex cards.
 - 2026-11-04: step 3 built. Worker in `worker/` (deployed as door-to-decision-pay on workers.dev), unlock button
   and the "payment received" screen (`#/unlocked`); 8 Worker tests. Details below.
+- 2026-11-05: 4a policy pages live (owner approved the text). 4b: site deployed to
+  https://app.door-to-decision.workers.dev (from this computer first); address added to Firebase authorized
+  domains and the payment Worker. The CI `cloudflare` job takes over once the owner adds the
+  `CLOUDFLARE_API_TOKEN` and `FIREBASE_SERVICE_ACCOUNT` GitHub secrets. Note: `wrangler pages ...` inside this
+  folder tries to convert the project (it ran `npm install wrangler@latest` and edited vite.config.ts); don't.
 - 2026-11-05: step 3 tested end to end in Razorpay test mode. Owner's manual year removed, owner paid ₹151 with
   a test payment in the local app; the webhook wrote `payments/{plinkId}` (15100 paise), extended the
   entitlement to 2027-11-05 (source `razorpay`) and cleared `pending/{uid}`; the app showed "Everything is
@@ -102,7 +107,8 @@ New dependencies (owner to approve): `firebase` (client SDK) and `wrangler` (Clo
   Settings and the unlock box. Operator shown as "Manav, India"; contact by email only (owner: no phone or
   address on the pages; add the minimum only if Razorpay's review insists). Refunds: none once unlocked, except
   failed or duplicate payments (5–7 working days to the original method). Reply promise: 3 working days.
-- 4b. Hosting on Cloudflare Pages (`*.pages.dev`), deployed from GitHub Actions; the paid-content upload runs
+- 4b. Hosting on Cloudflare, deployed from GitHub Actions. Cloudflare has folded Pages into Workers, so the site
+  is an assets-only Worker (`site/wrangler.jsonc`, `npm run site:deploy`) at https://app.door-to-decision.workers.dev; the paid-content upload runs
   in the same workflow once the launch switch is on. New address added to Firebase authorized domains and the
   Worker's `ALLOWED_ORIGINS`. Give Razorpay this address for KYC.
 - 4c. Repository private and renamed `door-to-decision-app`; a tiny public `door-to-decision` repo keeps the old

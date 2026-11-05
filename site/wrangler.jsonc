@@ -1,0 +1,14 @@
+// The website on Cloudflare (docs/plans/paid-access-plan.md step 4b): a Worker that only serves the built
+// app in dist/. Deploy with `npm run site:deploy` after `npm run build` (CI does both on every push to main).
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "app",
+  "compatibility_date": "2026-11-05",
+  "workers_dev": true,
+  "assets": {
+    "directory": "../dist",
+    "html_handling": "none",
+    "not_found_handling": "single-page-application",
+  },
+  "observability": { "enabled": true, "logs": { "enabled": true } },
+}

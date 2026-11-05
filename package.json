@@ -19,7 +19,8 @@
     "new-case": "node scripts/new-case.ts",
     "art": "node scripts/art.ts",
     "worker:types": "wrangler types -c worker/wrangler.jsonc worker/worker-configuration.d.ts",
-    "worker:deploy": "wrangler deploy -c worker/wrangler.jsonc"
+    "worker:deploy": "wrangler deploy -c worker/wrangler.jsonc",
+    "site:deploy": "wrangler deploy -c site/wrangler.jsonc"
   },
   "dependencies": {
     "firebase": "^12.19.0",
